@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Kin Music</string>
+    <string name="facebook_app_id">647244940059840</string>
+    <string name="fb_login_protocol_scheme">fb647244940059840</string>
+    <string name="default_notification_channel_id">Kin Music</string>
+    <string name="facebook_client_token">920cc0944ad3e36725b425983e4ab54d</string>
+</resources>
