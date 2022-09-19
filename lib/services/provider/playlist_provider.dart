@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/services/network/api/playlist_service.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_title.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ class PlayListProvider extends ChangeNotifier {
   bool isLoading = false;
   late int isFavorite;
   List<PlaylistTitle> musics = [];
+  PlaylistApiService playlistApiService = PlaylistApiService();
 
   Future<List<PlaylistTitle>> getPlayList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -39,7 +41,8 @@ class PlayListProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    var result = await createPlaylist(apiEndPoint, title, id);
+    var result =
+        await playlistApiService.createPlaylist(apiEndPoint, title, id);
     isLoading = false;
     notifyListeners();
     return result;
@@ -52,7 +55,8 @@ class PlayListProvider extends ChangeNotifier {
 
     String apiEndPoint = 'playlists/?user=$id';
     isLoading = true;
-    List<PlayListTitles> titles = await getPlayListTitles(apiEndPoint);
+    List<PlayListTitles> titles =
+        await playlistApiService.getPlayListTitles(apiEndPoint);
 
     isLoading = false;
     notifyListeners();
@@ -63,7 +67,8 @@ class PlayListProvider extends ChangeNotifier {
     String apiEndPoint = 'api/playlisttracks/';
 
     isLoading = true;
-    var result = await addToPlaylist(apiEndPoint, playlistInfo);
+    var result =
+        await playlistApiService.addToPlaylist(apiEndPoint, playlistInfo);
     isLoading = false;
     notifyListeners();
     return result;
@@ -73,13 +78,14 @@ class PlayListProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('id');
 
-    await removeFromPlaylist('/playlists/?user=$id', playlistId, trackId);
+    await playlistApiService.removeFromPlaylist(
+        '/playlists/?user=$id', playlistId, trackId);
 
     notifyListeners();
   }
 
   Future deletePlaylistTitle(playlistTitleId) async {
-    await removePlaylistTitle('/playlists/$playlistTitleId');
+    await playlistApiService.removePlaylistTitle('/playlists/$playlistTitleId');
     notifyListeners();
   }
 }

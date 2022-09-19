@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/services/network/api/favourite_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/favorite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
   bool isLoading = false;
   int isFavorite = 0;
   List<Favorite> favoriteMusics = [];
+  FavoriteApiService favoriteApiService = FavoriteApiService();
   Future<List<Favorite>> getFavMusic() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('id');
@@ -14,7 +16,8 @@ class FavoriteMusicProvider extends ChangeNotifier {
     String apiEndPoint = '/favourite/';
     isLoading = true;
     notifyListeners();
-    favoriteMusics = await getFavoriteMusics(apiEndPoint, id);
+    favoriteMusics =
+        await favoriteApiService.getFavoriteMusics(apiEndPoint, id);
     isLoading = false;
     notifyListeners();
     return favoriteMusics;
@@ -28,7 +31,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
 
     String apiEndPoint = '/api/favourites/';
 
-    await deleteFavMusic(apiEndPoint, musicId, id);
+    await favoriteApiService.deleteFavMusic(apiEndPoint, musicId, id);
 
     notifyListeners();
   }
@@ -42,7 +45,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
 
     String apiEndPoint = '/api/favourites/';
 
-    await markusFavMusic(apiEndPoint, musicId, id);
+    await favoriteApiService.markusFavMusic(apiEndPoint, musicId, id);
 
     notifyListeners();
   }
@@ -54,7 +57,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
     final id = prefs.getString('id');
 
     String apiEndPoint = '/favourite/?user=$id';
-    isFavorite = await isMusicFavorite(apiEndPoint, musicId);
+    isFavorite = await favoriteApiService.isMusicFavorite(apiEndPoint, musicId);
 
     notifyListeners();
   }

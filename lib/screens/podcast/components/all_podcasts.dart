@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_list_card.dart';
+import 'package:kin_music_player_app/services/network/api/podcast_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
@@ -33,9 +34,10 @@ class _AllPodCastListState extends State<AllPodCastList> {
 
   Future<void> fetchMorePodcast(pagekey) async {
     List<PodCast> podcasts = [];
+    PodcastApiService podcastApiService = PodcastApiService();
     try {
       var page = (pagekey / 10).toInt() + 1;
-      podcasts = await fetchMorePodCasts(page);
+      podcasts = await podcastApiService.fetchMorePodCasts(page);
       final isLastPage = podcasts.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(podcasts);

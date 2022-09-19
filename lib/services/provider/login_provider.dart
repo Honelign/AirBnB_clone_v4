@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';
+import 'package:kin_music_player_app/services/network/api/user_service.dart';
 import 'package:kin_music_player_app/services/network/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../network/api_service.dart';
@@ -16,6 +17,7 @@ class LoginProvider extends ChangeNotifier {
   Map user = {"userName": '', "email": ''};
   late String _verificationId;
   late String _fullName;
+  UserApiService userApiService = UserApiService();
   // late String _phoneNumber;
 
   Future getUserPrivilege() async {
@@ -24,7 +26,8 @@ class LoginProvider extends ChangeNotifier {
     String uid = prefs.getString("id") ?? "";
 
     // call api
-    var result = await fetchUserPrivilege(uid: uid, apiEndPoint: "/users");
+    var result = await userApiService.fetchUserPrivilege(
+        uid: uid, apiEndPoint: "/users");
 
     // TODO: make id based
     await prefs.remove("prev");
@@ -39,7 +42,7 @@ class LoginProvider extends ChangeNotifier {
   Future register(CustomUser user) async {
     isLoading = true;
     notifyListeners();
-    var result = await createAccount(user);
+    var result = await userApiService.createAccount(user);
     isLoading = false;
     notifyListeners();
     return result;
@@ -48,7 +51,7 @@ class LoginProvider extends ChangeNotifier {
   Future login(email, password) async {
     isLoading = true;
     notifyListeners();
-    var result = await logIn(email, password);
+    var result = await userApiService.logIn(email, password);
     isLoading = false;
     notifyListeners();
     return result;
@@ -57,7 +60,7 @@ class LoginProvider extends ChangeNotifier {
   Future googleLogin() async {
     isLoading = true;
     notifyListeners();
-    var result = await loginWithGoogle();
+    var result = await userApiService.loginWithGoogle();
     isLoading = false;
     notifyListeners();
     return result;
