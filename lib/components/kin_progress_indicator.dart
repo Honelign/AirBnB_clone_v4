@@ -8,7 +8,6 @@ class KinProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: kPrimaryColor,
       child: SpinKitFadingCircle(
         itemBuilder: (BuildContext context, int index) {
           return DecoratedBox(

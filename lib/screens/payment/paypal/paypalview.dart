@@ -11,6 +11,7 @@ class PaypalWebview extends StatefulWidget {
   final String executeUrl;
   final String accessToken;
   final FlutterPaypalSDK sdk;
+  final Function successFunction;
 
   const PaypalWebview({
     Key? key,
@@ -18,6 +19,7 @@ class PaypalWebview extends StatefulWidget {
     required this.executeUrl,
     required this.accessToken,
     required this.sdk,
+    required this.successFunction,
   }) : super(key: key);
 
   @override
@@ -65,14 +67,9 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                     payerId!,
                     widget.accessToken,
                   );
-                  // Handle After success
-                  // Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const Success(),
-                  //   ),
-                  // );
+
                   Navigator.pop(context);
+                  await widget.successFunction();
                   kShowToast(message: "Payment Successful!");
                 }
               },

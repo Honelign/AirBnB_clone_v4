@@ -35,80 +35,90 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const KinProgressIndicator();
           } else {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              padding: const EdgeInsets.symmetric(vertical: 34, horizontal: 12),
-              color: kPrimaryColor,
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() async {
+                  await provider.getCoinBalance();
+                });
+              },
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // title
-                    Text(
-                      "Coins Balance",
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.75),
-                        fontSize: 22,
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 24,
-                    ),
-
-                    Row(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 34, horizontal: 12),
+                  color: kPrimaryColor,
+                  child: SingleChildScrollView(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // static icon
-                        const CoinIcon(),
-
-                        // spacing
-                        SizedBox(
-                          width: getProportionateScreenWidth(10),
-                        ),
-
-                        // amount of remaining coins
+                        // title
                         Text(
-                          snapshot.data != "" && snapshot.data != null
-                              ? "${snapshot.data} ETB"
-                              : "0 ETB",
+                          "Coins Balance",
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.75),
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 24,
+                        ),
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // static icon
+                            const CoinIcon(),
+
+                            // spacing
+                            SizedBox(
+                              width: getProportionateScreenWidth(10),
+                            ),
+
+                            // amount of remaining coins
+                            Text(
+                              snapshot.data != "" && snapshot.data != null
+                                  ? "${snapshot.data} ETB"
+                                  : "0 ETB",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.75),
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // spacer
+                        const SizedBox(
+                          height: 48,
+                        ),
+
+                        // Action Section
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.65,
+                          child: SingleChildScrollView(
+                            child: ListView.builder(
+                              itemCount: allowedCoinValues.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                // card component
+                                return PurchaseCoinCard(
+                                  value: allowedCoinValues[index],
+                                  refresher: refreshFunction,
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
                     ),
-
-                    // spacer
-                    const SizedBox(
-                      height: 48,
-                    ),
-
-                    // Action Section
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.65,
-                      child: SingleChildScrollView(
-                        child: ListView.builder(
-                          itemCount: allowedCoinValues.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            // card component
-                            return PurchaseCoinCard(
-                              value: allowedCoinValues[index],
-                              refresher: refreshFunction,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             );

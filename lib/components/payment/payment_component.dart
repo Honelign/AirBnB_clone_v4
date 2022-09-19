@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,13 @@ import 'package:kin_music_player_app/size_config.dart';
 
 class PaymentComponent extends StatefulWidget {
   Function successFunction;
-  const PaymentComponent({Key? key, required Function successFunction})
+  Function refresherFunction;
+  String paymentPrice;
+  PaymentComponent(
+      {Key? key,
+      required this.successFunction,
+      required this.paymentPrice,
+      required this.refresherFunction})
       : super(key: key);
 
   @override
@@ -24,7 +31,7 @@ class PaymentComponent extends StatefulWidget {
 
 class _PaymentComponentState extends State<PaymentComponent> {
   //payment methods for paypal
-  payNow() async {
+  payWithPayPal() async {
     FlutterPaypalSDK sdk = FlutterPaypalSDK(
       clientId:
           'AQ0XWp625sJxSs6EJADNsK2iHLSbS99w5lkybY72euU_zbmBvT-7QF_XMvqVaE5xs9aOUQ4AXmDgYsCl',
@@ -47,6 +54,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
               executeUrl: payment.executeUrl!,
               accessToken: accessToken.token!,
               sdk: sdk,
+              successFunction: widget.successFunction,
             ),
           ),
         );
@@ -82,7 +90,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
       'sk_test_51LcOtyFvUcclFpL2Isr4xf7kyt67mCFY6LHxNy5mu06kfk5MzcZRU11W6dU211P4XGyMPoYTltDWBrftA3OoFhHz00pPkHiT4s';
 
   Map<String, dynamic>? paymentIntent;
-  Future<void> makePayment() async {
+  bool isLoading = false;
+  Future<void> payWithStripe() async {
     try {
       paymentIntent = await createPaymentIntent('10', 'USD');
       //Payment Sheet
@@ -103,29 +112,32 @@ class _PaymentComponentState extends State<PaymentComponent> {
     }
   }
 
-  // STRIPE Success
+  // STRIPE SUCCESS
   displayPaymentSheet() async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        await widget.successFunction();
+        await widget.refresherFunction();
+
         showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                          ),
-                          Text("Payment Successful"),
-                        ],
-                      ),
-                    ],
-                  ),
-                ));
-        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("paid successfully")));
+          context: context,
+          builder: (_) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: const [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                    ),
+                    Text("Payment Successful"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -198,237 +210,268 @@ class _PaymentComponentState extends State<PaymentComponent> {
               right: getProportionateScreenWidth(50),
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // title
-                const Padding(
-                  padding: EdgeInsets.only(
-                    top: 4.0,
-                    bottom: 30,
-                  ),
-                  child: Text(
-                    "Pay With",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+            child: isLoading == true
+                ? const Center(
+                    child: KinProgressIndicator(),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // title
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          top: 4.0,
+                          bottom: 30,
+                        ),
+                        child: Text(
+                          "Pay With",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
 
-                // tele birr
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return PaymentView();
+                      // pay with telebirr
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          // navigate to tele birr pay view
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return PaymentView();
+                              },
+                            ),
+                          );
+
+                          setState(() {
+                            isLoading = false;
+                          });
                         },
+                        child: Container(
+                          height: 80,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
+                            // Make rounded corners
+                            borderRadius: BorderRadius.circular(
+                              30,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(
+                                  2.0,
+                                ),
+                                child: Container(
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        50,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                            20,
+                                          ),
+                                          bottomLeft: Radius.circular(
+                                            20,
+                                          ),
+                                        ), // Image border
+                                        child: SizedBox.fromSize(
+                                          size: const Size.fromRadius(
+                                            48,
+                                          ),
+                                          child: Image.asset(
+                                            'assets/images/2.png',
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ))),
+                              ),
+
+                              // spacer
+                              const SizedBox(
+                                width: 25,
+                              ),
+
+                              // title
+                              const Text(
+                                "TeleBirr",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: Colors.black38,
-                      // Make rounded corners
-                      borderRadius: BorderRadius.circular(
-                        30,
+
+                      // spacer
+                      const SizedBox(height: 24),
+
+                      // pay with stripe
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          // initiate stripe payment
+                          await payWithStripe();
+
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
+
+                            // Make rounded corners
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(
+                                  1.0,
+                                ),
+                                child: Container(
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                    ), // Image border
+                                    child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(
+                                        48,
+                                      ),
+                                      child: Image.asset(
+                                        'assets/images/stripe.png',
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // spacer
+                              const SizedBox(
+                                width: 25,
+                              ),
+
+                              const Text(
+                                "Card",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(
-                            2.0,
-                          ),
-                          child: Container(
-                              width: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  50,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      20,
-                                    ),
-                                    bottomLeft: Radius.circular(
-                                      20,
-                                    ),
-                                  ), // Image border
-                                  child: SizedBox.fromSize(
-                                    size: const Size.fromRadius(
-                                      48,
-                                    ),
-                                    child: Image.asset(
-                                      'assets/images/2.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ))),
-                        ),
 
-                        // spacer
-                        const SizedBox(
-                          width: 25,
-                        ),
+                      // spacer
+                      const SizedBox(height: 24),
 
-                        // title
-                        const Text(
-                          "TeleBirr",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      // pay with paypal
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
 
-                // spacer
-                const SizedBox(height: 24),
+                          // initiate paypal
+                          await payWithPayPal();
 
-                // Stripe Payment
-                InkWell(
-                  onTap: () async {
-                    await makePayment();
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.black38,
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
 
-                      // Make rounded corners
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(
-                            1.0,
-                          ),
-                          child: Container(
-                            width: 150,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                              ), // Image border
-                              child: SizedBox.fromSize(
-                                size: const Size.fromRadius(
-                                  48,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/stripe.png',
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                            // Make rounded corners
+                            borderRadius: BorderRadius.circular(
+                              30,
                             ),
                           ),
-                        ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      50,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20),
+                                    ), // Image border
+                                    child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(
+                                        48,
+                                      ),
+                                      child: Image.asset(
+                                        'assets/images/pay_pal.jpg',
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
 
-                        // spacer
-                        const SizedBox(
-                          width: 25,
-                        ),
-
-                        const Text(
-                          "Card",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                              // spacer
+                              const SizedBox(
+                                width: 25,
+                              ),
+                              const Text(
+                                "PayPal",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-
-                // spacer
-                const SizedBox(height: 24),
-
-                // paypal
-                InkWell(
-                  onTap: () async {
-                    await payNow();
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.black38,
-
-                      // Make rounded corners
-                      borderRadius: BorderRadius.circular(
-                        30,
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Container(
-                            width: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                50,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                              ), // Image border
-                              child: SizedBox.fromSize(
-                                size: const Size.fromRadius(
-                                  48,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/pay_pal.jpg',
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // spacer
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        const Text(
-                          "PayPal",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
+                      const Divider()
+                    ],
                   ),
-                ),
-                const Divider()
-              ],
-            ),
           ),
         ),
       ),

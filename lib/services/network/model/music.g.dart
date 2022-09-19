@@ -11,10 +11,9 @@ Music _$MusicFromJson(Map<String, dynamic> json) => Music(
       title: json['track_name'] as String,
       audio: json['track_file'] as String,
       cover: json['track_cover'] as String ?? 'kinmusic',
-      artist: json['artist_name'] as String ?? 'kin artist',
       description: json['Genre']['genre_title'] as String ?? 'related result',
-      //
       lyrics: json['Lyrics'] as String ?? '',
+      artist: json['artist_name'] as String ?? 'kin artist',
       artist_id: json['artist_id'].toString(),
       isPurchasedByUser: false,
       priceETB: json['track_price'].toString(),

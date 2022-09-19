@@ -87,6 +87,10 @@ class _makePaymentState extends State<makePayment> {
         accessToken.token!,
       );
       if (payment.status) {
+        Future successFunction() async {
+          print("@@@@lookie - payment success -paypal");
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -95,6 +99,7 @@ class _makePaymentState extends State<makePayment> {
               executeUrl: payment.executeUrl!,
               accessToken: accessToken.token!,
               sdk: sdk,
+              successFunction: successFunction,
             ),
           ),
         );

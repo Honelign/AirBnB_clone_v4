@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/coins/components/coin_icon.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
@@ -60,18 +61,35 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
               });
               final provider =
                   Provider.of<CoinProvider>(context, listen: false);
-              await provider.buyCoin(int.parse(widget.value), "paypal");
+              Future makeCoinPurchaseSaveRequest() async {
+                await provider.buyCoin(int.parse(widget.value), "paypal");
+
+                print("@@@@lookie coin bought");
+                setState(() {
+                  isButtonLoading = false;
+                });
+              }
+
+              void refresherFunction() {
+                setState(() async {
+                  await provider.getCoinBalance();
+                });
+              }
+
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (context) => PaymentComponent(
+                  successFunction: makeCoinPurchaseSaveRequest,
+                  paymentPrice: widget.value,
+                  refresherFunction: refresherFunction,
+                ),
+              );
               widget.refresher();
             },
             child: isButtonLoading == true
-                ? Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: const Center(
-                      child: KinProgressIndicator(),
-                    ),
+                ? const Center(
+                    child: KinProgressIndicator(),
                   )
                 : Container(
                     decoration: BoxDecoration(

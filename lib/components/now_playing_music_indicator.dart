@@ -61,10 +61,23 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
               ),
               InkWell(
                 onTap: () {
+                  Future successFunction() async {
+                    print("@@@@@lookie-payment-stripe");
+                  }
+
+                  Future refersherFunction() async {
+                    print("@@@@@lookie-payment-stripe");
+                  }
+
                   showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => const PaymentComponent());
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => PaymentComponent(
+                      successFunction: successFunction,
+                      paymentPrice: p.currentMusic!.priceETB.toString(),
+                      refresherFunction: refersherFunction,
+                    ),
+                  );
                 },
                 child: Container(
                   padding:
@@ -145,9 +158,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                             await provider
                                                 .unFavMusic(p.currentMusic!.id);
 
-                                            // TODO: remove
-                                            //   await Future.delayed(Duration(seconds: 1));
-                                            provider.getFavMusic();
+                                            await provider.getFavMusic();
                                           },
                                           icon: const Icon(
                                             Icons.favorite,

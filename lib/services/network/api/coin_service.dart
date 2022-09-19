@@ -16,6 +16,8 @@ class CoinApiService {
 
     String id = prefs.getString("id") ?? "";
 
+    print("@@@@lookie - buy coin api call");
+
     try {
       Response response =
           await get(Uri.parse("$kinPaymentUrl/gift/save-payment-info/$id"));

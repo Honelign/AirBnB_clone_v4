@@ -13,6 +13,7 @@ class CoinProvider extends ChangeNotifier {
   Future<String> getCoinBalance() async {
     isLoading = true;
     currentCoinValue = await coinApiService.getRemainingGift();
+
     isLoading = false;
     notifyListeners();
     return currentCoinValue.toString();
