@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
-import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
 
 import '../network/model/genre.dart';
 
@@ -10,7 +9,7 @@ class GenreProvider extends ChangeNotifier {
   static const _pageSize = 10;
   List<Genre> albums = [];
   MusicApiService musicApiService = MusicApiService();
-  Future<List<Genre>> getGenre() async {
+  Future<List<Genre>> getAllGenres() async {
     const String apiEndPoint = '/mobile_app/genres';
     isLoading = true;
     List<Genre> genres = await musicApiService.getGenres(apiEndPoint);
@@ -18,5 +17,18 @@ class GenreProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return genres;
+  }
+
+  Future<List<Music>> getAllTracksByGenreId() async {
+    const String apiEndPoint = '/mobile_app/genres';
+    isLoading = true;
+    List<Music> allTracksUnderGenre = await musicApiService.getMusicByGenreID(
+      apiEndPoint: apiEndPoint,
+      genreId: "1",
+    );
+
+    isLoading = false;
+    notifyListeners();
+    return allTracksUnderGenre;
   }
 }
