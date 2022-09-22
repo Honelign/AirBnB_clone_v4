@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
+import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ import '../../../constants.dart';
 import '../../../size_config.dart';
 import 'playlist_card.dart';
 
-class AlbumBody extends StatelessWidget {
+class AlbumBody extends StatefulWidget {
   static String routeName = '/decoration';
 
   final Album album;
@@ -27,7 +28,22 @@ class AlbumBody extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<AlbumBody> createState() => _AlbumBodyState();
+}
+
+class _AlbumBodyState extends State<AlbumBody> {
+  List<Music> albumMusicss=[];
+  @override
+  void initState() {
+   Provider.of<MusicProvider>(context,listen: false).albumMusicsGetter(widget.album.id);
+    // TODO: implement initState
+    albumMusicss=Provider.of<MusicProvider>(context,listen:false).albumMusics;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+  //  var p= Provider.of<MusicProvider>(context,listen: false);
+    
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -35,7 +51,7 @@ class AlbumBody extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image:
-                  CachedNetworkImageProvider('$kinAssetBaseUrl/${album.cover}'),
+                  CachedNetworkImageProvider('$kinAssetBaseUrl/${widget.album.cover}'),
               fit: BoxFit.cover,
             ),
           ),
@@ -49,11 +65,11 @@ class AlbumBody extends StatelessWidget {
                       height: getProportionateScreenHeight(280),
                       child: Stack(
                         children: [
-                          _buildAlbumArt(album.cover),
-                          _buildTitleSection(album),
+                          _buildAlbumArt(widget.album.cover),
+                          _buildTitleSection(widget.album),
                           _buildBackButton(context),
                           _buildAlbumInfo(),
-                          _buildPlayAllIcon(context)
+                          _buildPlayAllIcon(context,albumMusicss)
                         ],
                       ),
                     ),
@@ -61,7 +77,7 @@ class AlbumBody extends StatelessWidget {
                       height: getProportionateScreenHeight(15),
                     ),
                     Expanded(
-                      child: _buildAlbumMusics(album.musics, context),
+                      child: _buildAlbumMusics(albumMusicss ,context),
                     )
                   ],
                 )),
@@ -161,7 +177,7 @@ class AlbumBody extends StatelessWidget {
         child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              "${album.musics.length} songs",
+              "${widget.album.count} songs",
               style: TextStyle(
                   color: Colors.white.withOpacity(0.7),
                   fontWeight: FontWeight.w600),
@@ -170,7 +186,7 @@ class AlbumBody extends StatelessWidget {
     );
   }
 
-  Widget _buildPlayAllIcon(context) {
+  Widget _buildPlayAllIcon(context,musics) {
     var playerProvider = Provider.of<MusicPlayer>(
       context,
     );
@@ -205,7 +221,8 @@ class AlbumBody extends StatelessWidget {
                     musicProvider.setPlayer(
                         musicProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                        album: album, music: album.musics[0], index: 0);
+                      musics: albumMusicss,
+                        album: widget.album, music: musics[0], index: 0);
                     podcastProvider.setEpisodeStopped(true);
                     podcastProvider.listenPodcastStreaming();
                   } else {
@@ -213,7 +230,7 @@ class AlbumBody extends StatelessWidget {
                   }
                 } else if (playerProvider.player.getCurrentAudioTitle ==
                         playerProvider.currentMusic!.title &&
-                    album.id == playerProvider.currentAlbum.id) {
+                    widget.album.id == playerProvider.currentAlbum.id) {
                   if (isPlaying || playerProvider.player.isBuffering.value) {
                     playerProvider.player.pause();
                   } else {
@@ -237,7 +254,8 @@ class AlbumBody extends StatelessWidget {
                     playerProvider.setPlayer(
                         playerProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                        album: album, music: album.musics[0], index: 0);
+                      musics: albumMusicss,
+                        album: widget.album, music: musics[0], index: 0);
                     playerProvider.setMusicStopped(false);
                     podcastProvider.setEpisodeStopped(true);
                     playerProvider.listenMusicStreaming();
@@ -274,7 +292,7 @@ class AlbumBody extends StatelessWidget {
                         )
                       : SvgPicture.asset(
                           isPlaying &&
-                                  album.id == playerProvider.currentAlbum.id
+                                  widget.album.id == playerProvider.currentAlbum.id
                               ? 'assets/icons/pause.svg'
                               : 'assets/icons/play.svg',
                           fit: BoxFit.contain,
@@ -289,15 +307,17 @@ class AlbumBody extends StatelessWidget {
     );
   }
 
-  Widget _buildAlbumMusics(List<Music> musics, context) {
+  Widget _buildAlbumMusics(musics, context) {
     return ListView.builder(
         itemCount: musics.length,
         itemBuilder: (context, index) {
           return AlbumCard(
-            music: album.musics[index],
+            albumMusics: musics,
+            music: musics[index],
             musicIndex: index,
-            album: album,
+            album: widget.album,
           );
         });
   }
 }
+

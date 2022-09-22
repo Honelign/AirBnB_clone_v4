@@ -98,8 +98,9 @@ class _MusicCardState extends State<MusicCard> {
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        musics: widget.musics,
+                        count: widget.musics.length,
                       ),
+                      musics: widget.musics
                     );
 
                     p.setMusicStopped(false);
@@ -157,7 +158,8 @@ class _MusicCardState extends State<MusicCard> {
                                             artist: 'kin',
                                             description: '',
                                             cover: 'assets/images/kin.png',
-                                            musics: widget.musics),
+                                            count: widget.musics.length),
+                                            
                                       )
                                     : Container(),
                           )
