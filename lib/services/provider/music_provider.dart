@@ -34,7 +34,8 @@ class MusicProvider extends ChangeNotifier {
 
   // popular
   Future<List<Music>> getPopularMusic() async {
-    const String apiEndPoint = '/mobileApp/popular_tracks';
+    // const String apiEndPoint = '/mobileApp/popular_tracks';
+    const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
 
     // TODO: Replace

@@ -93,17 +93,23 @@ class FavoriteList extends StatelessWidget {
                                   p.setPlayer(
                                       p.player, podcastProvider, radioProvider);
                                   radioProvider.setMiniPlayerVisibility(false);
+
+                                  // TODO: Replace
                                   p.handlePlayButton(
                                       music: music,
                                       index: musicIndex,
                                       album: Album(
-                                          id: -2,
-                                          title: 'Single Music $musicIndex',
-                                          artist: 'kin',
-                                          description: '',
-                                          cover: 'assets/images/kin.png',
-                                          // musics: favoriteMusicsList
-                                          count: favoriteMusicsList.length),
+                                        id: -2,
+                                        title: 'Single Music $musicIndex',
+                                        artist: 'kin',
+                                        description: '',
+                                        cover: 'assets/images/kin.png',
+                                        artist_id: "1",
+
+                                        // musics: favoriteMusicsList
+                                        count: favoriteMusicsList.length,
+                                        isPurchasedByUser: false, price: '60',
+                                      ),
                                       musics: favoriteMusicsList);
 
                                   p.setMusicStopped(false);
@@ -174,6 +180,7 @@ class FavoriteList extends StatelessWidget {
                                     ? TrackMusicPlayButton(
                                         music: music,
                                         index: musicIndex,
+                                        // TODO:Replace
                                         album: Album(
                                             id: -2,
                                             title: 'Favorite',
@@ -181,7 +188,10 @@ class FavoriteList extends StatelessWidget {
                                             description: '',
                                             cover: 'assets/images/kin.png',
                                             //  musics: favoriteMusicsList
-                                            count: favoriteMusicsList.length),
+                                            count: favoriteMusicsList.length,
+                                            artist_id: '1',
+                                            isPurchasedByUser: false,
+                                            price: '60'),
                                       )
                                     : Container(),
                             const SizedBox(

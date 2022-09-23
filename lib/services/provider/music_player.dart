@@ -201,14 +201,16 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     List<Music> shuffledMusics = shuffle(musics);
     if (_shuffled) {
       Album album = Album(
-          id: currentAlbum.id,
-          title: currentAlbum.title,
-          artist: currentAlbum.artist,
-          description: currentAlbum.description,
-          cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
-          count: currentAlbum.count
-          // musics: shuffledMusics
-          );
+        id: currentAlbum.id,
+        title: currentAlbum.title,
+        artist: currentAlbum.artist,
+        description: currentAlbum.description,
+        cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
+        count: currentAlbum.count,
+        artist_id: '1',
+        isPurchasedByUser: false,
+        price: '60',
+      );
       _currentAlbum = album;
       _albumMusics = shuffledMusics;
     } else {

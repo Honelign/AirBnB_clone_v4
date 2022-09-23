@@ -90,13 +90,18 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   p.handlePlayButton(
                       music: widget.music,
                       index: widget.musicIndex,
+                      // TODO:replace
                       album: Album(
-                          id: -2,
-                          title: 'Single Music ${widget.musicIndex}',
-                          artist: 'kin',
-                          description: '',
-                          cover: 'assets/images/kin.png',
-                          count: widget.musics.length),
+                        id: -2,
+                        title: 'Single Music ${widget.musicIndex}',
+                        artist: 'kin',
+                        description: '',
+                        cover: 'assets/images/kin.png',
+                        count: widget.musics.length,
+                        artist_id: '1',
+                        isPurchasedByUser: false,
+                        price: '60',
+                      ),
                       musics: widget.musics);
 
                   p.setMusicStopped(false);
@@ -330,14 +335,19 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                                       ? TrackMusicPlayButton(
                                           music: widget.music,
                                           index: widget.musicIndex,
+                                          // TODO:replace
                                           album: Album(
-                                              id: -2,
-                                              title:
-                                                  'Single Music ${widget.musicIndex}',
-                                              artist: 'kin',
-                                              description: '',
-                                              cover: 'assets/images/kin.png',
-                                              count: widget.musics.length),
+                                            id: -2,
+                                            title:
+                                                'Single Music ${widget.musicIndex}',
+                                            artist: 'kin',
+                                            description: '',
+                                            cover: 'assets/images/kin.png',
+                                            count: widget.musics.length,
+                                            artist_id: '6',
+                                            isPurchasedByUser: false,
+                                            price: '60',
+                                          ),
                                         )
                                       : Container()
                             ],
