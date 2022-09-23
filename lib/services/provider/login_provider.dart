@@ -18,7 +18,6 @@ class LoginProvider extends ChangeNotifier {
   late String _verificationId;
   late String _fullName;
   UserApiService userApiService = UserApiService();
-  // late String _phoneNumber;
 
   Future getUserPrivilege() async {
     isLoading = true;

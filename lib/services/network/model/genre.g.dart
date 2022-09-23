@@ -8,16 +8,12 @@ part of 'genre.dart';
 
 Genre _$GenreFromJson(Map<String, dynamic> json) => Genre(
       id: json['id'] as int,
-      title: json['genre_title'] as String,
-      cover: json['genre_cover'] as String,
-      musics: (json['Tracks'] as List<dynamic>)
-          .map((e) => Music.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      title: json['genre_name'] as String,
+      cover: json['genre_coverImage'] as String,
     );
 
 Map<String, dynamic> _$GenreToJson(Genre instance) => <String, dynamic>{
-      'genre_id': instance.id,
-      'genre_title': instance.title,
-      'genre_cover': instance.cover,
-      'Tracks': instance.musics,
+      'id': instance.id,
+      'genre_name': instance.title,
+      'genre_coverImage': instance.cover,
     };

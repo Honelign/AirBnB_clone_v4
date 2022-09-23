@@ -30,6 +30,12 @@ class Songs extends StatefulWidget {
 
 class _SongsState extends State<Songs> {
   @override
+  initState() {
+    print("@@@cachingnegro calling remote");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
@@ -197,18 +203,20 @@ class _SongsState extends State<Songs> {
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 220,
-                              childAspectRatio: 3.2,
-                              crossAxisSpacing: 5,
-                              mainAxisSpacing: 5),
+                        maxCrossAxisExtent: 220,
+                        childAspectRatio: 3.2,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
+                      ),
                       itemCount: snapshot.data?.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return MusicCardRecently(
-                            music: musics[index],
-                            musicIndex: index,
-                            musics: musics);
+                          music: musics[index],
+                          musicIndex: index,
+                          musics: musics,
+                        );
                       },
                     ),
                   ),
@@ -228,10 +236,11 @@ class _SongsState extends State<Songs> {
               }
             }
             return Container(
-                margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                child: Center(
-                  child: KinProgressIndicator(),
-                ));
+              margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+              child: const Center(
+                child: KinProgressIndicator(),
+              ),
+            );
           },
         )
       ],
@@ -248,11 +257,12 @@ class _SongsState extends State<Songs> {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: SectionTitle(
-              title: "Popular Musics",
-              press: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AllMusicList()));
-              }),
+            title: "Popular Musics",
+            press: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AllMusicList()));
+            },
+          ),
         ),
         SizedBox(height: getProportionateScreenHeight(20)),
         SizedBox(
@@ -298,11 +308,11 @@ class _SongsState extends State<Songs> {
                   }
                 }
                 return Container(
-                    margin:
-                        EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                    child: Center(
-                      child: KinProgressIndicator(),
-                    ));
+                  margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+                  child: const Center(
+                    child: KinProgressIndicator(),
+                  ),
+                );
               },
             ),
           ),
@@ -320,51 +330,54 @@ class _SongsState extends State<Songs> {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: SectionTitle(
-              title: "New Musics",
-              press: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AllMusicList(from: 1),
-                  ),
-                );
-              }),
+            title: "New Musics",
+            press: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AllMusicList(from: 1),
+                ),
+              );
+            },
+          ),
         ),
         SizedBox(
           height: getProportionateScreenHeight(20),
         ),
         FutureBuilder(
-            future: provider.getNewMusics(),
-            builder: (context, AsyncSnapshot<List<Music>> snapshot) {
-              if (!(snapshot.connectionState == ConnectionState.waiting)) {
-                if (snapshot.hasData) {
-                  List<Music> musics = snapshot.data!;
-                  return ListView.builder(
-                      itemCount: snapshot.data == null
-                          ? 0
-                          : (snapshot.data!.length > 8
-                              ? 8
-                              : snapshot.data!.length),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return MusicListCard(
-                            music: musics[index],
-                            musics: musics,
-                            musicIndex: index);
-                      });
-                } else {
-                  kShowToast();
-                  return Text(
-                    kConnectionErrorMessage,
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
-                  );
-                }
+          future: provider.getNewMusics(),
+          builder: (context, AsyncSnapshot<List<Music>> snapshot) {
+            if (!(snapshot.connectionState == ConnectionState.waiting)) {
+              if (snapshot.hasData) {
+                List<Music> musics = snapshot.data!;
+                return ListView.builder(
+                    itemCount: snapshot.data == null
+                        ? 0
+                        : (snapshot.data!.length > 8
+                            ? 8
+                            : snapshot.data!.length),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return MusicListCard(
+                        music: musics[index],
+                        musics: musics,
+                        musicIndex: index,
+                      );
+                    });
+              } else {
+                kShowToast();
+                return Text(
+                  kConnectionErrorMessage,
+                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                );
               }
-              return Center(
-                child: KinProgressIndicator(),
-              );
-            })
+            }
+            return const Center(
+              child: KinProgressIndicator(),
+            );
+          },
+        )
       ],
     );
   }

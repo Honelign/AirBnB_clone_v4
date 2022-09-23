@@ -6,6 +6,7 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicApiService {
   // get new tracks
@@ -76,7 +77,14 @@ class MusicApiService {
     return [];
   }
 
-  // get genres
+  // ignore: slash_for_doc_comments
+  /**
+   * ==================================
+   * GENRE METHODS
+   * ==================================
+   */
+
+  // get list of all available genres
   Future<List<Genre>> getGenres(apiEndPoint) async {
     try {
       Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
@@ -92,6 +100,34 @@ class MusicApiService {
       print("@music_service -> getGenres error $e");
     }
     return [];
+  }
+
+  // get list of all available genres
+  Future<List<Music>> getMusicByGenreID({
+    required String apiEndPoint,
+    required String genreId,
+  }) async {
+    List<Music> tracksUnderGenre = [];
+    try {
+      // get user Id
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String uid = prefs.getString("id") ?? "";
+
+      // make api call
+      Response response = await get(Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId"));
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body) as List;
+
+        tracksUnderGenre = result.map((track) {
+          return Music.fromJson(track);
+        }).toList();
+      }
+    } catch (e) {
+      print("@music_service -> getMusicByGenreID error $e");
+    }
+    return tracksUnderGenre;
   }
 
   Future addPopularCount(
