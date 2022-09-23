@@ -69,7 +69,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) => PaymentComponent(
-                      track_id:(p.currentIndex)as int,
+                      track_id: (p.currentIndex) as int,
                       successFunction: successFunction,
                       paymentPrice: p.currentMusic!.priceETB.toString(),
                     ),
@@ -127,14 +127,12 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                     ),
                                   )
                                 : p.handlePlayButton(
-                                  //just to resolve error I am not sure about the album music
-                                  musics: p.albumMusics,
+                                    //just to resolve error I am not sure about the album music
+                                    musics: p.albumMusics,
                                     music: p.currentMusic!,
                                     index: p.tIndex,
                                     album: p.currentAlbum,
-
-                                    musics: p.albumMusics);
-
+                                  );
                           },
                           child: Row(
                             children: [

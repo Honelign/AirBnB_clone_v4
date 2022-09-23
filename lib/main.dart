@@ -35,7 +35,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 
 import './services/provider/payment_provider.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // secret stripe key =sk_test_51LcOtyFvUcclFpL2Isr4xf7kyt67mCFY6LHxNy5mu06kfk5MzcZRU11W6dU211P4XGyMPoYTltDWBrftA3OoFhHz00pPkHiT4s
@@ -78,13 +77,12 @@ void main() async {
         ChangeNotifierProvider(create: (_) => RecentlyPlayedProvider()),
         ChangeNotifierProvider(create: (_) => CachedFavoriteProvider()),
         ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
-            ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentProvider()),
         StreamProvider(
             create: (context) =>
                 ConnectivityService().connectionStatusController.stream,
             initialData: ConnectivityStatus.offline),
       ],
-
     ),
   );
 }

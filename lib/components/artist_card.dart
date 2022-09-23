@@ -27,6 +27,7 @@ class ArtistCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ArtistDetail(
               artist_id: artist.id.toString(),
+              artist: artist,
             ),
           ),
         );

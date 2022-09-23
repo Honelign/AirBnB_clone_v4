@@ -33,13 +33,14 @@ class _ArtistCardSearchState extends State<ArtistCardSearch> {
         Artist artisttouched = provider.artist;
 
         // await Future.delayed(Duration(microseconds: 500));
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>const ArtistDetail(
-                      //artist: artisttouched,
-                      artist_id: '',
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => ArtistDetail(
+        //               //artist: artisttouched,
+        //               artist_id: '',
+        //               artist: widget.artist,
+        //             )));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

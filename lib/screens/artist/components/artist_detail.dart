@@ -24,11 +24,12 @@ import 'artist_album.dart';
 class ArtistDetail extends StatefulWidget {
   static String routeName = '/artistBody';
   final String artist_id;
-  
+  final Artist artist;
 
   const ArtistDetail({
     Key? key,
     required this.artist_id,
+    required this.artist,
   }) : super(key: key);
 
   @override
@@ -37,7 +38,7 @@ class ArtistDetail extends StatefulWidget {
 
 class _ArtistDetailState extends State<ArtistDetail> {
   final double MODAL_HEADER_HEIGHT = 220;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,13 +58,11 @@ class _ArtistDetailState extends State<ArtistDetail> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
-
               image: CachedNetworkImageProvider(
                 '$kinAssetBaseUrl/${widget.artist.cover}',
               ),
               fit: BoxFit.cover,
             ),
-
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
@@ -374,7 +373,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildAlbum(BuildContext context) {
-    final albumProvider=Provider.of<AlbumProvider>(context);
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -423,8 +422,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildTrackList(BuildContext context) {
-    
-    final albumProvider=Provider.of<AlbumProvider>(context);
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return Column(children: [
       Padding(
         padding:
@@ -434,7 +432,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
             press: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => PopularTracks(
-                         album_id:albumProvider.album.id.toString(),                      
+                        album_id: albumProvider.album.id.toString(),
                         //artist: albumProvider.album.artist,
                       )));
             }),

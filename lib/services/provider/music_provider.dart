@@ -21,16 +21,18 @@ class MusicProvider extends ChangeNotifier {
 
   int count = -1;
   Music music = Music(
-      artist_id: '',
-      artist: '',
-      audio: '',
-      cover: '',
-      description: '',
-      id: 2,
-      isPurchasedByUser: true,
-      priceETB: '5',
-      priceUSD: '5',
-      title: 'men');
+    artist_id: '',
+    artist: '',
+    audio: '',
+    cover: '',
+    description: '',
+    id: 2,
+    isPurchasedByUser: true,
+    priceETB: '5',
+    title: 'men',
+    albumId: '2',
+    genreId: '1',
+  );
 
   MusicApiService musicApiService = MusicApiService();
 
@@ -50,9 +52,8 @@ class MusicProvider extends ChangeNotifier {
     const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
 
-
     // TODO: Replace
-    List musics = await musicApiService.getMusic(apiEndPoint);
+    List<Music> musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
     notifyListeners();
     return musics;
