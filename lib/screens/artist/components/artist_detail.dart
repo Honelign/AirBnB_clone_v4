@@ -10,7 +10,10 @@ import 'package:kin_music_player_app/components/music_list_card.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/artist/components/popular_tracks.dart';
+import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -20,9 +23,13 @@ import 'artist_album.dart';
 
 class ArtistDetail extends StatefulWidget {
   static String routeName = '/artistBody';
-  final Artist artist;
+  final String artist_id;
+  
 
-  const ArtistDetail({Key? key, required this.artist}) : super(key: key);
+  const ArtistDetail({
+    Key? key,
+    required this.artist_id,
+  }) : super(key: key);
 
   @override
   State<ArtistDetail> createState() => _ArtistDetailState();
@@ -30,8 +37,19 @@ class ArtistDetail extends StatefulWidget {
 
 class _ArtistDetailState extends State<ArtistDetail> {
   final double MODAL_HEADER_HEIGHT = 220;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    final albumProvider = Provider.of<AlbumProvider>(context, listen: false)
+        .getArtistAlbums(widget.artist_id);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -39,11 +57,13 @@ class _ArtistDetailState extends State<ArtistDetail> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
+
               image: CachedNetworkImageProvider(
                 '$kinAssetBaseUrl/${widget.artist.cover}',
               ),
               fit: BoxFit.cover,
             ),
+
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
@@ -96,13 +116,14 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildHeader() {
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return Container(
         height: getProportionateScreenWidth(225),
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.artist.cover}'),
+                '$kinAssetBaseUrl/${albumProvider.album.cover}'),
             fit: BoxFit.cover,
           ),
         ),
@@ -118,14 +139,14 @@ class _ArtistDetailState extends State<ArtistDetail> {
                   ),
                   CircleAvatar(
                     backgroundImage: CachedNetworkImageProvider(
-                        '$kinAssetBaseUrl/${widget.artist.cover}'),
+                        '$kinAssetBaseUrl/${albumProvider.album.cover}'),
                     maxRadius: getProportionateScreenHeight(60),
                   ),
                   SizedBox(
                     height: getProportionateScreenHeight(15),
                   ),
                   Text(
-                    widget.artist.name,
+                    albumProvider.album.title,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         color: Colors.white,
@@ -136,7 +157,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "${widget.artist.albums!.length.toString()} albums",
+                        "albums 5",
+                        // "${widget.artist.albums!.length.toString()} albums",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontWeight: FontWeight.w500,
@@ -144,7 +166,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
-                        '${widget.artist.musics.length.toString()} tracks',
+                        "tracks",
+                        // '${widget.artist.musics.length.toString()} tracks',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontWeight: FontWeight.w500,
@@ -245,6 +268,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildModalHeader({String remainingCoinValue = "0"}) {
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return SizedBox(
       height: MODAL_HEADER_HEIGHT,
       width: MediaQuery.of(context).size.width,
@@ -318,7 +342,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
           // tip artist
           Text(
-            "Tip ${widget.artist.name}",
+            "Tip ${albumProvider.album.title}",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -331,6 +355,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildCoinTipList(Function refreshParent) {
+    final albumProvider = Provider.of<AlbumProvider>(context);
     return SizedBox(
       height: (MediaQuery.of(context).size.height * 0.7 - MODAL_HEADER_HEIGHT),
       width: MediaQuery.of(context).size.width,
@@ -340,8 +365,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
           return TipArtistCard(
             value: allowedCoinValues[index],
             refresher: refreshParent,
-            artistName: widget.artist.name,
-            artistId: widget.artist.id.toString(),
+            artistName: albumProvider.album.artist,
+            artistId: albumProvider.album.id.toString(),
           );
         },
       ),
@@ -349,6 +374,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildAlbum(BuildContext context) {
+    final albumProvider=Provider.of<AlbumProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -360,8 +386,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
               press: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ArtistAlbum(
-                    albums: widget.artist.albums!,
-                    artistCover: widget.artist.cover,
+                    albums: [], // widget.artist.albums!,
+                    artistCover: albumProvider.album.cover,
                   ),
                 ));
               }),
@@ -370,7 +396,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
         SizedBox(
             height: getProportionateScreenHeight(450),
             child: GridView.builder(
-              itemCount: widget.artist.albums!.length,
+              itemCount: 5, //widget.artist.albums!.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,
@@ -387,7 +413,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     left: getProportionateScreenWidth(20),
                   ),
                   child: GridCard(
-                    album: widget.artist.albums![index],
+                    album: [] as Album, //widget.artist.albums![index],
                   ),
                 );
               },
@@ -397,6 +423,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildTrackList(BuildContext context) {
+    
+    final albumProvider=Provider.of<AlbumProvider>(context);
     return Column(children: [
       Padding(
         padding:
@@ -406,20 +434,21 @@ class _ArtistDetailState extends State<ArtistDetail> {
             press: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => PopularTracks(
-                        artist: widget.artist,
+                         album_id:albumProvider.album.id.toString(),                      
+                        //artist: albumProvider.album.artist,
                       )));
             }),
       ),
       SizedBox(height: getProportionateScreenHeight(20)),
       ListView.builder(
-        itemCount:
-            widget.artist.musics.length > 6 ? 6 : widget.artist.musics.length,
+        itemCount: 5,
+        // widget.artist.musics.length > 6 ? 6 : widget.artist.musics.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return MusicListCard(
-            music: widget.artist.musics[index],
-            musics: widget.artist.musics,
+            music: [] as Music, //widget.artist.musics[index],
+            musics: [], //widget.artist.musics,
             musicIndex: index,
           );
         },

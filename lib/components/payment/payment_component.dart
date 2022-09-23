@@ -7,22 +7,27 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/size_config.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/provider/payment_provider.dart';
 
 class PaymentComponent extends StatefulWidget {
   Function successFunction;
-  Function refresherFunction;
   String paymentPrice;
+  int track_id;
   PaymentComponent(
       {Key? key,
       required this.successFunction,
       required this.paymentPrice,
-      required this.refresherFunction})
+      required this.track_id})
       : super(key: key);
 
   @override
@@ -30,6 +35,75 @@ class PaymentComponent extends StatefulWidget {
 }
 
 class _PaymentComponentState extends State<PaymentComponent> {
+  late PaymentProvider payprovider;
+//getting user id from shared preference
+  late String id;
+  void getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // final id = prefs.getInt('id');
+    // const idstatic = 12345;
+    // String apiEndPoint = '/playlists/?user=$idstatic';
+
+    id = prefs.getString('id').toString();
+    debugPrint("userId " + id.toString());
+  }
+
+  //get telebirr url
+  Future getUrl() async {
+    var linkMap;
+    var link;
+    var paymentData;
+    var paymentId;
+    var body = json.encode({
+      'userId': id,
+      'payment_amount': widget.paymentPrice,
+      'payment_method': "telebirr",
+      "payment_state": "PENDING"
+    });
+//http://104.199.33.9/payment/save-payment-info/
+    var res = await http.post(
+        Uri.parse("http://104.199.33.9/payment/purchase-with-telebirr/"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json'
+        },
+        body: body);
+    debugPrint(res.statusCode.toString());
+    if (res.statusCode == 200) {
+      debugPrint(body.toString());
+      debugPrint("done" + res.statusCode.toString());
+      //  debugPrint("done2" + res.body.toString());
+      Map<String, dynamic> urlbody = json.decode(res.body);
+      debugPrint("urlBody" + urlbody.toString());
+      // debugPrint("typee" + urlbody.runtimeType());
+
+      for (var key in urlbody.keys) {
+        //  debugPrint('Value: ${urlbody['data']}');
+        linkMap = urlbody['pay'];
+        paymentData = urlbody['data'];
+        debugPrint("payment data" + paymentData.toString());
+        debugPrint("linkk" + linkMap.toString());
+        debugPrint("data" + linkMap['data'].toString());
+
+        link = linkMap['data'];
+        paymentId = paymentData['id'];
+        debugPrint("paymentId=" + paymentId.toString());
+        debugPrint("data" + link['toPayUrl'].toString());
+      }
+      return Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return PaymentView(
+          userId: id,
+          payment_amount: widget.paymentPrice,
+          payment_method: "telebirr",
+          url: link['toPayUrl'].toString(),
+          payment_id: paymentId.toString(),
+          track_id: widget.track_id,
+        );
+      }));
+    }
+  }
+
   //payment methods for paypal
   payWithPayPal() async {
     FlutterPaypalSDK sdk = FlutterPaypalSDK(
@@ -50,6 +124,10 @@ class _PaymentComponentState extends State<PaymentComponent> {
           context,
           MaterialPageRoute(
             builder: (context) => PaypalWebview(
+              paymentAmount: double.parse(widget.paymentPrice),
+              paymentMethod: 'Paypal',
+              track_id: widget.track_id.toString(),
+              paymentState: 'COMPLETED',
               approveUrl: payment.approvalUrl!,
               executeUrl: payment.executeUrl!,
               accessToken: accessToken.token!,
@@ -76,7 +154,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
         {
           "amount": {
             "currency": "USD",
-            "total": "10",
+            "total": widget.paymentPrice,
           },
         }
       ],
@@ -93,7 +171,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
   bool isLoading = false;
   Future<void> payWithStripe() async {
     try {
-      paymentIntent = await createPaymentIntent('10', 'USD');
+      paymentIntent = await createPaymentIntent(widget.paymentPrice, 'USD');
       //Payment Sheet
       await Stripe.instance
           .initPaymentSheet(
@@ -116,28 +194,33 @@ class _PaymentComponentState extends State<PaymentComponent> {
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
-        await widget.successFunction();
-        await widget.refresherFunction();
-
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: const [
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    ),
-                    Text("Payment Successful"),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        await payprovider.savePaymentInfo(
+            paymentAmount: double.parse(widget.paymentPrice),
+            paymentMethod: 'stripe',
+            track_id: widget.track_id.toString(),
+            paymentState: 'COMPLETED');
+        showSucessDialog(
+          context,
         );
+        /* showDialog
+            context: context,
+            builder: (_) => AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
+                          Text("Payment Successful"),
+                        ],
+                      ),
+                    ],
+                  ),
+                )); */
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("paid successfully")));
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -184,6 +267,14 @@ class _PaymentComponentState extends State<PaymentComponent> {
   calculateAmount(String amount) {
     final calculatedAmount = (int.parse(amount)) * 100;
     return calculatedAmount.toString();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUserId();
+    payprovider = Provider.of<PaymentProvider>(context, listen: false);
+    super.initState();
   }
 
   @override
@@ -241,16 +332,17 @@ class _PaymentComponentState extends State<PaymentComponent> {
                           setState(() {
                             isLoading = true;
                           });
+                          getUrl();
 
                           // navigate to tele birr pay view
-                          Navigator.push(
+                          /*  Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) {
                                 return PaymentView();
                               },
                             ),
-                          );
+                          ); */
 
                           setState(() {
                             isLoading = false;

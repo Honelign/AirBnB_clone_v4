@@ -816,6 +816,97 @@ Future<List<RadioStation>> getRadioStations(apiEndPoint) async {
 
 // Gift methods
 
+Future saveUserPaymentInfo({
+  context,
+  required String userId,
+  required double paymentAmount,
+  required String paymentMethod,
+  required String paymentState,
+  required String track_id,
+}) async {
+  try {
+    var url = "${kinPaymentUrl}payment/save-payment-info/";
+    var body = jsonEncode(
+      {
+        "userId": userId.toString(),
+        "payment_amount": paymentAmount,
+        "payment_method": paymentMethod,
+        "payment_state": paymentState,
+      },
+    );
+    Response response = await post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json'
+      },
+    );
+    debugPrint('body' + body.toString());
+    debugPrint('url' + url.toString());
+    debugPrint('netcall' + response.statusCode.toString());
+    if (response.statusCode == 201) {
+      debugPrint("done" + response.body);
+      var body = json.decode(response.body);
+      var pay_id = body['id'];
+      verifyTrack(context, pay_id, userId, paymentAmount, track_id);
+
+      //  return showSucessDialog(context, body = 'Payment successful');
+    }
+
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+//payment service
+Future verifyTrack(context, pay_id, userId, payment_amount, track_id) async {
+  var body = jsonEncode({
+    "userId": userId,
+    "payment_id": pay_id,
+    "trackId": track_id,
+    "track_price_amount": payment_amount,
+    "isPurcahsed": true
+  });
+  var url = "${kinPaymentUrl}payment/purchased-tracks/";
+  debugPrint("url" + url.toString());
+  debugPrint("body" + body.toString());
+  Response res = await post(
+    Uri.parse(url),
+    body: body,
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json'
+    },
+  );
+  debugPrint(res.statusCode.toString());
+  if (res.statusCode == 201) {
+    debugPrint("successful");
+    Map<String, dynamic> urlbody = json.decode(res.body);
+    debugPrint("ispurchased" + urlbody['isPurcahsed'].toString());
+    debugPrint(urlbody.toString());
+    if (urlbody['isPurcahsed'] == true) {
+      return showSucessDialog(
+        context,
+      );
+    } else if (urlbody['isPurcahsed'] == false) {
+      kShowToast();
+      retryFuture(
+          verifyTrack(context, pay_id, userId, payment_amount, track_id), 2000);
+    }
+
+    debugPrint("urlBody" + urlbody['id'].toString());
+  }
+}
+
+retryFuture(future, delay) {
+  Future.delayed(Duration(milliseconds: delay), () {
+    future();
+  });
+}
+
+
 
 
 

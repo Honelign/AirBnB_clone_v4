@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/success.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../../../services/provider/payment_provider.dart';
 
 class PaypalWebview extends StatefulWidget {
   final String approveUrl;
@@ -12,7 +15,10 @@ class PaypalWebview extends StatefulWidget {
   final String accessToken;
   final FlutterPaypalSDK sdk;
   final Function successFunction;
-
+  final double paymentAmount;
+  final String paymentMethod;
+  final String track_id;
+  final String paymentState;
   const PaypalWebview({
     Key? key,
     required this.approveUrl,
@@ -20,6 +26,10 @@ class PaypalWebview extends StatefulWidget {
     required this.accessToken,
     required this.sdk,
     required this.successFunction,
+    required this.paymentAmount,
+    required this.paymentMethod,
+    required this.track_id,
+    required this.paymentState,
   }) : super(key: key);
 
   @override
@@ -27,10 +37,16 @@ class PaypalWebview extends StatefulWidget {
 }
 
 class _PaypalWebviewState extends State<PaypalWebview> {
+  var payprovider;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   int progress = 0;
+  @override
+  void initState() {
+    super.initState();
+    payprovider = Provider.of<PaymentProvider>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +79,14 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                   final uri = Uri.parse(url);
                   final payerId = uri.queryParameters['PayerID'];
                   await widget.sdk.executePayment(
-                    widget.executeUrl,
-                    payerId!,
-                    widget.accessToken,
-                  );
+                      widget.executeUrl, payerId!, widget.accessToken);
 
-                  Navigator.pop(context);
-                  await widget.successFunction();
+                  // Navigator.pop(context);
+                  await payprovider.savePaymentInfo(
+                      paymentAmount: widget.paymentAmount,
+                      paymentMethod: 'stripe',
+                      track_id: widget.track_id.toString(),
+                      paymentState: 'COMPLETED');
                   kShowToast(message: "Payment Successful!");
                 }
               },

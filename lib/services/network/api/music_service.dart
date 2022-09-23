@@ -30,6 +30,25 @@ class MusicApiService {
     return music;
   }
 
+  // get album tracks
+  Future getAlbumMusic(apiEndPoint, String album_id) async {
+    try {
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint$album_id"));
+
+      if (response.statusCode == 200) {
+        final item = json.decode(response.body) as List;
+
+        List<Music> music = item.map((value) => Music.fromJson(value)).toList();
+
+        return music;
+      } else {}
+    } catch (e) {
+      print("@music_service getMusic $e");
+    }
+    return [];
+  }
+
   // albums
   Future getAlbums(apiEndPoint) async {
     List<Album> albums = [];
@@ -48,6 +67,25 @@ class MusicApiService {
       print("@music_service -> getAlbums error - $e");
     }
     return albums;
+  }
+
+  Future getArtistAlbums(apiEndPoint, artist_id) async {
+    try {
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint$artist_id"));
+      if (response.statusCode == 200) {
+        final item = json.decode(response.body) as List;
+
+        List<Album> albums = item.map((value) {
+          return Album.fromJson(value);
+        }).toList();
+
+        return albums;
+      } else {}
+    } catch (e) {
+      print("@music_service -> getAlbums error - $e");
+    }
+    return [];
   }
 
   // get artists

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
@@ -50,7 +51,7 @@ const String kinPodcastBaseUrl = 'https://podcastservice.kinideas.com';
 const String kinSearchBaseUrl = 'https://searchservice.kinideas.com';
 const String kAnalyticsBaseUrl =
     "https://analytics-service-v1-vdzflryflq-ew.a.run.app";
-const String kinPaymentUrl = "http://104.199.33.9";
+const String kinPaymentUrl = "http://104.199.33.9/";
 const String kinProfileBaseUrl =
     "https://kinideas-profile-v1-vdzflryflq-ew.a.run.app";
 //
@@ -84,6 +85,38 @@ kShowToast({String message = "Please Check Your Connection"}) {
     textColor: Colors.black,
     fontSize: 16.0,
   );
+}
+
+kShowRetry({String message = "retrying... check your internet connection"}) {
+  return Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey,
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
+}
+
+showSucessDialog(
+  context,
+) {
+  return AwesomeDialog(
+    context: context,
+    animType: AnimType.scale,
+    dialogType: DialogType.success,
+    body: const Center(
+      child: Text(
+        "Payment successful",
+        style: TextStyle(fontStyle: FontStyle.italic),
+      ),
+    ),
+    title: 'title',
+    desc: 'desc',
+    btnOkOnPress: () {
+      Navigator.pop(context);
+    },
+  )..show();
 }
 
 checkConnection(status) {
