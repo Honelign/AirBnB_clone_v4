@@ -7,16 +7,14 @@ part 'artist.g.dart';
 class Artist {
   final int id;
   final String name, cover;
-  final List<Music> musics;
-  final List<Album>? albums;
+
   // final List<Music>? popular;
 
   Artist({
     required this.id,
     required this.name,
     required this.cover,
-    required this.musics,
-    this.albums,
+    
     // this.popular,
   });
 

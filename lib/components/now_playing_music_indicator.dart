@@ -65,17 +65,13 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                     print("@@@@@lookie-payment-stripe");
                   }
 
-                  Future refersherFunction() async {
-                    print("@@@@@lookie-payment-stripe");
-                  }
-
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
                     builder: (context) => PaymentComponent(
+                      track_id:(p.currentIndex)as int,
                       successFunction: successFunction,
                       paymentPrice: p.currentMusic!.priceETB.toString(),
-                      refresherFunction: refersherFunction,
                     ),
                   );
                 },
@@ -131,10 +127,11 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                     ),
                                   )
                                 : p.handlePlayButton(
+                                  //just to resolve error I am not sure about the album music
+                                  musics: p.albumMusics,
                                     music: p.currentMusic!,
                                     index: p.tIndex,
                                     album: p.currentAlbum,
-                                    musics: p.albumMusics
                                   );
                           },
                           child: Row(

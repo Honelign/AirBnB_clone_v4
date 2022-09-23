@@ -17,8 +17,20 @@ class MusicProvider extends ChangeNotifier {
   List<dynamic>? searchedTracks = [];
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
-  List<Music> albumMusics=[];
+  List<Music> albumMusics = [];
+  
   int count = -1;
+  Music music = Music(
+      artist_id: '',
+      artist: '',
+      audio: '',
+      cover: '',
+      description: '',
+      id: 2,
+      isPurchasedByUser: true,
+      priceETB: '5',
+      priceUSD: '5',
+      title: 'men');
 
   MusicApiService musicApiService = MusicApiService();
 
@@ -36,10 +48,22 @@ class MusicProvider extends ChangeNotifier {
   Future<List<Music>> getPopularMusic() async {
     const String apiEndPoint = '/mobile_app/popular_tracks';
     isLoading = true;
-    List musics = await musicApiService.getMusic(apiEndPoint);
+    List<Music> musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
     notifyListeners();
-    return musics as List<Music>;
+    return musics;
+  }
+
+  //get music for artist page with album id
+  Future<List<Music>> getAlbumMusic(String album_id) async {
+    const String apiEndPoint = '/mobile_app/popular_tracks';
+    isLoading = true;
+
+    List<Music> albumTracks =
+        await musicApiService.getAlbumMusic(apiEndPoint, album_id);
+    isLoading = false;
+    notifyListeners();
+    return albumTracks;
   }
 
   Future searchedMusic(keyword, searchType) async {
@@ -107,20 +131,16 @@ class MusicProvider extends ChangeNotifier {
     return searchedAlbum ?? [];
   }
 
-
   Future<int> searchedtrackcount(title) async {
     count = await fetchSearchedTrackscount(title);
     notifyListeners();
     return count;
   }
 
-
-Future<List?> albumMusicsGetter(id) async {
+  Future<List?> albumMusicsGetter(id) async {
     albumMusics = await fetchAlbumMusics(id);
 
     notifyListeners();
     return albumMusics;
   }
-
-
 }

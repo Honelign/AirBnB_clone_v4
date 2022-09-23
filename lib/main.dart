@@ -32,7 +32,7 @@ import 'services/provider/podcast_player.dart';
 import 'theme.dart';
 // payment import
 import 'package:flutter_stripe/flutter_stripe.dart';
-
+import './services/provider/payment_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,15 +63,32 @@ void main() async {
     ChangeNotifierProvider(create: (_) => LoginProvider()),
     ChangeNotifierProvider(create: (_) => MusicPlayer()),
     ChangeNotifierProvider(create: (_) => PodcastPlayer()),
-    ChangeNotifierProvider(create: (_) => FavoriteMusicProvider(),),
-    ChangeNotifierProvider(create: (_) => PlayListProvider(),),
-    ChangeNotifierProvider(create: (_) => DropDownProvider(),),
-    ChangeNotifierProvider(create: (_) => GenreProvider(),),
-    ChangeNotifierProvider(create: (_) => PodCastProvider(),),
-    ChangeNotifierProvider(create: (_) => RadioProvider(),),
-    ChangeNotifierProvider(create: (_) => RecentlyPlayedProvider(),),
-    ChangeNotifierProvider(create: (_) => CachedFavoriteProvider(),),
+    ChangeNotifierProvider(
+      create: (_) => FavoriteMusicProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => PlayListProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => DropDownProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => GenreProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => PodCastProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => RadioProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => RecentlyPlayedProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => CachedFavoriteProvider(),
+    ),
     ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
+    ChangeNotifierProvider(create: (_) => PaymentProvider()),
     StreamProvider(
       create: (context) =>
           ConnectivityService().connectionStatusController.stream,

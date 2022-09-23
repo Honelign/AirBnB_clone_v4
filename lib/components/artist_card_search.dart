@@ -36,7 +36,10 @@ class _ArtistCardSearchState extends State<ArtistCardSearch> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ArtistDetail(artist: artisttouched)));
+                builder: (context) =>const ArtistDetail(
+                      //artist: artisttouched,
+                      artist_id: '',
+                    )));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

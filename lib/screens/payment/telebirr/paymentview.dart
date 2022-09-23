@@ -1,20 +1,110 @@
-import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/home_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentView extends StatefulWidget {
+  final String url;
+  final String userId;
+  final String payment_amount;
+  final String payment_method;
+  final payment_id;
+  final track_id;
+
+  const PaymentView({
+    Key? key,
+    required this.url,
+    required this.userId,
+    required this.payment_amount,
+    required this.payment_method,
+    required this.payment_id,
+    required this.track_id,
+  }) : super(key: key);
   @override
   _PaymentViewState createState() => new _PaymentViewState();
 }
 
 class _PaymentViewState extends State<PaymentView> {
-  final GlobalKey webViewKey = GlobalKey();
+//send data to verify the track is bought
+  Future sendTrack(
+      pay_id, String userId, String payment_amount, track_id) async {
+    /*  var payment_body = {
+      'payment_id': pay_id,
+      'user_id': userId,
+      'amount': payment_amount
+    }; */
+    var body = jsonEncode({
+      "userId": userId,
+      "payment_id": pay_id,
+      "trackId": track_id,
+      "track_price_amount": payment_amount,
+      "isPurcahsed": true
+    });
+    debugPrint("body" + body.toString());
+    var url = 'http://104.199.33.9/payment/purchased-tracks/';
+    var res = await http.post(
+      Uri.parse(url),
+      body: body,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json'
+      },
+    );
+    debugPrint(res.statusCode.toString());
+    if (res.statusCode == 201) {
+      debugPrint("successful");
+      Map<String, dynamic> urlbody = json.decode(res.body);
+      debugPrint("ispurchased" + urlbody['ispurchased'].toString());
+      debugPrint(urlbody.toString());
+      if (urlbody['isPurcahsed'] == true) {
+        return showSucessDialog(
+          context,
+        );
+      } else {
+        kShowToast();
+        retryFuture(sendTrack, 2000);
+      }
 
+      debugPrint("urlBody" + urlbody['id'].toString());
+    }
+  }
+
+  retryFuture(future, delay) {
+    Future.delayed(Duration(milliseconds: delay), () {
+      future();
+    });
+  }
+
+  Future savePayment() async {
+    var urll = "http://104.199.33.9/payment/save-payment-info/" + pay_id;
+    /* var body = json.encode({
+      "userId": widget.userId,
+      "payment_amount": widget.payment_amount,
+      "payment_method": widget.payment_method,
+      "payment_state": "completed"
+    }); */
+    var response = await http.get(Uri.parse("$urll"));
+    debugPrint("url=" + urll.toString());
+    debugPrint(response.toString());
+    debugPrint(response.statusCode.toString());
+    if (response.statusCode == 200) {
+      var resbody = json.decode(response.body);
+      debugPrint("boddy" + resbody.toString());
+      var pay_id = resbody['id'];
+      debugPrint("payyy" + pay_id.toString());
+      sendTrack(pay_id, widget.userId, widget.payment_amount, widget.track_id);
+    }
+  }
+
+  final GlobalKey webViewKey = GlobalKey();
+  late final url;
+  late final pay_id;
   InAppWebViewController? webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
@@ -30,14 +120,15 @@ class _PaymentViewState extends State<PaymentView> {
       ));
 
   late PullToRefreshController pullToRefreshController;
-  String url =
-      "http://196.188.120.3:11443/ammsdkpay/#/?transactionNo=202208291059011564160679537418241";
-  String uri = "https://kinideas.com/";
+
   double progress = 0;
   final urlController = TextEditingController();
 
   @override
   void initState() {
+    url = widget.url;
+    pay_id = widget.payment_id;
+
     super.initState();
 
     pullToRefreshController = PullToRefreshController(
@@ -65,34 +156,19 @@ class _PaymentViewState extends State<PaymentView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Pay with Telebirr",
+            "Pay with Telebir",
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black,
         ),
         body: SafeArea(
             child: Column(children: [
-          /*    TextField(
-              decoration: InputDecoration(prefixIcon: Icon(Icons.search)),
-              controller: urlController,
-              keyboardType: TextInputType.url,
-              onSubmitted: (value) {
-                var url = Uri.parse(value);
-                if (url.scheme.isEmpty) {
-                  url = Uri.parse("www.engebeyay.com" + value);
-                }
-                webViewController?.loadUrl(urlRequest: URLRequest(url: url));
-              },
-            ), */
-          //Text("www"),
           Expanded(
             child: Stack(
               children: [
                 InAppWebView(
                   key: webViewKey,
-                  initialUrlRequest: URLRequest(
-                      url: Uri.parse(
-                          "http://196.188.120.3:11443/ammsdkpay/#/?transactionNo=202208291059011564160679537418241/")),
+                  initialUrlRequest: URLRequest(url: Uri.parse(url.toString())),
                   initialOptions: options,
                   pullToRefreshController: pullToRefreshController,
                   onWebViewCreated: (controller) {
@@ -102,9 +178,14 @@ class _PaymentViewState extends State<PaymentView> {
                     HomeScreen();
                   },
                   onLoadStart: (controller, url) {
-                    setState(() {
-                      this.url = url.toString();
+                    setState(() async {
+                      final uurl = await webViewController!.getUrl();
+                      this.url = widget.url.toString();
+
                       urlController.text = this.url;
+                      print("urrrl" + url.toString());
+                      print("urrrl" + uurl.toString());
+                      //  debugPrint("urlll" + url.toString());
                     });
                   },
                   androidOnPermissionRequest:
@@ -116,6 +197,7 @@ class _PaymentViewState extends State<PaymentView> {
                   shouldOverrideUrlLoading:
                       (controller, navigationAction) async {
                     var uri = navigationAction.request.url!;
+                    // debugPrint("urii" + uri.toString());
 
                     if (![
                       "http",
@@ -140,13 +222,24 @@ class _PaymentViewState extends State<PaymentView> {
                   },
                   onLoadStop: (controller, url) async {
                     pullToRefreshController.endRefreshing();
-                    setState(() {
+                    setState(() async {
+                      print("whaattt" + url.toString());
+                      print("pppath" + url!.path.toString());
+                      final u = url.toString();
+                      if (u.contains("result?status=200")) {
+                        debugPrint("asddd" + pay_id.toString());
+                        savePayment();
+
+                        // Navigator.pop(context);
+                        // await kShowToast(message: "Payment Successful!");
+                      }
+
                       this.url = url.toString();
                       urlController.text = this.url;
                     });
                   },
                   onLoadError: (controller, url, code, message) {
-                    Text("pull the screen to refresh");
+                    const Text("pull the screen to refresh");
 
                     pullToRefreshController.endRefreshing();
                   },
@@ -163,6 +256,7 @@ class _PaymentViewState extends State<PaymentView> {
                     setState(() {
                       this.url = url.toString();
                       urlController.text = this.url;
+                      // print("come on" + controller.getUrl().toString());
                     });
                   },
                   onConsoleMessage: (controller, consoleMessage) {

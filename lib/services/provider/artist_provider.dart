@@ -6,7 +6,7 @@ import '../network/api_service.dart';
 
 class ArtistProvider extends ChangeNotifier {
   bool isLoading = false;
-  Artist artist = Artist(id: 12, name: 'name', cover: '', musics: []);
+  Artist artist = Artist(id: 12, name: 'name', cover: '');
   MusicApiService musicApiService = MusicApiService();
 
   Future<List<Artist>> getArtist() async {

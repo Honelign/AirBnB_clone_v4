@@ -29,6 +29,17 @@ class AlbumProvider extends ChangeNotifier {
     notifyListeners();
     return albums;
   }
+  //get albums for artist
+  Future<List<Album>> getArtistAlbums(String artist_id) async {
+    const String apiEndPoint = '/mobile_app/albums';
+    isLoading = true;
+
+    List<Album> albums = await musicApiService.getArtistAlbums(apiEndPoint,artist_id);
+    isLoading = false;
+
+    notifyListeners();
+    return albums;
+  }
 
   Future<Album> getAlbumForsearch(id) async {
     isLoading = true;
