@@ -24,7 +24,7 @@ class MusicProvider extends ChangeNotifier {
 
   // get new music
   Future<List<Music>> getNewMusics() async {
-    const String apiEndPoint = '/mobile_app/tracks';
+    const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
     List<Music> musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
@@ -34,8 +34,10 @@ class MusicProvider extends ChangeNotifier {
 
   // popular
   Future<List<Music>> getPopularMusic() async {
-    const String apiEndPoint = '/mobile_app/popular_tracks';
+    const String apiEndPoint = '/mobileApp/popular_tracks';
     isLoading = true;
+
+    // TODO: Replace
     List musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
     notifyListeners();

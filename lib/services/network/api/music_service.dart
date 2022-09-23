@@ -6,50 +6,57 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicApiService {
+  HelperUtils helper = HelperUtils();
   // get new tracks
   Future getMusic(apiEndPoint) async {
+    List<Music> music = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Music> music = item.map((value) => Music.fromJson(value)).toList();
-
-        return music;
-      } else {}
+        music = item.map((value) => Music.fromJson(value)).toList();
+      }
     } catch (e) {
       print("@music_service getMusic $e");
     }
-    return [];
+    return music;
   }
 
   // albums
   Future getAlbums(apiEndPoint) async {
+    List<Album> albums = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Album> albums = item.map((value) {
+        albums = item.map((value) {
           return Album.fromJson(value);
         }).toList();
-
-        return albums;
-      } else {}
+      }
     } catch (e) {
       print("@music_service -> getAlbums error - $e");
     }
-    return [];
+    return albums;
   }
 
   // get artists
   Future getArtists(apiEndPoint) async {
+    List<Artist> artists = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -65,16 +72,14 @@ class MusicApiService {
           });
         });
 
-        List<Artist> artists = item.map((value) {
+        artists = item.map((value) {
           return Artist.fromJson(value);
         }).toList();
-
-        return artists;
       }
     } catch (e) {
       print("@music_service -> getArtists error - $e");
     }
-    return [];
+    return artists;
   }
 
   // ignore: slash_for_doc_comments
