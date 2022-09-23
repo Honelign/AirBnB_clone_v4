@@ -117,12 +117,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     _currentAlbum = album;
     notifyListeners();
   }
- List<Music> _albumMusics=[];
- List<Music> get albumMusics=>_albumMusics;
- set albumMusicss(musics){
-  _albumMusics=musics;
-  notifyListeners();
- }
 
   late int _sessionId;
 
@@ -145,32 +139,27 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   }
 
   isLastMusic(next) {
-    return next == _albumMusics.length;
+    return next == _currentAlbum.musics.length;
   }
 
-  next({action = true,musics}) {
+  next({action = true}) {
     int next = _currentIndex! + 1;
-
     if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
-      setPlaying(_currentAlbum, 0,musics);
-      play(0,);
+      setPlaying(_currentAlbum, 0);
+      play(0);
     } else if (!action && _loopMode && !_loopPlaylist) {
-      setPlaying(_currentAlbum, _currentIndex!,musics);
+      setPlaying(_currentAlbum, _currentIndex!);
       play(_currentIndex);
     } else {
-   
       play(next);
     }
   }
 
   prev() async {
-
     int pre = _currentIndex! - 1;
-        print('@@@$pre');
-    if (pre>=0&&pre < _albumMusics.length) {
+    if (pre <= _currentAlbum.musics!.length) {
       play(pre);
     }
-   
   }
 
   int c = 0;
@@ -196,7 +185,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
   handleShuffle() {
     _shuffled = !_shuffled;
-    List<Music> musics = _albumMusics;
+    List<Music> musics = _currentAlbum.musics;
     _beforeShuffling = _currentAlbum;
     List<Music> shuffledMusics = shuffle(musics);
     if (_shuffled) {
@@ -206,29 +195,23 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           artist: currentAlbum.artist,
           description: currentAlbum.description,
           cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
-          count: currentAlbum.count
-         // musics: shuffledMusics
-          );
+          musics: shuffledMusics);
       _currentAlbum = album;
-      _albumMusics=shuffledMusics;
     } else {
       _currentAlbum = _beforeShuffling;
     }
   }
 
-  play(index,) async {
+  play(index) async {
     try {
-      print("@@@ ${_albumMusics[index].title}");
-      _currentMusic = _albumMusics[index];
+      _currentMusic = _currentAlbum.musics[index];
       notifyListeners();
       player.stop();
 
-      await _open(_albumMusics[index]);
+      await _open(_currentAlbum.musics[index]);
 
       _currentIndex = index;
-    } catch (e) {
-      print("@@@@ $e");
-    }
+    } catch (_) {}
   }
 
   isSameAlbum() {
@@ -267,7 +250,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     );
     try {
       // kill any existing player
-     // player.pause();
+      player.pause();
       player.stop();
 
       // open new player
@@ -301,7 +284,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
-  handlePlayButton({album, required Music music, index,required List<Music> musics}) async {
+  handlePlayButton({album, required Music music, index}) async {
     _shuffled = false;
 
     setBuffering(index);
@@ -316,15 +299,15 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         await _open(music);
         _isMusicLoaded = true;
         notifyListeners();
-        setPlaying(album, index,musics);
+        setPlaying(album, index);
       }
     } catch (_) {}
   }
 
-  setPlaying(Album album, int index, musics) {
+  setPlaying(Album album, int index) {
     _currentAlbum = album;
     _currentIndex = index;
-    _currentMusic = musics[index];
+    _currentMusic = _currentAlbum.musics[index];
   }
 
   String getMusicThumbnail() {
