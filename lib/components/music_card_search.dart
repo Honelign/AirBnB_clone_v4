@@ -87,17 +87,21 @@ class MusicCardsearch extends StatelessWidget {
                   p.setPlayer(p.player, podcastProvider, radioProvider);
 
                   p.handlePlayButton(
-                    music: music,
-                    index: musicIndex,
-                    album: Album(
+                      music: music,
+                      index: musicIndex,
+                      // TODO:Replace
+                      album: Album(
                         id: -2,
                         title: 'Single Music $musicIndex',
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        count: musics.length),
-                        musics: musics
-                  );
+                        count: musics.length,
+                        artist_id: '1',
+                        isPurchasedByUser: false,
+                        price: '60',
+                      ),
+                      musics: musics);
 
                   p.setMusicStopped(false);
                   podcastProvider.setEpisodeStopped(true);
@@ -261,55 +265,58 @@ class MusicCardsearch extends StatelessWidget {
                                                                     provider,
                                                                     _) {
                                                               return TextButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    var playlistInfo =
-                                                                        {
-                                                                      'playListTitleId': snapshot
-                                                                          .data![
-                                                                              index]
-                                                                          .id,
-                                                                      'musicId':
-                                                                          music
-                                                                              .id
-                                                                    };
-                                                                    var result =
-                                                                        await provider
-                                                                            .addMusicToPlaylist(playlistInfo);
+                                                                onPressed:
+                                                                    () async {
+                                                                  var playlistInfo =
+                                                                      {
+                                                                    'playListTitleId':
+                                                                        snapshot
+                                                                            .data![index]
+                                                                            .id,
+                                                                    'musicId':
+                                                                        music.id
+                                                                  };
+                                                                  var result =
+                                                                      await provider
+                                                                          .addMusicToPlaylist(
+                                                                              playlistInfo);
 
-                                                                    if (result) {
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              const SnackBar(content: Text('Successfully added')));
-                                                                    } else {
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              const SnackBar(content: Text('Music Already added')));
-                                                                    }
-                                                                    Navigator.of(
+                                                                  if (result) {
+                                                                    ScaffoldMessenger.of(
                                                                             context)
-                                                                        .pop();
-                                                                  },
-                                                                  child: Text(
-                                                                    snapshot
-                                                                        .data![
-                                                                            index]
-                                                                        .title,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style: const TextStyle(
-                                                                        color:
-                                                                            kLightSecondaryColor),
-                                                                  ));
+                                                                        .showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text('Successfully added')));
+                                                                  } else {
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text('Music Already added')));
+                                                                  }
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child: Text(
+                                                                  snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .title,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style: const TextStyle(
+                                                                      color:
+                                                                          kLightSecondaryColor),
+                                                                ),
+                                                              );
                                                             },
                                                           );
                                                         },
                                                       );
                                                     }
-                                                    return Center(
+                                                    return const Center(
                                                       child:
                                                           KinProgressIndicator(),
                                                     );
@@ -331,15 +338,19 @@ class MusicCardsearch extends StatelessWidget {
                                         ? TrackMusicPlayButton(
                                             music: music,
                                             index: musicIndex,
+                                            // TODO: Replace
                                             album: Album(
-                                                id: -2,
-                                                title:
-                                                    'Single Music $musicIndex',
-                                                artist: 'kin',
-                                                description: '',
-                                                cover: 'assets/images/kin.png',
-                                                // cover:'$kinAssetBaseUrl/${music.cover}',
-                                                count: musics.length),
+                                              id: -2,
+                                              title: 'Single Music $musicIndex',
+                                              artist: 'kin',
+                                              description: '',
+                                              cover: 'assets/images/kin.png',
+                                              // cover:'$kinAssetBaseUrl/${music.cover}',
+                                              count: musics.length,
+                                              artist_id: '1',
+                                              isPurchasedByUser: false,
+                                              price: '60',
+                                            ),
                                           )
                                         : Container()
                               ],

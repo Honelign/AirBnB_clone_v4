@@ -45,6 +45,7 @@ class GenreCard extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 AspectRatio(
                   aspectRatio: 2.0,
@@ -54,18 +55,19 @@ class GenreCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   )),
                 ),
-                SizedBox(height: getProportionateScreenHeight(5)),
+                SizedBox(height: getProportionateScreenHeight(10)),
+
+                // Genre Title
                 Text(
                   genre.title,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                SizedBox(height: getProportionateScreenHeight(5)),
-                Text(
-                  '${genre.musics.length} tracks',
-                  style: TextStyle(color: Colors.white.withOpacity(0.75)),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                SizedBox(height: getProportionateScreenHeight(4)),
               ],
             ),
           ),

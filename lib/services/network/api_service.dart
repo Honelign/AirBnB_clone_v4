@@ -15,6 +15,7 @@ import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart'
 import 'package:kin_music_player_app/services/network/model/podcastSeasons.dart';
 import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
+import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
@@ -32,6 +33,8 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 import '../../constants.dart';
 import 'model/user.dart';
+
+HelperUtils helper = HelperUtils();
 
 Future<String> fetchUserPrivilege(
     {required String uid, required String apiEndPoint}) async {
@@ -277,32 +280,25 @@ Future fetchSearchedAlbums(String title) async {
   }
 }
 
-
 Future fetchAlbumMusics(int id) async {
-  Response response = await get(
-      Uri.parse('https://music-service-v1-vdzflryflq-ew.a.run.app/mobile_app/albums'));
-
+  List<Music> albumMusic = [];
   try {
+    String uid = await helper.getUserId();
+    Response response =
+        await get(Uri.parse('$kinMusicBaseUrl/mobileApp/albums?userId=$uid'));
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       var results = body[0]['Tracks'] as List;
-      List<Music> albumMusic = [];
-      
-      albumMusic=results.map((track) {
+
+      albumMusic = results.map((track) {
         return Music.fromJson(track);
-      } ).toList();
-      return albumMusic;
+      }).toList();
     }
   } catch (e) {
     print("@api_service -> fetchSearchedAlbums error - " + e.toString());
   }
+  return albumMusic;
 }
-
-
-
-
-
-
 
 Future fetchSearchedTrackscount(String title) async {
   Response response = await get(

@@ -31,7 +31,7 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
         setState(() {});
       },
       child: FutureBuilder(
-        future: provider.getGenre(),
+        future: provider.getAllGenres(),
         builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
           if (provider.isLoading &&
               snapshot.connectionState == ConnectionState.waiting) {
@@ -40,7 +40,7 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
                 Container(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.3),
-                  child: Center(
+                  child: const Center(
                     child: KinProgressIndicator(),
                   ),
                 )

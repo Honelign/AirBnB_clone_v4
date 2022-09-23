@@ -83,14 +83,17 @@ class MusicListCard extends StatelessWidget {
                     music: music!,
                     index: musicIndex,
                     album: Album(
-                        id: -2,
-                        title: 'Single Music $musicIndex',
-                        artist: 'kin',
-                        description: '',
-                        cover: 'assets/images/kin.png',
-                        count: musics.length),
-                        musics: musics
-                        );
+                      id: -2,
+                      title: 'Single Music $musicIndex',
+                      artist: 'kin',
+                      description: '',
+                      cover: 'assets/images/kin.png',
+                      count: musics.length,
+                      artist_id: '1',
+                      isPurchasedByUser: false,
+                      price: '60',
+                    ),
+                    musics: musics);
 
                 p.setMusicStopped(false);
                 podcastProvider.setEpisodeStopped(true);
@@ -161,12 +164,16 @@ class MusicListCard extends StatelessWidget {
                                       music: music,
                                       index: musicIndex,
                                       album: Album(
-                                          id: -2,
-                                          title: 'Single Music $musicIndex',
-                                          artist: 'kin',
-                                          description: '',
-                                          cover: 'assets/images/kin.png',
-                                          count: musics.length),
+                                        id: -2,
+                                        title: 'Single Music $musicIndex',
+                                        artist: 'kin',
+                                        description: '',
+                                        cover: 'assets/images/kin.png',
+                                        count: musics.length,
+                                        artist_id: '1',
+                                        isPurchasedByUser: false,
+                                        price: '60',
+                                      ),
                                     )
                                   : Container()
                         ],

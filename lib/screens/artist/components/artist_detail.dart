@@ -57,10 +57,13 @@ class _ArtistDetailState extends State<ArtistDetail> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  '$kinAssetBaseUrl/${albumProvider.album.cover}}',
-                ),
-                fit: BoxFit.cover),
+
+              image: CachedNetworkImageProvider(
+                '$kinAssetBaseUrl/${widget.artist.cover}',
+              ),
+              fit: BoxFit.cover,
+            ),
+
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),

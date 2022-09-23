@@ -28,7 +28,8 @@ class AlbumCard extends StatelessWidget {
     this.musicIndex = -1,
     this.height = 70,
     this.aspectRatio = 1.02,
-    required this.music, required this.albumMusics,
+    required this.music,
+    required this.albumMusics,
   }) : super(key: key);
 
   final double height, aspectRatio;
@@ -63,7 +64,7 @@ class AlbumCard extends StatelessWidget {
                 vertical: getProportionateScreenHeight(10)),
             child: InkWell(
               onTap: () async {
-                p.albumMusicss=albumMusics;
+                p.albumMusicss = albumMusics;
                 p.setBuffering(musicIndex);
 
                 if (checkConnection(status)) {
@@ -82,11 +83,10 @@ class AlbumCard extends StatelessWidget {
 
                     p.setPlayer(p.player, podcastProvider, radioProvider);
                     p.handlePlayButton(
-                      music: music,
-                      index: musicIndex,
-                      album: album,
-                      musics: albumMusics
-                    );
+                        music: music,
+                        index: musicIndex,
+                        album: album,
+                        musics: albumMusics);
                   }
 
                   p.setMusicStopped(false);

@@ -3,7 +3,7 @@ import 'package:kin_music_player_app/services/network/api/analytics_service.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AnalyticsProvider extends ChangeNotifier {
-  final String apiEndPoint = "/mobile_app/data_by_userid";
+  final String apiEndPoint = "/mobileApp/data_by_userid";
   bool isLoading = false;
   List producerOwnedInfo = [];
   List allArtists = [];

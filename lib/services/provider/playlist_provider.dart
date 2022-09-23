@@ -17,12 +17,8 @@ class PlayListProvider extends ChangeNotifier {
   Future<List<PlaylistTitle>> getPlayList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // final id = prefs.getInt('id');
-    // const idstatic = 12345;
-    // String apiEndPoint = '/playlists/?user=$idstatic';
-
     final id = prefs.getString('id');
-    // const idstatic = 1234;
+
     String apiEndPoint = '/playlists/?user=$id';
 
     isLoading = true;
@@ -51,7 +47,6 @@ class PlayListProvider extends ChangeNotifier {
   Future<List<PlayListTitles>> getPlayListTitle() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('id');
-    // const idstatic = 1234;
 
     String apiEndPoint = 'playlists/?user=$id';
     isLoading = true;

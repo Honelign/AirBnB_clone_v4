@@ -117,12 +117,13 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     _currentAlbum = album;
     notifyListeners();
   }
- List<Music> _albumMusics=[];
- List<Music> get albumMusics=>_albumMusics;
- set albumMusicss(musics){
-  _albumMusics=musics;
-  notifyListeners();
- }
+
+  List<Music> _albumMusics = [];
+  List<Music> get albumMusics => _albumMusics;
+  set albumMusicss(musics) {
+    _albumMusics = musics;
+    notifyListeners();
+  }
 
   late int _sessionId;
 
@@ -148,29 +149,28 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     return next == _albumMusics.length;
   }
 
-  next({action = true,musics}) {
+  next({action = true, musics}) {
     int next = _currentIndex! + 1;
 
     if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
-      setPlaying(_currentAlbum, 0,musics);
-      play(0,);
+      setPlaying(_currentAlbum, 0, musics);
+      play(
+        0,
+      );
     } else if (!action && _loopMode && !_loopPlaylist) {
-      setPlaying(_currentAlbum, _currentIndex!,musics);
+      setPlaying(_currentAlbum, _currentIndex!, musics);
       play(_currentIndex);
     } else {
-   
       play(next);
     }
   }
 
   prev() async {
-
     int pre = _currentIndex! - 1;
-        print('@@@$pre');
-    if (pre>=0&&pre < _albumMusics.length) {
+    print('@@@$pre');
+    if (pre >= 0 && pre < _albumMusics.length) {
       play(pre);
     }
-   
   }
 
   int c = 0;
@@ -201,22 +201,26 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     List<Music> shuffledMusics = shuffle(musics);
     if (_shuffled) {
       Album album = Album(
-          id: currentAlbum.id,
-          title: currentAlbum.title,
-          artist: currentAlbum.artist,
-          description: currentAlbum.description,
-          cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
-          count: currentAlbum.count
-         // musics: shuffledMusics
-          );
+        id: currentAlbum.id,
+        title: currentAlbum.title,
+        artist: currentAlbum.artist,
+        description: currentAlbum.description,
+        cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
+        count: currentAlbum.count,
+        artist_id: '1',
+        isPurchasedByUser: false,
+        price: '60',
+      );
       _currentAlbum = album;
-      _albumMusics=shuffledMusics;
+      _albumMusics = shuffledMusics;
     } else {
       _currentAlbum = _beforeShuffling;
     }
   }
 
-  play(index,) async {
+  play(
+    index,
+  ) async {
     try {
       print("@@@ ${_albumMusics[index].title}");
       _currentMusic = _albumMusics[index];
@@ -267,7 +271,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     );
     try {
       // kill any existing player
-     // player.pause();
+      // player.pause();
       player.stop();
 
       // open new player
@@ -301,7 +305,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
-  handlePlayButton({album, required Music music, index,required List<Music> musics}) async {
+  handlePlayButton(
+      {album, required Music music, index, required List<Music> musics}) async {
     _shuffled = false;
 
     setBuffering(index);
@@ -316,7 +321,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         await _open(music);
         _isMusicLoaded = true;
         notifyListeners();
-        setPlaying(album, index,musics);
+        setPlaying(album, index, musics);
       }
     } catch (_) {}
   }

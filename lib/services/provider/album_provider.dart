@@ -7,20 +7,22 @@ class AlbumProvider extends ChangeNotifier {
   bool isLoading = false;
   static const _pageSize = 10;
   Album album = Album(
-      id: 12,
-      title: 'title',
-      artist: 'artist',
-      description: 'description',
-      cover: 'cover',
-     // musics: []
-     count: 0
-      );
+    id: 12,
+    title: 'title',
+    artist: 'artist',
+    description: 'description',
+    cover: 'cover',
+    count: 0,
+    artist_id: '1',
+    isPurchasedByUser: false,
+    price: '60',
+  );
 
   MusicApiService musicApiService = MusicApiService();
 
 // get new albums
   Future<List<Album>> getAlbums() async {
-    const String apiEndPoint = '/mobile_app/albums';
+    const String apiEndPoint = '/mobileApp/albums';
     isLoading = true;
 
     List<Album> albums = await musicApiService.getAlbums(apiEndPoint);

@@ -6,24 +6,28 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/utils/helpers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicApiService {
+  HelperUtils helper = HelperUtils();
   // get new tracks
   Future getMusic(apiEndPoint) async {
+    List<Music> music = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Music> music = item.map((value) => Music.fromJson(value)).toList();
-
-        return music;
-      } else {}
+        music = item.map((value) => Music.fromJson(value)).toList();
+      }
     } catch (e) {
       print("@music_service getMusic $e");
     }
-    return [];
+    return music;
   }
 
   // get album tracks
@@ -47,21 +51,22 @@ class MusicApiService {
 
   // albums
   Future getAlbums(apiEndPoint) async {
+    List<Album> albums = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Album> albums = item.map((value) {
+        albums = item.map((value) {
           return Album.fromJson(value);
         }).toList();
-
-        return albums;
-      } else {}
+      }
     } catch (e) {
       print("@music_service -> getAlbums error - $e");
     }
-    return [];
+    return albums;
   }
 
   Future getArtistAlbums(apiEndPoint, artist_id) async {
@@ -85,8 +90,11 @@ class MusicApiService {
 
   // get artists
   Future getArtists(apiEndPoint) async {
+    List<Artist> artists = [];
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      String uid = await helper.getUserId();
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -102,19 +110,24 @@ class MusicApiService {
           });
         });
 
-        List<Artist> artists = item.map((value) {
+        artists = item.map((value) {
           return Artist.fromJson(value);
         }).toList();
-
-        return artists;
       }
     } catch (e) {
       print("@music_service -> getArtists error - $e");
     }
-    return [];
+    return artists;
   }
 
-  // get genres
+  // ignore: slash_for_doc_comments
+  /**
+   * ==================================
+   * GENRE METHODS
+   * ==================================
+   */
+
+  // get list of all available genres
   Future<List<Genre>> getGenres(apiEndPoint) async {
     try {
       Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
@@ -130,6 +143,34 @@ class MusicApiService {
       print("@music_service -> getGenres error $e");
     }
     return [];
+  }
+
+  // get list of all available genres
+  Future<List<Music>> getMusicByGenreID({
+    required String apiEndPoint,
+    required String genreId,
+  }) async {
+    List<Music> tracksUnderGenre = [];
+    try {
+      // get user Id
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String uid = prefs.getString("id") ?? "";
+
+      // make api call
+      Response response = await get(Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId"));
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body) as List;
+
+        tracksUnderGenre = result.map((track) {
+          return Music.fromJson(track);
+        }).toList();
+      }
+    } catch (e) {
+      print("@music_service -> getMusicByGenreID error $e");
+    }
+    return tracksUnderGenre;
   }
 
   Future addPopularCount(

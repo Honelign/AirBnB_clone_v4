@@ -18,7 +18,7 @@ class MusicProvider extends ChangeNotifier {
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
   List<Music> albumMusics = [];
-  
+
   int count = -1;
   Music music = Music(
       artist_id: '',
@@ -36,7 +36,7 @@ class MusicProvider extends ChangeNotifier {
 
   // get new music
   Future<List<Music>> getNewMusics() async {
-    const String apiEndPoint = '/mobile_app/tracks';
+    const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
     List<Music> musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
@@ -46,9 +46,13 @@ class MusicProvider extends ChangeNotifier {
 
   // popular
   Future<List<Music>> getPopularMusic() async {
-    const String apiEndPoint = '/mobile_app/popular_tracks';
+    // const String apiEndPoint = '/mobileApp/popular_tracks';
+    const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
-    List<Music> musics = await musicApiService.getMusic(apiEndPoint);
+
+
+    // TODO: Replace
+    List musics = await musicApiService.getMusic(apiEndPoint);
     isLoading = false;
     notifyListeners();
     return musics;

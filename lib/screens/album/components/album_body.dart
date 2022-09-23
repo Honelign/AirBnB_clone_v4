@@ -32,26 +32,29 @@ class AlbumBody extends StatefulWidget {
 }
 
 class _AlbumBodyState extends State<AlbumBody> {
-  List<Music> albumMusicss=[];
+  List<Music> albumMusicss = [];
   @override
   void initState() {
-   Provider.of<MusicProvider>(context,listen: false).albumMusicsGetter(widget.album.id);
+    Provider.of<MusicProvider>(context, listen: false)
+        .albumMusicsGetter(widget.album.id);
     // TODO: implement initState
-    albumMusicss=Provider.of<MusicProvider>(context,listen:false).albumMusics;
+    albumMusicss =
+        Provider.of<MusicProvider>(context, listen: false).albumMusics;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-  //  var p= Provider.of<MusicProvider>(context,listen: false);
-    
+    //  var p= Provider.of<MusicProvider>(context,listen: false);
+
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image:
-                  CachedNetworkImageProvider('$kinAssetBaseUrl/${widget.album.cover}'),
+              image: CachedNetworkImageProvider(
+                  '$kinAssetBaseUrl/${widget.album.cover}'),
               fit: BoxFit.cover,
             ),
           ),
@@ -69,7 +72,7 @@ class _AlbumBodyState extends State<AlbumBody> {
                           _buildTitleSection(widget.album),
                           _buildBackButton(context),
                           _buildAlbumInfo(),
-                          _buildPlayAllIcon(context,albumMusicss)
+                          _buildPlayAllIcon(context, albumMusicss)
                         ],
                       ),
                     ),
@@ -77,7 +80,7 @@ class _AlbumBodyState extends State<AlbumBody> {
                       height: getProportionateScreenHeight(15),
                     ),
                     Expanded(
-                      child: _buildAlbumMusics(albumMusicss ,context),
+                      child: _buildAlbumMusics(albumMusicss, context),
                     )
                   ],
                 )),
@@ -186,7 +189,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     );
   }
 
-  Widget _buildPlayAllIcon(context,musics) {
+  Widget _buildPlayAllIcon(context, musics) {
     var playerProvider = Provider.of<MusicPlayer>(
       context,
     );
@@ -221,8 +224,10 @@ class _AlbumBodyState extends State<AlbumBody> {
                     musicProvider.setPlayer(
                         musicProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                      musics: albumMusicss,
-                        album: widget.album, music: musics[0], index: 0);
+                        musics: albumMusicss,
+                        album: widget.album,
+                        music: musics[0],
+                        index: 0);
                     podcastProvider.setEpisodeStopped(true);
                     podcastProvider.listenPodcastStreaming();
                   } else {
@@ -254,8 +259,10 @@ class _AlbumBodyState extends State<AlbumBody> {
                     playerProvider.setPlayer(
                         playerProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                      musics: albumMusicss,
-                        album: widget.album, music: musics[0], index: 0);
+                        musics: albumMusicss,
+                        album: widget.album,
+                        music: musics[0],
+                        index: 0);
                     playerProvider.setMusicStopped(false);
                     podcastProvider.setEpisodeStopped(true);
                     playerProvider.listenMusicStreaming();
@@ -292,7 +299,8 @@ class _AlbumBodyState extends State<AlbumBody> {
                         )
                       : SvgPicture.asset(
                           isPlaying &&
-                                  widget.album.id == playerProvider.currentAlbum.id
+                                  widget.album.id ==
+                                      playerProvider.currentAlbum.id
                               ? 'assets/icons/pause.svg'
                               : 'assets/icons/play.svg',
                           fit: BoxFit.contain,
@@ -320,4 +328,3 @@ class _AlbumBodyState extends State<AlbumBody> {
         });
   }
 }
-
