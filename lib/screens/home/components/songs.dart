@@ -104,7 +104,7 @@ class _SongsState extends State<Songs> {
                           return SpecialOfferCard(
                               image: albums[index].cover,
                               genre: albums[index].title,
-                             // numOfMusics: albums[index].musics.length,
+                              numOfMusics: albums[index].musics.length,
                               press: () {
                                 Navigator.push(
                                     context,
@@ -375,12 +375,12 @@ class SpecialOfferCard extends StatelessWidget {
     Key? key,
     required this.genre,
     required this.image,
-   // required this.numOfMusics,
+    required this.numOfMusics,
     required this.press,
   }) : super(key: key);
 
   final String genre, image;
- // final int numOfMusics;
+  final int numOfMusics;
   final GestureTapCallback press;
 
   @override
@@ -429,7 +429,7 @@ class SpecialOfferCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                       // TextSpan(text: "$numOfMusics Musics")
+                        TextSpan(text: "$numOfMusics Musics")
                       ],
                     ),
                   ),

@@ -4,18 +4,18 @@ part 'album.g.dart';
 
 @JsonSerializable()
 class Album {
-  final int id,count;
+  final int id;
   final String title, artist, description, cover;
-  
+  final List<Music> musics;
+
   Album(
       {required this.id,
-      required this.count,
       required this.title,
       required this.artist,
       required this.description,
       required this.cover,
       // ignore: non_constant_identifier_names
-      
+       required this.musics
       });
 
   factory Album.fromJson(Map<String, dynamic> json) {

@@ -134,7 +134,6 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                     music: p.currentMusic!,
                                     index: p.tIndex,
                                     album: p.currentAlbum,
-                                    musics: p.albumMusics
                                   );
                           },
                           child: Row(

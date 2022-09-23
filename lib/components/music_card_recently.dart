@@ -96,8 +96,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        count:widget.musics.length),
-                        musics: widget.musics
+                        musics: widget.musics),
                   );
 
                   p.setMusicStopped(false);
@@ -338,7 +337,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                                               artist: 'kin',
                                               description: '',
                                               cover: 'assets/images/kin.png',
-                                              count: widget.musics.length),
+                                              musics: widget.musics),
                                         )
                                       : Container()
                             ],

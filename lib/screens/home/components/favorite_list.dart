@@ -102,10 +102,7 @@ class FavoriteList extends StatelessWidget {
                                         artist: 'kin',
                                         description: '',
                                         cover: 'assets/images/kin.png',
-                                       // musics: favoriteMusicsList
-                                       count: favoriteMusicsList.length
-                                        ),
-                                        musics: favoriteMusicsList
+                                        musics: favoriteMusicsList),
                                   );
 
                                   p.setMusicStopped(false);
@@ -182,9 +179,7 @@ class FavoriteList extends StatelessWidget {
                                             artist: 'kin',
                                             description: '',
                                             cover: 'assets/images/kin.png',
-                                          //  musics: favoriteMusicsList
-                                          count: favoriteMusicsList.length
-                                            ),
+                                            musics: favoriteMusicsList),
                                       )
                                     : Container(),
                             const SizedBox(
