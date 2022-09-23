@@ -94,16 +94,17 @@ class FavoriteList extends StatelessWidget {
                                       p.player, podcastProvider, radioProvider);
                                   radioProvider.setMiniPlayerVisibility(false);
                                   p.handlePlayButton(
-                                    music: music,
-                                    index: musicIndex,
-                                    album: Album(
-                                        id: -2,
-                                        title: 'Single Music $musicIndex',
-                                        artist: 'kin',
-                                        description: '',
-                                        cover: 'assets/images/kin.png',
-                                        musics: favoriteMusicsList),
-                                  );
+                                      music: music,
+                                      index: musicIndex,
+                                      album: Album(
+                                          id: -2,
+                                          title: 'Single Music $musicIndex',
+                                          artist: 'kin',
+                                          description: '',
+                                          cover: 'assets/images/kin.png',
+                                          // musics: favoriteMusicsList
+                                          count: favoriteMusicsList.length),
+                                      musics: favoriteMusicsList);
 
                                   p.setMusicStopped(false);
                                   podcastProvider.setEpisodeStopped(true);
@@ -179,7 +180,8 @@ class FavoriteList extends StatelessWidget {
                                             artist: 'kin',
                                             description: '',
                                             cover: 'assets/images/kin.png',
-                                            musics: favoriteMusicsList),
+                                            //  musics: favoriteMusicsList
+                                            count: favoriteMusicsList.length),
                                       )
                                     : Container(),
                             const SizedBox(

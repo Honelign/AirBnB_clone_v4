@@ -17,6 +17,7 @@ class MusicProvider extends ChangeNotifier {
   List<dynamic>? searchedTracks = [];
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
+  List<Music> albumMusics = [];
   int count = -1;
 
   MusicApiService musicApiService = MusicApiService();
@@ -110,5 +111,12 @@ class MusicProvider extends ChangeNotifier {
     count = await fetchSearchedTrackscount(title);
     notifyListeners();
     return count;
+  }
+
+  Future<List?> albumMusicsGetter(id) async {
+    albumMusics = await fetchAlbumMusics(id);
+
+    notifyListeners();
+    return albumMusics;
   }
 }

@@ -88,16 +88,16 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   p.setPlayer(p.player, podcastProvider, radioProvider);
 
                   p.handlePlayButton(
-                    music: widget.music,
-                    index: widget.musicIndex,
-                    album: Album(
-                        id: -2,
-                        title: 'Single Music ${widget.musicIndex}',
-                        artist: 'kin',
-                        description: '',
-                        cover: 'assets/images/kin.png',
-                        musics: widget.musics),
-                  );
+                      music: widget.music,
+                      index: widget.musicIndex,
+                      album: Album(
+                          id: -2,
+                          title: 'Single Music ${widget.musicIndex}',
+                          artist: 'kin',
+                          description: '',
+                          cover: 'assets/images/kin.png',
+                          count: widget.musics.length),
+                      musics: widget.musics);
 
                   p.setMusicStopped(false);
                   podcastProvider.setEpisodeStopped(true);
@@ -337,7 +337,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                                               artist: 'kin',
                                               description: '',
                                               cover: 'assets/images/kin.png',
-                                              musics: widget.musics),
+                                              count: widget.musics.length),
                                         )
                                       : Container()
                             ],

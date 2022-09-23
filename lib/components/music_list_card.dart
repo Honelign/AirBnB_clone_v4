@@ -88,7 +88,8 @@ class MusicListCard extends StatelessWidget {
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        musics: musics));
+                        count: musics.length),
+                    musics: musics);
 
                 p.setMusicStopped(false);
                 podcastProvider.setEpisodeStopped(true);
@@ -164,7 +165,7 @@ class MusicListCard extends StatelessWidget {
                                           artist: 'kin',
                                           description: '',
                                           cover: 'assets/images/kin.png',
-                                          musics: musics),
+                                          count: musics.length),
                                     )
                                   : Container()
                         ],

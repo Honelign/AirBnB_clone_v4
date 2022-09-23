@@ -12,7 +12,8 @@ class AlbumProvider extends ChangeNotifier {
       artist: 'artist',
       description: 'description',
       cover: 'cover',
-      musics: []);
+      // musics: []
+      count: 0);
 
   MusicApiService musicApiService = MusicApiService();
 

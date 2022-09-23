@@ -87,16 +87,16 @@ class MusicCardsearch extends StatelessWidget {
                   p.setPlayer(p.player, podcastProvider, radioProvider);
 
                   p.handlePlayButton(
-                    music: music,
-                    index: musicIndex,
-                    album: Album(
-                        id: -2,
-                        title: 'Single Music $musicIndex',
-                        artist: 'kin',
-                        description: '',
-                        cover: 'assets/images/kin.png',
-                        musics: musics),
-                  );
+                      music: music,
+                      index: musicIndex,
+                      album: Album(
+                          id: -2,
+                          title: 'Single Music $musicIndex',
+                          artist: 'kin',
+                          description: '',
+                          cover: 'assets/images/kin.png',
+                          count: musics.length),
+                      musics: musics);
 
                   p.setMusicStopped(false);
                   podcastProvider.setEpisodeStopped(true);
@@ -338,7 +338,7 @@ class MusicCardsearch extends StatelessWidget {
                                                 description: '',
                                                 cover: 'assets/images/kin.png',
                                                 // cover:'$kinAssetBaseUrl/${music.cover}',
-                                                musics: musics),
+                                                count: musics.length),
                                           )
                                         : Container()
                               ],
