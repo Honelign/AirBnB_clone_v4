@@ -28,13 +28,14 @@ class AlbumCard extends StatelessWidget {
     this.musicIndex = -1,
     this.height = 70,
     this.aspectRatio = 1.02,
-    required this.music,
+    required this.music, required this.albumMusics,
   }) : super(key: key);
 
   final double height, aspectRatio;
   final Music music;
   final int musicIndex;
   final Album album;
+  final List<Music> albumMusics;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,7 @@ class AlbumCard extends StatelessWidget {
                 vertical: getProportionateScreenHeight(10)),
             child: InkWell(
               onTap: () async {
+                p.albumMusicss=albumMusics;
                 p.setBuffering(musicIndex);
 
                 if (checkConnection(status)) {
@@ -83,6 +85,7 @@ class AlbumCard extends StatelessWidget {
                       music: music,
                       index: musicIndex,
                       album: album,
+                      musics: albumMusics
                     );
                   }
 
@@ -139,7 +142,7 @@ class AlbumCard extends StatelessWidget {
                             p.currentMusic == null
                                 ? Container()
                                 : p.currentMusic!.title ==
-                                        album.musics[musicIndex].title
+                                        albumMusics[musicIndex].title
                                     ? TrackMusicPlayButton(
                                         music: music,
                                         index: musicIndex,

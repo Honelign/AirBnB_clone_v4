@@ -95,7 +95,8 @@ class MusicCardsearch extends StatelessWidget {
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        musics: musics),
+                        count: musics.length),
+                        musics: musics
                   );
 
                   p.setMusicStopped(false);
@@ -338,7 +339,7 @@ class MusicCardsearch extends StatelessWidget {
                                                 description: '',
                                                 cover: 'assets/images/kin.png',
                                                 // cover:'$kinAssetBaseUrl/${music.cover}',
-                                                musics: musics),
+                                                count: musics.length),
                                           )
                                         : Container()
                               ],
