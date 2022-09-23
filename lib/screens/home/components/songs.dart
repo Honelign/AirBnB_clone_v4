@@ -30,6 +30,12 @@ class Songs extends StatefulWidget {
 
 class _SongsState extends State<Songs> {
   @override
+  initState() {
+    print("@@@cachingnegro calling remote");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {

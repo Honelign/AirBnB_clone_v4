@@ -10,7 +10,7 @@ class GenreProvider extends ChangeNotifier {
   List<Genre> albums = [];
   MusicApiService musicApiService = MusicApiService();
   Future<List<Genre>> getAllGenres() async {
-    const String apiEndPoint = '/mobile_app/genres';
+    const String apiEndPoint = 'mobileApp/genres';
     isLoading = true;
     List<Genre> genres = await musicApiService.getGenres(apiEndPoint);
 
@@ -20,7 +20,7 @@ class GenreProvider extends ChangeNotifier {
   }
 
   Future<List<Music>> getAllTracksByGenreId() async {
-    const String apiEndPoint = '/mobile_app/genres';
+    const String apiEndPoint = '/mobileApp/tracksByGenreId';
     isLoading = true;
     List<Music> allTracksUnderGenre = await musicApiService.getMusicByGenreID(
       apiEndPoint: apiEndPoint,

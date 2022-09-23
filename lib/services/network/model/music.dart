@@ -5,17 +5,18 @@ part 'music.g.dart';
 @JsonSerializable()
 class Music {
   final int id;
+  final String title;
   @JsonKey(name: 'music_description')
   final String description;
-  final String title;
   final String cover;
-  final String artist;
   final String audio;
-  final bool isPurchasedByUser;
-  final String priceETB;
-  final String priceUSD;
   final String? lyrics;
+  final String priceETB;
   final String artist_id;
+  final String albumId;
+  final String genreId;
+  final String artist;
+  final bool isPurchasedByUser;
 
   Music({
     required this.id,
@@ -27,7 +28,8 @@ class Music {
     required this.artist_id,
     required this.isPurchasedByUser,
     required this.priceETB,
-    required this.priceUSD,
+    required this.albumId,
+    required this.genreId,
     this.lyrics,
   });
 

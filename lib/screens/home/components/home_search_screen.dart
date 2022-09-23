@@ -74,19 +74,21 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
         provider.searchedTracks!.length > 0) {
       for (int i = 0; i < provider.searchedTracks!.length; i++) {
         searchedTracks.add(provider.searchedTracks![i]);
+
+        // TODO:Replace Album and GenreId
         musics.add(
           Music(
-            artist: searchedTracks[i].artistId.artistName,
-            audio: searchedTracks[i].trackFile,
-            cover: searchedTracks[i].albumId.albumCover,
-            description: searchedTracks[i].trackDescription,
-            id: searchedTracks[i].id,
-            title: searchedTracks[i].trackName,
-            artist_id: searchedTracks[i].artistId.id.toString(),
-            isPurchasedByUser: false,
-            priceETB: 32.50.toString(),
-            priceUSD: 0.99.toString(),
-          ),
+              artist: searchedTracks[i].artistId.artistName,
+              audio: searchedTracks[i].trackFile,
+              cover: searchedTracks[i].albumId.albumCover,
+              description: searchedTracks[i].trackDescription,
+              id: searchedTracks[i].id,
+              title: searchedTracks[i].trackName,
+              artist_id: searchedTracks[i].artistId.id.toString(),
+              isPurchasedByUser: false,
+              priceETB: 32.50.toString(),
+              albumId: "1",
+              genreId: "1"),
         );
       }
     }
@@ -229,6 +231,7 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                         : ListView.builder(
                                             itemCount: searchedTracks.length,
                                             itemBuilder: ((context, index) {
+                                              // TODO: Replace Artist and Album ID
                                               return MusicCardsearch(
                                                 artistname:
                                                     searchedTracks[index]
@@ -237,7 +240,8 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                                 music: Music(
                                                   isPurchasedByUser: false,
                                                   priceETB: 32.50.toString(),
-                                                  priceUSD: 0.99.toString(),
+                                                  albumId: "1",
+                                                  genreId: "1",
                                                   artist_id:
                                                       searchedTracks[index]
                                                           .artistId

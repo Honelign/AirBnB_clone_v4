@@ -33,7 +33,6 @@ import 'theme.dart';
 // payment import
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // secret stripe key =sk_test_51LcOtyFvUcclFpL2Isr4xf7kyt67mCFY6LHxNy5mu06kfk5MzcZRU11W6dU211P4XGyMPoYTltDWBrftA3OoFhHz00pPkHiT4s
@@ -55,29 +54,33 @@ void main() async {
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
 */
-  runApp(MultiProvider(child: Kin(), providers: [
-    ChangeNotifierProvider(create: (_) => MusicProvider()),
-    ChangeNotifierProvider(create: (_) => CoinProvider()),
-    ChangeNotifierProvider(create: (_) => AlbumProvider()),
-    ChangeNotifierProvider(create: (_) => ArtistProvider()),
-    ChangeNotifierProvider(create: (_) => LoginProvider()),
-    ChangeNotifierProvider(create: (_) => MusicPlayer()),
-    ChangeNotifierProvider(create: (_) => PodcastPlayer()),
-    ChangeNotifierProvider(create: (_) => FavoriteMusicProvider(),),
-    ChangeNotifierProvider(create: (_) => PlayListProvider(),),
-    ChangeNotifierProvider(create: (_) => DropDownProvider(),),
-    ChangeNotifierProvider(create: (_) => GenreProvider(),),
-    ChangeNotifierProvider(create: (_) => PodCastProvider(),),
-    ChangeNotifierProvider(create: (_) => RadioProvider(),),
-    ChangeNotifierProvider(create: (_) => RecentlyPlayedProvider(),),
-    ChangeNotifierProvider(create: (_) => CachedFavoriteProvider(),),
-    ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
-    StreamProvider(
-      create: (context) =>
-          ConnectivityService().connectionStatusController.stream,
-      initialData: ConnectivityStatus.offline,
+  runApp(
+    MultiProvider(
+      child: Kin(),
+      providers: [
+        ChangeNotifierProvider(create: (_) => MusicProvider()),
+        ChangeNotifierProvider(create: (_) => CoinProvider()),
+        ChangeNotifierProvider(create: (_) => AlbumProvider()),
+        ChangeNotifierProvider(create: (_) => ArtistProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => MusicPlayer()),
+        ChangeNotifierProvider(create: (_) => PodcastPlayer()),
+        ChangeNotifierProvider(create: (_) => FavoriteMusicProvider()),
+        ChangeNotifierProvider(create: (_) => PlayListProvider()),
+        ChangeNotifierProvider(create: (_) => DropDownProvider()),
+        ChangeNotifierProvider(create: (_) => GenreProvider()),
+        ChangeNotifierProvider(create: (_) => PodCastProvider()),
+        ChangeNotifierProvider(create: (_) => RadioProvider()),
+        ChangeNotifierProvider(create: (_) => RecentlyPlayedProvider()),
+        ChangeNotifierProvider(create: (_) => CachedFavoriteProvider()),
+        ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
+        StreamProvider(
+            create: (context) =>
+                ConnectivityService().connectionStatusController.stream,
+            initialData: ConnectivityStatus.offline),
+      ],
     ),
-  ]));
+  );
 }
 
 class Kin extends StatefulWidget {
