@@ -41,6 +41,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     albumMusicss =
         Provider.of<MusicProvider>(context, listen: false).albumMusics;
     super.initState();
+    print("@@@__${widget.album.id}");
   }
 
   @override

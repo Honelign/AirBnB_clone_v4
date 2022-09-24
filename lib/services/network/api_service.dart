@@ -262,37 +262,39 @@ Future fetchSearchedArtists(String title) async {
 }
 
 Future fetchSearchedAlbums(String title) async {
-  Response response = await get(
-      Uri.parse('https://searchservice.kinideas.com/search/album/$title'));
+  // Response response = await get(
+  //     Uri.parse('https://searchservice.kinideas.com/search/album/$title'));
 
-  try {
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      var results = body['results'] as List;
-      List<AlbumSearch> albumsearch = [];
-      results.forEach((element) {
-        albumsearch.add(albumSearchFromJson(jsonEncode(element)));
-      });
-      return albumsearch;
-    }
-  } catch (e) {
-    print("@api_service -> fetchSearchedAlbums error - " + e.toString());
-  }
+  // try {
+  //   if (response.statusCode == 200) {
+  //     var body = jsonDecode(response.body);
+  //     var results = body['results'] as List;
+  //     List<AlbumSearch> albumsearch = [];
+  //     results.forEach((element) {
+  //       albumsearch.add(albumSearchFromJson(jsonEncode(element)));
+  //     });
+  //     return albumsearch;
+  //   }
+  // } catch (e) {
+  //   print("@api_service -> fetchSearchedAlbums error - " + e.toString());
+  // }
 }
 
 Future fetchAlbumMusics(int id) async {
+  print("@@@$id");
   List<Music> albumMusic = [];
   try {
     String uid = await helper.getUserId();
     Response response =
-        await get(Uri.parse('$kinMusicBaseUrl/mobileApp/albums?userId=$uid'));
+        await get(Uri.parse('$kinMusicBaseUrl/mobileApp/tracksByAlbumId?userId=$uid&albumId=$id'));
     if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      var results = body[0]['Tracks'] as List;
+      var body = jsonDecode(response.body) as List;
+     // var results = body[0]['Tracks'] as List;
 
-      albumMusic = results.map((track) {
+      albumMusic = body.map((track) {
         return Music.fromJson(track);
       }).toList();
+  print("@@@ $albumMusic");
     }
   } catch (e) {
     print("@api_service -> fetchSearchedAlbums error - " + e.toString());
