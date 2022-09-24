@@ -17,7 +17,7 @@ class AlbumProvider extends ChangeNotifier {
     isPurchasedByUser: false,
     price: '60',
   );
-
+List<Album> albums=[];
   MusicApiService musicApiService = MusicApiService();
 
 // get new albums
@@ -40,5 +40,13 @@ class AlbumProvider extends ChangeNotifier {
 
     notifyListeners();
     return album;
+  }
+
+   Future<List<Album>> albumpaginator(key) async {
+    isLoading=true;
+    albums = await fetchMoreAlbumsPagination(key);
+    isLoading=false;
+    notifyListeners();
+    return albums;
   }
 }

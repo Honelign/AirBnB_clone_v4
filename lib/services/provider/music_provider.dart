@@ -116,9 +116,10 @@ class MusicProvider extends ChangeNotifier {
     return count;
   }
 
-  Future<List?> albumMusicsGetter(id) async {
+  Future<List<Music>> albumMusicsGetter(id) async {
+    isLoading=true;
     albumMusics = await fetchAlbumMusics(id);
-
+    isLoading=false;
     notifyListeners();
     return albumMusics;
   }
