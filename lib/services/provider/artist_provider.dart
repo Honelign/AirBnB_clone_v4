@@ -6,10 +6,12 @@ import '../network/api_service.dart';
 
 class ArtistProvider extends ChangeNotifier {
   bool isLoading = false;
-  Artist artist = Artist(id: 12, name: 'name', cover: '');
+  // Artist artist = Artist();
+  //late List<Artist> artist;
   MusicApiService musicApiService = MusicApiService();
 
   Future<List<Artist>> getArtist() async {
+    print("getting artist provider");
     const String apiEndPoint = '/mobileApp/artists';
     isLoading = true;
     List<Artist> artists = await musicApiService.getArtists(apiEndPoint);
@@ -19,12 +21,12 @@ class ArtistProvider extends ChangeNotifier {
     return artists;
   }
 
-  Future<Artist> getArtistForSearch(id) async {
+  /* Future<Artist> getArtistForSearch(id) async {
     isLoading = true;
     artist = await getArtistsforSearch(id);
 
     isLoading = false;
     notifyListeners();
     return artist;
-  }
+  } */
 }

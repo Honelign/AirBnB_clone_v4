@@ -56,6 +56,7 @@ class MusicApiService {
       String uid = await helper.getUserId();
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
+
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
@@ -71,14 +72,19 @@ class MusicApiService {
 
   Future getArtistAlbums(apiEndPoint, artist_id) async {
     try {
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint$artist_id"));
+      String uid = await helper.getUserId();
+      Response response = await get(Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id"));
+      print("$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id");
+      print("statuscode=" + response.statusCode.toString());
+
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Album> albums = item.map((value) {
+        List<Album> albums = item.map<Album>((value) {
           return Album.fromJson(value);
         }).toList();
+        print(albums.toString());
 
         return albums;
       } else {}
@@ -93,28 +99,19 @@ class MusicApiService {
     List<Artist> artists = [];
     try {
       String uid = await helper.getUserId();
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
+      Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+      //?userId=$uid
+      print("sdf");
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
-
-        item.forEach((artist) {
-          artist['Albums'].forEach((album) {
-            List allAlbums = artist['Tracks']
-                .where((track) =>
-                    track['album_id'].toString() == album['id'].toString())
-                .toList();
-
-            album['Tracks'] = allAlbums;
-          });
-        });
 
         artists = item.map((value) {
           return Artist.fromJson(value);
         }).toList();
       }
     } catch (e) {
+      print("$kinMusicBaseUrl$apiEndPoint");
       print("@music_service -> getArtists error - $e");
     }
     return artists;
