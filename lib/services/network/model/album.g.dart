@@ -15,7 +15,7 @@ Album _$AlbumFromJson(Map<String, dynamic> json) => Album(
       artist_id: json['artist_id'].toString(),
       artist: json['artist_name'] as String,
       isPurchasedByUser: json['is_purchasedByUser'] ?? false,
-      count: 5,
+      count: json['noOfTracks'] as int,
     );
 Map<String, dynamic> _$AlbumToJson(Album instance) => <String, dynamic>{
       'id': instance.id,
@@ -26,5 +26,5 @@ Map<String, dynamic> _$AlbumToJson(Album instance) => <String, dynamic>{
       'artist_id': instance.artist_id,
       'artist_name': instance.artist,
       'is_purchasedByUser': instance.isPurchasedByUser,
-      'count': instance.count
+      'noOfTracks': instance.count
     };

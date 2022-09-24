@@ -27,6 +27,7 @@ class GridCard extends StatelessWidget {
       width: getProportionateScreenWidth(width),
       child: GestureDetector(
         onTap: () {
+        
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AlbumBody(
@@ -43,6 +44,9 @@ class GridCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
+                  placeholder: (context, url) {
+                    return Image.asset("assets/images/logo.png");
+                  },
                   fit: BoxFit.cover,
                   imageUrl: '$kinAssetBaseUrl/${album.cover}',
                 ),
