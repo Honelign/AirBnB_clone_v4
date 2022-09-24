@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/genre_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -17,6 +19,35 @@ class Genres extends StatefulWidget {
 }
 
 class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
+  static const _pageSize = 1;
+
+  final PagingController<int, Genre> _pagingController =
+      PagingController(firstPageKey: 1);
+
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchMoreGenres(pageKey);
+    });
+    super.initState();
+  }
+
+  Future _fetchMoreGenres(pageKey) async {
+    try {
+      GenreProvider genreProvider = Provider.of<GenreProvider>(context);
+      final newItems = await genreProvider.getAllGenres(pageKey: _pageSize);
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -31,7 +62,7 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
         setState(() {});
       },
       child: FutureBuilder(
-        future: provider.getAllGenres(),
+        future: provider.getAllGenres(pageKey: _pageSize),
         builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
           if (provider.isLoading &&
               snapshot.connectionState == ConnectionState.waiting) {

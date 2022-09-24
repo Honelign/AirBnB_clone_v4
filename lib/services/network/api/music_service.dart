@@ -125,9 +125,11 @@ class MusicApiService {
    */
 
   // get list of all available genres
-  Future<List<Genre>> getGenres(apiEndPoint) async {
+  Future<List<Genre>> getGenres(
+      {required String apiEndPoint, required int pageKey}) async {
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?page=$pageKey"));
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
@@ -146,6 +148,7 @@ class MusicApiService {
   Future<List<Music>> getMusicByGenreID({
     required String apiEndPoint,
     required String genreId,
+    required int pageKey,
   }) async {
     List<Music> tracksUnderGenre = [];
     try {
@@ -167,6 +170,7 @@ class MusicApiService {
     } catch (e) {
       print("@music_service -> getMusicByGenreID error $e");
     }
+    print("@@@@@->getting genrebyID - $tracksUnderGenre");
     return tracksUnderGenre;
   }
 

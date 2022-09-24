@@ -28,20 +28,39 @@ class GenreDetail extends StatefulWidget {
 }
 
 class _GenreDetailState extends State<GenreDetail> {
-  static const _pageSize = 6;
-  final PagingController<int, Music> pagingController =
+  static const _pageSize = 0;
+
+  final PagingController<int, Music> _pagingController =
       PagingController(firstPageKey: 0);
 
   @override
   void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchMoreAlbums(pageKey);
+    });
     super.initState();
   }
 
-  Future fetchMoreAlbums(pageKey) async {}
+  Future _fetchMoreAlbums(pageKey) async {
+    try {
+      GenreProvider genreProvider = Provider.of<GenreProvider>(context);
+      final newItems = await genreProvider.getAllTracksByGenreId(
+          genreId: widget.genre.id.toString(), pageKey: pageKey);
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
 
   @override
   void dispose() {
-    pagingController.dispose();
+    _pagingController.dispose();
     super.dispose();
   }
 
@@ -52,7 +71,8 @@ class _GenreDetailState extends State<GenreDetail> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: FutureBuilder(
-        future: albumProvider.getAllTracksByGenreId(),
+        future: albumProvider.getAllTracksByGenreId(
+            genreId: widget.genre.id.toString(), pageKey: _pageSize),
         builder: (context, snapshot) {
           // loading state
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,19 +119,8 @@ class _GenreDetailState extends State<GenreDetail> {
                             child: Column(
                               children: [
                                 SizedBox(
-                                    height: getProportionateScreenWidth(20)),
-                                ListView.builder(
-                                  itemCount: allTracksUnderGenre.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return MusicListCard(
-                                      music: allTracksUnderGenre[index],
-                                      musics: allTracksUnderGenre,
-                                      musicIndex: index,
-                                    );
-                                  },
-                                )
+                                  height: getProportionateScreenWidth(20),
+                                ),
                               ],
                             ),
                           ),

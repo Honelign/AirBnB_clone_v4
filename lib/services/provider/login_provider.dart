@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
