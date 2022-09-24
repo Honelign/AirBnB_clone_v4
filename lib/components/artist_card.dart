@@ -38,7 +38,7 @@ class ArtistCard extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: CachedNetworkImage(
-              imageUrl: '$kinAssetBaseUrl/${artist.cover}',
+              imageUrl: '$kinAssetBaseUrl/${artist.artist_profileImage}',
               fit: BoxFit.cover,
             ),
           ),
@@ -51,7 +51,8 @@ class ArtistCard extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(artist.cover), fit: BoxFit.contain),
+                  image: AssetImage(artist.artist_profileImage),
+                  fit: BoxFit.contain),
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
@@ -59,7 +60,7 @@ class ArtistCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    artist.name,
+                    artist.artist_name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),

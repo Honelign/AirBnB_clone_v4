@@ -44,6 +44,13 @@ class _ArtistsState extends State<Artists> {
               return ArtistCard(artist: artists[index]);
             },
           );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Something went wrong!',
+              style: TextStyle(color: Colors.white),
+            ),
+          );
         }
         return const Center(
           child: KinProgressIndicator(),

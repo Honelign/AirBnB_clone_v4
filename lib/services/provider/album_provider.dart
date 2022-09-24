@@ -7,16 +7,15 @@ class AlbumProvider extends ChangeNotifier {
   bool isLoading = false;
   static const _pageSize = 10;
   Album album = Album(
-    id: 12,
-    title: 'title',
-    artist: 'artist',
-    description: 'description',
-    cover: 'cover',
-    count: 0,
-    artist_id: '1',
-    isPurchasedByUser: false,
-    price: '60',
-  );
+      id: 5,
+      count: 5,
+      title: 'title',
+      artist: 'artist',
+      description: 'description',
+      cover: 'cover',
+      artist_id: 'artist_id',
+      price: '5',
+      isPurchasedByUser: false);
 
   MusicApiService musicApiService = MusicApiService();
 
@@ -31,12 +30,14 @@ class AlbumProvider extends ChangeNotifier {
     notifyListeners();
     return albums;
   }
+
   //get albums for artist
   Future<List<Album>> getArtistAlbums(String artist_id) async {
-    const String apiEndPoint = '/mobile_app/albums';
+    const String apiEndPoint = '/mobileApp/albumByArtistId';
     isLoading = true;
 
-    List<Album> albums = await musicApiService.getArtistAlbums(apiEndPoint,artist_id);
+    List<Album> albums =
+        await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
     isLoading = false;
 
     notifyListeners();
@@ -45,11 +46,11 @@ class AlbumProvider extends ChangeNotifier {
 
   Future<Album> getAlbumForsearch(id) async {
     isLoading = true;
-
-    album = await getAlbumsforSearch(id);
+    await Future.delayed(Duration(seconds: 1));
+    //album = await getAlbumsforSearch(id);
     isLoading = false;
 
     notifyListeners();
-    return album;
+    return album; //album;
   }
 }

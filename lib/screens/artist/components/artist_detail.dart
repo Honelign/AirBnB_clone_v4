@@ -59,7 +59,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.artist.cover}',
+                '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
               ),
               fit: BoxFit.cover,
             ),
@@ -385,7 +385,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
               press: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ArtistAlbum(
-                    albums: [], // widget.artist.albums!,
+                    albums: albumProvider.album
+                        as List<Album>, // widget.artist.albums!,
                     artistCover: albumProvider.album.cover,
                   ),
                 ));
@@ -412,7 +413,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     left: getProportionateScreenWidth(20),
                   ),
                   child: GridCard(
-                    album: [] as Album, //widget.artist.albums![index],
+                    album: albumProvider.album, //widget.artist.albums![index],
                   ),
                 );
               },

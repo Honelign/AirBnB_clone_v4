@@ -29,8 +29,8 @@ class _ArtistCardSearchState extends State<ArtistCardSearch> {
     return GestureDetector(
       onTap: () async {
         final provider = Provider.of<ArtistProvider>(context, listen: false);
-        await provider.getArtistForSearch(widget.artist.id);
-        Artist artisttouched = provider.artist;
+      //  await provider.getArtistForSearch(widget.artist.id);
+      //  Artist artisttouched = provider.artist;
 
         // await Future.delayed(Duration(microseconds: 500));
         // Navigator.push(
