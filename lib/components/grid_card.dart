@@ -22,28 +22,20 @@ class GridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: MediaQuery.of(context).size.height * 0.6,
       decoration: BoxDecoration(
         color: kGrey.withOpacity(0.075),
         borderRadius: BorderRadius.circular(10),
       ),
       width: getProportionateScreenWidth(width),
-      child: GestureDetector(
-        onTap: ()async {
-        
-          List<Music> musics=[];
-         
-//  await Provider.of<MusicProvider>(context, listen: false)
-//         .albumMusicsGetter(album.id);
-//         musics =
-//         Provider.of<MusicProvider>(context, listen: false).albumMusics;
-//       //  print('@@@ ${albumMusicss}');
-  
+      child: InkWell(
+        onTap: () async {
+          List<Music> musics = [];
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AlbumBody(
                 album: album,
-                albumMusicsfromcard: musics,
+                albumMusicsFromCard: musics,
               ),
             ),
           );
@@ -60,7 +52,7 @@ class GridCard extends StatelessWidget {
                     return Image.asset("assets/images/logo.png");
                   },
                   fit: BoxFit.cover,
-                  imageUrl: '${album.cover}',
+                  imageUrl: '$kinAssetBaseUrl/${album.cover}',
                 ),
               ),
             ),
@@ -74,7 +66,7 @@ class GridCard extends StatelessWidget {
             SizedBox(
               height: getProportionateScreenHeight(2),
             ),
-            Text(
+            const Text(
               '',
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: kGrey),

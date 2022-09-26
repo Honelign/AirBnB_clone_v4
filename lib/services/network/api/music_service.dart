@@ -50,12 +50,12 @@ class MusicApiService {
   }
 
   // albums
-  Future getAlbums(apiEndPoint) async {
+  Future getAlbums({required String apiEndPoint, int pageSize = 1}) async {
     List<Album> albums = [];
     try {
       String uid = await helper.getUserId();
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid&page=$pageSize"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;

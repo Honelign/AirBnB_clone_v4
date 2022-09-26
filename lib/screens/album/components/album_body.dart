@@ -22,11 +22,12 @@ class AlbumBody extends StatefulWidget {
   static String routeName = '/decoration';
 
   final Album album;
-  final List<Music> albumMusicsfromcard;
+  final List<Music> albumMusicsFromCard;
 
   const AlbumBody({
     Key? key,
-    required this.album, required this.albumMusicsfromcard,
+    required this.album,
+    required this.albumMusicsFromCard,
   }) : super(key: key);
 
   @override
@@ -34,27 +35,8 @@ class AlbumBody extends StatefulWidget {
 }
 
 class _AlbumBodyState extends State<AlbumBody> {
-  //List<Music> albumMusicss = [];
-//   @override
-//   void initState()  {
-//   setterAlbumMusics();
-//     // TODO: implement initState
-    
-//     super.initState();
-//     print("@@@__${widget.album.id}");
-//   }
-//   Future<void> setterAlbumMusics()async{
-//  await Provider.of<MusicProvider>(context, listen: false)
-//         .albumMusicsGetter(widget.album.id);
-//         albumMusicss =
-//         Provider.of<MusicProvider>(context, listen: false).albumMusics;
-//         print('@@@ ${albumMusicss}');
-//   }
-
   @override
   Widget build(BuildContext context) {
-    //  var p= Provider.of<MusicProvider>(context,listen: false);
-
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -62,37 +44,42 @@ class _AlbumBodyState extends State<AlbumBody> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: CachedNetworkImageProvider(
-                  '$kinAssetBaseUrl/${widget.album.cover}'),
+                '$kinAssetBaseUrl/${widget.album.cover}',
+              ),
               fit: BoxFit.cover,
             ),
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
             child: Container(
-              
-                color: kPrimaryColor.withOpacity(0.5),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: getProportionateScreenHeight(280),
-                      child: Stack(
-                        children: [
-                          _buildAlbumArt(widget.album.cover),
-                          _buildTitleSection(widget.album),
-                          _buildBackButton(context),
-                         _buildAlbumInfo(),
-                          _buildPlayAllIcon(context, widget.albumMusicsfromcard)
-                        ],
-                      ),
+              color: kPrimaryColor.withOpacity(0.5),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(280),
+                    child: Stack(
+                      children: [
+                        _buildAlbumArt(widget.album.cover),
+                        _buildTitleSection(widget.album),
+                        _buildBackButton(context),
+                        _buildAlbumInfo(),
+                        _buildPlayAllIcon(
+                          context,
+                          widget.albumMusicsFromCard,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: getProportionateScreenHeight(15),
-                    ),
-                    Expanded(
-                      child: _buildAlbumMusics(widget.albumMusicsfromcard, context,widget.album.id),
-                    )
-                  ],
-                )),
+                  ),
+                  SizedBox(
+                    height: getProportionateScreenHeight(15),
+                  ),
+                  Expanded(
+                    child: _buildAlbumMusics(
+                        widget.albumMusicsFromCard, context, widget.album.id),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -184,16 +171,18 @@ class _AlbumBodyState extends State<AlbumBody> {
         width: double.infinity,
         color: kPrimaryColor.withOpacity(0.5),
         padding: EdgeInsets.symmetric(
-            horizontal: getProportionateScreenWidth(10),
-            vertical: getProportionateScreenHeight(5)),
+          horizontal: getProportionateScreenWidth(10),
+          vertical: getProportionateScreenHeight(5),
+        ),
         child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              "${widget.album.count} songs",
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontWeight: FontWeight.w600),
-            )),
+          alignment: Alignment.bottomLeft,
+          child: Text(
+            "${widget.album.count} songs",
+            style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontWeight: FontWeight.w600),
+          ),
+        ),
       ),
     );
   }
@@ -233,7 +222,7 @@ class _AlbumBodyState extends State<AlbumBody> {
                     musicProvider.setPlayer(
                         musicProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsfromcard,
+                        musics: widget.albumMusicsFromCard,
                         album: widget.album,
                         music: musics[0],
                         index: 0);
@@ -268,7 +257,7 @@ class _AlbumBodyState extends State<AlbumBody> {
                     playerProvider.setPlayer(
                         playerProvider.player, podcastProvider, radioProvider);
                     playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsfromcard,
+                        musics: widget.albumMusicsFromCard,
                         album: widget.album,
                         music: musics[0],
                         index: 0);
@@ -324,26 +313,27 @@ class _AlbumBodyState extends State<AlbumBody> {
     );
   }
 
-  Widget _buildAlbumMusics(musics, context,id) {
+  Widget _buildAlbumMusics(musics, context, id) {
     return FutureBuilder<List<Music>>(
-      future:Provider.of<MusicProvider>(context, listen: false)
-        .albumMusicsGetter(id) ,
+      future: Provider.of<MusicProvider>(context, listen: false)
+          .albumMusicsGetter(id),
       builder: (context, snapshot) {
-        if(snapshot.connectionState==ConnectionState.waiting){
-          return KinProgressIndicator();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const KinProgressIndicator();
         }
-        List<Music> musicss=snapshot.data??[];
+        List<Music> albumMusics = snapshot.data ?? [];
         return ListView.builder(
-            itemCount: musicss.length,
-            itemBuilder: (context, index) {
-              return AlbumCard(
-                albumMusics: musicss,
-                music: musicss[index],
-                musicIndex: index,
-                album: widget.album,
-              );
-            });
-      }
+          itemCount: albumMusics.length,
+          itemBuilder: (context, index) {
+            return AlbumCard(
+              albumMusics: albumMusics,
+              music: albumMusics[index],
+              musicIndex: index,
+              album: widget.album,
+            );
+          },
+        );
+      },
     );
   }
 }

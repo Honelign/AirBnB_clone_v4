@@ -21,11 +21,12 @@ class AlbumProvider extends ChangeNotifier {
   MusicApiService musicApiService = MusicApiService();
 
 // get new albums
-  Future<List<Album>> getAlbums() async {
+  Future<List<Album>> getAlbums({required int pageSize}) async {
     const String apiEndPoint = '/mobileApp/albums';
     isLoading = true;
 
-    List<Album> albums = await musicApiService.getAlbums(apiEndPoint);
+    List<Album> albums = await musicApiService.getAlbums(
+        apiEndPoint: apiEndPoint, pageSize: pageSize);
     isLoading = false;
 
     notifyListeners();
@@ -53,21 +54,5 @@ class AlbumProvider extends ChangeNotifier {
 
     notifyListeners();
     return album; //album;
-  }
-
-  Future<List<Album>> albumpaginator(key) async {
-    isLoading = true;
-    albums = await fetchMoreAlbumsPagination(key);
-    isLoading = false;
-    notifyListeners();
-    return albums;
-  }
-
-  Future<List<Album>> albumpaginator(key) async {
-    isLoading = true;
-    albums = await fetchMoreAlbumsPagination(key);
-    isLoading = false;
-    notifyListeners();
-    return albums;
   }
 }

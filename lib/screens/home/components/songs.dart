@@ -60,10 +60,6 @@ class _SongsState extends State<Songs> {
     );
   }
 
-  // Widget _buildNewReleasedMusicCard(BuildContext context) {
-
-  // }
-
   Widget _buildNewReleasedAlbums(BuildContext context) {
     final provider = Provider.of<AlbumProvider>(context, listen: false);
     return Column(
@@ -90,7 +86,7 @@ class _SongsState extends State<Songs> {
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder(
-                future: provider.getAlbums(),
+                future: provider.getAlbums(pageSize: 1),
                 builder: (context, AsyncSnapshot<List<Album>> snapshot) {
                   if (!(snapshot.connectionState == ConnectionState.waiting)) {
                     if (snapshot.hasData) {
@@ -106,17 +102,18 @@ class _SongsState extends State<Songs> {
                               image: albums[index].cover,
                               genre: albums[index].title,
                               // numOfMusics: albums[index].musics.length,
-                              press: ()async {
-                                List<Music> musics=[];
-       
-       
+                              press: () async {
+                                List<Music> musics = [];
+
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AlbumBody(
-                                          albumMusicsfromcard: musics,
-                                              album: albums[index],
-                                            )));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AlbumBody(
+                                      albumMusicsFromCard: musics,
+                                      album: albums[index],
+                                    ),
+                                  ),
+                                );
                               });
                         },
                       );

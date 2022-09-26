@@ -56,11 +56,12 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("negro = genrebuild");
     super.build(context);
     return RefreshIndicator(
       color: kSecondaryColor,
       onRefresh: () async {
-        setState(() {});
+        _pagingController.refresh();
       },
       child: PagedGridView<int, Genre>(
         pagingController: _pagingController,
@@ -85,21 +86,32 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
               child: Text("No Genres"),
             ),
           ),
-          noMoreItemsIndicatorBuilder: (_) => Container(
-            padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-            child: const Center(
-              child: Text(
-                "No More Genres",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+          noMoreItemsIndicatorBuilder: (_) => Wrap(
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(18, 16, 0, 32),
+                width: double.infinity,
+                height: 100,
+                child: const Center(
+                  child: Text(
+                    "No More Genres",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-          firstPageProgressIndicatorBuilder: (_) =>
-              const KinProgressIndicator(),
-          newPageProgressIndicatorBuilder: (_) => const KinProgressIndicator(),
+          firstPageProgressIndicatorBuilder: (_) => SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Center(child: KinProgressIndicator()),
+          ),
+          newPageProgressIndicatorBuilder: (_) => SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Center(child: KinProgressIndicator()),
+          ),
           itemBuilder: ((context, item, index) {
             return GenreCard(
               genre: item,
