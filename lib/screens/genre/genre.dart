@@ -56,7 +56,6 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("negro = genrebuild");
     super.build(context);
     return RefreshIndicator(
       color: kSecondaryColor,
