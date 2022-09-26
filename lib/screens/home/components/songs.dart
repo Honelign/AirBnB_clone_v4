@@ -10,6 +10,7 @@ import 'package:kin_music_player_app/components/section_titile_recently.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
+import 'package:kin_music_player_app/screens/payment/paypal/makepayment.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
@@ -105,11 +106,15 @@ class _SongsState extends State<Songs> {
                               image: albums[index].cover,
                               genre: albums[index].title,
                               // numOfMusics: albums[index].musics.length,
-                              press: () {
+                              press: ()async {
+                                List<Music> musics=[];
+       
+       
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AlbumBody(
+                                          albumMusicsfromcard: musics,
                                               album: albums[index],
                                             )));
                               });

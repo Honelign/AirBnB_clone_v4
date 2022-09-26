@@ -7,16 +7,17 @@ class AlbumProvider extends ChangeNotifier {
   bool isLoading = false;
   static const _pageSize = 10;
   Album album = Album(
-      id: 5,
-      count: 5,
-      title: 'title',
-      artist: 'artist',
-      description: 'description',
-      cover: 'cover',
-      artist_id: 'artist_id',
-      price: '5',
-      isPurchasedByUser: false);
-
+    id: 12,
+    title: 'title',
+    artist: 'artist',
+    description: 'description',
+    cover: 'cover',
+    count: 0,
+    artist_id: '1',
+    isPurchasedByUser: false,
+    price: '60',
+  );
+  List<Album> albums = [];
   MusicApiService musicApiService = MusicApiService();
 
 // get new albums
@@ -52,5 +53,21 @@ class AlbumProvider extends ChangeNotifier {
 
     notifyListeners();
     return album; //album;
+  }
+
+  Future<List<Album>> albumpaginator(key) async {
+    isLoading = true;
+    albums = await fetchMoreAlbumsPagination(key);
+    isLoading = false;
+    notifyListeners();
+    return albums;
+  }
+
+  Future<List<Album>> albumpaginator(key) async {
+    isLoading = true;
+    albums = await fetchMoreAlbumsPagination(key);
+    isLoading = false;
+    notifyListeners();
+    return albums;
   }
 }

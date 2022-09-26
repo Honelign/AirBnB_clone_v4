@@ -212,6 +212,20 @@ Future fetchMorePopular(page) async {
   }
 }
 
+Future fetchMoreAlbumsPagination(key) async {
+  List<Album> albums;
+  Response response =
+      await get(Uri.parse("$kinMusicBaseUrl/webApp/album?page=$key"));
+      print('lll ${response.statusCode}');
+      print('lll $kinMusicBaseUrl/webApp/album?page=$key');
+  if (response.statusCode == 200) {
+    final item = json.decode(response.body)['results'] as List;
+    albums = item.map((value) => Album.fromJson(value)).toList();
+    print('lll $albums');
+    return albums;
+  }
+}
+//http://music-service-vdzflryflq-ew.a.run.app/webApp/album?page=2
 Future fetchMoreCategories(page) async {
   List<PodCastCategory> categories;
   Response response =

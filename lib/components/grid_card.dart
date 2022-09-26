@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../services/network/model/music.dart';
+import '../services/provider/music_provider.dart';
 import '../size_config.dart';
 
 class GridCard extends StatelessWidget {
@@ -26,12 +29,21 @@ class GridCard extends StatelessWidget {
       ),
       width: getProportionateScreenWidth(width),
       child: GestureDetector(
-        onTap: () {
+        onTap: ()async {
         
+          List<Music> musics=[];
+         
+//  await Provider.of<MusicProvider>(context, listen: false)
+//         .albumMusicsGetter(album.id);
+//         musics =
+//         Provider.of<MusicProvider>(context, listen: false).albumMusics;
+//       //  print('@@@ ${albumMusicss}');
+  
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AlbumBody(
                 album: album,
+                albumMusicsfromcard: musics,
               ),
             ),
           );
@@ -48,7 +60,7 @@ class GridCard extends StatelessWidget {
                     return Image.asset("assets/images/logo.png");
                   },
                   fit: BoxFit.cover,
-                  imageUrl: '$kinAssetBaseUrl/${album.cover}',
+                  imageUrl: '${album.cover}',
                 ),
               ),
             ),
@@ -63,7 +75,7 @@ class GridCard extends StatelessWidget {
               height: getProportionateScreenHeight(2),
             ),
             Text(
-              album.artist,
+              '',
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: kGrey),
             ),
