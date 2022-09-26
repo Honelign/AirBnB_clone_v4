@@ -151,14 +151,18 @@ class MusicApiService {
     required int pageKey,
   }) async {
     List<Music> tracksUnderGenre = [];
+
     try {
       // get user Id
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String uid = prefs.getString("id") ?? "";
 
       // make api call
-      Response response = await get(Uri.parse(
-          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId"));
+      Response response = await get(
+        Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId&page=$pageKey",
+        ),
+      );
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body) as List;
@@ -170,7 +174,7 @@ class MusicApiService {
     } catch (e) {
       print("@music_service -> getMusicByGenreID error $e");
     }
-    print("@@@@@->getting genrebyID - $tracksUnderGenre");
+
     return tracksUnderGenre;
   }
 
@@ -178,7 +182,7 @@ class MusicApiService {
       {required String track_id, required String user_id}) async {
     var data = {"user_id": user_id, "track_id": track_id};
     Response response = await post(
-      Uri.parse("${kAnalyticsBaseUrl}/view_count"),
+      Uri.parse("$kAnalyticsBaseUrl/view_count"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'

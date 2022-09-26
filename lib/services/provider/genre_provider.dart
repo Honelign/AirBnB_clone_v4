@@ -38,6 +38,7 @@ class GenreProvider extends ChangeNotifier {
   // get all tracks under genre -> by genreId
   Future<List<Music>> getAllTracksByGenreId(
       {required String genreId, required int pageKey}) async {
+    await Future.delayed(const Duration(seconds: 1));
     // endpoint
     const String apiEndPoint = '/mobileApp/tracksByGenreId';
 
@@ -46,8 +47,8 @@ class GenreProvider extends ChangeNotifier {
     // make api call
     allTracksUnderGenre = await musicApiService.getMusicByGenreID(
       apiEndPoint: apiEndPoint,
-      genreId: "1",
-      pageKey: _currentPageKeyForTracksUnderGenre,
+      genreId: genreId,
+      pageKey: pageKey,
     );
 
     isLoading = false;
