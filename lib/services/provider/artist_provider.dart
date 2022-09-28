@@ -10,11 +10,12 @@ class ArtistProvider extends ChangeNotifier {
   //late List<Artist> artist;
   MusicApiService musicApiService = MusicApiService();
 
-  Future<List<Artist>> getArtist() async {
+  Future<List<Artist>> getArtist({required int pageSize}) async {
     print("getting artist provider");
     const String apiEndPoint = '/mobileApp/artists';
     isLoading = true;
-    List<Artist> artists = await musicApiService.getArtists(apiEndPoint);
+    List<Artist> artists = await musicApiService.getArtists(
+        apiEndPoint: apiEndPoint, pageSize: pageSize);
 
     isLoading = false;
     notifyListeners();
