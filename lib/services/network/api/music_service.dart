@@ -51,12 +51,12 @@ class MusicApiService {
   }
 
   // albums
-  Future getAlbums(apiEndPoint) async {
+  Future getAlbums({required String apiEndPoint, int pageSize = 1}) async {
     List<Album> albums = [];
     try {
       String uid = await helper.getUserId();
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid&page=$pageSize"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -174,9 +174,11 @@ class MusicApiService {
    */
 
   // get list of all available genres
-  Future<List<Genre>> getGenres(apiEndPoint) async {
+  Future<List<Genre>> getGenres(
+      {required String apiEndPoint, required int pageKey}) async {
     try {
-      Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?page=$pageKey"));
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
@@ -195,16 +197,21 @@ class MusicApiService {
   Future<List<Music>> getMusicByGenreID({
     required String apiEndPoint,
     required String genreId,
+    required int pageKey,
   }) async {
     List<Music> tracksUnderGenre = [];
+
     try {
       // get user Id
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String uid = prefs.getString("id") ?? "";
 
       // make api call
-      Response response = await get(Uri.parse(
-          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId"));
+      Response response = await get(
+        Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId&page=$pageKey",
+        ),
+      );
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body) as List;
@@ -216,6 +223,7 @@ class MusicApiService {
     } catch (e) {
       print("@music_service -> getMusicByGenreID error $e");
     }
+
     return tracksUnderGenre;
   }
 
@@ -223,7 +231,7 @@ class MusicApiService {
       {required String track_id, required String user_id}) async {
     var data = {"user_id": user_id, "track_id": track_id};
     Response response = await post(
-      Uri.parse("${kAnalyticsBaseUrl}/view_count"),
+      Uri.parse("$kAnalyticsBaseUrl/view_count"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'

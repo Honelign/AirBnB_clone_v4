@@ -212,6 +212,7 @@ Future fetchMorePopular(page) async {
   }
 }
 
+//http://music-service-vdzflryflq-ew.a.run.app/webApp/album?page=2
 Future fetchMoreCategories(page) async {
   List<PodCastCategory> categories;
   Response response =
@@ -285,16 +286,16 @@ Future fetchAlbumMusics(int id) async {
   List<Music> albumMusic = [];
   try {
     String uid = await helper.getUserId();
-    Response response =
-        await get(Uri.parse('$kinMusicBaseUrl/mobileApp/tracksByAlbumId?userId=$uid&albumId=$id'));
+    Response response = await get(Uri.parse(
+        '$kinMusicBaseUrl/mobileApp/tracksByAlbumId?userId=$uid&albumId=$id'));
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body) as List;
-     // var results = body[0]['Tracks'] as List;
+      // var results = body[0]['Tracks'] as List;
 
       albumMusic = body.map((track) {
         return Music.fromJson(track);
       }).toList();
-  print("@@@ $albumMusic");
+      print("@@@ $albumMusic");
     }
   } catch (e) {
     print("@api_service -> fetchSearchedAlbums error - " + e.toString());
@@ -907,8 +908,3 @@ retryFuture(future, delay) {
     future();
   });
 }
-
-
-
-
-

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/genre/components/custom_list_tile.dart';
+import 'package:kin_music_player_app/screens/podcast/components/custom_list_tile.dart';
 import 'package:kin_music_player_app/screens/podcast/components/detail_card.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/size_config.dart';

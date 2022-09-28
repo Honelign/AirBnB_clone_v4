@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../services/network/model/music.dart';
+import '../services/provider/music_provider.dart';
 import '../size_config.dart';
 
 class GridCard extends StatelessWidget {
@@ -19,19 +22,20 @@ class GridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: MediaQuery.of(context).size.height * 0.6,
       decoration: BoxDecoration(
         color: kGrey.withOpacity(0.075),
         borderRadius: BorderRadius.circular(10),
       ),
       width: getProportionateScreenWidth(width),
-      child: GestureDetector(
-        onTap: () {
-        
+      child: InkWell(
+        onTap: () async {
+          List<Music> musics = [];
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => AlbumBody(
                 album: album,
+                albumMusicsFromCard: musics,
               ),
             ),
           );
@@ -62,8 +66,8 @@ class GridCard extends StatelessWidget {
             SizedBox(
               height: getProportionateScreenHeight(2),
             ),
-            Text(
-              album.artist,
+            const Text(
+              '',
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: kGrey),
             ),

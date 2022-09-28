@@ -33,12 +33,12 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
         Album albumtouched = provider.searchalbum;
 
         // await Future.delayed(Duration(microseconds: 500));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AlbumBody(album: albumtouched),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => AlbumBody(album: albumtouched),
+        //   ),
+        // );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),

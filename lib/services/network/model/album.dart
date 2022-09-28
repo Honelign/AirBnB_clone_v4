@@ -10,7 +10,7 @@ class Album {
 
   Album(
       {required this.id,
-      required this.count,
+      this.count = 0,
       required this.title,
       required this.artist,
       required this.description,
