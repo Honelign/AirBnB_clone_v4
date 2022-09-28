@@ -86,44 +86,45 @@ class _GenreDetailState extends State<GenreDetail> {
               child: PagedListView<int, Music>(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<Music>(
-                    animateTransitions: true,
-                    transitionDuration: const Duration(milliseconds: 500),
-                    noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: Center(
-                            child: Text(
-                              "No Tracks in ${widget.genre.title}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
+                  animateTransitions: true,
+                  transitionDuration: const Duration(milliseconds: 500),
+                  noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: Center(
+                      child: Text(
+                        "No Tracks in ${widget.genre.title}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
                         ),
-                    noMoreItemsIndicatorBuilder: (_) => Container(
-                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                          child: Center(
-                            child: Text(
-                              "No More Items in ${widget.genre.title}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                      ),
+                    ),
+                  ),
+                  noMoreItemsIndicatorBuilder: (_) => Container(
+                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                    child: Center(
+                      child: Text(
+                        "No More Items in ${widget.genre.title}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
-                    firstPageProgressIndicatorBuilder: (_) =>
-                        const KinProgressIndicator(),
-                    newPageProgressIndicatorBuilder: (_) =>
-                        const KinProgressIndicator(),
-                    itemBuilder: (context, item, index) {
-                      return MusicListCard(
-                        music: item,
-                        musics: genreProvider.allTracksUnderGenre,
-                        musicIndex: index,
-                      );
-                    }),
+                      ),
+                    ),
+                  ),
+                  firstPageProgressIndicatorBuilder: (_) =>
+                      const KinProgressIndicator(),
+                  newPageProgressIndicatorBuilder: (_) =>
+                      const KinProgressIndicator(),
+                  itemBuilder: (context, item, index) {
+                    return MusicListCard(
+                      music: item,
+                      musics: genreProvider.allTracksUnderGenre,
+                      musicIndex: index,
+                    );
+                  },
+                ),
               ),
             ),
           ),

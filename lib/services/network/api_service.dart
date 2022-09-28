@@ -4,15 +4,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
-import 'package:kin_music_player_app/screens/podcast/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/album_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
-import 'package:kin_music_player_app/services/network/model/playlist.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
-import 'package:kin_music_player_app/services/network/model/podcastSeasons.dart';
 import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
 import 'package:kin_music_player_app/services/utils/helpers.dart';
@@ -22,17 +16,13 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/companyProfile.dart';
 import 'package:kin_music_player_app/services/network/model/favorite.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_title.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 import '../../constants.dart';
-import 'model/user.dart';
 
 HelperUtils helper = HelperUtils();
 
@@ -400,50 +390,6 @@ Future getAlbumsforSearch(id) async {
   } else {
     return [];
   }
-}
-
-Future getPlayLists(apiEndPoint) async {
-  Response response = await get(Uri.parse("$kinMusicBaseUrl/" "$apiEndPoint"));
-
-  if (response.statusCode == 200) {
-    final item = json.decode(response.body) as List;
-    item.forEach((playlistTitle) {
-      List playlistList = [];
-      playlistTitle['playlists'] = [];
-      playlistTitle['Tracks'].forEach((track) {
-        Map<String, dynamic> playlistInfo = {};
-
-        playlistInfo['playlist_id'] = playlistTitle['playlist_id'];
-        playlistInfo['playlist_music'] = track;
-        playlistList.add(playlistInfo);
-      });
-      playlistTitle['playlists'] = playlistList;
-      playlistTitle.remove("Tracks");
-    });
-
-    List<PlaylistTitle> playlists = item.map((value) {
-      return PlaylistTitle.fromJson(value);
-    }).toList();
-
-    return playlists;
-  } else {}
-
-  // Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
-
-  // if (response.statusCode == 200) {
-  //   final item = json.decode(response.body) as List;
-  //   item.forEach((musics) {
-  //     musics['Tracks'].forEach((tracks) {
-  //       tracks['lyrics_detail'] = tracks['genre_title'];
-  //       tracks['lyrics_id'] = tracks['genre_title'];
-  //     });
-  //   });
-  //   List<PlaylistTitle> playlists = item.map((value) {
-  //     return PlaylistTitle.fromJson(value);
-  //   }).toList();
-
-  //   return playlists;
-  // } else {}
 }
 
 Future getPlayListTitles(apiEndPoint) async {

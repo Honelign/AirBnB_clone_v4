@@ -17,14 +17,14 @@ import 'components/custom_bottom_app_bar.dart';
 
 class AppRouter {
   final Map<String, WidgetBuilder> allRoutes = {
-    LandingPage.routeName: (context) => LandingPage(),
+    LandingPage.routeName: (context) => const LandingPage(),
     HomeScreen.routeName: (context) => const HomeScreen(),
     HomeSearchScreen.routeName: (context) => const HomeSearchScreen(),
-    CustomBottomAppBar.routeName: (context) => CustomBottomAppBar(),
+    CustomBottomAppBar.routeName: (context) => const CustomBottomAppBar(),
     AllCategory.routeName: (context) => const AllCategory(),
     Favorite.routeName: (context) => const Favorite(),
     AllPodCastList.routeName: (context) => const AllPodCastList(),
-    LoginSignupBody.routeName: (context) => const LoginSignupBody(),
+    LoginSignUpBody.routeName: (context) => const LoginSignUpBody(),
     ForgetPassword.routeName: (context) => ForgetPassword(),
     RegPage.routeName: (context) => RegPage(),
     OTPVerification.routeName: (context) => OTPVerification(),

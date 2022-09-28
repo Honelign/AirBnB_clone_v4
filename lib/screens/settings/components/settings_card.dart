@@ -75,7 +75,7 @@ class SettingsCard extends StatelessWidget {
                               ),
                             );
                             Navigator.pushReplacementNamed(
-                                context, LoginSignupBody.routeName);
+                                context, LoginSignUpBody.routeName);
                           },
                           child: const Text(
                             'Yes',

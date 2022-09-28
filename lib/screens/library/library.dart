@@ -56,7 +56,7 @@ class _MyLibraryState extends State<MyLibrary> {
           ),
         ),
         body: TabBarView(children: [
-          PlayLists(),
+          const PlaylistsScreen(),
           const Favorite(),
           const Offline(),
           const Purchased(),

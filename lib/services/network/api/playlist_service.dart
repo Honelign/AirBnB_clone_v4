@@ -2,10 +2,110 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_title.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 
 class PlaylistApiService {
+  // Error Logging Service
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+
+  // get all playlists of user
+  Future<List<PlaylistInfo>> getPlayLists(
+      {required String apiEndPoint, required int pageKey}) async {
+    List<PlaylistInfo> playlists = [];
+    try {
+      // get user id
+      String uid = await helper.getUserId();
+
+      // make api call
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid&page=$pageKey"));
+
+      if (response.statusCode == 200) {
+        final item = json.decode(response.body) as List;
+
+        playlists = item.map((value) {
+          return PlaylistInfo.fromJson(value);
+        }).toList();
+      }
+    } catch (e) {
+      // playlists = [];
+
+      // log error to server
+      errorLoggingApiService.logErrorToServer(
+        fileName: "playlist_service",
+        functionName: "getPlayLists",
+        errorInfo: e.toString(),
+      );
+    }
+    return playlists;
+  }
+
+  // create playlist for a user
+  Future createPlaylist(
+      {required String apiEndPoint, required String playlistName}) async {
+    try {
+      // get user id
+      String uid = await helper.getUserId();
+      Response response = await post(
+        Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid"),
+        body: json.encode(
+          {"playlist_name": playlistName.toString(), "user_FUI": uid},
+        ),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json'
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return 'Successful';
+      } else {
+        errorLoggingApiService.logErrorToServer(
+            fileName: "playlist_service",
+            functionName: "createPlaylist",
+            errorInfo: jsonDecode(response.body),
+            remark: "Status code is ${response.statusCode}");
+        return 'Something went wrong. Try again!';
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: "playlist_service",
+        functionName: "createPlaylist",
+        errorInfo: e.toString(),
+      );
+    }
+  }
+
+  Future getTracksUnderPlaylistById(
+      {required String apiEndPoint,
+      required int playlistId,
+      required int pageKey}) async {
+    List<Music> musicUnderPlaylist = [];
+    try {
+      String uid = await helper.getUserId();
+      Response response = await get(Uri.parse(
+          "$kinMusicBaseUrl/$apiEndPoint?userId=$uid&playlistId=$playlistId&page=$pageKey"));
+
+      if (response.statusCode == 200) {
+        List items = jsonDecode(response.body);
+
+        musicUnderPlaylist =
+            items.map((tracks) => Music.fromJson(tracks)).toList();
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+          fileName: "playlist_service",
+          functionName: "getTracksUnderPlaylistById",
+          errorInfo: e.toString());
+    }
+
+    return musicUnderPlaylist;
+  }
+
   Future removeTrackPlaylist(apiEndPoint, playListTrackId) async {
     Response response = await delete(
       Uri.parse("$kinMusicBaseUrl/$apiEndPoint$playListTrackId/"),
@@ -48,25 +148,6 @@ class PlaylistApiService {
     }
   }
 
-  Future createPlaylist(apiEndPoint, title, id) async {
-    Response response = await post(
-      Uri.parse("$kinMusicBaseUrl/api" "$apiEndPoint"),
-      body: json.encode(
-        {"playlist_name": title.toString(), "user_id": id},
-      ),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json'
-      },
-    );
-
-    if (response.statusCode == 201) {
-      return 'Successful';
-    } else {
-      return 'PlayList Title Already Exists';
-    }
-  }
-
   Future removeFromPlaylist(apiEndPoint, playlistId, trackId) async {
     Response response = await get(
       Uri.parse("$kinMusicBaseUrl$apiEndPoint"),
@@ -100,34 +181,6 @@ class PlaylistApiService {
         }
       }
     }
-  }
-
-  Future getPlayLists(apiEndPoint) async {
-    Response response =
-        await get(Uri.parse("$kinMusicBaseUrl/" "$apiEndPoint"));
-
-    if (response.statusCode == 200) {
-      final item = json.decode(response.body) as List;
-      item.forEach((playlistTitle) {
-        List playlistList = [];
-        playlistTitle['playlists'] = [];
-        playlistTitle['Tracks'].forEach((track) {
-          Map<String, dynamic> playlistInfo = {};
-
-          playlistInfo['playlist_id'] = playlistTitle['playlist_id'];
-          playlistInfo['playlist_music'] = track;
-          playlistList.add(playlistInfo);
-        });
-        playlistTitle['playlists'] = playlistList;
-        playlistTitle.remove("Tracks");
-      });
-
-      List<PlaylistTitle> playlists = item.map((value) {
-        return PlaylistTitle.fromJson(value);
-      }).toList();
-
-      return playlists;
-    } else {}
   }
 
   Future removePlaylistTitle(apiEndPoint) async {

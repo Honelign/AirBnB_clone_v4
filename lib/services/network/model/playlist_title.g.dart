@@ -10,9 +10,7 @@ PlaylistTitle _$PlaylistTitleFromJson(Map<String, dynamic> json) =>
     PlaylistTitle(
       id: json['playlist_id'] as int,
       title: json['playlist_name'] as String,
-      playlists: (json['playlists'] as List<dynamic>)
-          .map((e) => PlayList.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      playlists: [],
     );
 
 Map<String, dynamic> _$PlaylistTitleToJson(PlaylistTitle instance) =>

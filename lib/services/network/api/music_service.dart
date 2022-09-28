@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
@@ -10,7 +11,12 @@ import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicApiService {
+  // helper class
   HelperUtils helper = HelperUtils();
+
+  // error logging service
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+
   // get new tracks
   Future getMusic(apiEndPoint) async {
     List<Music> music = [];
@@ -25,13 +31,18 @@ class MusicApiService {
         music = item.map((value) => Music.fromJson(value)).toList();
       }
     } catch (e) {
-      print("@music_service getMusic $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getMusic",
+        errorInfo: e.toString(),
+      );
     }
     return music;
   }
 
   // get album tracks
   Future getAlbumMusic(apiEndPoint, String album_id) async {
+    List<Music> music = [];
     try {
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint$album_id"));
@@ -39,14 +50,18 @@ class MusicApiService {
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Music> music = item.map((value) => Music.fromJson(value)).toList();
+        music = item.map((value) => Music.fromJson(value)).toList();
 
         return music;
       } else {}
     } catch (e) {
-      print("@music_service getMusic $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getAlbumMusic",
+        errorInfo: e.toString(),
+      );
     }
-    return [];
+    return music;
   }
 
   // albums
@@ -65,7 +80,11 @@ class MusicApiService {
         }).toList();
       }
     } catch (e) {
-      print("@music_service -> getAlbums error - $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getAlbums",
+        errorInfo: e.toString(),
+      );
     }
     return albums;
   }
@@ -127,21 +146,26 @@ class MusicApiService {
   // get list of all available genres
   Future<List<Genre>> getGenres(
       {required String apiEndPoint, required int pageKey}) async {
+    List<Genre> genres = [];
     try {
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?page=$pageKey"));
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
 
-        List<Genre> genres = item.map((value) {
+        genres = item.map((value) {
           return Genre.fromJson(value);
         }).toList();
         return genres;
       }
     } catch (e) {
-      print("@music_service -> getGenres error $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getGenres",
+        errorInfo: e.toString(),
+      );
     }
-    return [];
+    return genres;
   }
 
   // get list of all available genres

@@ -6,9 +6,9 @@ import '../../size_config.dart';
 import 'components/header.dart';
 import 'components/login_signup_tab_bar.dart';
 
-class LoginSignupBody extends StatelessWidget {
-  const LoginSignupBody({Key? key}) : super(key: key);
-  static String routeName = '/loginSignup';
+class LoginSignUpBody extends StatelessWidget {
+  const LoginSignUpBody({Key? key}) : super(key: key);
+  static String routeName = '/loginSignUp';
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class LoginSignupBody extends StatelessWidget {
           SizedBox(
             height: getProportionateScreenHeight(10),
           ),
-          const Expanded(child: LoginSignupTabBar()),
+          const Expanded(child: LoginSignUpTabBar()),
         ],
       ),
     );

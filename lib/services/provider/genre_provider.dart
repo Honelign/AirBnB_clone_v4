@@ -5,10 +5,6 @@ import 'package:kin_music_player_app/services/network/model/music.dart';
 import '../network/model/genre.dart';
 
 class GenreProvider extends ChangeNotifier {
-  // page size
-  static const int _pageSize = 10;
-  static const int _currentPageKeyForTracksUnderGenre = 1;
-
   // music api service
   MusicApiService musicApiService = MusicApiService();
 
@@ -38,7 +34,6 @@ class GenreProvider extends ChangeNotifier {
   // get all tracks under genre -> by genreId
   Future<List<Music>> getAllTracksByGenreId(
       {required String genreId, required int pageKey}) async {
-    await Future.delayed(const Duration(seconds: 1));
     // endpoint
     const String apiEndPoint = '/mobileApp/tracksByGenreId';
 

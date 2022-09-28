@@ -761,10 +761,12 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
 
                                   // TODO:Improve implementation
                                   Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              PlayLists()));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PlaylistsScreen(),
+                                    ),
+                                  );
                                 },
                                 child: const Text(
                                   'Yes',
@@ -773,8 +775,10 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
                           },
                         ),
                         TextButton(
-                          child: const Text('No',
-                              style: TextStyle(color: kSecondaryColor)),
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: kSecondaryColor),
+                          ),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

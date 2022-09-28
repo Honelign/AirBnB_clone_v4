@@ -3,14 +3,14 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/email_login.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/phone_number_login.dart';
 
-class LoginSignupTabBar extends StatefulWidget {
-  const LoginSignupTabBar({Key? key}) : super(key: key);
+class LoginSignUpTabBar extends StatefulWidget {
+  const LoginSignUpTabBar({Key? key}) : super(key: key);
 
   @override
-  State<LoginSignupTabBar> createState() => _LoginSignupTabBarState();
+  State<LoginSignUpTabBar> createState() => _LoginSignUpTabBarState();
 }
 
-class _LoginSignupTabBarState extends State<LoginSignupTabBar>
+class _LoginSignUpTabBarState extends State<LoginSignUpTabBar>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
