@@ -171,7 +171,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
-                        "tracks ${widget.artist}",
+                        "tracks ${widget.artist.noOfTracks}",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontWeight: FontWeight.w500,
@@ -391,7 +391,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ArtistAlbum(
                     albums: albumProvider.albums,
-                     // widget.artist.albums!,
+                    // widget.artist.albums!,
                     artistCover: widget.artist.artist_profileImage,
                   ),
                 ));

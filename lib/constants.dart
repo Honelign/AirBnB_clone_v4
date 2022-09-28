@@ -87,6 +87,17 @@ kShowToast({String message = "Please Check Your Connection"}) {
   );
 }
 
+kTelebirrToast({String message = "TeleBirr server not responding"}) {
+  return Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey,
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
+}
+
 kShowRetry({String message = "retrying... check your internet connection"}) {
   return Fluttertoast.showToast(
     msg: message,
