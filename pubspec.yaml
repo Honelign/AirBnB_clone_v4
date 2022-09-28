@@ -60,8 +60,7 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.2.0
 
-flutter_native_splash:
-  background_image: "assets/images/kin_background.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
