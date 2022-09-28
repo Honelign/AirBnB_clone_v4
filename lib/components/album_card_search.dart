@@ -30,7 +30,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
       onTap: () async {
         final provider = Provider.of<AlbumProvider>(context, listen: false);
         await provider.getAlbumForsearch(widget.album.id);
-        Album albumtouched = provider.album;
+        Album albumtouched = provider.searchalbum;
 
         // await Future.delayed(Duration(microseconds: 500));
         Navigator.push(

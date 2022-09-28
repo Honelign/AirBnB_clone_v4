@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
@@ -71,6 +72,7 @@ class MusicApiService {
   }
 
   Future getArtistAlbums(apiEndPoint, artist_id) async {
+    List<Album> album = [];
     try {
       String uid = await helper.getUserId();
       Response response = await get(Uri.parse(
@@ -79,19 +81,65 @@ class MusicApiService {
       print("statuscode=" + response.statusCode.toString());
 
       if (response.statusCode == 200) {
+        print("body" + response.body.toString());
         final item = json.decode(response.body) as List;
+        print("item type" + item.runtimeType.toString());
 
-        List<Album> albums = item.map<Album>((value) {
-          return Album.fromJson(value);
+        album = item.map((e) {
+          return Album(
+              artist: e['artist_name'],
+              artist_id: e['artist_id'],
+              count: e['noOfTracks'],
+              cover: e['album_coverImage'],
+              description: e['album_description'],
+              id: e['id'],
+              isPurchasedByUser: e['is_purchasedByUser'],
+              price: e['album_price'],
+              title: e['album_name']);
         }).toList();
-        print(albums.toString());
-
-        return albums;
-      } else {}
+        print("done");
+      } else {
+        print("error");
+      }
     } catch (e) {
-      print("@music_service -> getAlbums error - $e");
+      print("album artist error shit" + e.toString());
     }
-    return [];
+    return album;
+  }
+  Future getArtistAlbumsTracks(apiEndPoint, artist_id) async {
+    List<Album> album = [];
+    try {
+      String uid = await helper.getUserId();
+      Response response = await get(Uri.parse(
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id"));
+      print("$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id");
+      print("statuscode=" + response.statusCode.toString());
+
+      if (response.statusCode == 200) {
+        print("body" + response.body.toString());
+        final item = json.decode(response.body) as List;
+        print("item type" + item.runtimeType.toString());
+
+        album = item.map((e) {
+          return Album(
+              artist: e['artist_name'],
+              artist_id: e['artist_id'],
+              count: e['noOfTracks'],
+              cover: e['album_coverImage'],
+              description: e['album_description'],
+              id: e['id'],
+              isPurchasedByUser: e['is_purchasedByUser'],
+              price: e['album_price'],
+              title: e['album_name']);
+        }).toList();
+        print("done");
+      } else {
+        print("error");
+      }
+    } catch (e) {
+      print("album artist error shit" + e.toString());
+    }
+    return album;
   }
 
   // get artists
@@ -101,7 +149,7 @@ class MusicApiService {
       String uid = await helper.getUserId();
       Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
       //?userId=$uid
-      print("sdf");
+      print("$kinMusicBaseUrl$apiEndPoint");
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -114,6 +162,7 @@ class MusicApiService {
       print("$kinMusicBaseUrl$apiEndPoint");
       print("@music_service -> getArtists error - $e");
     }
+    print(artists.toString());
     return artists;
   }
 

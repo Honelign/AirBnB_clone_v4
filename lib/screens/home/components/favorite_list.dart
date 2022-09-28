@@ -104,11 +104,11 @@ class FavoriteList extends StatelessWidget {
                                         artist: 'kin',
                                         description: '',
                                         cover: 'assets/images/kin.png',
-                                        artist_id: "1",
+                                        artist_id: 1,
 
                                         // musics: favoriteMusicsList
-                                        count: favoriteMusicsList.length,
-                                        isPurchasedByUser: false, price: '60',
+                                        count: favoriteMusicsList.length ,
+                                        isPurchasedByUser: false, price: 60,
                                       ),
                                       musics: favoriteMusicsList);
 
@@ -188,10 +188,10 @@ class FavoriteList extends StatelessWidget {
                                             description: '',
                                             cover: 'assets/images/kin.png',
                                             //  musics: favoriteMusicsList
-                                            count: favoriteMusicsList.length,
-                                            artist_id: '1',
+                                            count: favoriteMusicsList.length ,
+                                            artist_id: 1,
                                             isPurchasedByUser: false,
-                                            price: '60'),
+                                            price: 60),
                                       )
                                     : Container(),
                             const SizedBox(

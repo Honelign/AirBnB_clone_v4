@@ -88,10 +88,10 @@ class MusicListCard extends StatelessWidget {
                       artist: 'kin',
                       description: '',
                       cover: 'assets/images/kin.png',
-                      count: musics.length,
-                      artist_id: '1',
+                      count: musics.length ,
+                      artist_id: 1,
                       isPurchasedByUser: false,
-                      price: '60',
+                      price: 60,
                     ),
                     musics: musics);
 
@@ -169,10 +169,10 @@ class MusicListCard extends StatelessWidget {
                                         artist: 'kin',
                                         description: '',
                                         cover: 'assets/images/kin.png',
-                                        count: musics.length,
-                                        artist_id: '1',
+                                        count: musics.length ,
+                                        artist_id: 1,
                                         isPurchasedByUser: false,
-                                        price: '60',
+                                        price: 60,
                                       ),
                                     )
                                   : Container()

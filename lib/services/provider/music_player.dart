@@ -207,9 +207,9 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         description: currentAlbum.description,
         cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
         count: currentAlbum.count,
-        artist_id: '1',
+        artist_id: 1,
         isPurchasedByUser: false,
-        price: '60',
+        price: 60,
       );
       _currentAlbum = album;
       _albumMusics = shuffledMusics;

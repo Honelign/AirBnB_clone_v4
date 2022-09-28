@@ -59,7 +59,7 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
                       style: TextStyle(color: Colors.white.withOpacity(0.7)),
                     ),
                   ),
-                )
+                ),
               ],
             );
           } else if (snapshot.hasData &&
