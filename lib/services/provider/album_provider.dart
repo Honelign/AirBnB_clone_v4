@@ -4,20 +4,21 @@ import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 
 class AlbumProvider extends ChangeNotifier {
+  List<Album> albums = [];
+
   bool isLoading = false;
   static const _pageSize = 10;
-  Album album = Album(
-    id: 12,
-    title: 'title',
-    artist: 'artist',
-    description: 'description',
-    cover: 'cover',
-    count: 0,
-    artist_id: '1',
-    isPurchasedByUser: false,
-    price: '60',
-  );
-  List<Album> albums = [];
+  Album searchalbum = Album(
+      id: 5,
+      count: 5,
+      title: 'title',
+      artist: 'artist',
+      description: 'description',
+      cover: 'cover',
+      artist_id: 1,
+      price: 5,
+      isPurchasedByUser: false);
+
   MusicApiService musicApiService = MusicApiService();
 
 // get new albums
@@ -34,25 +35,27 @@ class AlbumProvider extends ChangeNotifier {
   }
 
   //get albums for artist
-  Future<List<Album>> getArtistAlbums(String artist_id) async {
+  Future<void> getArtistAlbums(String artist_id) async {
     const String apiEndPoint = '/mobileApp/albumByArtistId';
     isLoading = true;
 
-    List<Album> albums =
-        await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
+    final res = await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
+    debugPrint("type of res=" + res.runtimeType.toString());
+    albums = res as List<Album>;
+    debugPrint("album artist" + albums.toString());
     isLoading = false;
-
     notifyListeners();
-    return albums;
   }
 
   Future<Album> getAlbumForsearch(id) async {
     isLoading = true;
-    await Future.delayed(Duration(seconds: 1));
-    //album = await getAlbumsforSearch(id);
+    final List<Album> album = await Future.delayed(Duration(seconds: 1));
+    final res = await getAlbumsforSearch(id);
+    searchalbum = res;
+
     isLoading = false;
 
     notifyListeners();
-    return album; //album;
+    return searchalbum; //album as List<Album>; //album;
   }
 }

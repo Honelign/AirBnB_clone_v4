@@ -43,7 +43,7 @@ class RadioProvider extends ChangeNotifier {
 
   Future<List<RadioStation>> getStations() async {
     var loading = true;
-    const String apiEndPoint = 'stations/';
+    const String apiEndPoint = 'stations';
 
     _stations = await getRadioStations(apiEndPoint);
 

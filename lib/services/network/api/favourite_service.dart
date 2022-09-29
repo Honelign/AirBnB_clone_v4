@@ -7,7 +7,7 @@ import 'package:kin_music_player_app/services/network/model/favorite.dart';
 class FavoriteApiService {
   Future getFavoriteMusics(apiEndPoint, id) async {
     Response response =
-        await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?user=$id"));
+        await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$id"));
 
     try {
       List<Map<String, dynamic>> item = [];
@@ -42,7 +42,7 @@ class FavoriteApiService {
       List music = body['results']
           .where(
             (fav) =>
-                fav['user_id'] == userId.toString() &&
+                fav['user_FUI'] == userId.toString() &&
                 fav['track_id'] ==
                     int.parse(
                       musicId.toString(),
@@ -60,13 +60,14 @@ class FavoriteApiService {
   }
 
   Future markusFavMusic(apiEndPoint, musicId, userId) async {
-    var body = json.encode({'user_id': userId, 'track_id': musicId});
+    var body = json.encode({'user_FUI': userId, 'track_id': musicId});
     Response response = await post(Uri.parse("$kinMusicBaseUrl$apiEndPoint"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
         },
         body: body);
+    print("$kinMusicBaseUrl$apiEndPoint");
 
     if (response.statusCode == 201) {
     } else {}

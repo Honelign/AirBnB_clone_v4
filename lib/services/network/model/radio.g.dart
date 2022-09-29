@@ -7,12 +7,15 @@ part of 'radio.dart';
 // **************************************************************************
 
 RadioStation _$RadioFromJson(Map<String, dynamic> json) => RadioStation(
-      id: json['station_id'] as int,
-      stationName: json['station_name'] as String,
-      mhz: (json['station_frequency'].toString()) as String,
-      url: json['station_url'] as String,
-      coverImage: json['station_cover'] as String,
-    );
+    id: json['id'] as int,
+    stationName: json['station_name'] as String,
+    mhz: (json['station_frequency'].toString()) as String,
+    url: json['station_url'] as String,
+    coverImage: json['station_cover'] as String,
+    stationDescription: json['station_description'] as String,
+    created_at: json['created_at'] ?? " ",
+    encoder_FUI: json['encoder_FUI'] ?? " ",
+    updated_at: json["updated_at"] ?? " ");
 /*
 
         "id": 1,

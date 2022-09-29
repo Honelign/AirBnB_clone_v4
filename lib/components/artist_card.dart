@@ -27,7 +27,7 @@ class ArtistCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ArtistDetail(
               artist_id: artist.id.toString(),
-              artist: artist,
+               artist: artist, 
             ),
           ),
         );
@@ -68,13 +68,14 @@ class ArtistCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "album 5",
+                        "Albums ${artist.noOfAlbums}",
+
                         // '${(artist.albums!.length - 1).toString()} albums',
                         style: const TextStyle(color: kGrey),
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
-                        "tracks 5",
+                        "Tracks ${artist.noOfTracks}",
                         // '${artist.musics.length.toString()} tracks',
                         style: const TextStyle(color: kGrey),
                       ),

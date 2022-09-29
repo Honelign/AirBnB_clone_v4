@@ -12,11 +12,12 @@ import '../../../size_config.dart';
 
 class PopularTracks extends StatefulWidget {
   static String routeName = 'popularTracks';
-  //final Artist artist;
+  final Artist artist;
   final String album_id;
 
   const PopularTracks({
     Key? key,
+    required this.artist,
     required this.album_id,
   }) : super(key: key);
 

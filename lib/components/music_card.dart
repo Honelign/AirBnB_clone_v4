@@ -98,10 +98,10 @@ class _MusicCardState extends State<MusicCard> {
                           artist: 'kin',
                           description: '',
                           cover: 'assets/images/kin.png',
-                          count: widget.musics.length,
-                          artist_id: '1',
+                          count: widget.musics.length ,
+                          artist_id: 1,
                           isPurchasedByUser: false,
-                          price: '60',
+                          price: 60,
                         ),
                         musics: widget.musics);
 
@@ -160,10 +160,10 @@ class _MusicCardState extends State<MusicCard> {
                                           artist: 'kin',
                                           description: '',
                                           cover: 'assets/images/kin.png',
-                                          count: widget.musics.length,
-                                          artist_id: '1',
+                                          count: widget.musics.length ,
+                                          artist_id: 1,
                                           isPurchasedByUser: false,
-                                          price: '60',
+                                          price: 60,
                                         ),
                                       )
                                     : Container(),
