@@ -324,7 +324,11 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
                                                       var result = await provider
                                                           .addMusicToPlaylist(
-                                                              playlistInfo);
+                                                        playlistId: snapshot
+                                                            .data![index].id,
+                                                        trackId:
+                                                            music.id.toString(),
+                                                      );
 
                                                       if (result) {
                                                         Navigator.of(context)

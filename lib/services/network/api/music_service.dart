@@ -18,12 +18,12 @@ class MusicApiService {
   ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
 
   // get new tracks
-  Future getMusic(apiEndPoint) async {
+  Future getMusic({required String apiEndPoint, required int pageKey}) async {
     List<Music> music = [];
     try {
       String uid = await helper.getUserId();
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid"));
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid&page=$pageKey"));
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;

@@ -3,8 +3,6 @@ import 'package:kin_music_player_app/services/network/api/playlist_service.dart'
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 
-import 'package:kin_music_player_app/services/network/model/playlist_title.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayListProvider extends ChangeNotifier {
@@ -55,23 +53,44 @@ class PlayListProvider extends ChangeNotifier {
     return musics;
   }
 
-  Future<bool> addMusicToPlaylist(playlistInfo) async {
-    String apiEndPoint = 'api/playlisttracks/';
+// add track to playlist
+  Future<bool> addMusicToPlaylist(
+      {required String playlistId, required String trackId}) async {
+    String apiEndPoint = 'mobileApp/tracksByPlaylistId';
 
     isLoading = true;
-    var result =
-        await playlistApiService.addToPlaylist(apiEndPoint, playlistInfo);
+    var result = await playlistApiService.addToPlaylist(
+      apiEndPoint: apiEndPoint,
+      playlistId: playlistId,
+      trackId: trackId,
+    );
     isLoading = false;
     notifyListeners();
     return result;
   }
 
-  Future deleteFromPlaylist(playlistId, trackId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id');
+  // add multiple tracks to a playlist
+  Future<bool> addMultipleMusicToPlaylist({
+    required String playlistId,
+    required List<String> musicIds,
+  }) async {
+    String apiEndPoint = 'mobileApp/tracksByPlaylistId';
 
+    isLoading = true;
+    var result = await playlistApiService.addMultipleToPlaylist(
+        playlistId: playlistId,
+        listOfTrackIds: musicIds,
+        apiEndPoint: apiEndPoint);
+    isLoading = false;
+    notifyListeners();
+    return result;
+  }
+
+  Future deleteFromPlaylist(
+      {required String playlistId, required String trackId}) async {
+    isLoading = true;
     await playlistApiService.removeFromPlaylist(
-        '/playlists/?user=$id', playlistId, trackId);
+        '/playlists/', playlistId, trackId);
 
     notifyListeners();
   }

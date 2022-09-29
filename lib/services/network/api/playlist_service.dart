@@ -32,8 +32,6 @@ class PlaylistApiService {
         }).toList();
       }
     } catch (e) {
-      // playlists = [];
-
       // log error to server
       errorLoggingApiService.logErrorToServer(
         fileName: "playlist_service",
@@ -80,6 +78,7 @@ class PlaylistApiService {
     }
   }
 
+  // get all tracks under a playlist
   Future getTracksUnderPlaylistById(
       {required String apiEndPoint,
       required int playlistId,
@@ -106,6 +105,63 @@ class PlaylistApiService {
     return musicUnderPlaylist;
   }
 
+  // add track to playlist
+  Future addToPlaylist(
+      {required String apiEndPoint,
+      required String playlistId,
+      required String trackId}) async {
+    try {
+      String uid = await helper.getUserId();
+      Response response = await post(
+        Uri.parse(
+            "$kinMusicBaseUrl/$apiEndPoint?userId=$uid&playlistId=$playlistId"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        encoding: Encoding.getByName("utf-8"),
+        body: json.encode({"playlist_id": playlistId, "track_id": trackId}),
+      );
+
+      print(response.statusCode);
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: "playlist_provider",
+        functionName: "addToPlaylist",
+        errorInfo: e.toString(),
+      );
+    }
+    return false;
+  }
+
+  // add multiple tracks to playlist
+  Future addMultipleToPlaylist(
+      {required String apiEndPoint,
+      required String playlistId,
+      required List<String> listOfTrackIds}) async {
+    try {
+      String uid = await helper.getUserId();
+      listOfTrackIds.forEach((trackId) async {
+        bool res = await addToPlaylist(
+            apiEndPoint: apiEndPoint, playlistId: playlistId, trackId: trackId);
+
+        print(res);
+      });
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: "playlist_service",
+        functionName: "addMultipleToPlaylist",
+        errorInfo: e.toString(),
+      );
+    }
+
+    return true;
+  }
+
   Future removeTrackPlaylist(apiEndPoint, playListTrackId) async {
     Response response = await delete(
       Uri.parse("$kinMusicBaseUrl/$apiEndPoint$playListTrackId/"),
@@ -128,24 +184,6 @@ class PlaylistApiService {
       }).toList();
       return playlistTitles;
     } else {}
-  }
-
-  Future addToPlaylist(apiEndPoint, playlistInfo) async {
-    Response response = await post(
-      Uri.parse("$kinMusicBaseUrl/$apiEndPoint"),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      encoding: Encoding.getByName("utf-8"),
-      body: json.encode(playlistInfo),
-    );
-
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   Future removeFromPlaylist(apiEndPoint, playlistId, trackId) async {

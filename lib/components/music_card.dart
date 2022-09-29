@@ -1,11 +1,13 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
@@ -237,118 +239,14 @@ class _MusicCardState extends State<MusicCard> {
                                     );
                                   });
                             } else {
-                              // showDialog(
-                              //     context: context,
-                              //     builder: (context) {
-                              //       return AlertDialog(
-                              //         backgroundColor: kPrimaryColor,
-                              //         title: Text(
-                              //           'Choose Playlist',
-                              //           style: TextStyle(
-                              //               color:
-                              //                   Colors.white.withOpacity(0.7)),
-                              //         ),
-                              //         content: SizedBox(
-                              //           height: 200,
-                              //           width: 200,
-                              //           child:
-                              //               FutureBuilder<List<PlayListTitles>>(
-                              //             future: provider.getPlayListTitle(),
-                              //             builder: (context,
-                              //                 AsyncSnapshot //< List<PlayListTitles>>
-                              //                     snapshot) {
-                              //               if (snapshot.hasData) {
-                              //                 return ListView.builder(
-                              //                   shrinkWrap: true,
-                              //                   scrollDirection: Axis.vertical,
-                              //                   itemCount:
-                              //                       snapshot.data!.length,
-                              //                   itemBuilder: (context, index) {
-                              //                     return Consumer<
-                              //                         PlayListProvider>(
-                              //                       builder:
-                              //                           (BuildContext context,
-                              //                               provider, _) {
-                              //                         return TextButton(
-                              //                             onPressed: () async {
-                              //                               var playlistInfo = {
-                              //                                 'playlist_id':
-                              //                                     snapshot
-                              //                                         .data![
-                              //                                             index]
-                              //                                         .id,
-                              //                                 'track_id': widget
-                              //                                     .music.id
-                              //                               };
-
-                              //                               var result = await provider
-                              //                                   .addMusicToPlaylist(
-                              //                                       playlistInfo);
-
-                              //                               if (result) {
-                              //                                 Navigator.of(
-                              //                                         context)
-                              //                                     .pushReplacement(
-                              //                                   MaterialPageRoute(
-                              //                                     builder:
-                              //                                         (context) =>
-                              //                                             const PlaylistsScreen(),
-                              //                                   ),
-                              //                                 );
-
-                              //                                 ScaffoldMessenger
-                              //                                         .of(context)
-                              //                                     .showSnackBar(
-                              //                                   const SnackBar(
-                              //                                     content: Text(
-                              //                                         'Successfully added'),
-                              //                                   ),
-                              //                                 );
-                              //                                 setState(() {});
-                              //                               } else {
-                              //                                 setState(() {});
-                              //                                 ScaffoldMessenger
-                              //                                         .of(context)
-                              //                                     .showSnackBar(
-                              //                                   const SnackBar(
-                              //                                     content: Text(
-                              //                                       'Music Already added',
-                              //                                     ),
-                              //                                   ),
-                              //                                 );
-                              //                               }
-
-                              //                               Navigator.of(
-                              //                                       context)
-                              //                                   .pop();
-                              //                               setState(() {});
-                              //                             },
-                              //                             child: Text(
-                              //                               snapshot
-                              //                                   .data![index]
-                              //                                   .title,
-                              //                               overflow:
-                              //                                   TextOverflow
-                              //                                       .ellipsis,
-                              //                               style:
-                              //                                   const TextStyle(
-                              //                                 color:
-                              //                                     kLightSecondaryColor,
-                              //                               ),
-                              //                             ));
-                              //                       },
-                              //                     );
-                              //                   },
-                              //                 );
-                              //               }
-                              //               return const Center(
-                              //                 child: KinProgressIndicator(),
-                              //               );
-                              //             },
-                              //           ),
-                              //         ),
-                              //       );
-                              //     });
+                              showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return PlaylistSelectorDialog(
+                                    trackId: widget.music.id.toString(),
+                                  );
+                                },
+                              );
                             }
                           },
                           itemBuilder: (context) {

@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/screens/playlist/components/playlist_body.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_title.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
@@ -118,8 +119,21 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                       newPageProgressIndicatorBuilder: (_) =>
                           const KinProgressIndicator(),
                       itemBuilder: ((context, item, index) {
-                        return PlaylistTitleDisplay(
-                          playlistInfo: item,
+                        return InkWell(
+                          onTap: () {
+                            // go to detail page
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PlaylistBody(
+                                  playlistId: item.id,
+                                  playlistName: item.name,
+                                ),
+                              ),
+                            );
+                          },
+                          child: PlaylistTitleDisplay(
+                            playlistInfo: item,
+                          ),
                         );
                       }),
                     ),
@@ -243,6 +257,7 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                                               playlistNameController.text,
                                         );
                                         await playListProvider.getPlayList();
+
                                         Navigator.pop(context, true);
                                         refersh();
                                       }
@@ -282,6 +297,6 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
   }
 
   void refersh() {
-    setState(() {});
+    _pagingController.refresh();
   }
 }

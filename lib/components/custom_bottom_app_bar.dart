@@ -7,19 +7,15 @@ import 'package:kin_music_player_app/components/now_playing_podcast_indicator.da
 import 'package:kin_music_player_app/components/now_playing_radio_indicator.dart';
 
 import 'package:kin_music_player_app/screens/library/library.dart';
-import 'package:kin_music_player_app/screens/login_signup/verify_email.dart';
-import 'package:kin_music_player_app/screens/payment/stripe.dart';
 import 'package:kin_music_player_app/screens/podcast/podcast.dart';
 import 'package:kin_music_player_app/screens/settings/settings.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
-import '../screens/payment/paypal/makepayment.dart';
 import '../screens/radio2.dart';
 import 'custom_animated_bottom_bar.dart';
 import 'package:provider/provider.dart';
@@ -53,10 +49,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       if (user == null) {
         return false;
       } else {
-        return FirebaseAuth.instance.currentUser!.emailVerified ?? false;
+        return FirebaseAuth.instance.currentUser!.emailVerified;
       }
     } catch (e) {
-      print("@@@ custom_bottom_app_bar - checkIfEmailIsVerified - $e");
       return false;
     }
   }
@@ -117,7 +112,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         }
         // email not verified
         else {
-          return KinProgressIndicator();
+          return const KinProgressIndicator();
         }
       },
     );
@@ -143,7 +138,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             musicProvider.isMusicLoaded
                         ? Visibility(
                             visible: musicProvider.miniPlayerVisibility,
-                            child: NowPlayingMusicIndicator(),
+                            child: const NowPlayingMusicIndicator(),
                           )
                         : Container();
               },
@@ -158,7 +153,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             podcastProvider.isEpisodeLoaded
                         ? Visibility(
                             visible: podcastProvider.miniPlayerVisibility,
-                            child: NowPlayingPodcastIndicator(),
+                            child: const NowPlayingPodcastIndicator(),
                           )
                         : Container();
               },

@@ -12,51 +12,38 @@ class PlaylistTitleDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        // go to detail page
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PlaylistBody(
-              playlistId: playlistInfo.id,
-              playlistName: playlistInfo.name,
-            ),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 24),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: kGrey.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        children: [
+          // icon
+          Image.asset(
+            "assets/icons/Playlist Icon.png",
+            width: 32,
+            height: 32,
           ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(12, 0, 12, 24),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: kGrey.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          children: [
-            // icon
-            SvgPicture.asset(
-              "assets/icons/Playlist Icon.svg",
-              width: 32,
-              height: 32,
-            ),
 
-            // spacer
-            const SizedBox(
-              width: 12,
-            ),
+          // spacer
+          const SizedBox(
+            width: 12,
+          ),
 
-            // title
-            Text(
-              playlistInfo.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            )
-          ],
-        ),
+          // title
+          Text(
+            playlistInfo.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          )
+        ],
       ),
     );
   }

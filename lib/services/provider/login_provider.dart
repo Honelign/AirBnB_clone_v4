@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,7 +7,6 @@ import 'package:kin_music_player_app/screens/login_signup/components/otp_verific
 import 'package:kin_music_player_app/services/network/api/user_service.dart';
 import 'package:kin_music_player_app/services/network/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../network/api_service.dart';
 
 class LoginProvider extends ChangeNotifier {
   bool isLoading = false;
@@ -88,7 +85,7 @@ class LoginProvider extends ChangeNotifier {
           },
           verificationFailed: (verificationFailed) async {
             isLoading = false;
-            print("@otp" + verificationFailed.message!.toString());
+
             kShowToast(message: "Please try again!");
           },
           codeSent: (verificationId, resendingToken) async {
@@ -99,7 +96,7 @@ class LoginProvider extends ChangeNotifier {
           // timeout: Duration(seconds: 120),
           codeAutoRetrievalTimeout: (verificationId) async {});
     } catch (e) {
-      print("@otp" + e.toString());
+    
       kShowToast(message: "Invalid OTP");
       rethrow;
     }
@@ -142,9 +139,12 @@ class LoginProvider extends ChangeNotifier {
       if (currentUser != null) {
         // redirect user to home page
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => CustomBottomAppBar()),
-            (route) => false);
+          context,
+          MaterialPageRoute(
+            builder: (context) => const CustomBottomAppBar(),
+          ),
+          (route) => false,
+        );
 
         // cache user info
         SharedPreferences prefs = await SharedPreferences.getInstance();

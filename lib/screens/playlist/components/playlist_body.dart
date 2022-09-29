@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/music_list_card.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/home/components/home_search_screen.dart';
+import 'package:kin_music_player_app/screens/playlist/components/playlist_add_tracks.dart';
+import 'package:kin_music_player_app/screens/playlist/components/playlist_track_card.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
-import 'package:kin_music_player_app/services/provider/genre_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +58,10 @@ class _PlaylistBodyState extends State<PlaylistBody> {
     }
   }
 
+  void refresh() {
+    _pagingController.refresh();
+  }
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -78,7 +80,16 @@ class _PlaylistBodyState extends State<PlaylistBody> {
             padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
             child: IconButton(
               onPressed: () {
-                print("@@@getting tracks");
+                // go to detail page
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AddTracksToPlaylist(
+                      playlistName: widget.playlistName,
+                      playlistId: widget.playlistId.toString(),
+                      refresherFunction: refresh,
+                    ),
+                  ),
+                );
               },
               icon: const Icon(
                 Icons.add,
@@ -132,10 +143,11 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                 newPageProgressIndicatorBuilder: (_) =>
                     const KinProgressIndicator(),
                 itemBuilder: (context, item, index) {
-                  return MusicListCard(
+                  return PlaylistListCard(
                     music: item,
                     musics: playListProvider.musics,
                     musicIndex: index,
+                    isForPlaylist: true,
                   );
                 },
               ),

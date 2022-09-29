@@ -2,14 +2,14 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 
-import '../constants.dart';
-import '../services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 
 import 'package:kin_music_player_app/services/provider/music_player.dart';
@@ -17,8 +17,8 @@ import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-class MusicListCard extends StatelessWidget {
-  MusicListCard(
+class PlaylistListCard extends StatelessWidget {
+  PlaylistListCard(
       {Key? key,
       this.height = 70,
       this.aspectRatio = 1.02,
@@ -39,7 +39,8 @@ class MusicListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
-    final provider = Provider.of<PlayListProvider>(context, listen: false);
+    final playlistProvider =
+        Provider.of<PlayListProvider>(context, listen: false);
     var p = Provider.of<MusicPlayer>(
       context,
     );
@@ -219,141 +220,7 @@ class MusicListCard extends StatelessWidget {
                             );
                           });
                     } else {
-                      // isForPlaylist == null
-                      //     ? showDialog(
-                      //         context: context,
-                      //         builder: (context) {
-                      //           return AlertDialog(
-                      //             backgroundColor: kPrimaryColor,
-                      //             title: Text(
-                      //               'Choose Playlist',
-                      //               style: TextStyle(
-                      //                 color: Colors.white.withOpacity(0.7),
-                      //               ),
-                      //             ),
-                      //             content: SizedBox(
-                      //               height: 200,
-                      //               width: 200,
-                      //               child: FutureBuilder<List<PlayListTitles>>(
-                      //                 future: provider.getPlayListTitle(),
-                      //                 builder: (context,
-                      //                     AsyncSnapshot<List<PlayListTitles>>
-                      //                         snapshot) {
-                      //                   if (snapshot.hasData) {
-                      //                     return ListView.builder(
-                      //                       itemCount: snapshot.data!.length,
-                      //                       shrinkWrap: true,
-                      //                       scrollDirection: Axis.vertical,
-                      //                       itemBuilder: (context, index) {
-                      //                         return Consumer<PlayListProvider>(
-                      //                           builder: (BuildContext context,
-                      //                               provider, _) {
-                      //                             return TextButton(
-                      //                                 onPressed: () async {
-                      //                                   var playlistInfo = {
-                      //                                     'playlist_id':
-                      //                                         snapshot
-                      //                                             .data![index]
-                      //                                             .id,
-                      //                                     'track_id': music!.id
-                      //                                   };
-                      //                                   var result = await provider
-                      //                                       .addMusicToPlaylist(
-                      //                                           playlistInfo);
-
-                      //                                   if (result) {
-                      //                                     ScaffoldMessenger.of(
-                      //                                             context)
-                      //                                         .showSnackBar(
-                      //                                       const SnackBar(
-                      //                                         content: Text(
-                      //                                             'Successfully added'),
-                      //                                       ),
-                      //                                     );
-                      //                                   } else {
-                      //                                     ScaffoldMessenger.of(
-                      //                                             context)
-                      //                                         .showSnackBar(
-                      //                                       const SnackBar(
-                      //                                         content: Text(
-                      //                                             'Music Already added'),
-                      //                                       ),
-                      //                                     );
-                      //                                   }
-                      //                                   Navigator.of(context)
-                      //                                       .pop();
-                      //                                 },
-                      //                                 child: Text(
-                      //                                   snapshot
-                      //                                       .data![index].title,
-                      //                                   style: const TextStyle(
-                      //                                     color:
-                      //                                         kLightSecondaryColor,
-                      //                                   ),
-                      //                                 ));
-                      //                           },
-                      //                         );
-                      //                       },
-                      //                     );
-                      //                   }
-                      //                   return const Center(
-                      //                     child: KinProgressIndicator(),
-                      //                   );
-                      //                 },
-                      //               ),
-                      //             ),
-                      //           );
-                      //         })
-                      //     : showDialog(
-                      //         context: context,
-                      //         builder: (ctx) {
-                      //           return AlertDialog(
-                      //             backgroundColor: kPrimaryColor,
-                      //             title: Text(
-                      //               'Are You Sure ?',
-                      //               style: TextStyle(
-                      //                 color: Colors.white.withOpacity(0.7),
-                      //               ),
-                      //             ),
-                      //             actions: [
-                      //               TextButton(
-                      //                 onPressed: () {
-                      //                   Navigator.of(context).pop();
-                      //                 },
-                      //                 child: const Text(
-                      //                   'No',
-                      //                   style:
-                      //                       TextStyle(color: kSecondaryColor),
-                      //                 ),
-                      //               ),
-                      //               TextButton(
-                      //                 onPressed: () async {
-                      //                   final trackId = music!.id;
-                      //                   final provider =
-                      //                       Provider.of<PlayListProvider>(
-                      //                           context,
-                      //                           listen: false);
-                      //                   var result =
-                      //                       await provider.deleteFromPlaylist(
-                      //                           trackId, playlistId);
-                      //                   Navigator.of(ctx).pop();
-
-                      //                   ScaffoldMessenger.of(ctx).showSnackBar(
-                      //                     const SnackBar(
-                      //                       content:
-                      //                           Text('Successfully Removed'),
-                      //                     ),
-                      //                   );
-                      //                 },
-                      //                 child: const Text(
-                      //                   'Yes',
-                      //                   style:
-                      //                       TextStyle(color: kSecondaryColor),
-                      //                 ),
-                      //               )
-                      //             ],
-                      //           );
-                      //         });
+                      print("Removing");
                     }
                   },
                   itemBuilder: (context) {
