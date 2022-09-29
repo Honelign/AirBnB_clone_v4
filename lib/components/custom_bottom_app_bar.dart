@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
 import '../screens/payment/paypal/makepayment.dart';
+import '../screens/radio.dart';
 import '../screens/radio2.dart';
 import 'custom_animated_bottom_bar.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
     const HomeScreen(),
     const MyLibrary(),
     const Podcast(),
-    const RadioScreen1(),
+    const RadioScreen(),
     const Settings(),
     //makePayment(),
   ];
@@ -200,7 +201,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 pages.removeAt(3);
                 pages.insert(
                   3,
-                  const RadioScreen1(),
+                  const RadioScreen(),
                 );
               });
             }

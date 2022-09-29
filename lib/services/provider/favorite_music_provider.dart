@@ -13,7 +13,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getString('id');
 
-    String apiEndPoint = '/favourite/';
+    String apiEndPoint = '/mobileApp/favTracks/';
     isLoading = true;
     notifyListeners();
     favoriteMusics =
@@ -43,7 +43,7 @@ class FavoriteMusicProvider extends ChangeNotifier {
 
     final id = prefs.getString('id');
 
-    String apiEndPoint = '/api/favourites/';
+    String apiEndPoint = '/mobileApp/favTracks/';
 
     await favoriteApiService.markusFavMusic(apiEndPoint, musicId, id);
 

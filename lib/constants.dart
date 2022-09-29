@@ -44,6 +44,8 @@ const String kinAssetBaseUrl =
 const String kinAssetsBaseUrlOld =
     "https://storage.googleapis.com/kin-project-352614-storage";
 
+const String kinNewAsset =
+    "https://storage.googleapis.com/kin-project-352614-kinmusic-storage";
 const String kinMusicBaseUrl = 'https://music-service-vdzflryflq-ew.a.run.app';
 
 const String kinRadioBaseUrl = 'https://radioservice.kinideas.com';
@@ -54,6 +56,8 @@ const String kAnalyticsBaseUrl =
 const String kinPaymentUrl = "http://104.199.33.9/";
 const String kinProfileBaseUrl =
     "https://kinideas-profile-v1-vdzflryflq-ew.a.run.app";
+const String KinRadioUrl =
+    "https://radio-service-vdzflryflq-ew.a.run.app/mobileApp/";
 //
 const kAnimationDuration = Duration(milliseconds: 200);
 const String youtubeDataApiKey = "AIzaSyAzB1wCAyyNEUOY87xJYWbMMwaWeUhl-ms";
