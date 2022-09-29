@@ -85,7 +85,11 @@ class _RadioScreenState extends State<RadioScreen> {
                                 child: Container(
                                   // ignore: prefer_const_constructors
                                   decoration:
+
                                       BoxDecoration(color: Colors.black),
+
+                                      const BoxDecoration(color: Colors.black),
+
                                 ),
                               ),
                               Column(

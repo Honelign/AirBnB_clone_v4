@@ -4,8 +4,8 @@ part 'album.g.dart';
 
 @JsonSerializable()
 class Album {
-  final int id, count;
-  final String title, artist, description, cover, price, artist_id;
+  final int id, count,price, artist_id;
+  final String title, artist, description, cover;
   final bool isPurchasedByUser;
 
   Album(

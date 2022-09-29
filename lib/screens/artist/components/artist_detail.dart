@@ -53,63 +53,69 @@ class _ArtistDetailState extends State<ArtistDetail> {
     final albumProvider = Provider.of<AlbumProvider>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+      body: FutureBuilder(
+        builder: (context, snapshot) {
+          final album = snapshot.data;
+
+          return SafeArea(
             child: Container(
-              color: kPrimaryColor.withOpacity(0.5),
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Column(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                    '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                child: Container(
+                  color: kPrimaryColor.withOpacity(0.5),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            // artist header with name image
-                            _buildHeader(),
+                            Column(
+                              children: [
+                                // artist header with name image
+                                _buildHeader(),
 
-                            // spacer
-                            const SizedBox(
-                              height: 32,
+                                // spacer
+                                const SizedBox(
+                                  height: 32,
+                                ),
+
+                                // tip button
+                                _buildTipButton()
+                              ],
                             ),
-
-                            // tip button
-                            _buildTipButton()
+                            SizedBox(
+                              height: getProportionateScreenHeight(15),
+                            ),
+                            _buildAlbum(context),
+                            SizedBox(
+                              height: getProportionateScreenHeight(25),
+                            ),
+                            // _buildTrackList(context),
                           ],
                         ),
-                        SizedBox(
-                          height: getProportionateScreenHeight(15),
-                        ),
-                        _buildAlbum(context),
-                        SizedBox(
-                          height: getProportionateScreenHeight(25),
-                        ),
-                        // _buildTrackList(context),
-                      ],
-                    ),
+                      ),
+                      BackButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
                   ),
-                  BackButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -122,7 +128,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${albumProvider.album.cover}'),
+                '$kinAssetBaseUrl/${widget.artist.artist_profileImage}'),
             fit: BoxFit.cover,
           ),
         ),
@@ -138,14 +144,14 @@ class _ArtistDetailState extends State<ArtistDetail> {
                   ),
                   CircleAvatar(
                     backgroundImage: CachedNetworkImageProvider(
-                        '$kinAssetBaseUrl/${albumProvider.album.cover}'),
+                        '$kinAssetBaseUrl/${widget.artist.artist_profileImage}'),
                     maxRadius: getProportionateScreenHeight(60),
                   ),
                   SizedBox(
                     height: getProportionateScreenHeight(15),
                   ),
                   Text(
-                    albumProvider.album.title,
+                    widget.artist.artist_name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         color: Colors.white,
@@ -156,7 +162,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "albums 5",
+                        "albums ${widget.artist.noOfAlbums}",
                         // "${widget.artist.albums!.length.toString()} albums",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
@@ -165,8 +171,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
-                        "tracks",
-                        // '${widget.artist.musics.length.toString()} tracks',
+                        "tracks ${widget.artist.noOfTracks}",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontWeight: FontWeight.w500,
@@ -218,7 +223,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                               );
                             }
 
-                            // coin info got
+// coin info got
                             else {
                               return Container(
                                 color: kPrimaryColor,
@@ -341,7 +346,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
           // tip artist
           Text(
-            "Tip ${albumProvider.album.title}",
+            "Tip ${widget.artist.artist_name}",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -364,8 +369,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
           return TipArtistCard(
             value: allowedCoinValues[index],
             refresher: refreshParent,
-            artistName: albumProvider.album.artist,
-            artistId: albumProvider.album.id.toString(),
+            artistName: widget.artist.artist_name,
+            artistId: widget.artist_id.toString(),
           );
         },
       ),
@@ -385,9 +390,9 @@ class _ArtistDetailState extends State<ArtistDetail> {
               press: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ArtistAlbum(
-                    albums: albumProvider.album
-                        as List<Album>, // widget.artist.albums!,
-                    artistCover: albumProvider.album.cover,
+                    albums: albumProvider.albums,
+                    // widget.artist.albums!,
+                    artistCover: widget.artist.artist_profileImage,
                   ),
                 ));
               }),
@@ -396,7 +401,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
         SizedBox(
             height: getProportionateScreenHeight(450),
             child: GridView.builder(
-              itemCount: 5, //widget.artist.albums!.length,
+              itemCount:
+                  albumProvider.albums.length, //widget.artist.albums!.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,
@@ -413,7 +419,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     left: getProportionateScreenWidth(20),
                   ),
                   child: GridCard(
-                    album: albumProvider.album, //widget.artist.albums![index],
+                    album: albumProvider
+                        .albums[index], //widget.artist.albums![index],
                   ),
                 );
               },
@@ -433,8 +440,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
             press: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => PopularTracks(
-                        album_id: albumProvider.album.id.toString(),
-                        //artist: albumProvider.album.artist,
+                        album_id: '5', //albumProvider.album.id.toString(),
+                        artist: widget.artist,
                       )));
             }),
       ),

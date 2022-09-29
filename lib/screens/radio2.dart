@@ -185,6 +185,8 @@ class _RadioScreen1State extends State<RadioScreen1> {
                                                 kShowToast();
                                               }
                                             },
+                                            //https://storage.googleapis.com/kin-project-352614-kinmusic-storage/https://storage.googleapis.com/kin-project-352614-kinmusic-storage/Media_Files/Station_Cover_Images/hone_the_office.jpg
+                                            //https://storage.googleapis.com/kin-project-352614-kinmusic-storage/Media_Files/Station_Cover_Images/hone_the_office.jpg
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -204,7 +206,7 @@ class _RadioScreen1State extends State<RadioScreen1> {
                                                         children: [
                                                           CachedNetworkImage(
                                                             imageUrl:
-                                                                '$kinAssetsBaseUrlOld/${radioProvider.stations[index].coverImage}',
+                                                                '${radioProvider.stations[index].coverImage}',
                                                             imageBuilder: (context,
                                                                     imageProvider) =>
                                                                 Container(

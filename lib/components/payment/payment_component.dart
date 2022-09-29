@@ -36,6 +36,7 @@ class PaymentComponent extends StatefulWidget {
 
 class _PaymentComponentState extends State<PaymentComponent> {
   late PaymentProvider payprovider;
+  bool loading = false;
 //getting user id from shared preference
   late String id;
   void getUserId() async {
@@ -51,6 +52,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   //get telebirr url
   Future getUrl() async {
+    loading = true;
     var linkMap;
     var link;
     var paymentData;
@@ -101,7 +103,13 @@ class _PaymentComponentState extends State<PaymentComponent> {
           track_id: widget.track_id,
         );
       }));
+    } else if (res.statusCode != 200) {
+      //  debugPrint("unable to procced with telebirr");
+      kTelebirrToast();
+      loading = false;
     }
+    loading = false;
+    setState(() {});
   }
 
   //payment methods for paypal
@@ -385,10 +393,14 @@ class _PaymentComponentState extends State<PaymentComponent> {
                                           size: const Size.fromRadius(
                                             48,
                                           ),
-                                          child: Image.asset(
-                                            'assets/images/2.png',
-                                            fit: BoxFit.fill,
-                                          ),
+                                          child: loading
+                                              ? const Center(
+                                                  child:
+                                                      CircularProgressIndicator())
+                                              : Image.asset(
+                                                  'assets/images/2.png',
+                                                  fit: BoxFit.fill,
+                                                ),
                                         ))),
                               ),
 

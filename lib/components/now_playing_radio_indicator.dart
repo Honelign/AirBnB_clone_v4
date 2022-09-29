@@ -132,7 +132,7 @@ class _NowPlayingRadioIndicatorState extends State<NowPlayingRadioIndicator> {
           color: kSecondaryColor.withOpacity(0.1),
           child: CachedNetworkImage(
             fit: BoxFit.cover,
-            imageUrl: "$kinAssetBaseUrl/$coverImage",
+            imageUrl: "$coverImage",
           ),
         ),
       ),

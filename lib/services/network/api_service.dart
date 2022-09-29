@@ -750,20 +750,27 @@ Future<dynamic> getCompanyProfile(apiEndPoint) async {
 }
 
 Future<List<RadioStation>> getRadioStations(apiEndPoint) async {
-  Response response = await get(Uri.parse("$kinRadioBaseUrl/$apiEndPoint"));
-
+  Response response = await get(Uri.parse("$KinRadioUrl$apiEndPoint"));
+  debugPrint("$KinRadioUrl$apiEndPoint");
+  debugPrint("body" + response.body.toString());
+  debugPrint("statusCode=" + response.statusCode.toString());
   if (response.statusCode == 200) {
-    final item = json.decode(response.body) as List;
-    List<RadioStation> stations = item.map((value) {
+    final item = json.decode(response.body);
+
+    debugPrint("item" + item['results'].toString());
+    final resbody = item['results'] as List;
+    List<RadioStation> stations = resbody.map((value) {
       return RadioStation.fromJson(value);
     }).toList();
-
+    debugPrint(stations.toString());
     return stations;
   } else {}
   return [];
 }
 
 // Gift methods
+//https://radio-service-vdzflryflq-ew.a.run.app/mobileApp/stations/
+//https://radio-service-vdzflryflq-ew.a.run.app/mobileApp/stations
 
 Future saveUserPaymentInfo({
   context,
