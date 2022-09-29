@@ -71,6 +71,8 @@ class _AllPodCastListState extends State<AllPodCastList> {
             // 2
             () => _pagingController.refresh(),
           ),
+          backgroundColor: refreshIndicatorBackgroundColor,
+          color: refreshIndicatorForegroundColor,
           child: PagedListView<int, PodCast>.separated(
             pagingController: _pagingController,
             shrinkWrap: true,

@@ -36,6 +36,8 @@ class _SongsState extends State<Songs> {
       onRefresh: () async {
         setState(() {});
       },
+      backgroundColor: refreshIndicatorBackgroundColor,
+      color: refreshIndicatorForegroundColor,
       child: Container(
         color: kPrimaryColor,
         child: SingleChildScrollView(

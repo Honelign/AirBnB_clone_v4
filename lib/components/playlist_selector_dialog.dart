@@ -94,7 +94,11 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
                     width: MediaQuery.of(context).size.width,
                     height: getProportionateScreenHeight(320),
                     child: RefreshIndicator(
-                      onRefresh: () async {},
+                      backgroundColor: refreshIndicatorBackgroundColor,
+                      color: refreshIndicatorForegroundColor,
+                      onRefresh: () async {
+                        _pagingController.refresh();
+                      },
                       child: PagedListView<int, PlaylistInfo>(
                         pagingController: _pagingController,
                         builderDelegate:

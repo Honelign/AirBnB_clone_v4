@@ -79,6 +79,8 @@ class _AllMusicListState extends State<AllMusicList> {
         onRefresh: () => Future.sync(
           () => _pagingController.refresh(),
         ),
+        backgroundColor: refreshIndicatorBackgroundColor,
+        color: refreshIndicatorForegroundColor,
         child: PagedListView<int, Music>.separated(
           pagingController: _pagingController,
           shrinkWrap: true,

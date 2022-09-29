@@ -35,10 +35,6 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
   final PagingController<int, Music> _pagingController =
       PagingController(firstPageKey: 1);
 
-  void refreshFunction() {
-    setState(() {});
-  }
-
   @override
   void initState() {
     musicProvider = Provider.of<MusicProvider>(context, listen: false);
@@ -111,23 +107,28 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
               multiSelectProvider.selectModeSelectedMusicIds.isNotEmpty
                   ? IconButton(
                       onPressed: () async {
-                        playlistProvider.isLoading = true;
-                        setState(() {});
+                        // playlistProvider.isLoading = true;
+
                         bool saveStatus =
                             await playlistProvider.addMultipleMusicToPlaylist(
                           playlistId: widget.playlistId,
                           musicIds:
                               multiSelectProvider.selectModeSelectedMusicIds,
                         );
-                        playlistProvider.isLoading = false;
-                        setState(() {});
-                        widget.refresherFunction();
+                        // playlistProvider.isLoading = false;
 
                         if (saveStatus == true) {
                           multiSelectProvider.cancelAllSelection();
+                          await playlistProvider.getTracksUnderPlaylistById(
+                            playlistId: int.parse(
+                              widget.playlistId.toString(),
+                            ),
+                          );
+                          widget.refresherFunction();
                           kShowToast(
                               message:
                                   "Successfully added to ${widget.playlistName}");
+                          Navigator.pop(context, false);
                         } else {
                           kShowToast(
                               message:
@@ -161,8 +162,8 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
               onRefresh: () async {
                 _pagingController.refresh();
               },
-              color: Colors.white,
-              backgroundColor: kSecondaryColor,
+              backgroundColor: refreshIndicatorBackgroundColor,
+              color: refreshIndicatorForegroundColor,
               child: multiSelectProvider.isLoading ||
                       playlistProvider.isLoading == true
                   ? const Center(

@@ -107,7 +107,8 @@ class _PlaylistBodyState extends State<PlaylistBody> {
             onRefresh: () async {
               _pagingController.refresh();
             },
-            backgroundColor: kSecondaryColor,
+            backgroundColor: refreshIndicatorBackgroundColor,
+            color: refreshIndicatorForegroundColor,
             child: PagedListView<int, Music>(
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<Music>(

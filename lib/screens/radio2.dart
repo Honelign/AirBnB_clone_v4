@@ -69,11 +69,12 @@ class _RadioScreen1State extends State<RadioScreen1> {
           if (!(snapshot.connectionState == ConnectionState.waiting)) {
             if (snapshot.hasData) {
               return RefreshIndicator(
-                  color: kSecondaryColor,
                   onRefresh: () async {
                     loadStations();
                     setState(() {});
                   },
+                  backgroundColor: refreshIndicatorBackgroundColor,
+                  color: refreshIndicatorForegroundColor,
                   child: Container(
                     height: MediaQuery.of(context).size.height,
                     width: double.infinity,

@@ -48,7 +48,9 @@ class _RadioScreenState extends State<RadioScreen> {
     return Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          title: const Text('Radio',),
+          title: const Text(
+            'Radio',
+          ),
           backgroundColor: Colors.black,
         ),
         body: FutureBuilder(
@@ -74,22 +76,21 @@ class _RadioScreenState extends State<RadioScreen> {
                           child: Stack(
                             children: [
                               RefreshIndicator(
-                                onRefresh: () async{
-                                  setState(() {
-                                    
-                                  });
+                                onRefresh: () async {
+                                  setState(() {});
                                 },
+                                backgroundColor:
+                                    refreshIndicatorBackgroundColor,
+                                color: refreshIndicatorForegroundColor,
                                 child: Container(
                                   // ignore: prefer_const_constructors
-                                  decoration: BoxDecoration(
-                                    color: Colors.black
-                                  
-                                  ),
+                                  decoration:
+                                      BoxDecoration(color: Colors.black),
                                 ),
                               ),
                               Column(
                                 // crossAxisAlignment: CrossAxisAlignment.stretch,
-                              
+
                                 children: [
                                   SizedBox(
                                     height: getProportionateScreenHeight(50),
@@ -330,16 +331,17 @@ class _RadioScreenState extends State<RadioScreen> {
           padding: const EdgeInsets.all(20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-           
-            boxShadow: [BoxShadow(
-                      color: Colors.black,
-                      offset: const Offset(
-                        5.0,
-                        5.0,
-                      ),
-                      blurRadius: 20.0,
-                      spreadRadius: 5.0,
-                    ), ],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                  offset: const Offset(
+                    5.0,
+                    5.0,
+                  ),
+                  blurRadius: 20.0,
+                  spreadRadius: 5.0,
+                ),
+              ],
               color: kSecondaryColor.withOpacity(0.8),
               borderRadius: BorderRadius.circular(1000)),
           child: CircleAvatar(

@@ -83,7 +83,8 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                   onRefresh: () async {
                     _pagingController.refresh();
                   },
-                  color: kSecondaryColor,
+                  backgroundColor: refreshIndicatorBackgroundColor,
+                  color: refreshIndicatorForegroundColor,
                   child: PagedListView<int, PlaylistInfo>(
                     pagingController: _pagingController,
                     builderDelegate: PagedChildBuilderDelegate<PlaylistInfo>(
