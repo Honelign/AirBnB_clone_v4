@@ -5,6 +5,7 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/services/provider/analytics_provider.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
+import 'package:kin_music_player_app/services/provider/multi_select_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,6 +79,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CachedFavoriteProvider()),
         ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => MultiSelectProvider()),
         StreamProvider(
             create: (context) =>
                 ConnectivityService().connectionStatusController.stream,
@@ -88,6 +90,8 @@ void main() async {
 }
 
 class Kin extends StatefulWidget {
+  const Kin({Key? key}) : super(key: key);
+
   @override
   State<Kin> createState() => _KinState();
 }
@@ -116,9 +120,6 @@ class _KinState extends State<Kin> {
 
   @override
   Widget build(BuildContext context) {
-    //  final provider = Provider.of<CachedFavoriteProvider>(context);
-    // provider.cacheFavorite( context);
-
     final AppRouter _appRouter = AppRouter();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -154,7 +155,6 @@ Future<bool> checkIfEmailIsVerified() async {
       return FirebaseAuth.instance.currentUser!.emailVerified ?? false;
     }
   } catch (e) {
-    print("@@@ main.dart  checkIfEmailIsVerified - $e");
     return false;
   }
 }
@@ -199,14 +199,14 @@ class _LandingPageState extends State<LandingPage> {
               future: checkIfEmailIsVerified(),
               builder: ((context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return KinProgressIndicator();
+                  return const KinProgressIndicator();
                 } else {
-                  return CustomBottomAppBar();
+                  return const CustomBottomAppBar();
                 }
               }),
             );
           } else {
-            return LoginSignupBody();
+            return const LoginSignUpBody();
           }
         }
       },

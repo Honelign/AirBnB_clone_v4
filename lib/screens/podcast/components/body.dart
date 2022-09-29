@@ -24,6 +24,8 @@ class _BodyState extends State<Body> {
       onRefresh: () async {
         setState(() {});
       },
+      backgroundColor: refreshIndicatorBackgroundColor,
+      color: refreshIndicatorForegroundColor,
       child: SingleChildScrollView(
         child: Column(
           children: [

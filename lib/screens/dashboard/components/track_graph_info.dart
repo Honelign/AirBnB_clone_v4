@@ -65,9 +65,9 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
     }
 
     //  find max
-    maxCount = int.parse(statValue[0].viewCount) ?? 0;
+    maxCount = int.parse(statValue[0].viewCount);
     int xIndex = 1;
-    statValue.forEach((stat) {
+    for (var stat in statValue) {
       if (int.parse(stat.viewCount) > maxCount) {
         maxCount = int.parse(stat.viewCount);
       }
@@ -100,19 +100,18 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
       dateValues.add(formattedDate.substring(0, 3));
 
       xIndex++;
-    });
+    }
 
     return {"status": "done"};
   }
 
   @override
   Widget build(BuildContext context) {
-    print("@@@@" + "Track Page");
     return FutureBuilder(
       future: getInfoValues(),
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return KinProgressIndicator();
+          return const KinProgressIndicator();
         } else if (snapshot.hasData && !snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(

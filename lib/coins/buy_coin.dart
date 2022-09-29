@@ -41,6 +41,8 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
                   await provider.getCoinBalance();
                 });
               },
+              backgroundColor: refreshIndicatorBackgroundColor,
+              color: refreshIndicatorForegroundColor,
               child: SingleChildScrollView(
                 child: Container(
                   width: MediaQuery.of(context).size.width,

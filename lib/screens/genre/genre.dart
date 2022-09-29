@@ -19,7 +19,7 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
   late GenreProvider genreProvider;
   static const _pageSize = 1;
   final PagingController<int, Genre> _pagingController =
-      PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 0);
 
   @override
   void initState() {
@@ -58,12 +58,14 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return RefreshIndicator(
-      color: kSecondaryColor,
       onRefresh: () async {
         _pagingController.refresh();
       },
+      backgroundColor: refreshIndicatorBackgroundColor,
+      color: refreshIndicatorForegroundColor,
       child: PagedGridView<int, Genre>(
         pagingController: _pagingController,
+        showNoMoreItemsIndicatorAsGridChild: false,
         scrollDirection: Axis.vertical,
         padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenHeight(10),

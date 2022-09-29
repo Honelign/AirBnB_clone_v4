@@ -64,7 +64,6 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
               Future makeCoinPurchaseSaveRequest() async {
                 await provider.buyCoin(int.parse(widget.value), "paypal");
 
-                print("@@@@lookie coin bought");
                 setState(() {
                   isButtonLoading = false;
                 });
@@ -80,10 +79,10 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
                 isScrollControlled: true,
                 context: context,
                 builder: (context) => PaymentComponent(
-                  track_id: 1,//unneccesary parameter but must have
+                  track_id: 1,
                   successFunction: makeCoinPurchaseSaveRequest,
                   paymentPrice: widget.value,
-                 // refresherFunction: refresherFunction,
+                  // refresherFunction: refresherFunction,
                 ),
               );
               widget.refresher();

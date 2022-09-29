@@ -225,106 +225,107 @@ class MusicCardsearch extends StatelessWidget {
                                             );
                                           });
                                     } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              backgroundColor: kPrimaryColor,
-                                              title: Text(
-                                                'Choose Playlist',
-                                                style: TextStyle(
-                                                    color: Colors.white
-                                                        .withOpacity(0.7)),
-                                              ),
-                                              content: SizedBox(
-                                                height: 200,
-                                                width: 200,
-                                                child: FutureBuilder<
-                                                    List<PlayListTitles>>(
-                                                  future: provider
-                                                      .getPlayListTitle(),
-                                                  builder: (context,
-                                                      AsyncSnapshot<
-                                                              List<
-                                                                  PlayListTitles>>
-                                                          snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      return ListView.builder(
-                                                        shrinkWrap: true,
-                                                        scrollDirection:
-                                                            Axis.vertical,
-                                                        itemCount: snapshot
-                                                            .data!.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Consumer<
-                                                              PlayListProvider>(
-                                                            builder:
-                                                                (BuildContext
-                                                                        context,
-                                                                    provider,
-                                                                    _) {
-                                                              return TextButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  var playlistInfo =
-                                                                      {
-                                                                    'playListTitleId':
-                                                                        snapshot
-                                                                            .data![index]
-                                                                            .id,
-                                                                    'musicId':
-                                                                        music.id
-                                                                  };
-                                                                  var result =
-                                                                      await provider
-                                                                          .addMusicToPlaylist(
-                                                                              playlistInfo);
+                                      // TODO: Improve
+                                      // showDialog(
+                                      //     context: context,
+                                      //     builder: (context) {
+                                      //       return AlertDialog(
+                                      //         backgroundColor: kPrimaryColor,
+                                      //         title: Text(
+                                      //           'Choose Playlist',
+                                      //           style: TextStyle(
+                                      //               color: Colors.white
+                                      //                   .withOpacity(0.7)),
+                                      //         ),
+                                      //         content: SizedBox(
+                                      //           height: 200,
+                                      //           width: 200,
+                                      //           child: FutureBuilder<
+                                      //               List<PlayListTitles>>(
+                                      //             future: provider
+                                      //                 .getPlayListTitle(),
+                                      //             builder: (context,
+                                      //                 AsyncSnapshot<
+                                      //                         List<
+                                      //                             PlayListTitles>>
+                                      //                     snapshot) {
+                                      //               if (snapshot.hasData) {
+                                      //                 return ListView.builder(
+                                      //                   shrinkWrap: true,
+                                      //                   scrollDirection:
+                                      //                       Axis.vertical,
+                                      //                   itemCount: snapshot
+                                      //                       .data!.length,
+                                      //                   itemBuilder:
+                                      //                       (context, index) {
+                                      //                     return Consumer<
+                                      //                         PlayListProvider>(
+                                      //                       builder:
+                                      //                           (BuildContext
+                                      //                                   context,
+                                      //                               provider,
+                                      //                               _) {
+                                      //                         return TextButton(
+                                      //                           onPressed:
+                                      //                               () async {
+                                      //                             var playlistInfo =
+                                      //                                 {
+                                      //                               'playListTitleId':
+                                      //                                   snapshot
+                                      //                                       .data![index]
+                                      //                                       .id,
+                                      //                               'musicId':
+                                      //                                   music.id
+                                      //                             };
+                                      //                             var result =
+                                      //                                 await provider
+                                      //                                     .addMusicToPlaylist(
+                                      //                                         playlistInfo);
 
-                                                                  if (result) {
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(const SnackBar(
-                                                                            content:
-                                                                                Text('Successfully added')));
-                                                                  } else {
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(const SnackBar(
-                                                                            content:
-                                                                                Text('Music Already added')));
-                                                                  }
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                                child: Text(
-                                                                  snapshot
-                                                                      .data![
-                                                                          index]
-                                                                      .title,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style: const TextStyle(
-                                                                      color:
-                                                                          kLightSecondaryColor),
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      );
-                                                    }
-                                                    return const Center(
-                                                      child:
-                                                          KinProgressIndicator(),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                          });
+                                      //                             if (result) {
+                                      //                               ScaffoldMessenger.of(
+                                      //                                       context)
+                                      //                                   .showSnackBar(const SnackBar(
+                                      //                                       content:
+                                      //                                           Text('Successfully added')));
+                                      //                             } else {
+                                      //                               ScaffoldMessenger.of(
+                                      //                                       context)
+                                      //                                   .showSnackBar(const SnackBar(
+                                      //                                       content:
+                                      //                                           Text('Music Already added')));
+                                      //                             }
+                                      //                             Navigator.of(
+                                      //                                     context)
+                                      //                                 .pop();
+                                      //                           },
+                                      //                           child: Text(
+                                      //                             snapshot
+                                      //                                 .data![
+                                      //                                     index]
+                                      //                                 .title,
+                                      //                             overflow:
+                                      //                                 TextOverflow
+                                      //                                     .ellipsis,
+                                      //                             style: const TextStyle(
+                                      //                                 color:
+                                      //                                     kLightSecondaryColor),
+                                      //                           ),
+                                      //                         );
+                                      //                       },
+                                      //                     );
+                                      //                   },
+                                      //                 );
+                                      //               }
+                                      //               return const Center(
+                                      //                 child:
+                                      //                     KinProgressIndicator(),
+                                      //               );
+                                      //             },
+                                      //           ),
+                                      //         ),
+                                      //       );
+                                      //     });
                                     }
                                   },
                                   itemBuilder: (context) {

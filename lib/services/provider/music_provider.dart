@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,10 +36,11 @@ class MusicProvider extends ChangeNotifier {
   MusicApiService musicApiService = MusicApiService();
 
   // get new music
-  Future<List<Music>> getNewMusics() async {
+  Future<List<Music>> getNewMusics({int pageKey = 1}) async {
     const String apiEndPoint = '/mobileApp/tracks';
     isLoading = true;
-    List<Music> musics = await musicApiService.getMusic(apiEndPoint);
+    List<Music> musics = await musicApiService.getMusic(
+        apiEndPoint: apiEndPoint, pageKey: pageKey);
     isLoading = false;
     notifyListeners();
     return musics;
@@ -53,7 +53,8 @@ class MusicProvider extends ChangeNotifier {
     isLoading = true;
 
     // TODO: Replace
-    List<Music> musics = await musicApiService.getMusic(apiEndPoint);
+    List<Music> musics =
+        await musicApiService.getMusic(apiEndPoint: apiEndPoint, pageKey: 1);
     isLoading = false;
     notifyListeners();
     return musics;
@@ -143,9 +144,9 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Future<List<Music>> albumMusicsGetter(id) async {
-    isLoading=true;
+    isLoading = true;
     albumMusics = await fetchAlbumMusics(id);
-    isLoading=false;
+    isLoading = false;
     notifyListeners();
     return albumMusics;
   }

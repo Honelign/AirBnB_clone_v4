@@ -301,7 +301,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                                   height: 200,
                                   width: 200,
                                   child: FutureBuilder<List<PlayListTitles>>(
-                                    future: provider.getPlayListTitle(),
+                                    // future: provider.getPlayListTitle(),
                                     builder: (context,
                                         AsyncSnapshot //< List<PlayListTitles>>
                                             snapshot) {
@@ -324,14 +324,18 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
                                                       var result = await provider
                                                           .addMusicToPlaylist(
-                                                              playlistInfo);
+                                                        playlistId: snapshot
+                                                            .data![index].id,
+                                                        trackId:
+                                                            music.id.toString(),
+                                                      );
 
                                                       if (result) {
                                                         Navigator.of(context)
                                                             .pushReplacement(
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const PlayLists(),
+                                                                const PlaylistsScreen(),
                                                           ),
                                                         );
 
@@ -796,31 +800,32 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
             child: Consumer<DropDownProvider>(
               builder: (ctx, provider, _) {
                 return DropdownButton<PlaylistTitle>(
-                    icon: const Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                    ),
-                    value: value,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    onChanged: (val) {
-                      provider.setPlaylist(val!);
-                      // setState(() {
-                      //   selectedPlaylistId = val!.id;
-                      // });
-                    },
-                    hint: Text(
-                      value.title,
-                    ),
-                    underline: Container(),
-                    items: data.map((PlaylistTitle playlist) {
-                      return DropdownMenuItem<PlaylistTitle>(
-                        key: Key(playlist.id.toString()),
-                        value: playlist,
-                        child: Text(playlist.title),
-                      );
-                    }).toList());
+                  icon: const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.white,
+                  ),
+                  value: value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  onChanged: (val) {
+                    provider.setPlaylist(val!);
+                    // setState(() {
+                    //   selectedPlaylistId = val!.id;
+                    // });
+                  },
+                  hint: Text(
+                    value.title,
+                  ),
+                  underline: Container(),
+                  items: data.map((PlaylistTitle playlist) {
+                    return DropdownMenuItem<PlaylistTitle>(
+                      key: Key(playlist.id.toString()),
+                      value: playlist,
+                      child: Text(playlist.title),
+                    );
+                  }).toList(),
+                );
               },
             ),
           ),
@@ -867,10 +872,12 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
                                   // TODO:Improve implementation
                                   Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              PlayLists()));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PlaylistsScreen(),
+                                    ),
+                                  );
                                 },
                                 child: const Text(
                                   'Yes',

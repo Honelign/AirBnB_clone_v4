@@ -1,16 +1,16 @@
-
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kin_music_player_app/services/network/model/playlist.dart';
+import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 
 part 'playlist_title.g.dart';
+
 @JsonSerializable()
 class PlaylistTitle {
   final int id;
   final String title;
-  List<PlayList> playlists;
+  List<PlaylistInfo> playlists;
 
-  PlaylistTitle({required this.id, required this.title, required this.playlists});
-
+  PlaylistTitle(
+      {required this.id, required this.title, required this.playlists});
 
   factory PlaylistTitle.fromJson(Map<String, dynamic> json) {
     return _$PlaylistTitleFromJson(json);

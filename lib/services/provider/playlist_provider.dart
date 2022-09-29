@@ -1,80 +1,96 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kin_music_player_app/services/network/api/playlist_service.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_title.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 
-import '../network/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayListProvider extends ChangeNotifier {
   bool isLoading = false;
   late int isFavorite;
-  List<PlaylistTitle> musics = [];
+  List<Music> musics = [];
+  List<PlaylistInfo> playlists = [];
+
+  // playlist service
   PlaylistApiService playlistApiService = PlaylistApiService();
 
-  Future<List<PlaylistTitle>> getPlayList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // get playlists of a user
+  Future<List<PlaylistInfo>> getPlayList({int pageKey = 1}) async {
+    isLoading = true;
+    String apiEndPoint = 'mobileApp/playlists';
+    playlists = await playlistApiService.getPlayLists(
+        apiEndPoint: apiEndPoint, pageKey: pageKey);
+    isLoading = false;
+    notifyListeners();
+    return playlists;
+  }
 
-    final id = prefs.getString('id');
-
-    String apiEndPoint = '/playlists/?user=$id';
+  // create a playlist for a user
+  Future createPlayList({required String playlistName}) async {
+    String apiEndPoint = 'mobileApp/playlists';
 
     isLoading = true;
-    musics = await getPlayLists(apiEndPoint);
-    isLoading = false;
+    notifyListeners();
 
+    var result = await playlistApiService.createPlaylist(
+      apiEndPoint: apiEndPoint,
+      playlistName: playlistName,
+    );
+    isLoading = false;
+    notifyListeners();
+    return result;
+  }
+
+  // get tracks under playlist
+  Future<List<Music>> getTracksUnderPlaylistById(
+      {required int playlistId, int pageKey = 1}) async {
+    isLoading = true;
+    String apiEndPoint = 'mobileApp/tracksByPlaylistId';
+    musics = await playlistApiService.getTracksUnderPlaylistById(
+        playlistId: playlistId, apiEndPoint: apiEndPoint, pageKey: pageKey);
+    isLoading = false;
     notifyListeners();
     return musics;
   }
 
-  Future createPlayList(title) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id');
-    String apiEndPoint = '/playlists/';
+// add track to playlist
+  Future<bool> addMusicToPlaylist(
+      {required String playlistId, required String trackId}) async {
+    String apiEndPoint = 'mobileApp/tracksByPlaylistId';
 
     isLoading = true;
-    notifyListeners();
-
-    var result =
-        await playlistApiService.createPlaylist(apiEndPoint, title, id);
+    var result = await playlistApiService.addToPlaylist(
+      apiEndPoint: apiEndPoint,
+      playlistId: playlistId,
+      trackId: trackId,
+    );
     isLoading = false;
     notifyListeners();
     return result;
   }
 
-  Future<List<PlayListTitles>> getPlayListTitle() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id');
-
-    String apiEndPoint = 'playlists/?user=$id';
-    isLoading = true;
-    List<PlayListTitles> titles =
-        await playlistApiService.getPlayListTitles(apiEndPoint);
-
-    isLoading = false;
-    notifyListeners();
-    return titles;
-  }
-
-  Future<bool> addMusicToPlaylist(playlistInfo) async {
-    String apiEndPoint = 'api/playlisttracks/';
+  // add multiple tracks to a playlist
+  Future<bool> addMultipleMusicToPlaylist({
+    required String playlistId,
+    required List<String> musicIds,
+  }) async {
+    String apiEndPoint = 'mobileApp/tracksByPlaylistId';
 
     isLoading = true;
-    var result =
-        await playlistApiService.addToPlaylist(apiEndPoint, playlistInfo);
+    var result = await playlistApiService.addMultipleToPlaylist(
+        playlistId: playlistId,
+        listOfTrackIds: musicIds,
+        apiEndPoint: apiEndPoint);
     isLoading = false;
     notifyListeners();
     return result;
   }
 
-  Future deleteFromPlaylist(playlistId, trackId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id');
-
+  Future deleteFromPlaylist(
+      {required String playlistId, required String trackId}) async {
+    isLoading = true;
     await playlistApiService.removeFromPlaylist(
-        '/playlists/?user=$id', playlistId, trackId);
+        '/playlists/', playlistId, trackId);
 
     notifyListeners();
   }

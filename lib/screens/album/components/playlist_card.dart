@@ -210,82 +210,82 @@ class AlbumCard extends StatelessWidget {
                         },
                       );
                     } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            backgroundColor: kPrimaryColor,
-                            title: const Text(
-                              'Choose Playlist',
-                              style: TextStyle(color: kGrey),
-                            ),
-                            content: SizedBox(
-                              height: 200,
-                              width: 200,
-                              child: FutureBuilder<List<PlayListTitles>>(
-                                future: provider.getPlayListTitle(),
-                                builder: (context,
-                                    AsyncSnapshot<List<PlayListTitles>>
-                                        snapshot) {
-                                  if (snapshot.hasData) {
-                                    return ListView.builder(
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        return Consumer<PlayListProvider>(
-                                          builder: (BuildContext context,
-                                              provider, _) {
-                                            return TextButton(
-                                              onPressed: () async {
-                                                var playlistInfo = {
-                                                  'playlist_id':
-                                                      snapshot.data![index].id,
-                                                  'track_id': music.id
-                                                };
-                                                var result = await provider
-                                                    .addMusicToPlaylist(
-                                                        playlistInfo);
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return AlertDialog(
+                      //       backgroundColor: kPrimaryColor,
+                      //       title: const Text(
+                      //         'Choose Playlist',
+                      //         style: TextStyle(color: kGrey),
+                      //       ),
+                      //       content: SizedBox(
+                      //         height: 200,
+                      //         width: 200,
+                      //         child: FutureBuilder<List<PlayListTitles>>(
+                      //           future: provider.getPlayListTitle(),
+                      //           builder: (context,
+                      //               AsyncSnapshot<List<PlayListTitles>>
+                      //                   snapshot) {
+                      //             if (snapshot.hasData) {
+                      //               return ListView.builder(
+                      //                 itemCount: snapshot.data!.length,
+                      //                 itemBuilder: (context, index) {
+                      //                   return Consumer<PlayListProvider>(
+                      //                     builder: (BuildContext context,
+                      //                         provider, _) {
+                      //                       return TextButton(
+                      //                         onPressed: () async {
+                      //                           var playlistInfo = {
+                      //                             'playlist_id':
+                      //                                 snapshot.data![index].id,
+                      //                             'track_id': music.id
+                      //                           };
+                      //                           var result = await provider
+                      //                               .addMusicToPlaylist(
+                      //                                   playlistInfo);
 
-                                                if (result) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text(
-                                                          'Successfully added'),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text(
-                                                          'Music Already added'),
-                                                    ),
-                                                  );
-                                                }
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                snapshot.data![index].title,
-                                                style: const TextStyle(
-                                                  color: kLightSecondaryColor,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      shrinkWrap: true,
-                                    );
-                                  }
-                                  return const Center(
-                                    child: KinProgressIndicator(),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                      //                           if (result) {
+                      //                             ScaffoldMessenger.of(context)
+                      //                                 .showSnackBar(
+                      //                               const SnackBar(
+                      //                                 content: Text(
+                      //                                     'Successfully added'),
+                      //                               ),
+                      //                             );
+                      //                           } else {
+                      //                             ScaffoldMessenger.of(context)
+                      //                                 .showSnackBar(
+                      //                               const SnackBar(
+                      //                                 content: Text(
+                      //                                     'Music Already added'),
+                      //                               ),
+                      //                             );
+                      //                           }
+                      //                           Navigator.of(context).pop();
+                      //                         },
+                      //                         child: Text(
+                      //                           snapshot.data![index].title,
+                      //                           style: const TextStyle(
+                      //                             color: kLightSecondaryColor,
+                      //                           ),
+                      //                         ),
+                      //                       );
+                      //                     },
+                      //                   );
+                      //                 },
+                      //                 shrinkWrap: true,
+                      //               );
+                      //             }
+                      //             return const Center(
+                      //               child: KinProgressIndicator(),
+                      //             );
+                      //           },
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // );
                     }
                   },
                   itemBuilder: (context) {

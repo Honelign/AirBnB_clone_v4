@@ -26,6 +26,10 @@ const kTextColor = Color(0xFF757575);
 const kDarkTextColor = Color(0XFFFFFF00);
 const kLightTextColor = Color(0XFFFFFFFF);
 
+// refresh
+const refreshIndicatorBackgroundColor = kSecondaryColor;
+const refreshIndicatorForegroundColor = Colors.white;
+
 // number of seconds to play before adding to recently played
 const int recentlyPlayedWaitDuration = 5;
 
