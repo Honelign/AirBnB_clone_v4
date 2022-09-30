@@ -254,7 +254,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
 
   Widget _buildCover(provider) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(15),
       child: AspectRatio(
         aspectRatio: 1.0,
         child: Container(
@@ -316,19 +316,17 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(1000),
             ),
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: 15,
-              child: isPlaying
-                  ? const Icon(
-                      Icons.pause_rounded,
-                      size: 30,
-                    )
-                  : const Icon(
-                      Icons.play_arrow_rounded,
-                      size: 32,
-                    ),
-            ),
+            child: isPlaying
+                ? const Icon(
+                    Icons.pause_rounded,
+                    size: 30,
+                    color: Colors.white,
+                  )
+                : const Icon(
+                    Icons.play_arrow_rounded,
+                    size: 32,
+                    color: Colors.white,
+                  ),
           ),
         );
       },
