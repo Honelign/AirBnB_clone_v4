@@ -18,7 +18,7 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/connectivity_service.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
-import 'package:kin_music_player_app/services/provider/drop_down_provider.dart';
+
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
@@ -75,7 +75,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PodcastPlayer()),
         ChangeNotifierProvider(create: (_) => FavoriteMusicProvider()),
         ChangeNotifierProvider(create: (_) => PlayListProvider()),
-        ChangeNotifierProvider(create: (_) => DropDownProvider()),
         ChangeNotifierProvider(create: (_) => GenreProvider()),
         ChangeNotifierProvider(create: (_) => PodCastProvider()),
         ChangeNotifierProvider(create: (_) => RadioProvider()),

@@ -34,9 +34,9 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
-  final _inactiveColor = Colors.grey;
+  final _inactiveColor = kGrey;
   List<Widget> pages = [
     const HomeScreen(),
     const MyLibrary(),

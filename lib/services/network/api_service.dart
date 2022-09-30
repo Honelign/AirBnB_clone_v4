@@ -1,30 +1,27 @@
-// ignore_for_file: unnecessary_brace_in_string_interps
-
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
+import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
 import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/companyProfile.dart';
 import 'package:kin_music_player_app/services/network/model/favorite.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';
 
-import '../../constants.dart';
-
 HelperUtils helper = HelperUtils();
+ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+String fileName = "api_service.dart";
 
 Future<String> fetchUserPrivilege(
     {required String uid, required String apiEndPoint}) async {
@@ -42,7 +39,11 @@ Future<String> fetchUserPrivilege(
 
     // return value
   } catch (e) {
-    print("@@@ api_service fetchUserPrivilege  $e");
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "fetchUserPrivilege",
+      errorInfo: e.toString(),
+    );
   }
   return "-1";
 }
@@ -390,18 +391,6 @@ Future getAlbumsforSearch(id) async {
   } else {
     return [];
   }
-}
-
-Future getPlayListTitles(apiEndPoint) async {
-  Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
-
-  if (response.statusCode == 200) {
-    final item = json.decode(response.body) as List;
-    List<PlayListTitles> playlistTitles = item.map((value) {
-      return PlayListTitles.fromJson(value);
-    }).toList();
-    return playlistTitles;
-  } else {}
 }
 
 Future addToPlaylist(apiEndPoint, playlistInfo) async {

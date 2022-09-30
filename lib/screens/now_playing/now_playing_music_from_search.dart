@@ -23,8 +23,6 @@ import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-import '../../services/network/model/playlist_title.dart';
-import '../../services/provider/drop_down_provider.dart';
 import '../../services/provider/playlist_provider.dart';
 import '../playlist/playlist.dart';
 
@@ -651,7 +649,9 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
         decoration: BoxDecoration(
           color: kGrey.withOpacity(0.15),
           borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(50),
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -665,169 +665,6 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
               child: Text(
                 'Lyrics',
                 style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buttonBar(context, data, index) {
-    PlaylistTitle value = data[index];
-    selectedPlaylistId = data[index].id;
-    return Container(
-      width: double.infinity,
-      color: kGrey.withOpacity(0.2),
-      height: getProportionateScreenHeight(75),
-      padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
-            child: Consumer<DropDownProvider>(
-              builder: (ctx, provider, _) {
-                return DropdownButton<PlaylistTitle>(
-                    icon: const Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                    ),
-                    value: value,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                    onChanged: (val) {
-                      provider.setPlaylist(val!);
-                      // setState(() {
-                      //   selectedPlaylistId = val!.id;
-                      // });
-                    },
-                    hint: Text(
-                      value.title,
-                    ),
-                    underline: Container(),
-                    items: data.map((PlaylistTitle playlist) {
-                      return DropdownMenuItem<PlaylistTitle>(
-                        key: Key(playlist.id.toString()),
-                        value: playlist,
-                        child: Text(playlist.title),
-                      );
-                    }).toList());
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: PopupMenuButton(
-              initialValue: 0,
-              child: const Icon(
-                Icons.more_vert,
-                color: Colors.white,
-              ),
-              color: kPopupMenuBackgroundColor,
-              itemBuilder: (context) {
-                return kDeletePlaylistTitle;
-              },
-              onSelected: (value) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      backgroundColor: kPopupMenuBackgroundColor,
-                      title: const Text(
-                        'Are you sure? Musics under this playlist will also be deleted',
-                        style: TextStyle(color: Colors.white60, fontSize: 15),
-                      ),
-                      actions: [
-                        Consumer<DropDownProvider>(
-                          builder: (context, provider, _) {
-                            return TextButton(
-                                onPressed: () async {
-                                  var id = data.length == 1
-                                      ? selectedPlaylistId
-                                      : provider.playlistId;
-                                  setState(() {
-                                    context
-                                        .read<PlayListProvider>()
-                                        .deletePlaylist(playlistId: id);
-                                  });
-                                  Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Successfully Deleted'),
-                                    ),
-                                  );
-
-                                  // TODO:Improve implementation
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PlaylistsScreen(),
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  'Yes',
-                                  style: TextStyle(color: kSecondaryColor),
-                                ));
-                          },
-                        ),
-                        TextButton(
-                          child: const Text(
-                            'No',
-                            style: TextStyle(color: kSecondaryColor),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _playListAppBar(
-      BuildContext context, List<PlaylistTitle> data, index) {
-    return SliverAppBar(
-      expandedHeight: 175,
-      pinned: true,
-      backgroundColor: kPrimaryColor,
-      elevation: 2,
-      automaticallyImplyLeading: false,
-      title: const Text('My Playlist'),
-      bottom: PreferredSize(
-        preferredSize: const Size(double.infinity, 75),
-        child: _buttonBar(context, data, index),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    const Color(0xFF343434).withOpacity(0.4),
-                    const Color(0xFF343434).withOpacity(0.7),
-                  ],
-                ),
               ),
             )
           ],
