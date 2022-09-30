@@ -17,10 +17,8 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
 
-import '../screens/payment/paypal/makepayment.dart';
 import '../screens/radio.dart';
 
-import '../screens/radio2.dart';
 import 'custom_animated_bottom_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -142,7 +140,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             musicProvider.isMusicLoaded
                         ? Visibility(
                             visible: musicProvider.miniPlayerVisibility,
-                            child: const NowPlayingMusicIndicator(),
+                            child: NowPlayingMusicIndicator(
+                              trackPrice: musicProvider.currentMusic!.priceETB
+                                  .toString(),
+                            ),
                           )
                         : Container();
               },

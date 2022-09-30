@@ -1,24 +1,22 @@
 import 'dart:ui';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
-import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 
-import '../constants.dart';
-import '../screens/payment/stripe.dart';
-import '../services/provider/favorite_music_provider.dart';
-import '../size_config.dart';
-
 class NowPlayingMusicIndicator extends StatefulWidget {
-  const NowPlayingMusicIndicator({Key? key}) : super(key: key);
+  final String trackPrice;
+  const NowPlayingMusicIndicator({Key? key, required this.trackPrice})
+      : super(key: key);
 
   @override
   State<NowPlayingMusicIndicator> createState() =>
@@ -37,34 +35,31 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    // get providers
     var p = Provider.of<MusicPlayer>(context, listen: false);
     var favprovider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(p.currentMusic!.id);
 
+    // build UI
     return Container(
       height: 125,
       color: kPrimaryColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Buy Button
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [],
-                ),
-              ),
               InkWell(
                 onTap: () {
                   Future successFunction() async {
                     // print("@@@@@lookie-payment-stripe");
                   }
 
+                  // payment modal
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
@@ -84,7 +79,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Text(
-                    "Buy 15 ETB",
+                    "Buy ${widget.trackPrice} ETB",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.75),
                       fontSize: 16,

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/video_player.dart';
-import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
 import 'package:kin_music_player_app/size_config.dart';
 

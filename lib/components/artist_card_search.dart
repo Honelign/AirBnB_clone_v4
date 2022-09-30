@@ -1,12 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../services/network/model/artist.dart';
 import '../size_config.dart';
 
 class ArtistCardSearch extends StatefulWidget {
@@ -29,8 +27,8 @@ class _ArtistCardSearchState extends State<ArtistCardSearch> {
     return GestureDetector(
       onTap: () async {
         final provider = Provider.of<ArtistProvider>(context, listen: false);
-      //  await provider.getArtistForSearch(widget.artist.id);
-      //  Artist artisttouched = provider.artist;
+        //  await provider.getArtistForSearch(widget.artist.id);
+        //  Artist artisttouched = provider.artist;
 
         // await Future.delayed(Duration(microseconds: 500));
         // Navigator.push(

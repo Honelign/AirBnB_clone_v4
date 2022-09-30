@@ -1,16 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/album/components/album_body.dart';
-import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/album_for_search.dart';
-import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
-import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../services/network/model/artist.dart';
 import '../size_config.dart';
 
 class AlbumCardSearch extends StatefulWidget {

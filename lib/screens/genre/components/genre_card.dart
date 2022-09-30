@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/genre/components/genre_detail.dart';
 import 'package:kin_music_player_app/services/network/model/genre.dart';
 
-import '../constants.dart';
-import '../size_config.dart';
+import '../../../constants.dart';
+import '../../../size_config.dart';
 
 class GenreCard extends StatelessWidget {
   const GenreCard({
