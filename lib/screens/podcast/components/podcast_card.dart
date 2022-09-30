@@ -68,6 +68,7 @@ class PodcastCard extends StatelessWidget {
                         Icons.more_vert,
                         color: kGrey,
                       ),
+                      color: kPopupMenuBackgroundColor,
                       onSelected: (value) {},
                       itemBuilder: (context) {
                         return kPodcastPopupMenuItem;

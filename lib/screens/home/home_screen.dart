@@ -1,21 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/screens/album/album.dart';
+import 'package:kin_music_player_app/screens/artist/artist.dart';
 import 'package:kin_music_player_app/screens/genre/genre.dart';
-import 'package:kin_music_player_app/screens/home/components/favorite.dart';
 import 'package:kin_music_player_app/screens/home/components/home_search_screen.dart';
-import 'package:kin_music_player_app/screens/login_signup/verify_email.dart';
-import 'package:kin_music_player_app/services/provider/login_provider.dart';
-import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
-import 'package:provider/provider.dart';
 
-import '../../constants.dart';
-import '../../screens/album/album.dart';
-import '../../services/provider/cached_favorite_music_provider.dart';
 import '../../size_config.dart';
-import '../../screens/artist/artist.dart';
-
 import 'components/songs.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -83,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             indicatorColor: kSecondaryColor,
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             Songs(),
             Albums(),

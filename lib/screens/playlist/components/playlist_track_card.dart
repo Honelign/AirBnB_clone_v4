@@ -5,6 +5,7 @@ import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
@@ -17,30 +18,43 @@ import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-class PlaylistListCard extends StatelessWidget {
-  PlaylistListCard(
-      {Key? key,
-      this.height = 70,
-      this.aspectRatio = 1.02,
-      required this.musics,
-      required this.music,
-      required this.musicIndex,
-      this.isForPlaylist,
-      this.playlistId})
-      : super(key: key);
+class PlaylistListCard extends StatefulWidget {
+  PlaylistListCard({
+    Key? key,
+    this.height = 70,
+    this.aspectRatio = 1.02,
+    required this.musics,
+    required this.music,
+    required this.musicIndex,
+    this.playlistId,
+    required this.refresherFunction,
+  }) : super(key: key);
 
   final double height, aspectRatio;
-  final Music? music;
+  final Music music;
   final int musicIndex;
   final List<Music> musics;
-  bool? isForPlaylist;
+  final Function refresherFunction;
+
   int? playlistId;
+
+  @override
+  State<PlaylistListCard> createState() => _PlaylistListCardState();
+}
+
+class _PlaylistListCardState extends State<PlaylistListCard> {
+  late PlayListProvider playlistProvider;
+
+  @override
+  void initState() {
+    playlistProvider = Provider.of<PlayListProvider>(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
-    final playlistProvider =
-        Provider.of<PlayListProvider>(context, listen: false);
+
     var p = Provider.of<MusicPlayer>(
       context,
     );
@@ -56,14 +70,14 @@ class PlaylistListCard extends StatelessWidget {
       builder: (context, isPlaying) {
         return GestureDetector(
           onTap: () {
-            // incrementMusicView(music!.id);
-
-            p.setBuffering(musicIndex);
+            print("mandem-UI" + playlistProvider.musics.length.toString());
+            incrementMusicView(widget.music.id);
+            p.setBuffering(widget.musicIndex);
             if (checkConnection(status)) {
-              if (p.isMusicInProgress(music!)) {
+              if (p.isMusicInProgress(widget.music)) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => NowPlayingMusic(music),
+                    builder: (context) => NowPlayingMusic(widget.music),
                   ),
                 );
               } else {
@@ -79,20 +93,21 @@ class PlaylistListCard extends StatelessWidget {
                 p.setPlayer(p.player, podcastProvider, radioProvider);
                 radioProvider.setMiniPlayerVisibility(false);
                 p.handlePlayButton(
-                    music: music!,
-                    index: musicIndex,
-                    album: Album(
-                      id: -2,
-                      title: 'Single Music $musicIndex',
-                      artist: 'kin',
-                      description: '',
-                      cover: 'assets/images/kin.png',
-                      count: musics.length,
-                      artist_id: 1,
-                      isPurchasedByUser: false,
-                      price: 60,
-                    ),
-                    musics: musics);
+                  music: widget.music!,
+                  index: widget.musicIndex,
+                  album: Album(
+                    id: -2,
+                    title: 'Single Music ${widget.musicIndex}',
+                    artist: 'kin',
+                    description: '',
+                    cover: 'assets/images/kin.png',
+                    count: widget.musics.length,
+                    artist_id: 1,
+                    isPurchasedByUser: false,
+                    price: 60,
+                  ),
+                  musics: widget.musics,
+                );
 
                 p.setMusicStopped(false);
                 podcastProvider.setEpisodeStopped(true);
@@ -100,17 +115,17 @@ class PlaylistListCard extends StatelessWidget {
                 podcastProvider.listenPodcastStreaming();
 
                 // add to recently played
-                musicProvider.addToRecentlyPlayed(music: music!);
+                musicProvider.addToRecentlyPlayed(music: widget.music);
 
                 // add to popluar
-                musicProvider.countPopular(music: music!);
+                musicProvider.countPopular(music: widget.music);
               }
             } else {
               kShowToast();
             }
           },
           child: Container(
-            height: getProportionateScreenHeight(height),
+            height: getProportionateScreenHeight(widget.height),
             width: getProportionateScreenWidth(75),
             margin: EdgeInsets.symmetric(
                 horizontal: getProportionateScreenWidth(20),
@@ -126,7 +141,7 @@ class PlaylistListCard extends StatelessWidget {
                         color: kSecondaryColor.withOpacity(0.1),
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: '$kinAssetBaseUrl/${music!.cover}',
+                          imageUrl: '$kinAssetBaseUrl/${widget.music!.cover}',
                         ),
                       ),
                     )),
@@ -138,7 +153,7 @@ class PlaylistListCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        music!.title,
+                        widget.music!.title,
                         style:
                             const TextStyle(color: Colors.white, fontSize: 16),
                       ),
@@ -147,8 +162,8 @@ class PlaylistListCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              music!.artist.isNotEmpty
-                                  ? music!.artist
+                              widget.music.artist.isNotEmpty
+                                  ? widget.music.artist
                                   : 'kin artist',
                               style: const TextStyle(color: kGrey),
                               maxLines: 1,
@@ -157,18 +172,18 @@ class PlaylistListCard extends StatelessWidget {
                           ),
                           p.currentMusic == null
                               ? Container()
-                              : p.currentMusic!.title ==
-                                      musics[musicIndex].title
+                              : p.currentMusic!.title == widget.music.title
                                   ? TrackMusicPlayButton(
-                                      music: music,
-                                      index: musicIndex,
+                                      music: widget.music,
+                                      index: widget.musicIndex,
                                       album: Album(
                                         id: -2,
-                                        title: 'Single Music $musicIndex',
+                                        title:
+                                            'Single Music ${widget.musicIndex}',
                                         artist: 'kin',
                                         description: '',
                                         cover: 'assets/images/kin.png',
-                                        count: musics.length,
+                                        count: widget.musics.length,
                                         artist_id: 1,
                                         isPurchasedByUser: false,
                                         price: 60,
@@ -186,33 +201,38 @@ class PlaylistListCard extends StatelessWidget {
                     Icons.more_vert,
                     color: kGrey,
                   ),
-                  onSelected: (value) {
+                  color: kPopupMenuBackgroundColor,
+                  onSelected: (value) async {
                     if (value == 2) {
                       showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              backgroundColor: kPrimaryColor,
+                              backgroundColor: kPopupMenuBackgroundColor,
                               title: const Text(
                                 'Music Detail',
                                 style: TextStyle(
-                                    color: Colors.white60, fontSize: 15),
+                                  color: Colors.white60,
+                                  fontSize: 15,
+                                ),
                               ),
                               content: SizedBox(
                                 height: 100,
                                 child: Column(
                                   children: [
                                     Text(
-                                      music!.description.isNotEmpty
-                                          ? music!.description
+                                      widget.music!.description.isNotEmpty
+                                          ? widget.music!.description
                                           : '',
                                       style: const TextStyle(
-                                          color: kLightSecondaryColor),
+                                        color: kLightSecondaryColor,
+                                      ),
                                     ),
                                     Text(
-                                      'By ${music!.artist}',
+                                      'By ${widget.music!.artist}',
                                       style: const TextStyle(
-                                          color: kLightSecondaryColor),
+                                        color: kLightSecondaryColor,
+                                      ),
                                     )
                                   ],
                                 ),
@@ -220,13 +240,28 @@ class PlaylistListCard extends StatelessWidget {
                             );
                           });
                     } else {
-                      print("Removing");
+                      playlistProvider.isLoading = true;
+                      widget.refresherFunction();
+                      bool response =
+                          await playlistProvider.deleteTrackFromPlaylist(
+                        trackIdInPlaylist:
+                            widget.music!.trackIdInPlaylist.toString() ?? "-1",
+                      );
+                      playlistProvider.isLoading = false;
+
+                      if (response == true) {
+                        kShowToast(message: "${widget.music!.title} removed");
+                        widget.refresherFunction();
+                      } else {
+                        kShowRetry(
+                          message:
+                              "${widget.music!.title} could not be removed",
+                        );
+                      }
                     }
                   },
                   itemBuilder: (context) {
-                    return isForPlaylist != null
-                        ? kPlaylistPopupMenuItem
-                        : kMusicPopupMenuItem;
+                    return kPlaylistPopupMenuItem;
                   },
                 ),
               ],

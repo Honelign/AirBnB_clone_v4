@@ -119,7 +119,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                   height: MediaQuery.of(context).size.height * 0.5,
                   child: Center(
                     child: Text(
-                      "No Tracks in ${widget.playlistName} - ${widget.playlistId}",
+                      "No Tracks in ${widget.playlistName}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -131,7 +131,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                   padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
                   child: Center(
                     child: Text(
-                      "No More Items in ${widget.playlistName} - ${widget.playlistId}",
+                      "No More Items in ${widget.playlistName}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -146,9 +146,9 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                 itemBuilder: (context, item, index) {
                   return PlaylistListCard(
                     music: item,
-                    musics: playListProvider.musics,
+                    musics: _pagingController.itemList ?? [],
                     musicIndex: index,
-                    isForPlaylist: true,
+                    refresherFunction: refresh,
                   );
                 },
               ),

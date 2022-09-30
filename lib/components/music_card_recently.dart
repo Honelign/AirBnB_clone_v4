@@ -2,23 +2,20 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
-
-import '../constants.dart';
-import '../size_config.dart';
-import 'kin_progress_indicator.dart';
 
 class MusicCardRecently extends StatefulWidget {
   MusicCardRecently(
@@ -65,10 +62,9 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
           width: getProportionateScreenWidth(widget.width),
           child: GestureDetector(
             onTap: () {
+              incrementMusicView(widget.music.id);
+              p.setBuffering(widget.musicIndex);
               if (checkConnection(status)) {
-                incrementMusicView(widget.music.id);
-                p.setBuffering(widget.musicIndex);
-
                 if (p.isMusicInProgress(widget.music)) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -86,18 +82,17 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   podcastProvider.listenPodcastStreaming();
 
                   p.setPlayer(p.player, podcastProvider, radioProvider);
-
+                  radioProvider.setMiniPlayerVisibility(false);
                   p.handlePlayButton(
-                      music: widget.music,
+                      music: widget.music!,
                       index: widget.musicIndex,
-                      // TODO:replace
                       album: Album(
                         id: -2,
                         title: 'Single Music ${widget.musicIndex}',
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        count: widget.musics.length ,
+                        count: widget.musics.length,
                         artist_id: 1,
                         isPurchasedByUser: false,
                         price: 60,
@@ -109,16 +104,14 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   p.listenMusicStreaming();
                   podcastProvider.listenPodcastStreaming();
 
-                  // add to popluar
-                  musicProvider.countPopular(music: widget.music);
+                  // add to recently played
+                  musicProvider.addToRecentlyPlayed(music: widget.music!);
+
+                  // add to popular
+                  musicProvider.countPopular(music: widget.music!);
                 }
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text(
-                    'No Connection',
-                    style: TextStyle(color: kGrey),
-                  ),
-                ));
+                kShowToast();
               }
             },
             child: Row(
@@ -170,13 +163,15 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                                   Icons.more_vert,
                                   color: Colors.transparent,
                                 ),
+                                color: kPopupMenuBackgroundColor,
                                 onSelected: (value) {
                                   if (value == 2) {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
-                                            backgroundColor: kPrimaryColor,
+                                            backgroundColor:
+                                                kPopupMenuBackgroundColor,
                                             title: const Text(
                                               'Music Detail',
                                               style: TextStyle(
@@ -344,7 +339,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                                             artist: 'kin',
                                             description: '',
                                             cover: 'assets/images/kin.png',
-                                            count: widget.musics.length ,
+                                            count: widget.musics.length,
                                             artist_id: 6,
                                             isPurchasedByUser: false,
                                             price: 60,

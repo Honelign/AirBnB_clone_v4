@@ -107,7 +107,7 @@ class FavoriteList extends StatelessWidget {
                                         artist_id: 1,
 
                                         // musics: favoriteMusicsList
-                                        count: favoriteMusicsList.length ,
+                                        count: favoriteMusicsList.length,
                                         isPurchasedByUser: false, price: 60,
                                       ),
                                       musics: favoriteMusicsList);
@@ -188,7 +188,7 @@ class FavoriteList extends StatelessWidget {
                                             description: '',
                                             cover: 'assets/images/kin.png',
                                             //  musics: favoriteMusicsList
-                                            count: favoriteMusicsList.length ,
+                                            count: favoriteMusicsList.length,
                                             artist_id: 1,
                                             isPurchasedByUser: false,
                                             price: 60),
@@ -203,7 +203,8 @@ class FavoriteList extends StatelessWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        backgroundColor: kPrimaryColor,
+                                        backgroundColor:
+                                            kPopupMenuBackgroundColor,
                                         title: const Text(
                                           'Are Your Sure',
                                           style: TextStyle(color: Colors.white),

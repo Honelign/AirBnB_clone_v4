@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/artist_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +61,8 @@ class _ArtistsState extends State<Artists> with AutomaticKeepAliveClientMixin {
       onRefresh: () async {
         _pagingController.refresh();
       },
+      color: refreshIndicatorForegroundColor,
+      backgroundColor: refreshIndicatorBackgroundColor,
       child: Container(
         padding: EdgeInsets.only(top: getProportionateScreenHeight(30)),
         child: PagedGridView<int, Artist>(

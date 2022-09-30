@@ -34,7 +34,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 2;
+  int _currentIndex = 1;
 
   final _inactiveColor = Colors.grey;
   List<Widget> pages = [
@@ -79,7 +79,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               await showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                        backgroundColor: kPrimaryColor,
+                        backgroundColor: kPopupMenuBackgroundColor,
                         title: Text(
                           'Do you want to exit from Kin?',
                           style: TextStyle(

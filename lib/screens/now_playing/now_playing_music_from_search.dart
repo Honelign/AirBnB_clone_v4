@@ -726,6 +726,7 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
                 Icons.more_vert,
                 color: Colors.white,
               ),
+              color: kPopupMenuBackgroundColor,
               itemBuilder: (context) {
                 return kDeletePlaylistTitle;
               },
@@ -734,7 +735,7 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      backgroundColor: kPrimaryColor,
+                      backgroundColor: kPopupMenuBackgroundColor,
                       title: const Text(
                         'Are you sure? Musics under this playlist will also be deleted',
                         style: TextStyle(color: Colors.white60, fontSize: 15),
@@ -750,7 +751,7 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
                                   setState(() {
                                     context
                                         .read<PlayListProvider>()
-                                        .deletePlaylistTitle(id);
+                                        .deletePlaylist(playlistId: id);
                                   });
                                   Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(

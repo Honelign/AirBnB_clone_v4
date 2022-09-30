@@ -191,6 +191,10 @@ class Podcast extends StatelessWidget {
               PodcastScroller(
                 podcasts: podcastsThree,
               ),
+
+              const SizedBox(
+                height: 60,
+              ),
             ],
           ),
         ),
@@ -239,8 +243,8 @@ class PodcastCardGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 280,
-      height: 150,
+      width: 240,
+      height: 160,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(imageUrl),

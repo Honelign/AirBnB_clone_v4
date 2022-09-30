@@ -1,8 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 
-import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/constants.dart';
 
@@ -10,7 +10,6 @@ import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart'
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
@@ -19,7 +18,7 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-class AlbumCard extends StatelessWidget {
+class AlbumCard extends StatefulWidget {
   const AlbumCard({
     Key? key,
     required this.album,
@@ -36,6 +35,11 @@ class AlbumCard extends StatelessWidget {
   final Album album;
   final List<Music> albumMusics;
 
+  @override
+  State<AlbumCard> createState() => _AlbumCardState();
+}
+
+class _AlbumCardState extends State<AlbumCard> {
   @override
   Widget build(BuildContext context) {
     var p = Provider.of<MusicPlayer>(
@@ -56,20 +60,21 @@ class AlbumCard extends StatelessWidget {
       player: p.player,
       builder: (context, isPlaying) {
         return Container(
-          height: getProportionateScreenHeight(height),
+          height: getProportionateScreenHeight(widget.height),
           margin: EdgeInsets.symmetric(
-              horizontal: getProportionateScreenWidth(20),
-              vertical: getProportionateScreenHeight(10)),
+            horizontal: getProportionateScreenWidth(20),
+            vertical: getProportionateScreenHeight(10),
+          ),
           child: InkWell(
             onTap: () async {
-              p.albumMusicss = albumMusics;
-              p.setBuffering(musicIndex);
+              p.albumMusicss = widget.albumMusics;
+              p.setBuffering(widget.musicIndex);
 
               if (checkConnection(status)) {
-                if (p.isMusicInProgress(music)) {
+                if (p.isMusicInProgress(widget.music)) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => NowPlayingMusic(music),
+                      builder: (context) => NowPlayingMusic(widget.music),
                     ),
                   );
                 } else {
@@ -84,10 +89,10 @@ class AlbumCard extends StatelessWidget {
 
                   p.setPlayer(p.player, podcastProvider, radioProvider);
                   p.handlePlayButton(
-                    music: music,
-                    index: musicIndex,
-                    album: album,
-                    musics: albumMusics,
+                    music: widget.music,
+                    index: widget.musicIndex,
+                    album: widget.album,
+                    musics: widget.albumMusics,
                   );
                 }
 
@@ -97,10 +102,10 @@ class AlbumCard extends StatelessWidget {
                 podcastProvider.listenPodcastStreaming();
 
                 // add to recently played
-                musicProvider.addToRecentlyPlayed(music: music);
+                musicProvider.addToRecentlyPlayed(music: widget.music);
 
                 // add to popluar
-                musicProvider.countPopular(music: music);
+                musicProvider.countPopular(music: widget.music);
               } else {
                 kShowToast();
               }
@@ -115,7 +120,7 @@ class AlbumCard extends StatelessWidget {
                     child: Container(
                       color: kSecondaryColor.withOpacity(0.1),
                       child: CachedNetworkImage(
-                        imageUrl: '$kinAssetBaseUrl/${music.cover}',
+                        imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -129,7 +134,7 @@ class AlbumCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        music.title,
+                        widget.music.title,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -140,7 +145,7 @@ class AlbumCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              music.artist,
+                              widget.music.artist,
                               style: const TextStyle(color: kGrey),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -148,11 +153,12 @@ class AlbumCard extends StatelessWidget {
                           p.currentMusic == null
                               ? Container()
                               : p.currentMusic!.title ==
-                                      albumMusics[musicIndex].title
+                                      widget
+                                          .albumMusics[widget.musicIndex].title
                                   ? TrackMusicPlayButton(
-                                      music: music,
-                                      index: musicIndex,
-                                      album: album,
+                                      music: widget.music,
+                                      index: widget.musicIndex,
+                                      album: widget.album,
                                     )
                                   : Container()
                         ],
@@ -162,24 +168,23 @@ class AlbumCard extends StatelessWidget {
                 ),
                 PopupMenuButton(
                   initialValue: 0,
-                  // color: Colors.amber,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Icon(
+                    children: const [
+                      Icon(
                         Icons.more_vert,
                         color: kGrey,
                       ),
                     ],
                   ),
+                  color: kPopupMenuBackgroundColor,
                   onSelected: (value) {
                     if (value == 2) {
                       showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            backgroundColor: kPrimaryColor,
+                            backgroundColor: kPopupMenuBackgroundColor,
                             title: const Text(
                               'Music Detail',
                               style: TextStyle(
@@ -192,13 +197,13 @@ class AlbumCard extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    music.description,
+                                    widget.music.description,
                                     style: const TextStyle(
                                       color: kLightSecondaryColor,
                                     ),
                                   ),
                                   Text(
-                                    'By ${music.artist}',
+                                    'By ${widget.music.artist}',
                                     style: const TextStyle(
                                       color: kLightSecondaryColor,
                                     ),
@@ -210,82 +215,14 @@ class AlbumCard extends StatelessWidget {
                         },
                       );
                     } else {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) {
-                      //     return AlertDialog(
-                      //       backgroundColor: kPrimaryColor,
-                      //       title: const Text(
-                      //         'Choose Playlist',
-                      //         style: TextStyle(color: kGrey),
-                      //       ),
-                      //       content: SizedBox(
-                      //         height: 200,
-                      //         width: 200,
-                      //         child: FutureBuilder<List<PlayListTitles>>(
-                      //           future: provider.getPlayListTitle(),
-                      //           builder: (context,
-                      //               AsyncSnapshot<List<PlayListTitles>>
-                      //                   snapshot) {
-                      //             if (snapshot.hasData) {
-                      //               return ListView.builder(
-                      //                 itemCount: snapshot.data!.length,
-                      //                 itemBuilder: (context, index) {
-                      //                   return Consumer<PlayListProvider>(
-                      //                     builder: (BuildContext context,
-                      //                         provider, _) {
-                      //                       return TextButton(
-                      //                         onPressed: () async {
-                      //                           var playlistInfo = {
-                      //                             'playlist_id':
-                      //                                 snapshot.data![index].id,
-                      //                             'track_id': music.id
-                      //                           };
-                      //                           var result = await provider
-                      //                               .addMusicToPlaylist(
-                      //                                   playlistInfo);
-
-                      //                           if (result) {
-                      //                             ScaffoldMessenger.of(context)
-                      //                                 .showSnackBar(
-                      //                               const SnackBar(
-                      //                                 content: Text(
-                      //                                     'Successfully added'),
-                      //                               ),
-                      //                             );
-                      //                           } else {
-                      //                             ScaffoldMessenger.of(context)
-                      //                                 .showSnackBar(
-                      //                               const SnackBar(
-                      //                                 content: Text(
-                      //                                     'Music Already added'),
-                      //                               ),
-                      //                             );
-                      //                           }
-                      //                           Navigator.of(context).pop();
-                      //                         },
-                      //                         child: Text(
-                      //                           snapshot.data![index].title,
-                      //                           style: const TextStyle(
-                      //                             color: kLightSecondaryColor,
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   );
-                      //                 },
-                      //                 shrinkWrap: true,
-                      //               );
-                      //             }
-                      //             return const Center(
-                      //               child: KinProgressIndicator(),
-                      //             );
-                      //           },
-                      //         ),
-                      //       ),
-                      //     );
-                      //   },
-                      // );
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return PlaylistSelectorDialog(
+                            trackId: widget.music.id.toString(),
+                          );
+                        },
+                      );
                     }
                   },
                   itemBuilder: (context) {

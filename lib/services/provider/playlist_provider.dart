@@ -86,17 +86,23 @@ class PlayListProvider extends ChangeNotifier {
     return result;
   }
 
-  Future deleteFromPlaylist(
-      {required String playlistId, required String trackId}) async {
+  // delete playlist
+  Future deletePlaylist({required String playlistId}) async {
     isLoading = true;
-    await playlistApiService.removeFromPlaylist(
-        '/playlists/', playlistId, trackId);
-
+    bool response = await playlistApiService
+        .removePlaylist('mobileApp/playlists/$playlistId');
     notifyListeners();
+    isLoading = false;
+    notifyListeners();
+    return response;
   }
 
-  Future deletePlaylistTitle(playlistTitleId) async {
-    await playlistApiService.removePlaylistTitle('/playlists/$playlistTitleId');
+  Future deleteTrackFromPlaylist({required String trackIdInPlaylist}) async {
+    isLoading = true;
+    bool response = await playlistApiService.removeTrackFromPlaylist(
+        apiEndPoint: 'mobileApp/tracksByPlaylistId/$trackIdInPlaylist');
+    isLoading = false;
     notifyListeners();
+    return response;
   }
 }

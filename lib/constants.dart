@@ -10,21 +10,17 @@ import 'size_config.dart';
 // const kArtistID = "gZkd8CJAxESJpJFmXRLnU0IFkhE3";
 const kArtistID = "";
 
-// Navy Primary
-// const kPrimaryColor = Color(0XFF0A192F);
+// colors
 const kPrimaryColor = Colors.black;
-
-// Yellow Secondary
 const kSecondaryColor = Color(0xFF3D8361);
-// const kSecondaryColor = Color(0XFFFCE762);
 const kLightSecondaryColor = Color(0xFF009ddc);
 const kTertiaryColor = Color(0xFF7e9632);
 const kGrey = Color(0xFFBBBBBB);
 const kTextColor = Color(0xFF757575);
-
-// Text Colors
 const kDarkTextColor = Color(0XFFFFFF00);
 const kLightTextColor = Color(0XFFFFFFFF);
+const kPopupMenuBackgroundColor = Color.fromARGB(255, 43, 42, 42);
+const kPopupMenuForegroundColor = kGrey;
 
 // refresh
 const refreshIndicatorBackgroundColor = kSecondaryColor;
@@ -146,20 +142,63 @@ checkConnection(status) {
   return false;
 }
 
+// POPUP MENU ITEMS
+const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
 const List<PopupMenuItem> kMusicPopupMenuItem = [
-  PopupMenuItem(child: Text('Add to playlist'), value: 1),
-  PopupMenuItem(child: Text('Detail'), value: 2),
+  PopupMenuItem(
+      child: Text(
+        'Add to playlist',
+        style: popupTextStyle,
+      ),
+      value: 1),
+  PopupMenuItem(
+      child: Text(
+        'Detail',
+        style: popupTextStyle,
+      ),
+      value: 2),
 ];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [
-  PopupMenuItem(child: Text('Remove from playlist'), value: 1),
-  PopupMenuItem(child: Text('Detail'), value: 2),
+  PopupMenuItem(
+      child: Text(
+        'Remove from playlist',
+        style: popupTextStyle,
+      ),
+      value: 1),
+  PopupMenuItem(
+      child: Text(
+        'Detail',
+        style: popupTextStyle,
+      ),
+      value: 2),
 ];
 const List<PopupMenuItem> kPodcastPopupMenuItem = [
-  PopupMenuItem(child: Text('Detail'), value: 1),
+  PopupMenuItem(
+      child: Text(
+        'Detail',
+        style: popupTextStyle,
+      ),
+      value: 1),
 ];
 const List<PopupMenuItem> kDeletePlaylistTitle = [
-  PopupMenuItem(child: Text('Remove playlist'), value: 1),
+  PopupMenuItem(
+      child: Text(
+        'Remove playlist',
+        style: popupTextStyle,
+      ),
+      value: 1),
 ];
+const List<PopupMenuItem> kPlaylistTitleCardsPopupMenuItems = [
+  PopupMenuItem(
+      child: Text(
+        'Delete Playlist',
+        style: popupTextStyle,
+      ),
+      value: 1),
+  // PopupMenuItem(child: Text('Playlist Detail'), value: 1),
+];
+
+//
 const defaultDuration = Duration(milliseconds: 250);
 
 // Form Error

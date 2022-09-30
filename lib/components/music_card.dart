@@ -7,8 +7,6 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
@@ -18,9 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 
 import '../constants.dart';
-import '../screens/playlist/playlist.dart';
 import '../size_config.dart';
-import 'kin_progress_indicator.dart';
 
 class MusicCard extends StatefulWidget {
   MusicCard(
@@ -100,7 +96,7 @@ class _MusicCardState extends State<MusicCard> {
                           artist: 'kin',
                           description: '',
                           cover: 'assets/images/kin.png',
-                          count: widget.musics.length ,
+                          count: widget.musics.length,
                           artist_id: 1,
                           isPurchasedByUser: false,
                           price: 60,
@@ -162,7 +158,7 @@ class _MusicCardState extends State<MusicCard> {
                                           artist: 'kin',
                                           description: '',
                                           cover: 'assets/images/kin.png',
-                                          count: widget.musics.length ,
+                                          count: widget.musics.length,
                                           artist_id: 1,
                                           isPurchasedByUser: false,
                                           price: 60,
@@ -198,18 +194,22 @@ class _MusicCardState extends State<MusicCard> {
                             Icons.more_vert,
                             color: kGrey,
                           ),
+                          color: kPopupMenuBackgroundColor,
+                          elevation: 10,
                           onSelected: (value) {
                             if (value == 2) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      backgroundColor: kPrimaryColor,
+                                      backgroundColor:
+                                          kPopupMenuBackgroundColor,
                                       title: const Text(
                                         'Music Detail',
                                         style: TextStyle(
-                                            color: Colors.white60,
-                                            fontSize: 15),
+                                          color: Colors.white60,
+                                          fontSize: 15,
+                                        ),
                                       ),
                                       content: SizedBox(
                                         height: 100,

@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -223,6 +220,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
       showDialog(
         context: context,
         builder: (_) => const AlertDialog(
+          backgroundColor: kPopupMenuBackgroundColor,
           content: Text("Cancelled "),
         ),
       );

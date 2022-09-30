@@ -46,7 +46,6 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
   @override
   void initState() {
-    // TODO: implement initState
     musicId = widget.musicForId!.id;
 
     Provider.of<FavoriteMusicProvider>(context, listen: false)
@@ -79,10 +78,11 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
             return Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      '$kinAssetBaseUrl/${music!.cover}',
-                    ),
-                    fit: BoxFit.cover),
+                  image: CachedNetworkImageProvider(
+                    '$kinAssetBaseUrl/${music!.cover}',
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
@@ -291,11 +291,12 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                backgroundColor: kPrimaryColor,
+                                backgroundColor: kPopupMenuBackgroundColor,
                                 title: Text(
                                   'Choose Playlist',
                                   style: TextStyle(
-                                      color: Colors.white.withOpacity(0.7)),
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
                                 ),
                                 content: SizedBox(
                                   height: 200,
@@ -837,6 +838,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                 Icons.more_vert,
                 color: Colors.white,
               ),
+              color: kPopupMenuBackgroundColor,
               itemBuilder: (context) {
                 return kDeletePlaylistTitle;
               },
@@ -845,7 +847,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      backgroundColor: kPrimaryColor,
+                      backgroundColor: kPopupMenuBackgroundColor,
                       title: const Text(
                         'Are you sure? Musics under this playlist will also be deleted',
                         style: TextStyle(color: Colors.white60, fontSize: 15),
@@ -861,7 +863,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                                   setState(() {
                                     context
                                         .read<PlayListProvider>()
-                                        .deletePlaylistTitle(id);
+                                        .deletePlaylist(playlistId: id);
                                   });
                                   Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(

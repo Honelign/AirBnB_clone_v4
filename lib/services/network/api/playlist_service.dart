@@ -9,6 +9,10 @@ import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
 import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
 
 class PlaylistApiService {
+  //
+  String className = "PlaylistApiService";
+  String fileName = "playlist_service.dart";
+
   // Error Logging Service
   ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
 
@@ -34,9 +38,10 @@ class PlaylistApiService {
     } catch (e) {
       // log error to server
       errorLoggingApiService.logErrorToServer(
-        fileName: "playlist_service",
+        fileName: fileName,
         functionName: "getPlayLists",
         errorInfo: e.toString(),
+        className: className,
       );
     }
     return playlists;
@@ -63,7 +68,7 @@ class PlaylistApiService {
         return 'Successful';
       } else {
         errorLoggingApiService.logErrorToServer(
-            fileName: "playlist_service",
+            fileName: fileName,
             functionName: "createPlaylist",
             errorInfo: jsonDecode(response.body),
             remark: "Status code is ${response.statusCode}");
@@ -71,10 +76,10 @@ class PlaylistApiService {
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "playlist_service",
-        functionName: "createPlaylist",
-        errorInfo: e.toString(),
-      );
+          fileName: fileName,
+          functionName: "createPlaylist",
+          errorInfo: e.toString(),
+          className: className);
     }
   }
 
@@ -97,9 +102,11 @@ class PlaylistApiService {
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-          fileName: "playlist_service",
-          functionName: "getTracksUnderPlaylistById",
-          errorInfo: e.toString());
+        fileName: fileName,
+        functionName: "getTracksUnderPlaylistById",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
 
     return musicUnderPlaylist;
@@ -123,17 +130,15 @@ class PlaylistApiService {
         body: json.encode({"playlist_id": playlistId, "track_id": trackId}),
       );
 
-      print(response.statusCode);
-
       if (response.statusCode == 201) {
         return true;
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "playlist_provider",
-        functionName: "addToPlaylist",
-        errorInfo: e.toString(),
-      );
+          fileName: fileName,
+          functionName: "addToPlaylist",
+          errorInfo: e.toString(),
+          className: className);
     }
     return false;
   }
@@ -148,88 +153,59 @@ class PlaylistApiService {
       listOfTrackIds.forEach((trackId) async {
         bool res = await addToPlaylist(
             apiEndPoint: apiEndPoint, playlistId: playlistId, trackId: trackId);
-
-        print(res);
       });
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "playlist_service",
+        fileName: fileName,
         functionName: "addMultipleToPlaylist",
         errorInfo: e.toString(),
+        className: className,
       );
     }
 
     return true;
   }
 
-  Future removeTrackPlaylist(apiEndPoint, playListTrackId) async {
-    Response response = await delete(
-      Uri.parse("$kinMusicBaseUrl/$apiEndPoint$playListTrackId/"),
-    );
+  // delete playlist itself
+  Future removePlaylist(apiEndPoint) async {
+    try {
+      Response response = await delete(
+        Uri.parse("$kinMusicBaseUrl/$apiEndPoint"),
+      );
 
-    if (response.statusCode == 204) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future getPlayListTitles(apiEndPoint) async {
-    Response response = await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint"));
-
-    if (response.statusCode == 200) {
-      final item = json.decode(response.body) as List;
-      List<PlayListTitles> playlistTitles = item.map((value) {
-        return PlayListTitles.fromJson(value);
-      }).toList();
-      return playlistTitles;
-    } else {}
-  }
-
-  Future removeFromPlaylist(apiEndPoint, playlistId, trackId) async {
-    Response response = await get(
-      Uri.parse("$kinMusicBaseUrl$apiEndPoint"),
-    );
-
-    if (response.statusCode == 200) {
-      var resbody = json.decode(response.body) as List;
-
-      for (int j = 0; j < resbody[j].length; j++) {
-        if (trackId == resbody[j]['playlist_id']) {
-          var tracks = resbody[j]['Tracks'];
-
-          for (int i = 0; i < resbody[j]['Tracks'].length; i++) {
-            if (playlistId == tracks[i]['track_id']) {
-              var playListTrackId = tracks[i]['playlisttracks_id'];
-
-              var apiEndPoint = 'api/playlisttracks/';
-              Response response = await delete(
-                Uri.parse("$kinMusicBaseUrl/$apiEndPoint$playListTrackId/"),
-              );
-
-              if (response.statusCode == 204) {
-                return true;
-              } else {
-                return false;
-              }
-              // removeTrackPlaylist(apiEndPoint, playListTrackId);
-
-            }
-          }
-        }
+      if (response.statusCode == 204) {
+        return true;
       }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: "playlist_service",
+        functionName: "removePlaylist",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    return false;
   }
 
-  Future removePlaylistTitle(apiEndPoint) async {
-    Response response = await delete(
-      Uri.parse("$kinMusicBaseUrl/api" "$apiEndPoint/"),
-    );
+// delete track from playlist
+  Future removeTrackFromPlaylist({required String apiEndPoint}) async {
+    try {
+      Response response = await delete(
+        Uri.parse("$kinMusicBaseUrl/$apiEndPoint"),
+      );
 
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      return false;
+      if (response.statusCode == 204) {
+        return true;
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "removeTrackFromPlaylist",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+
+    return false;
   }
 }

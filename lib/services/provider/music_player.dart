@@ -4,6 +4,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
@@ -20,6 +21,10 @@ class SingletonPlayer {
 
 class MusicPlayer extends ChangeNotifier with BaseMixins {
   AssetsAudioPlayer player = SingletonPlayer.instance;
+
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+  String fileName = "music_player.dart";
+  String className = "MusicPlayer";
 
   final List<Music> _popularMusicsList = [];
   final List<Music> _recentMusicsList = [];
@@ -138,7 +143,14 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   playOrPause() async {
     try {
       await player.playOrPause();
-    } catch (_) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "playOrPause",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
   isFirstMusic() {
@@ -222,7 +234,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     index,
   ) async {
     try {
-      print("@@@ ${_albumMusics[index].title}");
       _currentMusic = _albumMusics[index];
       notifyListeners();
       player.stop();
@@ -231,7 +242,12 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
       _currentIndex = index;
     } catch (e) {
-      print("@@@@ $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "play",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
   }
 
@@ -301,7 +317,12 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         ),
       );
     } catch (e) {
-      print("@@-${e}");
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "_open",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
   }
 
@@ -321,9 +342,17 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         await _open(music);
         _isMusicLoaded = true;
         notifyListeners();
+
         setPlaying(album, index, musics);
       }
-    } catch (_) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "handlePlayButton",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
   setPlaying(Album album, int index, musics) {
