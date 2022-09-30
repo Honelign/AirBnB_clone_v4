@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/provider/analytics_provider.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
@@ -44,15 +46,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: kPrimaryColor,
+      statusBarColor: kPrimaryColor,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
   /*
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: kPrimaryColor,
-    statusBarColor: kPrimaryColor,
-    systemNavigationBarIconBrightness: Brightness.light,
-
-  ));
-
-  ByteData data =
+   ByteData data =
       await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
@@ -60,7 +64,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      child: Kin(),
+      child: const Kin(),
       providers: [
         ChangeNotifierProvider(create: (_) => MusicProvider()),
         ChangeNotifierProvider(create: (_) => CoinProvider()),
@@ -81,9 +85,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => MultiSelectProvider()),
         StreamProvider(
-            create: (context) =>
-                ConnectivityService().connectionStatusController.stream,
-            initialData: ConnectivityStatus.offline),
+          create: (context) =>
+              ConnectivityService().connectionStatusController.stream,
+          initialData: ConnectivityStatus.offline,
+        ),
       ],
     ),
   );

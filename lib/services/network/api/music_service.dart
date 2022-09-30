@@ -72,8 +72,6 @@ class MusicApiService {
       String uid = await helper.getUserId();
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?page=$pageSize"));
-      //?userId=$uid
-      print("$kinMusicBaseUrl$apiEndPoint");
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -83,10 +81,13 @@ class MusicApiService {
         }).toList();
       }
     } catch (e) {
-      print("$kinMusicBaseUrl$apiEndPoint");
-      print("@music_service -> getArtists error - $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getArtists",
+        errorInfo: e.toString(),
+      );
     }
-    print(artists.toString());
+
     return artists;
   }
 

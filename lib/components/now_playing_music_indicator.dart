@@ -62,7 +62,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
               InkWell(
                 onTap: () {
                   Future successFunction() async {
-                    print("@@@@@lookie-payment-stripe");
+                    // print("@@@@@lookie-payment-stripe");
                   }
 
                   showModalBottomSheet(

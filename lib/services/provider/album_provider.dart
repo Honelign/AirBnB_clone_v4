@@ -40,9 +40,9 @@ class AlbumProvider extends ChangeNotifier {
     isLoading = true;
 
     final res = await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
-    debugPrint("type of res=" + res.runtimeType.toString());
+
     albums = res as List<Album>;
-    debugPrint("album artist" + albums.toString());
+
     isLoading = false;
     notifyListeners();
   }

@@ -96,7 +96,6 @@ class MusicProvider extends ChangeNotifier {
       track_id: music.id.toString(),
       user_id: id,
     );
-    print("@@@@ music_player -> countPopular: Added ${music.title} count");
   }
 
   // add to recently played
@@ -106,8 +105,6 @@ class MusicProvider extends ChangeNotifier {
         seconds: recentlyPlayedWaitDuration,
       ),
     );
-
-    print("@@@${music.title} added to recently played");
 
     final provider = RecentlyPlayedProvider();
 

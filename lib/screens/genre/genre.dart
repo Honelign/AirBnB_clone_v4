@@ -19,11 +19,13 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
   late GenreProvider genreProvider;
   static const _pageSize = 1;
   final PagingController<int, Genre> _pagingController =
-      PagingController(firstPageKey: 1, invisibleItemsThreshold: 0);
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 3);
 
   @override
   void initState() {
     genreProvider = Provider.of<GenreProvider>(context, listen: false);
+
+    // infinite scroll pagination
     _pagingController.addPageRequestListener((pageKey) {
       _fetchMoreGenre(pageKey);
     });

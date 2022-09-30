@@ -20,8 +20,9 @@ class BuyTipCurrency extends StatelessWidget {
       },
       child: Container(
         margin: EdgeInsets.symmetric(
-            vertical: getProportionateScreenHeight(15),
-            horizontal: getProportionateScreenWidth(20)),
+          vertical: getProportionateScreenHeight(15),
+          horizontal: getProportionateScreenWidth(20),
+        ),
         height: 60,
         width: double.infinity,
         decoration: BoxDecoration(

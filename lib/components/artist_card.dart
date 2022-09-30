@@ -27,7 +27,7 @@ class ArtistCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ArtistDetail(
               artist_id: artist.id.toString(),
-               artist: artist, 
+              artist: artist,
             ),
           ),
         );
@@ -49,11 +49,12 @@ class ArtistCard extends StatelessWidget {
               vertical: getProportionateScreenHeight(5),
               horizontal: getProportionateScreenWidth(5),
             ),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(artist.artist_profileImage),
-                  fit: BoxFit.contain),
-            ),
+            // decoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage(artist.artist_profileImage),
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
               child: Column(
@@ -69,14 +70,11 @@ class ArtistCard extends StatelessWidget {
                     children: [
                       Text(
                         "Albums ${artist.noOfAlbums}",
-
-                        // '${(artist.albums!.length - 1).toString()} albums',
                         style: const TextStyle(color: kGrey),
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
                         "Tracks ${artist.noOfTracks}",
-                        // '${artist.musics.length.toString()} tracks',
                         style: const TextStyle(color: kGrey),
                       ),
                     ],
