@@ -41,44 +41,149 @@ class _AlbumBodyState extends State<AlbumBody> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.album.cover}',
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                  '$kinAssetBaseUrl/${widget.album.cover}',
+                ),
+                fit: BoxFit.cover,
               ),
-              fit: BoxFit.cover,
             ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-            child: Container(
-              color: kPrimaryColor.withOpacity(0.5),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: getProportionateScreenHeight(280),
-                    child: Stack(
-                      children: [
-                        _buildAlbumArt(widget.album.cover),
-                        _buildTitleSection(widget.album),
-                        _buildBackButton(context),
-                        _buildAlbumInfo(),
-                        _buildPlayAllIcon(
-                          context,
-                          widget.albumMusicsFromCard,
-                        )
-                      ],
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+              child: Container(
+                color: kPrimaryColor.withOpacity(0.5),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // _buildTitleSection(widget.album),
+
+                          // back button
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                _buildBackButton(context),
+                              ],
+                            ),
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+
+                          // spacer
+                          SizedBox(
+                            height: 16,
+                          ),
+
+                          // Album Art
+                          _buildAlbumArt(
+                            "$kinAssetBaseUrl/${widget.album.cover}",
+                          ),
+
+                          SizedBox(
+                            height: 12,
+                          ),
+
+                          Text(
+                            widget.album.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            widget.album.artist,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 4,
+                          ),
+                          // Text(
+                          //   widget.album.count == 0
+                          //       ? "No items"
+                          //       : widget.album.count == 1
+                          //           ? "1 item"
+                          //           : widget.album.count.toString() + " items",
+                          //   style: TextStyle(
+                          //     color: Colors.white,
+                          //     fontSize: 10,
+                          //   ),
+                          // ),
+
+                          // _buildAlbumInfo(),
+                          // _buildPlayAllIcon(
+                          //   context,
+                          //   widget.albumMusicsFromCard,
+                          // )
+
+                          SizedBox(
+                            height: 16,
+                          ),
+
+                          // button
+                          Container(
+                            child: InkWell(
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 9,
+                                    horizontal: 30,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: kPopupMenuBackgroundColor,
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.shuffle_rounded,
+                                        color: kSecondaryColor,
+                                        size: 18,
+                                      ),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        "Shuffle All",
+                                        style: TextStyle(
+                                          color: kSecondaryColor,
+                                          fontSize: 20,
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: getProportionateScreenHeight(15),
-                  ),
-                  Expanded(
-                    child: _buildAlbumMusics(
-                        widget.albumMusicsFromCard, context, widget.album.id),
-                  )
-                ],
+                    SizedBox(
+                      height: getProportionateScreenHeight(25),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Expanded(
+                        child: _buildAlbumMusics(widget.albumMusicsFromCard,
+                            context, widget.album.id),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -88,67 +193,17 @@ class _AlbumBodyState extends State<AlbumBody> {
   }
 
   Widget _buildAlbumArt(image) {
-    return Stack(
-      children: [
-        SizedBox(
-          height: getProportionateScreenHeight(245),
-          width: double.infinity,
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            imageUrl: '$kinAssetBaseUrl/$image',
+    return CachedNetworkImage(
+      imageUrl: image,
+      imageBuilder: (context, imageProvider) => Container(
+        height: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.4,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fill,
           ),
-        ),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                const Color(0xFF343434).withOpacity(0.4),
-                const Color(0xFF343434).withOpacity(0.15),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildTitleSection(Album album) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
-        alignment: Alignment.topLeft,
-        height: getProportionateScreenHeight(75),
-        width: double.infinity,
-        color: kPrimaryColor.withOpacity(0.3),
-        padding: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(15.0),
-          vertical: getProportionateScreenWidth(5),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              album.artist,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              album.title,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
     );
