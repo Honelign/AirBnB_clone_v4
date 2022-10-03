@@ -19,10 +19,10 @@ class _SettingsState extends State<Settings> {
           setState(() {});
         },
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: SafeArea(
+            child: const SafeArea(
               child: SettingsBody(),
             ),
           ),

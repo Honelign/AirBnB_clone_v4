@@ -65,9 +65,9 @@ class _AlbumGraphPageState extends State<AlbumGraphPage> {
     }
 
     //  find max
-    maxCount = int.parse(statValue[0].viewCount) ?? 0;
+    maxCount = int.parse(statValue[0].viewCount);
     int xIndex = 1;
-    statValue.forEach((stat) {
+    for (var stat in statValue) {
       if (int.parse(stat.viewCount) > maxCount) {
         maxCount = int.parse(stat.viewCount);
       }
@@ -100,7 +100,7 @@ class _AlbumGraphPageState extends State<AlbumGraphPage> {
       dateValues.add(formattedDate.substring(0, 3));
 
       xIndex++;
-    });
+    }
 
     return {"status": "done"};
   }

@@ -156,7 +156,7 @@ Future<bool> checkIfEmailIsVerified() async {
     if (user == null) {
       return false;
     } else {
-      return FirebaseAuth.instance.currentUser!.emailVerified ?? false;
+      return FirebaseAuth.instance.currentUser!.emailVerified;
     }
   } catch (e) {
     return false;

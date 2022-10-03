@@ -1,19 +1,12 @@
 import 'dart:ui';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
-import 'package:kin_music_player_app/services/provider/podcast_player.dart';
-import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +72,7 @@ class _AlbumBodyState extends State<AlbumBody> {
                           ),
 
                           // spacer
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
 
@@ -88,29 +81,29 @@ class _AlbumBodyState extends State<AlbumBody> {
                             "$kinAssetBaseUrl/${widget.album.cover}",
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
 
                           Text(
                             widget.album.title,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Text(
                             widget.album.artist,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                             ),
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           // Text(
@@ -131,42 +124,41 @@ class _AlbumBodyState extends State<AlbumBody> {
                           //   widget.albumMusicsFromCard,
                           // )
 
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
 
                           // button
-                          Container(
-                            child: InkWell(
-                              child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 9,
-                                    horizontal: 30,
+                          InkWell(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 9,
+                                horizontal: 30,
+                              ),
+                              decoration: BoxDecoration(
+                                color: kPopupMenuBackgroundColor,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(
+                                    Icons.shuffle_rounded,
+                                    color: kSecondaryColor,
+                                    size: 18,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: kPopupMenuBackgroundColor,
-                                    borderRadius: BorderRadius.circular(25),
+                                  SizedBox(
+                                    width: 6,
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.shuffle_rounded,
-                                        color: kSecondaryColor,
-                                        size: 18,
-                                      ),
-                                      SizedBox(
-                                        width: 6,
-                                      ),
-                                      Text(
-                                        "Shuffle All",
-                                        style: TextStyle(
-                                          color: kSecondaryColor,
-                                          fontSize: 20,
-                                        ),
-                                      )
-                                    ],
-                                  )),
+                                  Text(
+                                    "Shuffle All",
+                                    style: TextStyle(
+                                      color: kSecondaryColor,
+                                      fontSize: 20,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -215,158 +207,6 @@ class _AlbumBodyState extends State<AlbumBody> {
       onPressed: () {
         Navigator.of(context).pop();
       },
-    );
-  }
-
-  Widget _buildAlbumInfo() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-        height: getProportionateScreenHeight(280) -
-            getProportionateScreenHeight(245),
-        width: double.infinity,
-        color: kPrimaryColor.withOpacity(0.5),
-        padding: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(10),
-          vertical: getProportionateScreenHeight(5),
-        ),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Text(
-            "${widget.album.count} songs",
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlayAllIcon(context, musics) {
-    var playerProvider = Provider.of<MusicPlayer>(
-      context,
-    );
-    var podcastProvider = Provider.of<PodcastPlayer>(
-      context,
-    );
-    var musicProvider = Provider.of<MusicPlayer>(
-      context,
-    );
-    var radioProvider = Provider.of<RadioProvider>(
-      context,
-    );
-    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: PlayerBuilder.isPlaying(
-          player: playerProvider.player,
-          builder: (context, isPlaying) {
-            return InkWell(
-              onTap: () {
-                if (playerProvider.currentMusic == null) {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
-
-                    musicProvider.setPlayer(
-                        musicProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                } else if (playerProvider.player.getCurrentAudioTitle ==
-                        playerProvider.currentMusic!.title &&
-                    widget.album.id == playerProvider.currentAlbum.id) {
-                  if (isPlaying || playerProvider.player.isBuffering.value) {
-                    playerProvider.player.pause();
-                  } else {
-                    if (checkConnection(status)) {
-                      playerProvider.player.play();
-                    } else {
-                      kShowToast();
-                    }
-                  }
-                } else {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-                    playerProvider.player.stop();
-
-                    playerProvider.setMusicStopped(true);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-
-                    playerProvider.setPlayer(
-                        playerProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    playerProvider.setMusicStopped(false);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                }
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: kSecondaryColor,
-                  borderRadius: BorderRadius.circular(1000),
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 15,
-                  child: !playerProvider.isMusicLoaded
-                      ? SpinKitFadingCircle(
-                          itemBuilder: (BuildContext context, int index) {
-                            return DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: index.isEven
-                                    ? kSecondaryColor
-                                    : Colors.white,
-                              ),
-                            );
-                          },
-                          size: 30,
-                        )
-                      : SvgPicture.asset(
-                          isPlaying &&
-                                  widget.album.id ==
-                                      playerProvider.currentAlbum.id
-                              ? 'assets/icons/pause.svg'
-                              : 'assets/icons/play.svg',
-                          fit: BoxFit.contain,
-                          color: Colors.white,
-                        ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
     );
   }
 

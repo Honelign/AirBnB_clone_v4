@@ -5,10 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/kurztech/com/kin_music_player_app/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/kurztech/com/kin_music_player_app/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kin_music_player_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kin_music_player_app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/ad_banner.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/ad_banner.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/album_card_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/album_card_search.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/music_card_recently.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card_recently.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/mixins/BaseMixins.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mixins/BaseMixins.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/album/components/album_body.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/album/components/album_body.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/album/components/playlist_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/album/components/playlist_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/artist/components/artist_detail.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/artist/components/artist_detail.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/album_graph_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/album_graph_info.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_info.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/settings/components/settings_body.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/settings/components/settings_body.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/settings/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/settings/settings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api/analytics_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api/analytics_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/album_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/album_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/login_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/login_provider.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +34,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="analytics" />
+                <branch-info repo="$PROJECT_DIR$" source="mainVer2.0" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="2" />
   </component>
   <component name="ProjectId" id="2Dbm8rMzdpVxfTbUBvzouRm2Wew" />
   <component name="ProjectView">
@@ -32,14 +67,17 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -58,5 +96,15 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
     </layout>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/services/network/regi_page.dart</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

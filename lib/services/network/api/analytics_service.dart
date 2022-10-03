@@ -8,6 +8,9 @@ import 'package:kin_music_player_app/services/network/model/analytics/artist_inf
 import '../../../constants.dart';
 
 class AnalyticsApiService {
+  String fileName = "analytics_service.dart";
+  String className = "AnalyticsApiService";
+
   // get info by track id
   Future getTrackInfo({
     required String trackId,

@@ -234,7 +234,7 @@ Future getArtistsforSearch(id) async {
   }
 }
 
-Future getAlbumsforSearch(id) async {
+Future getAlbumsForSearch(id) async {
   Response response = await get(
       Uri.parse("https://musicservice.kinideas.com/album/?album=$id"));
   if (response.statusCode == 200) {
