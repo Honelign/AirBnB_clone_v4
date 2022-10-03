@@ -4,9 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserApiService {
+  String className = "UserApiService";
+  String fileName = "user_service.dart";
+
+  //
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+
+  // get user privilege -Producer / Artist / User
   Future<String> fetchUserPrivilege(
       {required String uid, required String apiEndPoint}) async {
     try {
@@ -23,7 +31,12 @@ class UserApiService {
 
       // return value
     } catch (e) {
-      print("@@@ api_service fetchUserPrivilege  $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "fetchUserPrivilege",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
     return "-1";
   }
@@ -97,12 +110,19 @@ class UserApiService {
       if (e.code == "wrong-password" || e.code == "user-not-found") {
         return "Invalid Credentials";
       } else if (e.code == "invalid-email") {
-        print("@@api_service + " + e.code);
+        errorLoggingApiService.logErrorToServer(
+          fileName: fileName,
+          functionName: "logIn",
+          errorInfo: e.toString(),
+        );
         return "Something Went Wrong";
       }
     } catch (e) {
-      print("@@api_service" + e.toString());
-      print("@@api_service + " + e.toString());
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "logIn",
+        errorInfo: e.toString(),
+      );
       return "Something Went Wrong";
     }
   }
@@ -139,7 +159,11 @@ class UserApiService {
 
       return "Successfully Logged In";
     } catch (e) {
-      print("@api_service -> loginWithGoogle error - " + e.toString());
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "logIn",
+        errorInfo: e.toString(),
+      );
       return e.toString();
     }
   }

@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/settings/components/Setting_card_artist.dart';
 import 'package:kin_music_player_app/screens/settings/components/settings_tip_buy_card.dart';
 import 'package:kin_music_player_app/screens/settings/components/user_accout_header.dart';
-import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

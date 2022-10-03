@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,7 +12,6 @@ import 'package:kin_music_player_app/components/music_list_card.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/artist/components/popular_tracks.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
@@ -41,7 +42,6 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
   @override
   void initState() {
-    // TODO: implement initState
     final albumProvider = Provider.of<AlbumProvider>(context, listen: false)
         .getArtistAlbums(widget.artist_id);
 

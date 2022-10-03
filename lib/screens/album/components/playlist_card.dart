@@ -12,7 +12,6 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
-import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -45,9 +44,7 @@ class _AlbumCardState extends State<AlbumCard> {
     var p = Provider.of<MusicPlayer>(
       context,
     );
-    var provider = Provider.of<PlayListProvider>(
-      context,
-    );
+
     var podcastProvider = Provider.of<PodcastPlayer>(
       context,
     );
@@ -104,7 +101,7 @@ class _AlbumCardState extends State<AlbumCard> {
                 // add to recently played
                 musicProvider.addToRecentlyPlayed(music: widget.music);
 
-                // add to popluar
+                // add to popular
                 musicProvider.countPopular(music: widget.music);
               } else {
                 kShowToast();
