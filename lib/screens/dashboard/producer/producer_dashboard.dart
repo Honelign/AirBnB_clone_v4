@@ -43,7 +43,9 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
       context,
       listen: false,
     ); // get producer based info
-    await analyticsProvider.getProducerOwnedInfo();
+
+    await analyticsProvider.getProducerOwnedInfo(typeOfInfo: currentUploadType);
+
     List result = await analyticsProvider.getProducerGeneralInfo();
     barData = [];
     dateValues = [];
@@ -194,297 +196,305 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
               backgroundColor: Colors.black,
             ),
             backgroundColor: Colors.black,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  getProportionateScreenWidth(16),
-                  getProportionateScreenHeight(40),
-                  getProportionateScreenWidth(16),
-                  getProportionateScreenHeight(40),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //  profile image
-                    FirebaseAuth.instance.currentUser!.photoURL != null
-                        ? SizedBox(
-                            width: 120,
-                            height: 120,
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  FirebaseAuth.instance.currentUser!.photoURL ??
-                                      "",
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                // height: 200,
-                                //  width: double.infinity,
-                                decoration: BoxDecoration(
-                                  // borderRadius: BorderRadius.circular(20),
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fill,
+            body: RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+              },
+              color: refreshIndicatorForegroundColor,
+              backgroundColor: refreshIndicatorBackgroundColor,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(16),
+                    getProportionateScreenHeight(40),
+                    getProportionateScreenWidth(16),
+                    getProportionateScreenHeight(40),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //  profile image
+                      FirebaseAuth.instance.currentUser!.photoURL != null
+                          ? SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: CachedNetworkImage(
+                                imageUrl: FirebaseAuth
+                                        .instance.currentUser!.photoURL ??
+                                    "",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  // height: 200,
+                                  //  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    // borderRadius: BorderRadius.circular(20),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              width: 120,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey.withOpacity(0.55),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  formatDisplayName(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 64,
+                                    letterSpacing: 4,
                                   ),
                                 ),
                               ),
                             ),
-                          )
-                        : Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey.withOpacity(0.55),
-                            ),
-                            child: Center(
-                              child: Text(
-                                formatDisplayName(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 64,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                            ),
-                          ),
 
-                    // Spacer
-                    SizedBox(
-                      height: getProportionateScreenHeight(24),
-                    ),
-
-                    // Artist Name
-                    Text(
-                      FirebaseAuth.instance.currentUser!.displayName ?? "",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: getProportionateScreenWidth(28),
+                      // Spacer
+                      SizedBox(
+                        height: getProportionateScreenHeight(24),
                       ),
-                    ),
-                    SizedBox(
-                      height: getProportionateScreenHeight(6),
-                    ),
 
-                    // Email / contact info
-                    Text(
-                      getEmailOrPhone(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: getProportionateScreenWidth(14),
+                      // Artist Name
+                      Text(
+                        FirebaseAuth.instance.currentUser!.displayName ?? "",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: getProportionateScreenWidth(28),
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(6),
+                      ),
 
-                    SizedBox(
-                      height: getProportionateScreenHeight(24),
-                    ),
-
-                    // Info card - Total View Count
-                    ArtistInfoCard(
-                      infoLabel: "Total Views",
-                      infoValue: analyticsProvider
-                          .generalAnalytics[0].total_count
-                          .toString(),
-                      cardType: "Views",
-                    ),
-
-                    // spacer
-                    SizedBox(
-                      height: getProportionateScreenHeight(24),
-                    ),
-                    // Info card - Total View Count
-                    ArtistInfoCard(
-                      infoLabel: "Total Revenue",
-                      infoValue: analyticsProvider
-                          .generalAnalytics[0].total_revenue
-                          .toString(),
-                      cardType: 'Revenue',
-                    ),
-
-                    SizedBox(
-                      height: getProportionateScreenHeight(45),
-                    ),
-
-                    // analytics one title
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // section title
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: Text(
-                            "Your Music Analytics",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: getProportionateScreenWidth(16),
-                            ),
-                          ),
+                      // Email / contact info
+                      Text(
+                        getEmailOrPhone(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: getProportionateScreenWidth(14),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: DropdownButton(
-                            value: currentAnalyticsType,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: kSecondaryColor,
-                            ),
-                            // Array list of items
-                            items: possibleAnalyticTypes.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(
-                                  items,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                currentAnalyticsType = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
 
-                    SizedBox(
-                      height: getProportionateScreenHeight(36),
-                    ),
+                      SizedBox(
+                        height: getProportionateScreenHeight(24),
+                      ),
 
-                    // Graph Section
-                    // currentAnalyticsType == "Daily"
-                    //     ? DailyGraph(
-                    //         barData: finalValues,
-                    //         leftTileValues: [],
-                    //         bottomTileValues: mainGraphInfo
-                    //             .map(
-                    //               (e) => e['date'] as String,
-                    //             )
-                    //             .toList(),
-                    //       )
-                    //     : currentAnalyticsType == "Weekly"
-                    //         ? WeeklyGraph(
-                    //             barData: finalValues,
-                    //             leftTileValues: [],
-                    //             bottomTileValues: const [
-                    //               "Week 1",
-                    //               "Week 2",
-                    //               "Week 3",
-                    //               "Week 4"
-                    //             ],
-                    //           )
-                    //         : MonthlyGraph(
-                    //             barData: finalValues,
-                    //             leftTileValues: [],
-                    //             bottomTileValues: mainGraphInfo
-                    //                 .map(
-                    //                   (e) => e['date'] as String,
-                    //                 )
-                    //                 .toList(),
-                    //           ),
+                      // Info card - Total View Count
+                      ArtistInfoCard(
+                        infoLabel: "Total Views",
+                        infoValue: analyticsProvider
+                            .generalAnalytics[0].total_count
+                            .toString(),
+                        cardType: "Views",
+                      ),
 
-                    //
-                    currentAnalyticsType == "Daily"
-                        ? DailyGraphWidget(
-                            barData: barData,
-                            bottomTileValues: dateValues,
-                            maxY: maxCount.toDouble(),
-                          )
-                        : currentAnalyticsType == "Weekly"
-                            ? WeeklyGraphWidget(
-                                barData: barData,
-                                maxY: (maxCount.toDouble() + 5),
-                              )
-                            : MonthlyGraphWidget(
-                                barData: barData,
-                                bottomTileValues: dateValues,
-                                maxY: maxCount.toDouble(),
+                      // spacer
+                      SizedBox(
+                        height: getProportionateScreenHeight(24),
+                      ),
+                      // Info card - Total View Count
+                      ArtistInfoCard(
+                        infoLabel: "Total Revenue",
+                        infoValue: analyticsProvider
+                            .generalAnalytics[0].total_revenue
+                            .toString(),
+                        cardType: 'Revenue',
+                      ),
+
+                      SizedBox(
+                        height: getProportionateScreenHeight(45),
+                      ),
+
+                      // analytics one title
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // section title
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: Text(
+                              "Your Music Analytics",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
-
-                    SizedBox(
-                      height: getProportionateScreenHeight(55),
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // section title
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: Text(
-                            "Your Views",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: getProportionateScreenWidth(16),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: DropdownButton(
-                            value: currentUploadType,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: kSecondaryColor,
-                            ),
-                            // Array list of items
-                            items:
-                                possibleUploadTypesProducer.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(
-                                  items,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(
-                                () {
-                                  currentUploadType = newValue!;
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: getProportionateScreenHeight(300),
-                      child: displayValues.isNotEmpty
-                          ? SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                // scrollDirection: ,
-                                shrinkWrap: true,
-                                itemCount: displayValues.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ArtistGraphCard(
-                                    id: displayValues[index].id,
-                                    image: displayValues[index].image,
-                                    name: displayValues[index].name,
-                                    cardType: currentUploadType,
-                                  );
-                                },
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: DropdownButton(
+                              value: currentAnalyticsType,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: kSecondaryColor,
                               ),
+                              // Array list of items
+                              items: possibleAnalyticTypes.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(
+                                    items,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  currentAnalyticsType = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+                        height: getProportionateScreenHeight(36),
+                      ),
+
+                      // Graph Section
+                      // currentAnalyticsType == "Daily"
+                      //     ? DailyGraph(
+                      //         barData: finalValues,
+                      //         leftTileValues: [],
+                      //         bottomTileValues: mainGraphInfo
+                      //             .map(
+                      //               (e) => e['date'] as String,
+                      //             )
+                      //             .toList(),
+                      //       )
+                      //     : currentAnalyticsType == "Weekly"
+                      //         ? WeeklyGraph(
+                      //             barData: finalValues,
+                      //             leftTileValues: [],
+                      //             bottomTileValues: const [
+                      //               "Week 1",
+                      //               "Week 2",
+                      //               "Week 3",
+                      //               "Week 4"
+                      //             ],
+                      //           )
+                      //         : MonthlyGraph(
+                      //             barData: finalValues,
+                      //             leftTileValues: [],
+                      //             bottomTileValues: mainGraphInfo
+                      //                 .map(
+                      //                   (e) => e['date'] as String,
+                      //                 )
+                      //                 .toList(),
+                      //           ),
+
+                      //
+                      currentAnalyticsType == "Daily"
+                          ? DailyGraphWidget(
+                              barData: barData,
+                              bottomTileValues: dateValues,
+                              maxY: maxCount.toDouble(),
                             )
-                          : Center(
-                              child: Text(
-                                "No $currentUploadType uploaded",
-                                style: const TextStyle(
-                                  color: Colors.white,
+                          : currentAnalyticsType == "Weekly"
+                              ? WeeklyGraphWidget(
+                                  barData: barData,
+                                  maxY: (maxCount.toDouble() + 5),
+                                )
+                              : MonthlyGraphWidget(
+                                  barData: barData,
+                                  bottomTileValues: dateValues,
+                                  maxY: maxCount.toDouble(),
                                 ),
+
+                      SizedBox(
+                        height: getProportionateScreenHeight(55),
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // section title
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: Text(
+                              "Your Views",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: getProportionateScreenWidth(16),
                               ),
                             ),
-                    ),
-                  ],
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: DropdownButton(
+                              value: currentUploadType,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: kSecondaryColor,
+                              ),
+                              // Array list of items
+                              items: possibleUploadTypesProducer
+                                  .map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(
+                                    items,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(
+                                  () {
+                                    currentUploadType = newValue!;
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+                        width: double.infinity,
+                        height: getProportionateScreenHeight(300),
+                        child: displayValues.isNotEmpty
+                            ? SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  // scrollDirection: ,
+                                  shrinkWrap: true,
+                                  itemCount: displayValues.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ArtistGraphCard(
+                                      id: displayValues[index].id,
+                                      image: displayValues[index].image,
+                                      name: displayValues[index].name,
+                                      cardType: currentUploadType,
+                                    );
+                                  },
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  "No $currentUploadType uploaded",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -492,9 +502,25 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
         } else {
           return Scaffold(
             body: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 5),
-              child: Text(
-                snapshot.toString(),
+              child: Column(
+                children: [
+                  Text(
+                    snapshot.toString(),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 25),
+                    color: Colors.red,
+                    child: InkWell(
+                      child: const Text("Back"),
+                      onTap: () async {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
               ),
             ),
           );

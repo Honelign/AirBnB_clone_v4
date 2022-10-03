@@ -17,7 +17,7 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-import 'playlist_card.dart';
+import 'album_card.dart';
 
 class AlbumBody extends StatefulWidget {
   static String routeName = '/decoration';
@@ -36,8 +36,23 @@ class AlbumBody extends StatefulWidget {
 }
 
 class _AlbumBodyState extends State<AlbumBody> {
+  bool _showLoader = false;
+
+  @override
+  void initState() {
+    _showLoader = true;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _showLoader = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // _showLoader = false;
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -320,10 +335,13 @@ class _AlbumBodyState extends State<AlbumBody> {
       future: Provider.of<MusicProvider>(context, listen: false)
           .albumMusicsGetter(id),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const KinProgressIndicator();
+        if (_showLoader == true) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const KinProgressIndicator();
+          }
         }
         List<Music> albumMusics = snapshot.data ?? [];
+        _showLoader = false;
         return ListView.builder(
           itemCount: albumMusics.length,
           itemBuilder: (context, index) {

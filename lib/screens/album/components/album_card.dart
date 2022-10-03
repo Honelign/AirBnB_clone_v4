@@ -102,10 +102,10 @@ class _AlbumCardState extends State<AlbumCard> {
                 podcastProvider.listenPodcastStreaming();
 
                 // add to recently played
-                musicProvider.addToRecentlyPlayed(music: widget.music);
+                // musicProvider.addToRecentlyPlayed(music: widget.music);
 
                 // add to popluar
-                musicProvider.countPopular(music: widget.music);
+                // musicProvider.countPopular(music: widget.music);
               } else {
                 kShowToast();
               }

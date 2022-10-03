@@ -20,6 +20,7 @@ class AlbumProvider extends ChangeNotifier {
       isPurchasedByUser: false);
 
   MusicApiService musicApiService = MusicApiService();
+  List albumMusics = [];
 
 // get new albums
   Future<List<Album>> getAlbums({required int pageSize}) async {
