@@ -43,7 +43,7 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
       context,
       listen: false,
     ); // get producer based info
-    await analyticsProvider.getProducerOwnedInfo();
+    await analyticsProvider.getProducerOwnedInfo(infoType: currentUploadType);
     List result = await analyticsProvider.getProducerGeneralInfo();
     barData = [];
     dateValues = [];
