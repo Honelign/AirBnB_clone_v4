@@ -18,26 +18,29 @@ class AnalyticsProvider extends ChangeNotifier {
 
   AnalyticsApiService analyticsApiService = AnalyticsApiService();
 
-  // get total count,revenue and main graph info of producer
+  //
+  final String generalInfoApiEndPoint = "totalViewCountByUserId";
+
+  // get total count,revenue and main graph info of a producer
   Future getProducerGeneralInfo() async {
     isLoading = true;
 
     generalAnalytics = [];
     generalAnalytics = await analyticsApiService.getProducerGeneralInfo(
-      apiEndPoint: totalViewCountApiEndPoint,
+      apiEndPoint: generalInfoApiEndPoint,
     );
     isLoading = false;
 
     return generalAnalytics;
   }
 
-  // get total count,revenue and main graph info of artist
+  // get total count,revenue and main graph info of an artist
   Future getArtistGeneralInfo() async {
     isLoading = true;
 
     generalAnalytics = [];
     generalAnalytics = await analyticsApiService.getArtistGeneralInfo(
-      apiEndPoint: totalViewCountApiEndPoint,
+      apiEndPoint: generalInfoApiEndPoint,
     );
     isLoading = false;
 
@@ -45,7 +48,7 @@ class AnalyticsProvider extends ChangeNotifier {
   }
 
   // get all artists, albums and tracks under a producer
-  Future getProducerOwnedInfo({required String typeOfInfo}) async {
+  Future getProducerOwnedInfo({required String infoType}) async {
     isLoading = true;
     allArtists = [];
     allAlbums = [];
@@ -53,26 +56,29 @@ class AnalyticsProvider extends ChangeNotifier {
 
     String apiEndPoint = "mobileApp/artistsByUserId";
 
-    if (typeOfInfo == "Albums") {
+    if (infoType == "Albums") {
       apiEndPoint = "mobileApp/albumsByUserId";
-    } else if (typeOfInfo == "Tracks") {
+    }
+
+    //
+    else if (infoType == "Tracks") {
       apiEndPoint = "mobileApp/tracksByUserId";
     }
 
     // make api call
     var producerOwnedInfo = await analyticsApiService.getProducerOwnedInfo(
+      infoType: infoType,
       apiEndPoint: apiEndPoint,
-      typeOfInfo: typeOfInfo,
     );
 
     isLoading = false;
 
-    if (typeOfInfo == "Albums") {
+    if (infoType == "Albums") {
       allAlbums = producerOwnedInfo;
     }
 
     //
-    else if (typeOfInfo == "Tracks") {
+    else if (infoType == "Tracks") {
       allTracks = producerOwnedInfo;
     }
 
@@ -80,22 +86,62 @@ class AnalyticsProvider extends ChangeNotifier {
     else {
       allArtists = producerOwnedInfo;
     }
+    isLoading = false;
+    notifyListeners();
+    return producerOwnedInfo;
   }
 
-  // get count and view of an artist
+  // get all  albums and tracks under an artist
+  Future getArtistOwnedInfo({required String infoType}) async {
+    isLoading = true;
+    allArtists = [];
+    allAlbums = [];
+    allTracks = [];
+
+    String apiEndPoint = "mobileApp/albumsByUserId";
+
+    //
+    if (infoType == "Tracks") {
+      apiEndPoint = "mobileApp/tracksByUserId";
+    }
+
+    // make api call
+    var artistOwnedInfo = await analyticsApiService.getArtistOwnedInfo(
+      infoType: infoType,
+      apiEndPoint: apiEndPoint,
+    );
+
+    isLoading = false;
+
+    // arrange info
+
+    if (infoType == "Tracks") {
+      allTracks = artistOwnedInfo;
+    }
+
+    //
+    else {
+      allAlbums = artistOwnedInfo;
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  // get analytics of an artist
   Future getArtistAnalyticsInfo({required String artistId}) async {
     isLoading = true;
     currentArtistAnalytics = [];
     currentArtistAnalytics = await analyticsApiService.getArtistInfo(
       artistId: artistId,
-      apiEndPoint: '/total_artist_count',
+      apiEndPoint: 'totalArtistViewCount',
     );
     isLoading = false;
 
     return currentArtistAnalytics;
   }
 
-  // get count and view of an album
+  // get analytics of an album
   Future getAlbumAnalyticsInfo({required String albumId}) async {
     isLoading = true;
     currentAlbumAnalytics = [];
@@ -114,43 +160,10 @@ class AnalyticsProvider extends ChangeNotifier {
     currentTrackAnalytics = [];
     currentTrackAnalytics = await analyticsApiService.getTrackInfo(
       trackId: trackId,
-      apiEndPoint: '/total_track_count',
+      apiEndPoint: 'totalTrackViewCount',
     );
     isLoading = false;
 
     return currentTrackAnalytics;
-  }
-
-  Future getArtistOwnedInfo() async {
-    isLoading = true;
-    allArtists = [];
-    allAlbums = [];
-    allTracks = [];
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // get user id
-    String uid = prefs.getString("id") ?? "";
-
-    // get user prev
-    String privilege = prefs.getString("prev") ?? "2";
-
-    // make api call
-    var artistOwnedInfo = await analyticsApiService.getArtistOwnedInfo(
-      userId: uid,
-      privilege: privilege,
-      apiEndPoint: totalViewCountApiEndPoint,
-    );
-
-    isLoading = false;
-
-    // arrange info
-
-    artistOwnedInfo.forEach((album) {
-      allAlbums.add(album);
-
-      album.musics.forEach((music) {
-        allTracks.add(music);
-      });
-    });
   }
 }

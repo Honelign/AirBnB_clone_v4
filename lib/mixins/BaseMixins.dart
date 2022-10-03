@@ -5,9 +5,6 @@ import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
 
 mixin BaseMixins {
-
-
-
   dynamic responsive(BuildContext context, {isPhone, isSmallPhone, isTablet}) {
     var width = MediaQuery.of(context).size.width;
     if (width > 500) {
@@ -18,8 +15,6 @@ mixin BaseMixins {
       return isPhone;
     }
   }
-
-
 
   List<Music> shuffle(List<Music> list) {
     var random = Random();
@@ -33,6 +28,7 @@ mixin BaseMixins {
     }
     return list;
   }
+
   List<PodCastEpisode?> shufflePodcast(List<PodCastEpisode?> list) {
     var random = Random();
     int length = list.length;

@@ -9,7 +9,6 @@ import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
-import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,22 +17,23 @@ import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart'
 import '../constants.dart';
 import '../size_config.dart';
 
+// ignore: must_be_immutable
 class MusicCard extends StatefulWidget {
-  MusicCard(
-      {Key? key,
-      this.width = 125,
-      this.aspectRatio = 1.02,
-      required this.music,
-      required this.musics,
-      this.musicIndex = -1,
-      this.isForPlaylist})
-      : super(key: key);
-
   final double width, aspectRatio;
   final Music music;
   final int musicIndex;
   final List<Music> musics;
   bool? isForPlaylist;
+
+  MusicCard({
+    Key? key,
+    this.width = 125,
+    this.aspectRatio = 1.02,
+    required this.music,
+    required this.musics,
+    this.musicIndex = -1,
+    this.isForPlaylist,
+  }) : super(key: key);
 
   @override
   State<MusicCard> createState() => _MusicCardState();
@@ -43,7 +43,7 @@ class _MusicCardState extends State<MusicCard> {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
-    final provider = Provider.of<PlayListProvider>(context, listen: false);
+
     var p = Provider.of<MusicPlayer>(
       context,
     );
@@ -111,7 +111,7 @@ class _MusicCardState extends State<MusicCard> {
                     // add to recently played
                     musicProvider.addToRecentlyPlayed(music: widget.music);
 
-                    // add to popluar
+                    // add to popular
                     musicProvider.countPopular(music: widget.music);
                   }
                 } else {
@@ -258,7 +258,7 @@ class _MusicCardState extends State<MusicCard> {
                   ),
                   Text(
                     widget.music.artist.isNotEmpty
-                        ? widget.music!.artist
+                        ? widget.music.artist
                         : 'kin artist',
                     style: const TextStyle(color: kGrey),
                   ),

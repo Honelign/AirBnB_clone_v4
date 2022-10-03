@@ -1,16 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/album/components/album_body.dart';
-import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/album_for_search.dart';
-import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
-import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../services/network/model/artist.dart';
 import '../size_config.dart';
 
 class AlbumCardSearch extends StatefulWidget {
@@ -29,8 +24,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
     return GestureDetector(
       onTap: () async {
         final provider = Provider.of<AlbumProvider>(context, listen: false);
-        await provider.getAlbumForsearch(widget.album.id);
-        Album albumtouched = provider.searchalbum;
+        await provider.getAlbumForSearch(widget.album.id);
 
         // await Future.delayed(Duration(microseconds: 500));
         // Navigator.push(
@@ -42,7 +36,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Container(
+        child: SizedBox(
           height: 70,
           width: 300,
           child: Row(
@@ -50,7 +44,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Container(
+                child: SizedBox(
                   width: 70,
                   child: CachedNetworkImage(
                     imageUrl: '$kinAssetBaseUrl/${widget.album.albumCover}',
@@ -59,7 +53,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Column(
@@ -68,7 +62,7 @@ class _AlbumCardSearchState extends State<AlbumCardSearch> {
                 children: [
                   Text(
                     widget.album.albumTitle,
-                    style: TextStyle(color: Colors.white, fontSize: 17),
+                    style: const TextStyle(color: Colors.white, fontSize: 17),
                   ),
                   // Text(widget.artist.artistTitle,style: TextStyle(color: Colors.white,),),
                 ],

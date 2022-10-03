@@ -1,13 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/dashboard/components/album_graph_info.dart';
 import 'package:kin_music_player_app/screens/dashboard/components/artist_graph_info.dart';
 import 'package:kin_music_player_app/screens/dashboard/components/track_graph_info.dart';
-import 'package:kin_music_player_app/services/network/model/analytics/analytics.dart';
 import 'package:kin_music_player_app/services/provider/analytics_provider.dart';
 
 import 'package:kin_music_player_app/size_config.dart';

@@ -2,14 +2,9 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:kin_music_player_app/coins/buy_coin.dart';
-import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/animation_rotate.dart';
-import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +140,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                           ),
 
                           // action center
-                          _buildActionCenter(music!),
+                          _buildActionCenter(),
 
                           // spacer
                           SizedBox(
@@ -244,7 +239,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     );
   }
 
-  Widget _buildActionCenter(Music music) {
+  Widget _buildActionCenter() {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(30)),
@@ -265,154 +260,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
           // Tip Button
           IconButton(
-            onPressed: () {
-              showMaterialModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  // coin provider
-                  final provider =
-                      Provider.of<CoinProvider>(context, listen: false);
-
-                  // UI
-                  return StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      void refresherFunction() {
-                        setState(() {});
-                      }
-
-                      return FutureBuilder(
-                          future: provider.getCoinBalance(),
-                          builder: (context, snapshot) {
-                            // if loading coin balance
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.65,
-                                color: Colors.black,
-                                child: const KinProgressIndicator(),
-                              );
-                            }
-
-                            // coin info got
-                            else {
-                              return Container(
-                                color: kPrimaryColor,
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.7,
-                                child: Column(
-                                  children: [
-                                    // modal header
-                                    SizedBox(
-                                      height: MODAL_HEADER_HEIGHT,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Column(
-                                        children: [
-                                          // spacer
-                                          const SizedBox(
-                                            height: 18,
-                                          ),
-
-                                          // title
-                                          Text(
-                                            "Coin Balance",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white
-                                                  .withOpacity(0.75),
-                                            ),
-                                          ),
-
-                                          // spacer
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-
-                                          // remaining coin value
-                                          Text(
-                                            "${snapshot.data ?? '0'} ETB",
-                                            style: TextStyle(
-                                              fontSize: 32,
-                                              color: Colors.white
-                                                  .withOpacity(0.75),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-
-                                          // spacer
-                                          const SizedBox(
-                                            height: 24,
-                                          ),
-
-                                          // buy coins button
-                                          InkWell(
-                                            onTap: () async {
-                                              // remove modal sheet
-                                              Navigator.pop(context);
-
-                                              // route to buy coin page
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const BuyCoinPage(),
-                                                ),
-                                              );
-                                            },
-                                            child: Container(
-                                              child: const Text(
-                                                "Buy Coins",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 8,
-                                                horizontal: 25,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: kSecondaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    // modal list values
-                                    SizedBox(
-                                      height:
-                                          (MediaQuery.of(context).size.height *
-                                                  0.65 -
-                                              MODAL_HEADER_HEIGHT),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ListView.builder(
-                                        itemCount: allowedCoinValues.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return TipArtistCard(
-                                            value: allowedCoinValues[index],
-                                            refresher: refresherFunction,
-                                            artistName: music.artist,
-                                            artistId: music.artist_id,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          });
-                    },
-                  );
-                },
-              );
-            },
+            onPressed: () {},
             icon: Icon(
               Icons.money_sharp,
               color: Colors.white.withOpacity(0.8),
@@ -432,16 +280,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
           // add to playlist
           IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) {
-                  return PlaylistSelectorDialog(
-                    trackId: musicId.toString(),
-                  );
-                },
-              );
-            },
+            onPressed: () {},
             icon: Icon(
               Icons.add,
               color: Colors.white.withOpacity(0.8),

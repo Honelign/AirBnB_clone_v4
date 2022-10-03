@@ -65,9 +65,9 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
     }
 
     //  find max
-    maxCount = int.parse(statValue[0].viewCount) ?? 0;
+    maxCount = int.parse(statValue[0].viewCount);
     int xIndex = 1;
-    statValue.forEach((stat) {
+    for (var stat in statValue) {
       if (int.parse(stat.viewCount) > maxCount) {
         maxCount = int.parse(stat.viewCount);
       }
@@ -100,7 +100,7 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
       dateValues.add(formattedDate.substring(0, 3));
 
       xIndex++;
-    });
+    }
 
     return {"status": "done"};
   }
@@ -193,7 +193,8 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
                                     value: items,
                                     child: Text(
                                       items,
-                                      style: TextStyle(color: Colors.white),
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
                                   );
                                 }).toList(),

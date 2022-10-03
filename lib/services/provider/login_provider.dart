@@ -5,6 +5,7 @@ import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';
 import 'package:kin_music_player_app/services/network/api/user_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +63,6 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future loginFacebook() async {
-    const String apiEndPoint = '/redirect';
     isLoading = true;
     notifyListeners();
     // var result = await loginWithFacebook(apiEndPoint);
@@ -96,7 +96,6 @@ class LoginProvider extends ChangeNotifier {
           // timeout: Duration(seconds: 120),
           codeAutoRetrievalTimeout: (verificationId) async {});
     } catch (e) {
-    
       kShowToast(message: "Invalid OTP");
       rethrow;
     }
@@ -148,13 +147,14 @@ class LoginProvider extends ChangeNotifier {
 
         // cache user info
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('id', currentUser!.uid);
+        await prefs.setString('id', currentUser.uid);
 
         await prefs.setString(
-            'email${currentUser!.uid}',
-            FirebaseAuth.instance.currentUser != null
-                ? FirebaseAuth.instance.currentUser!.phoneNumber!
-                : "Phone Number");
+          'email${currentUser.uid}',
+          FirebaseAuth.instance.currentUser != null
+              ? FirebaseAuth.instance.currentUser!.phoneNumber!
+              : "Phone Number",
+        );
         notifyListeners();
       } else {
         kShowToast(message: "Invalid OTP");
@@ -195,7 +195,13 @@ class LoginProvider extends ChangeNotifier {
     try {
       final googleSignIn = GoogleSignIn();
       googleSignIn.signOut();
-    } catch (e) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "logOut",
+        errorInfo: e.toString(),
+      );
+    }
 
     // clear cache stored user info
     SharedPreferences pref = await SharedPreferences.getInstance();

@@ -18,7 +18,16 @@ import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class PlaylistListCard extends StatefulWidget {
+  final double height, aspectRatio;
+  final Music music;
+  final int musicIndex;
+  final List<Music> musics;
+  final Function refresherFunction;
+
+  int? playlistId;
+
   PlaylistListCard({
     Key? key,
     this.height = 70,
@@ -30,14 +39,6 @@ class PlaylistListCard extends StatefulWidget {
     required this.refresherFunction,
   }) : super(key: key);
 
-  final double height, aspectRatio;
-  final Music music;
-  final int musicIndex;
-  final List<Music> musics;
-  final Function refresherFunction;
-
-  int? playlistId;
-
   @override
   State<PlaylistListCard> createState() => _PlaylistListCardState();
 }
@@ -48,6 +49,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
   @override
   void initState() {
     playlistProvider = Provider.of<PlayListProvider>(context, listen: false);
+    print("here - ${widget.musics[0].title}");
     super.initState();
   }
 
@@ -70,7 +72,6 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
       builder: (context, isPlaying) {
         return GestureDetector(
           onTap: () {
-            print("mandem-UI" + playlistProvider.musics.length.toString());
             incrementMusicView(widget.music.id);
             p.setBuffering(widget.musicIndex);
             if (checkConnection(status)) {
@@ -93,7 +94,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
                 p.setPlayer(p.player, podcastProvider, radioProvider);
                 radioProvider.setMiniPlayerVisibility(false);
                 p.handlePlayButton(
-                  music: widget.music!,
+                  music: widget.music,
                   index: widget.musicIndex,
                   album: Album(
                     id: -2,
@@ -117,7 +118,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
                 // add to recently played
                 musicProvider.addToRecentlyPlayed(music: widget.music);
 
-                // add to popluar
+                // add to popular
                 musicProvider.countPopular(music: widget.music);
               }
             } else {
@@ -128,48 +129,64 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
             height: getProportionateScreenHeight(widget.height),
             width: getProportionateScreenWidth(75),
             margin: EdgeInsets.symmetric(
-                horizontal: getProportionateScreenWidth(20),
-                vertical: getProportionateScreenHeight(10)),
+              horizontal: getProportionateScreenWidth(20),
+              vertical: getProportionateScreenHeight(10),
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Image
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: AspectRatio(
-                      aspectRatio: 1.02,
-                      child: Container(
-                        color: kSecondaryColor.withOpacity(0.1),
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: '$kinAssetBaseUrl/${widget.music!.cover}',
-                        ),
+                  borderRadius: BorderRadius.circular(10),
+                  child: AspectRatio(
+                    aspectRatio: 1.02,
+                    child: Container(
+                      color: kSecondaryColor.withOpacity(0.1),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
                       ),
-                    )),
+                    ),
+                  ),
+                ),
+
+                // Spacer
                 SizedBox(
                   width: getProportionateScreenWidth(10),
                 ),
+
+                //
                 Expanded(
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.music!.title,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Music Title
+                          Text(
+                            widget.music.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+
+                          // Artist Title
+                          Text(
+                            widget.music.artist.isNotEmpty
+                                ? widget.music.artist
+                                : 'kin artist',
+                            style: const TextStyle(color: kGrey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.music.artist.isNotEmpty
-                                  ? widget.music.artist
-                                  : 'kin artist',
-                              style: const TextStyle(color: kGrey),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                           p.currentMusic == null
                               ? Container()
                               : p.currentMusic!.title == widget.music.title
@@ -221,15 +238,15 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      widget.music!.description.isNotEmpty
-                                          ? widget.music!.description
+                                      widget.music.description.isNotEmpty
+                                          ? widget.music.description
                                           : '',
                                       style: const TextStyle(
                                         color: kLightSecondaryColor,
                                       ),
                                     ),
                                     Text(
-                                      'By ${widget.music!.artist}',
+                                      'By ${widget.music.artist}',
                                       style: const TextStyle(
                                         color: kLightSecondaryColor,
                                       ),
@@ -245,17 +262,16 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
                       bool response =
                           await playlistProvider.deleteTrackFromPlaylist(
                         trackIdInPlaylist:
-                            widget.music!.trackIdInPlaylist.toString() ?? "-1",
+                            widget.music.trackIdInPlaylist.toString(),
                       );
                       playlistProvider.isLoading = false;
 
                       if (response == true) {
-                        kShowToast(message: "${widget.music!.title} removed");
+                        kShowToast(message: "${widget.music.title} removed");
                         widget.refresherFunction();
                       } else {
                         kShowRetry(
-                          message:
-                              "${widget.music!.title} could not be removed",
+                          message: "${widget.music.title} could not be removed",
                         );
                       }
                     }

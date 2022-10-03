@@ -53,7 +53,7 @@ const String kAnalyticsBaseUrl =
     "https://analytics-service-vdzflryflq-ew.a.run.app";
 const String kinPaymentUrl = "http://104.199.33.9/";
 const String kinProfileBaseUrl =
-    "https://kinideas-profile-v1-vdzflryflq-ew.a.run.app";
+    "https://kinideas-profile-vdzflryflq-ew.a.run.app";
 const String KinRadioUrl =
     "https://radio-service-vdzflryflq-ew.a.run.app/mobileApp/";
 //
@@ -144,55 +144,62 @@ checkConnection(status) {
 const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(
-      child: Text(
-        'Add to playlist',
-        style: popupTextStyle,
-      ),
-      value: 1),
+    child: Text(
+      'Add to playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
   PopupMenuItem(
-      child: Text(
-        'Detail',
-        style: popupTextStyle,
-      ),
-      value: 2),
+    child: Text(
+      'Detail',
+      style: popupTextStyle,
+    ),
+    value: 2,
+  ),
 ];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [
   PopupMenuItem(
-      child: Text(
-        'Remove from playlist',
-        style: popupTextStyle,
-      ),
-      value: 1),
+    child: Text(
+      'Remove from playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
   PopupMenuItem(
-      child: Text(
-        'Detail',
-        style: popupTextStyle,
-      ),
-      value: 2),
+    child: Text(
+      'Detail',
+      style: popupTextStyle,
+    ),
+    value: 2,
+  ),
 ];
 const List<PopupMenuItem> kPodcastPopupMenuItem = [
   PopupMenuItem(
-      child: Text(
-        'Detail',
-        style: popupTextStyle,
-      ),
-      value: 1),
+    child: Text(
+      'Detail',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
 ];
 const List<PopupMenuItem> kDeletePlaylistTitle = [
   PopupMenuItem(
-      child: Text(
-        'Remove playlist',
-        style: popupTextStyle,
-      ),
-      value: 1),
+    child: Text(
+      'Remove playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
 ];
 const List<PopupMenuItem> kPlaylistTitleCardsPopupMenuItems = [
   PopupMenuItem(
-      child: Text(
-        'Delete Playlist',
-        style: popupTextStyle,
-      ),
-      value: 1),
+    child: Text(
+      'Delete Playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
   // PopupMenuItem(child: Text('Playlist Detail'), value: 1),
 ];
 

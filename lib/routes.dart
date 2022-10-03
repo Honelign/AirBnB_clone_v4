@@ -6,7 +6,6 @@ import 'package:kin_music_player_app/screens/home/components/home_search_screen.
 import 'package:kin_music_player_app/screens/login_signup/components/forget_password.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';
 import 'package:kin_music_player_app/screens/login_signup/login_signup_body.dart';
-import 'package:kin_music_player_app/screens/login_signup/verify_email.dart';
 import 'package:kin_music_player_app/screens/podcast/components/all_category.dart';
 import 'package:kin_music_player_app/screens/podcast/components/all_podcasts.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_search_screen.dart';

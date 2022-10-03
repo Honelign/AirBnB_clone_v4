@@ -69,12 +69,6 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
                 });
               }
 
-              void refresherFunction() {
-                setState(() async {
-                  await provider.getCoinBalance();
-                });
-              }
-
               showModalBottomSheet(
                 isScrollControlled: true,
                 context: context,
