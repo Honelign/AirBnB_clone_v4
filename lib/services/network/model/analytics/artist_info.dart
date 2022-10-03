@@ -8,13 +8,11 @@ class ArtistInfo {
   final String id;
   final String name;
   final String image;
-  final List albums;
 
   ArtistInfo({
     required this.id,
     required this.name,
     required this.image,
-    required this.albums,
   });
 
   factory ArtistInfo.fromJson(Map<String, dynamic> json) {

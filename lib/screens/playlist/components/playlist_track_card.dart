@@ -49,6 +49,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
   @override
   void initState() {
     playlistProvider = Provider.of<PlayListProvider>(context, listen: false);
+    print("here - ${widget.musics[0].title}");
     super.initState();
   }
 
@@ -128,48 +129,64 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
             height: getProportionateScreenHeight(widget.height),
             width: getProportionateScreenWidth(75),
             margin: EdgeInsets.symmetric(
-                horizontal: getProportionateScreenWidth(20),
-                vertical: getProportionateScreenHeight(10)),
+              horizontal: getProportionateScreenWidth(20),
+              vertical: getProportionateScreenHeight(10),
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Image
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: AspectRatio(
-                      aspectRatio: 1.02,
-                      child: Container(
-                        color: kSecondaryColor.withOpacity(0.1),
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
-                        ),
+                  borderRadius: BorderRadius.circular(10),
+                  child: AspectRatio(
+                    aspectRatio: 1.02,
+                    child: Container(
+                      color: kSecondaryColor.withOpacity(0.1),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
                       ),
-                    )),
+                    ),
+                  ),
+                ),
+
+                // Spacer
                 SizedBox(
                   width: getProportionateScreenWidth(10),
                 ),
+
+                //
                 Expanded(
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.music.title,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Music Title
+                          Text(
+                            widget.music.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+
+                          // Artist Title
+                          Text(
+                            widget.music.artist.isNotEmpty
+                                ? widget.music.artist
+                                : 'kin artist',
+                            style: const TextStyle(color: kGrey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.music.artist.isNotEmpty
-                                  ? widget.music.artist
-                                  : 'kin artist',
-                              style: const TextStyle(color: kGrey),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                           p.currentMusic == null
                               ? Container()
                               : p.currentMusic!.title == widget.music.title

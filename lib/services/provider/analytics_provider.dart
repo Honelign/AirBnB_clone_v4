@@ -26,7 +26,8 @@ class AnalyticsProvider extends ChangeNotifier {
 
     generalAnalytics = [];
     generalAnalytics = await analyticsApiService.getProducerGeneralInfo(
-        apiEndPoint: generalInfoApiEndPoint);
+      apiEndPoint: generalInfoApiEndPoint,
+    );
     isLoading = false;
 
     return generalAnalytics;
@@ -38,7 +39,8 @@ class AnalyticsProvider extends ChangeNotifier {
 
     generalAnalytics = [];
     generalAnalytics = await analyticsApiService.getArtistGeneralInfo(
-        apiEndPoint: generalInfoApiEndPoint);
+      apiEndPoint: generalInfoApiEndPoint,
+    );
     isLoading = false;
 
     return generalAnalytics;
@@ -51,15 +53,15 @@ class AnalyticsProvider extends ChangeNotifier {
     allAlbums = [];
     allTracks = [];
 
-    String apiEndPoint = "artists";
+    String apiEndPoint = "mobileApp/artistsByUserId";
 
     if (infoType == "Albums") {
-      apiEndPoint = "albums";
+      apiEndPoint = "mobileApp/albumsByUserId";
     }
 
     //
     else if (infoType == "Tracks") {
-      apiEndPoint = "tracks";
+      apiEndPoint = "mobileApp/tracksByUserId";
     }
 
     // make api call
@@ -124,7 +126,7 @@ class AnalyticsProvider extends ChangeNotifier {
     currentArtistAnalytics = [];
     currentArtistAnalytics = await analyticsApiService.getArtistInfo(
       artistId: artistId,
-      apiEndPoint: '/total_artist_count',
+      apiEndPoint: 'totalArtistViewCount',
     );
     isLoading = false;
 
@@ -137,7 +139,7 @@ class AnalyticsProvider extends ChangeNotifier {
     currentAlbumAnalytics = [];
     currentAlbumAnalytics = await analyticsApiService.getAlbumInfo(
       albumId: albumId,
-      apiEndPoint: '/total_album_count',
+      apiEndPoint: 'totalAlbumViewCount',
     );
     isLoading = false;
 
@@ -150,7 +152,7 @@ class AnalyticsProvider extends ChangeNotifier {
     currentTrackAnalytics = [];
     currentTrackAnalytics = await analyticsApiService.getTrackInfo(
       trackId: trackId,
-      apiEndPoint: '/total_track_count',
+      apiEndPoint: 'totalTrackViewCount',
     );
     isLoading = false;
 

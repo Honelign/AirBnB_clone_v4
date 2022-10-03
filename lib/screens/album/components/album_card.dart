@@ -110,6 +110,7 @@ class _AlbumCardState extends State<AlbumCard> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: AspectRatio(
@@ -123,30 +124,47 @@ class _AlbumCardState extends State<AlbumCard> {
                     ),
                   ),
                 ),
+
+                // Spacer
                 SizedBox(
                   width: getProportionateScreenWidth(10),
                 ),
+
+                //
                 Expanded(
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.music.title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.music.artist,
-                              style: const TextStyle(color: kGrey),
-                              overflow: TextOverflow.ellipsis,
+                          // Music title
+                          Text(
+                            widget.music.title,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
+
+                          // artist name
+                          Text(
+                            widget.music.artist,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(color: kGrey),
+                          )
+                        ],
+                      ),
+
+                      // POPUP menu & Playing wave
+                      Row(
+                        children: [
+                          // playing wave
                           p.currentMusic == null
                               ? Container()
                               : p.currentMusic!.title ==
@@ -157,74 +175,82 @@ class _AlbumCardState extends State<AlbumCard> {
                                       index: widget.musicIndex,
                                       album: widget.album,
                                     )
-                                  : Container()
+                                  : Container(),
+
+                          // Spacer
+                          const SizedBox(
+                            width: 4,
+                          ),
+
+                          // POP UP MENU
+                          PopupMenuButton(
+                            initialValue: 0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.more_vert,
+                                  color: kGrey,
+                                ),
+                              ],
+                            ),
+                            color: kPopupMenuBackgroundColor,
+                            onSelected: (value) {
+                              if (value == 2) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          kPopupMenuBackgroundColor,
+                                      title: const Text(
+                                        'Music Detail',
+                                        style: TextStyle(
+                                          color: Colors.white60,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      content: SizedBox(
+                                        height: 100,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              widget.music.description,
+                                              style: const TextStyle(
+                                                color: kLightSecondaryColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              'By ${widget.music.artist}',
+                                              style: const TextStyle(
+                                                color: kLightSecondaryColor,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    return PlaylistSelectorDialog(
+                                      trackId: widget.music.id.toString(),
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            itemBuilder: (context) {
+                              return kMusicPopupMenuItem;
+                            },
+                          ),
                         ],
-                      ),
+                      )
                     ],
                   ),
-                ),
-                PopupMenuButton(
-                  initialValue: 0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.more_vert,
-                        color: kGrey,
-                      ),
-                    ],
-                  ),
-                  color: kPopupMenuBackgroundColor,
-                  onSelected: (value) {
-                    if (value == 2) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            backgroundColor: kPopupMenuBackgroundColor,
-                            title: const Text(
-                              'Music Detail',
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontSize: 15,
-                              ),
-                            ),
-                            content: SizedBox(
-                              height: 100,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    widget.music.description,
-                                    style: const TextStyle(
-                                      color: kLightSecondaryColor,
-                                    ),
-                                  ),
-                                  Text(
-                                    'By ${widget.music.artist}',
-                                    style: const TextStyle(
-                                      color: kLightSecondaryColor,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return PlaylistSelectorDialog(
-                            trackId: widget.music.id.toString(),
-                          );
-                        },
-                      );
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return kMusicPopupMenuItem;
-                  },
                 ),
               ],
             ),

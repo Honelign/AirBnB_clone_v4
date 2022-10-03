@@ -21,7 +21,7 @@ class AnalyticsApiService {
     try {
       String uid = await helper.getUserId();
       Response response = await get(
-          Uri.parse("$kAnalyticsBaseUrl/$apiEndPoint?userId=$uid&level=1"));
+          Uri.parse("$kAnalyticsBaseUrl/$apiEndPoint?userId=$uid&userType=1"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(
@@ -50,7 +50,7 @@ class AnalyticsApiService {
     try {
       String uid = await helper.getUserId();
       Response response = await get(
-          Uri.parse("$kAnalyticsBaseUrl$apiEndPoint?userId=$uid&level=2"));
+          Uri.parse("$kAnalyticsBaseUrl$apiEndPoint?userId=$uid&userType=2"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(
@@ -80,15 +80,13 @@ class AnalyticsApiService {
     List returnInfo = [];
     try {
       String uid = await helper.getUserId();
-      Response response = await get(
-          Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$uid&level=1"));
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
         // artist value
-
-        returnInfo = data.map((value) => ArtistInfo.fromJson(value)).toList();
 
         // album info
         if (infoType == "Albums") {
@@ -159,22 +157,27 @@ class AnalyticsApiService {
     required String artistId,
     required String apiEndPoint,
   }) async {
+    List analytics = [];
     try {
-      Response response =
-          await get(Uri.parse("$kAnalyticsBaseUrl$apiEndPoint?id=$artistId"));
+      Response response = await get(
+          Uri.parse("$kAnalyticsBaseUrl/$apiEndPoint?artistId=$artistId"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        List analytics =
-            data.map((value) => AnalyticsData.fromJson(value)).toList();
+        analytics = data.map((value) => AnalyticsData.fromJson(value)).toList();
 
         return analytics;
       }
     } catch (e) {
-      print("@analytics_service -> getArtistInfo error - $e");
-      return [];
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getArtistInfo",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    return analytics;
   }
 
   // get info by artist id
@@ -182,22 +185,25 @@ class AnalyticsApiService {
     required String albumId,
     required String apiEndPoint,
   }) async {
+    List analytics = [];
     try {
-      Response response =
-          await get(Uri.parse("$kAnalyticsBaseUrl$apiEndPoint?id=$albumId"));
+      Response response = await get(
+          Uri.parse("$kAnalyticsBaseUrl/$apiEndPoint?albumId=$albumId"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        List analytics =
-            data.map((value) => AnalyticsData.fromJson(value)).toList();
-
-        return analytics;
+        analytics = data.map((value) => AnalyticsData.fromJson(value)).toList();
       }
     } catch (e) {
-      print("@analytics_service -> ${e}");
-      return [];
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getAlbumInfo",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    return analytics;
   }
 
   // get info by track id
@@ -205,21 +211,24 @@ class AnalyticsApiService {
     required String trackId,
     required String apiEndPoint,
   }) async {
+    List analytics = [];
     try {
-      Response response =
-          await get(Uri.parse("$kAnalyticsBaseUrl$apiEndPoint?id=$trackId"));
+      Response response = await get(
+          Uri.parse("$kAnalyticsBaseUrl/$apiEndPoint?trackId=$trackId"));
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        List analytics =
-            data.map((value) => AnalyticsData.fromJson(value)).toList();
-
-        return analytics;
+        analytics = data.map((value) => AnalyticsData.fromJson(value)).toList();
       }
     } catch (e) {
-      print("@analytics_service -> getTrackInfo error -$e");
-      return [];
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getTrackInfo",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    return analytics;
   }
 }
