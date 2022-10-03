@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
@@ -81,7 +82,6 @@ class _AlbumBodyState extends State<AlbumBody> {
                         _buildAlbumInfo(),
                         _buildPlayAllIcon(
                           context,
-                          widget.albumMusicsFromCard,
                         )
                       ],
                     ),
@@ -204,7 +204,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     );
   }
 
-  Widget _buildPlayAllIcon(context, musics) {
+  Widget _buildPlayAllIcon(context) {
     var playerProvider = Provider.of<MusicPlayer>(
       context,
     );
@@ -214,119 +214,143 @@ class _AlbumBodyState extends State<AlbumBody> {
     var musicProvider = Provider.of<MusicPlayer>(
       context,
     );
+    MusicProvider musicProv =
+        Provider.of<MusicProvider>(context, listen: false);
     var radioProvider = Provider.of<RadioProvider>(
       context,
     );
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: PlayerBuilder.isPlaying(
-          player: playerProvider.player,
-          builder: (context, isPlaying) {
-            return InkWell(
-              onTap: () {
-                if (playerProvider.currentMusic == null) {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
+    return FutureBuilder<List<Music>>(
+      future: musicProv.albumMusicsGetter(widget.album.id),
+      builder: ((context, snapshot) {
+        //
 
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
+        if (snapshot.hasData && !snapshot.hasError) {
+          List<Music>? allMusic = snapshot.data;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: PlayerBuilder.isPlaying(
+                player: playerProvider.player,
+                builder: (context, isPlaying) {
+                  return InkWell(
+                    onTap: () {
+                      if (playerProvider.currentMusic == null) {
+                        if (checkConnection(status)) {
+                          radioProvider.player.stop();
+                          podcastProvider.player.stop();
 
-                    musicProvider.setPlayer(
-                        musicProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                } else if (playerProvider.player.getCurrentAudioTitle ==
-                        playerProvider.currentMusic!.title &&
-                    widget.album.id == playerProvider.currentAlbum.id) {
-                  if (isPlaying || playerProvider.player.isBuffering.value) {
-                    playerProvider.player.pause();
-                  } else {
-                    if (checkConnection(status)) {
-                      playerProvider.player.play();
-                    } else {
-                      kShowToast();
-                    }
-                  }
-                } else {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-                    playerProvider.player.stop();
+                          podcastProvider.setEpisodeStopped(true);
+                          podcastProvider.listenPodcastStreaming();
 
-                    playerProvider.setMusicStopped(true);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
+                          musicProvider.setPlayer(musicProvider.player,
+                              podcastProvider, radioProvider);
+                          playerProvider.handlePlayButton(
+                            musics: allMusic!,
+                            album: widget.album,
+                            music: allMusic![0],
+                            index: 0,
+                          );
+                          podcastProvider.setEpisodeStopped(true);
+                          podcastProvider.listenPodcastStreaming();
+                        } else {
+                          kShowToast();
+                        }
+                      } else if (playerProvider.player.getCurrentAudioTitle ==
+                              playerProvider.currentMusic!.title &&
+                          widget.album.id == playerProvider.currentAlbum.id) {
+                        if (isPlaying ||
+                            playerProvider.player.isBuffering.value) {
+                          playerProvider.player.pause();
+                        } else {
+                          if (checkConnection(status)) {
+                            playerProvider.player.play();
+                          } else {
+                            kShowToast();
+                          }
+                        }
+                      } else {
+                        if (checkConnection(status)) {
+                          radioProvider.player.stop();
+                          podcastProvider.player.stop();
+                          playerProvider.player.stop();
 
-                    playerProvider.setPlayer(
-                        playerProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    playerProvider.setMusicStopped(false);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                }
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: kSecondaryColor,
-                  borderRadius: BorderRadius.circular(1000),
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 15,
-                  child: !playerProvider.isMusicLoaded
-                      ? SpinKitFadingCircle(
-                          itemBuilder: (BuildContext context, int index) {
-                            return DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: index.isEven
-                                    ? kSecondaryColor
-                                    : Colors.white,
+                          playerProvider.setMusicStopped(true);
+                          podcastProvider.setEpisodeStopped(true);
+                          playerProvider.listenMusicStreaming();
+                          podcastProvider.listenPodcastStreaming();
+
+                          playerProvider.setPlayer(playerProvider.player,
+                              podcastProvider, radioProvider);
+                          playerProvider.handlePlayButton(
+                            musics: allMusic!,
+                            album: widget.album,
+                            music: allMusic![0],
+                            index: 0,
+                          );
+                          playerProvider.setMusicStopped(false);
+                          podcastProvider.setEpisodeStopped(true);
+                          playerProvider.listenMusicStreaming();
+                          podcastProvider.listenPodcastStreaming();
+                        } else {
+                          kShowToast();
+                        }
+                      }
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      padding: const EdgeInsets.all(10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: kSecondaryColor,
+                        borderRadius: BorderRadius.circular(1000),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 15,
+                        child: !playerProvider.isMusicLoaded
+                            ? SpinKitFadingCircle(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: index.isEven
+                                          ? kSecondaryColor
+                                          : Colors.white,
+                                    ),
+                                  );
+                                },
+                                size: 30,
+                              )
+                            : SvgPicture.asset(
+                                isPlaying &&
+                                        widget.album.id ==
+                                            playerProvider.currentAlbum.id
+                                    ? 'assets/icons/pause.svg'
+                                    : 'assets/icons/play.svg',
+                                fit: BoxFit.contain,
+                                color: Colors.white,
                               ),
-                            );
-                          },
-                          size: 30,
-                        )
-                      : SvgPicture.asset(
-                          isPlaying &&
-                                  widget.album.id ==
-                                      playerProvider.currentAlbum.id
-                              ? 'assets/icons/pause.svg'
-                              : 'assets/icons/play.svg',
-                          fit: BoxFit.contain,
-                          color: Colors.white,
-                        ),
-                ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          );
+        }
+
+        //
+        else if (snapshot.hasError) {
+          return OnSnapshotError(
+            error: snapshot.toString(),
+          );
+        } else {
+          return Container();
+        }
+      }),
     );
   }
 
