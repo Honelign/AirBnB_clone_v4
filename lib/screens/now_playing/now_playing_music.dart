@@ -3,6 +3,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/components/animation_rotate.dart';
+import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:provider/provider.dart';
@@ -280,7 +281,16 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
           // add to playlist
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) {
+                  return PlaylistSelectorDialog(
+                    trackId: musicId.toString(),
+                  );
+                },
+              );
+            },
             icon: Icon(
               Icons.add,
               color: Colors.white.withOpacity(0.8),

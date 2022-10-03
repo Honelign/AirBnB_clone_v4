@@ -99,7 +99,7 @@ class _AlbumCardState extends State<AlbumCard> {
                 podcastProvider.listenPodcastStreaming();
 
                 // add to recently played
-                // musicProvider.addToRecentlyPlayed(music: widget.music);
+                musicProvider.addToRecentlyPlayed(music: widget.music);
 
                 // add to popular
                 musicProvider.countPopular(music: widget.music);
@@ -163,6 +163,7 @@ class _AlbumCardState extends State<AlbumCard> {
 
                       // POPUP menu & Playing wave
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // playing wave
                           p.currentMusic == null
@@ -186,7 +187,7 @@ class _AlbumCardState extends State<AlbumCard> {
                           PopupMenuButton(
                             initialValue: 0,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: const [
                                 Icon(
                                   Icons.more_vert,
