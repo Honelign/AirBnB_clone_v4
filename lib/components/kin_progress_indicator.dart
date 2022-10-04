@@ -8,15 +8,15 @@ class KinProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SpinKitFadingCircle(
+      child: SpinKitFadingCube(
         itemBuilder: (BuildContext context, int index) {
           return DecoratedBox(
             decoration: BoxDecoration(
-              color: index.isEven ? kSecondaryColor : Colors.white,
+              color: index.isEven ? kSecondaryColor : Colors.green,
             ),
           );
         },
-        size: 35,
+        size: 22,
       ),
     );
   }

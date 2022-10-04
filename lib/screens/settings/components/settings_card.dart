@@ -42,7 +42,7 @@ class SettingsCard extends StatelessWidget {
                         Provider.of<RadioProvider>(context, listen: false);
 
                     return AlertDialog(
-                      backgroundColor: kPrimaryColor,
+                      backgroundColor: kPopupMenuBackgroundColor,
                       title: Text(
                         'Are you sure?',
                         style: TextStyle(color: Colors.white.withOpacity(0.7)),
@@ -96,16 +96,19 @@ class SettingsCard extends StatelessWidget {
                   });
             } else {
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text(title ?? ''),
-                      content: SingleChildScrollView(
-                          child: Html(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(title ?? ''),
+                    backgroundColor: kPopupMenuBackgroundColor,
+                    content: SingleChildScrollView(
+                      child: Html(
                         data: data!,
-                      )),
-                    );
-                  });
+                      ),
+                    ),
+                  );
+                },
+              );
             }
           },
           child: ListTile(

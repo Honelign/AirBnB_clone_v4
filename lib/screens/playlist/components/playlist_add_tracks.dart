@@ -107,7 +107,8 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
               multiSelectProvider.selectModeSelectedMusicIds.isNotEmpty
                   ? IconButton(
                       onPressed: () async {
-                        // playlistProvider.isLoading = true;
+                        playlistProvider.isLoading = true;
+                        setState(() {});
 
                         bool saveStatus =
                             await playlistProvider.addMultipleMusicToPlaylist(
@@ -115,7 +116,7 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
                           musicIds:
                               multiSelectProvider.selectModeSelectedMusicIds,
                         );
-                        // playlistProvider.isLoading = false;
+                        playlistProvider.isLoading = false;
 
                         if (saveStatus == true) {
                           multiSelectProvider.cancelAllSelection();
@@ -124,6 +125,7 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
                               widget.playlistId.toString(),
                             ),
                           );
+                          setState(() {});
                           widget.refresherFunction();
                           kShowToast(
                               message:

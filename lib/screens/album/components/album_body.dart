@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/on_snapshot_error.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
@@ -13,10 +13,10 @@ import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
-import '../../../constants.dart';
-import '../../../size_config.dart';
-import 'playlist_card.dart';
+
+import 'album_card.dart';
 
 class AlbumBody extends StatefulWidget {
   static String routeName = '/decoration';
@@ -35,49 +35,128 @@ class AlbumBody extends StatefulWidget {
 }
 
 class _AlbumBodyState extends State<AlbumBody> {
+  bool _showLoader = false;
+
+  @override
+  void initState() {
+    _showLoader = true;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _showLoader = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // _showLoader = false;
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.album.cover}',
+        child: SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                  '$kinAssetBaseUrl/${widget.album.cover}',
+                ),
+                fit: BoxFit.cover,
               ),
-              fit: BoxFit.cover,
             ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-            child: Container(
-              color: kPrimaryColor.withOpacity(0.5),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: getProportionateScreenHeight(280),
-                    child: Stack(
-                      children: [
-                        _buildAlbumArt(widget.album.cover),
-                        _buildTitleSection(widget.album),
-                        _buildBackButton(context),
-                        _buildAlbumInfo(),
-                        _buildPlayAllIcon(
-                          context,
-                          widget.albumMusicsFromCard,
-                        )
-                      ],
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+              child: Container(
+                color: kPrimaryColor.withOpacity(0.5),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // back button
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                _buildBackButton(context),
+                              ],
+                            ),
+                            height: 45,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+
+                          // spacer
+                          const SizedBox(
+                            height: 16,
+                          ),
+
+                          // Album Art
+                          _buildAlbumArt(
+                            "$kinAssetBaseUrl/${widget.album.cover}",
+                          ),
+
+                          // spacer
+                          const SizedBox(
+                            height: 12,
+                          ),
+
+                          // album title
+                          Text(
+                            widget.album.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+
+                          // spacer
+                          const SizedBox(
+                            height: 4,
+                          ),
+
+                          // artist title
+                          Text(
+                            widget.album.artist,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+
+                          // spacer
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          // play all button
+                          _buildPlayAllButton(context),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: getProportionateScreenHeight(15),
-                  ),
-                  Expanded(
-                    child: _buildAlbumMusics(
-                        widget.albumMusicsFromCard, context, widget.album.id),
-                  )
-                ],
+
+                    // spacer
+                    SizedBox(
+                      height: getProportionateScreenHeight(25),
+                    ),
+
+                    // Scrollable Album View
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SingleChildScrollView(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: _buildAlbumMusics(widget.albumMusicsFromCard,
+                              context, widget.album.id),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -87,67 +166,17 @@ class _AlbumBodyState extends State<AlbumBody> {
   }
 
   Widget _buildAlbumArt(image) {
-    return Stack(
-      children: [
-        SizedBox(
-          height: getProportionateScreenHeight(245),
-          width: double.infinity,
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            imageUrl: '$kinAssetBaseUrl/$image',
+    return CachedNetworkImage(
+      imageUrl: image,
+      imageBuilder: (context, imageProvider) => Container(
+        height: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.4,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fill,
           ),
-        ),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                const Color(0xFF343434).withOpacity(0.4),
-                const Color(0xFF343434).withOpacity(0.15),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildTitleSection(Album album) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
-        alignment: Alignment.topLeft,
-        height: getProportionateScreenHeight(75),
-        width: double.infinity,
-        color: kPrimaryColor.withOpacity(0.3),
-        padding: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(15.0),
-          vertical: getProportionateScreenWidth(5),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              album.artist,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              album.title,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
     );
@@ -162,166 +191,16 @@ class _AlbumBodyState extends State<AlbumBody> {
     );
   }
 
-  Widget _buildAlbumInfo() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-        height: getProportionateScreenHeight(280) -
-            getProportionateScreenHeight(245),
-        width: double.infinity,
-        color: kPrimaryColor.withOpacity(0.5),
-        padding: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(10),
-          vertical: getProportionateScreenHeight(5),
-        ),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Text(
-            "${widget.album.count} songs",
-            style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlayAllIcon(context, musics) {
-    var playerProvider = Provider.of<MusicPlayer>(
-      context,
-    );
-    var podcastProvider = Provider.of<PodcastPlayer>(
-      context,
-    );
-    var musicProvider = Provider.of<MusicPlayer>(
-      context,
-    );
-    var radioProvider = Provider.of<RadioProvider>(
-      context,
-    );
-    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: PlayerBuilder.isPlaying(
-          player: playerProvider.player,
-          builder: (context, isPlaying) {
-            return InkWell(
-              onTap: () {
-                if (playerProvider.currentMusic == null) {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
-
-                    musicProvider.setPlayer(
-                        musicProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    podcastProvider.setEpisodeStopped(true);
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                } else if (playerProvider.player.getCurrentAudioTitle ==
-                        playerProvider.currentMusic!.title &&
-                    widget.album.id == playerProvider.currentAlbum.id) {
-                  if (isPlaying || playerProvider.player.isBuffering.value) {
-                    playerProvider.player.pause();
-                  } else {
-                    if (checkConnection(status)) {
-                      playerProvider.player.play();
-                    } else {
-                      kShowToast();
-                    }
-                  }
-                } else {
-                  if (checkConnection(status)) {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-                    playerProvider.player.stop();
-
-                    playerProvider.setMusicStopped(true);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-
-                    playerProvider.setPlayer(
-                        playerProvider.player, podcastProvider, radioProvider);
-                    playerProvider.handlePlayButton(
-                        musics: widget.albumMusicsFromCard,
-                        album: widget.album,
-                        music: musics[0],
-                        index: 0);
-                    playerProvider.setMusicStopped(false);
-                    podcastProvider.setEpisodeStopped(true);
-                    playerProvider.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-                  } else {
-                    kShowToast();
-                  }
-                }
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: kSecondaryColor,
-                  borderRadius: BorderRadius.circular(1000),
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  radius: 15,
-                  child: !playerProvider.isMusicLoaded
-                      ? SpinKitFadingCircle(
-                          itemBuilder: (BuildContext context, int index) {
-                            return DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: index.isEven
-                                    ? kSecondaryColor
-                                    : Colors.white,
-                              ),
-                            );
-                          },
-                          size: 30,
-                        )
-                      : SvgPicture.asset(
-                          isPlaying &&
-                                  widget.album.id ==
-                                      playerProvider.currentAlbum.id
-                              ? 'assets/icons/pause.svg'
-                              : 'assets/icons/play.svg',
-                          fit: BoxFit.contain,
-                          color: Colors.white,
-                        ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _buildAlbumMusics(musics, context, id) {
     return FutureBuilder<List<Music>>(
       future: Provider.of<MusicProvider>(context, listen: false)
           .albumMusicsGetter(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const KinProgressIndicator();
+          return Container();
         }
         List<Music> albumMusics = snapshot.data ?? [];
+        _showLoader = false;
         return ListView.builder(
           itemCount: albumMusics.length,
           itemBuilder: (context, index) {
@@ -335,5 +214,149 @@ class _AlbumBodyState extends State<AlbumBody> {
         );
       },
     );
+  }
+
+  Widget _buildPlayAllButton(ctx) {
+    var playerProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var podcastProvider = Provider.of<PodcastPlayer>(
+      ctx,
+      listen: false,
+    );
+    var musicProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var radioProvider = Provider.of<RadioProvider>(
+      ctx,
+      listen: false,
+    );
+    MusicProvider musicProv =
+        Provider.of<MusicProvider>(context, listen: false);
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
+
+    //
+    return FutureBuilder<List<Music>>(
+        future: musicProv.albumMusicsGetter(widget.album.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const KinProgressIndicator();
+          } else {
+            return PlayerBuilder.isPlaying(
+              player: playerProvider.player,
+              builder: ((context, isPlaying) {
+                return InkWell(
+                  onTap: () {
+                    if (playerProvider.currentMusic == null) {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+
+                        musicProvider.setPlayer(musicProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: widget.album,
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    } else if (playerProvider.player.getCurrentAudioTitle ==
+                            playerProvider.currentMusic!.title &&
+                        widget.album.id == playerProvider.currentAlbum.id) {
+                      if (isPlaying ||
+                          playerProvider.player.isBuffering.value) {
+                        playerProvider.player.pause();
+                      } else {
+                        if (checkConnection(status)) {
+                          playerProvider.player.play();
+                        } else {
+                          kShowToast();
+                        }
+                      }
+                    } else {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+                        playerProvider.player.stop();
+
+                        playerProvider.setMusicStopped(true);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+
+                        playerProvider.setPlayer(playerProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: widget.album,
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        playerProvider.setMusicStopped(false);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 9,
+                      horizontal: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      color: kPopupMenuBackgroundColor,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: kPrimaryColor,
+                          offset: Offset(
+                            1.0,
+                            1.0,
+                          ),
+                          blurRadius: 2.0,
+                          spreadRadius: 1.0,
+                        ), //BoxShadow
+                        //BoxShadow
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.play_arrow,
+                          color: kSecondaryColor,
+                          size: 22,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          "Play All",
+                          style: TextStyle(
+                            color: kSecondaryColor,
+                            fontSize: 20,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            );
+          }
+        });
   }
 }

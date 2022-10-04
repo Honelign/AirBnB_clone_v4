@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/artist_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,12 +15,14 @@ class Artists extends StatefulWidget {
   State<Artists> createState() => _ArtistsState();
 }
 
-class _ArtistsState extends State<Artists> {
+class _ArtistsState extends State<Artists> with AutomaticKeepAliveClientMixin {
+  late ArtistProvider artistProvider;
   static const _pageSize = 1;
   final PagingController<int, Artist> _pagingController =
-      PagingController(firstPageKey: 1);
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 3);
   @override
   void initState() {
+    artistProvider = Provider.of<ArtistProvider>(context, listen: false);
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
@@ -28,8 +31,7 @@ class _ArtistsState extends State<Artists> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems = await Provider.of<ArtistProvider>(context, listen: false)
-          .getArtist(pageSize: pageKey);
+      final newItems = await artistProvider.getArtist(pageSize: pageKey);
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -44,6 +46,9 @@ class _ArtistsState extends State<Artists> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void dispose() {
     _pagingController.dispose();
     super.dispose();
@@ -51,15 +56,18 @@ class _ArtistsState extends State<Artists> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ArtistProvider>(context, listen: false);
+    super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
         _pagingController.refresh();
       },
+      color: refreshIndicatorForegroundColor,
+      backgroundColor: refreshIndicatorBackgroundColor,
       child: Container(
         padding: EdgeInsets.only(top: getProportionateScreenHeight(30)),
         child: PagedGridView<int, Artist>(
           scrollDirection: Axis.vertical,
+          showNoMoreItemsIndicatorAsGridChild: false,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 0.75,
@@ -74,7 +82,7 @@ class _ArtistsState extends State<Artists> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: const Center(
-                child: Text("No Albums"),
+                child: Text("No Artists"),
               ),
             ),
             noMoreItemsIndicatorBuilder: (_) => Wrap(
@@ -85,7 +93,7 @@ class _ArtistsState extends State<Artists> {
                   height: 100,
                   child: const Center(
                     child: Text(
-                      "No More Artist",
+                      "No More Artists",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -105,51 +113,10 @@ class _ArtistsState extends State<Artists> {
             ),
             itemBuilder: (context, item, index) {
               return ArtistCard(artist: item);
-
-              // GridCard(album: item);
             },
           ),
         ),
       ),
     );
-    /* FutureBuilder(
-      future: provider.getArtist(),
-      builder: (context, AsyncSnapshot<List<Artist>> snapshot) {
-        if (snapshot.hasData) {
-          List<Artist> artists = snapshot.data!;
-          if (provider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return GridView.builder(
-            itemCount: artists.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1,
-              crossAxisSpacing: getProportionateScreenWidth(25),
-              mainAxisSpacing: getProportionateScreenWidth(25),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: getProportionateScreenHeight(25),
-              vertical: getProportionateScreenHeight(25),
-            ),
-            itemBuilder: (context, index) {
-              return ArtistCard(artist: artists[index]);
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Something went wrong!',
-              style: TextStyle(color: Colors.white),
-            ),
-          );
-        }
-        return const Center(
-          child: KinProgressIndicator(),
-        );
-      },
-    ); */
   }
 }

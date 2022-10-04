@@ -19,6 +19,8 @@ Music _$MusicFromJson(Map<String, dynamic> json) => Music(
       genreId: json['genre_id'].toString(),
       artist: json['artist_name'] as String ?? 'kin artist',
       isPurchasedByUser: json['is_purchasedByUser'] ?? false,
+      trackIdInPlaylist: json['playlist_track_id'] ?? -1,
+      encoder_id: json['encoder_FUI'] ?? "",
     );
 
 Map<String, dynamic> _$MusicToJson(Music instance) => <String, dynamic>{
@@ -34,4 +36,6 @@ Map<String, dynamic> _$MusicToJson(Music instance) => <String, dynamic>{
       'artist_name': instance.artist,
       'track_lyrics': instance.lyrics,
       'is_purchasedByUser': instance.isPurchasedByUser,
+      'trackIdInPlaylist': instance.trackIdInPlaylist,
+      "encoder_id": instance.encoder_id,
     };

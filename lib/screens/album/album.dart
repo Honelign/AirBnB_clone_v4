@@ -15,27 +15,25 @@ class Albums extends StatefulWidget {
   State<Albums> createState() => _AlbumsState();
 }
 
-class _AlbumsState extends State<Albums> {
+class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
+  late AlbumProvider albumProvider;
   static const _pageSize = 1;
   final PagingController<int, Album> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 3);
 
   @override
   void initState() {
+    albumProvider = Provider.of<AlbumProvider>(context, listen: false);
+    // infinite scroll pagination
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+      _fetchMoreAlbums(pageKey);
     });
     super.initState();
   }
 
-  // Future fetchMoreAlbums(pageKey) async {
-
-  // }
-
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchMoreAlbums(int pageKey) async {
     try {
-      final newItems = await Provider.of<AlbumProvider>(context, listen: false)
-          .getAlbums(pageSize: pageKey);
+      final newItems = await albumProvider.getAlbums(pageSize: pageKey);
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -50,6 +48,9 @@ class _AlbumsState extends State<Albums> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void dispose() {
     _pagingController.dispose();
     super.dispose();
@@ -57,6 +58,7 @@ class _AlbumsState extends State<Albums> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
         _pagingController.refresh();

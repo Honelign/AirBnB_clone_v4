@@ -44,7 +44,7 @@ class _ArtistDashboardState extends State<ArtistDashboard> {
       context,
       listen: false,
     ); // get producer based info
-    await analyticsProvider.getArtistOwnedInfo();
+    await analyticsProvider.getArtistOwnedInfo(infoType: currentUploadType);
     List result = await analyticsProvider.getArtistGeneralInfo();
 
     barData = [];

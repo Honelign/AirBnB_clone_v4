@@ -45,7 +45,6 @@ class _PlaylistSelectCardState extends State<PlaylistSelectCard> {
 
   @override
   Widget build(BuildContext context) {
-    // print("${widget.music!.title} - ${widget.isMusicSelected}");
     return Container(
       height: getProportionateScreenHeight(widget.height),
       width: getProportionateScreenWidth(75),

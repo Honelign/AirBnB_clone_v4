@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
@@ -9,6 +8,7 @@ class AdBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Make API Based ADS
     List<String> urls = [
       // 'https://feres.et/Content/images/slide_1.jpg',
       // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUyBTw5J4u3OpkQpq9DE6g2rUPcv0Vde9Nkg&usqp=CAU',

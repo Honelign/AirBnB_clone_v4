@@ -1,11 +1,19 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_add_tracks.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_track_card.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
+import 'package:kin_music_player_app/services/provider/podcast_player.dart';
+import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +30,7 @@ class PlaylistBody extends StatefulWidget {
 
 class _PlaylistBodyState extends State<PlaylistBody> {
   late PlayListProvider playListProvider;
+  List<Music> allTracksInPlaylist = [];
 
   static const _pageSize = 1;
 
@@ -119,7 +128,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                   height: MediaQuery.of(context).size.height * 0.5,
                   child: Center(
                     child: Text(
-                      "No Tracks in ${widget.playlistName} - ${widget.playlistId}",
+                      "No Tracks in ${widget.playlistName}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -131,7 +140,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                   padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
                   child: Center(
                     child: Text(
-                      "No More Items in ${widget.playlistName} - ${widget.playlistId}",
+                      "No More Items in ${widget.playlistName}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -144,17 +153,169 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                 newPageProgressIndicatorBuilder: (_) =>
                     const KinProgressIndicator(),
                 itemBuilder: (context, item, index) {
+                  allTracksInPlaylist = _pagingController.itemList ?? [];
                   return PlaylistListCard(
                     music: item,
-                    musics: playListProvider.musics,
+                    musics: _pagingController.itemList ?? [],
                     musicIndex: index,
-                    isForPlaylist: true,
+                    refresherFunction: refresh,
                   );
                 },
               ),
             ),
           ),
         ),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: _buildPlayAllButton(ctx: context),
+    );
+  }
+
+  Widget _buildPlayAllButton({required BuildContext ctx}) {
+    var playerProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var podcastProvider = Provider.of<PodcastPlayer>(
+      ctx,
+      listen: false,
+    );
+    var musicProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var radioProvider = Provider.of<RadioProvider>(
+      ctx,
+      listen: false,
+    );
+
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
+
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: FutureBuilder<List<Music>>(
+        future: playListProvider.getTracksUnderPlaylistById(
+          playlistId: widget.playlistId,
+        ),
+        builder: (context, snapshot) {
+          //
+          if (snapshot.connectionState != ConnectionState.waiting &&
+              !snapshot.hasError &&
+              snapshot.hasData) {
+            return PlayerBuilder.isPlaying(
+              player: playerProvider.player,
+              builder: ((context, isPlaying) {
+                return FloatingActionButton(
+                  backgroundColor: kSecondaryColor,
+                  onPressed: () async {
+                    playerProvider.albumMusicss = allTracksInPlaylist;
+
+                    if (playerProvider.currentMusic == null) {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+
+                        musicProvider.setPlayer(musicProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: Album(
+                            id: -1,
+                            title: "Kin Music",
+                            artist: "Kin",
+                            description: "",
+                            cover: "",
+                            artist_id: -1,
+                            price: 0,
+                            isPurchasedByUser: false,
+                          ),
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    } else if (playerProvider.player.getCurrentAudioTitle ==
+                        playerProvider.currentMusic!.title) {
+                      if (isPlaying ||
+                          playerProvider.player.isBuffering.value) {
+                        playerProvider.player.pause();
+                      } else {
+                        if (checkConnection(status)) {
+                          playerProvider.player.play();
+                        } else {
+                          kShowToast();
+                        }
+                      }
+                    } else {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+                        playerProvider.player.stop();
+
+                        playerProvider.setMusicStopped(true);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+
+                        playerProvider.setPlayer(playerProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: Album(
+                            id: -1,
+                            title: "Kin Music",
+                            artist: "Kin",
+                            description: "",
+                            cover: "",
+                            artist_id: -1,
+                            price: 0,
+                            isPurchasedByUser: false,
+                          ),
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        playerProvider.setMusicStopped(false);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    }
+                  },
+                  child: const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                );
+              }),
+            );
+          }
+
+          //
+          else {
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: kSecondaryColor,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: const KinProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

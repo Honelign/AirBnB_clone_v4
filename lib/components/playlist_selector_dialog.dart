@@ -68,7 +68,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
     return Consumer<PlayListProvider>(
       builder: (BuildContext context, playListProvider, _) {
         return SimpleDialog(
-          backgroundColor: const Color.fromARGB(255, 42, 41, 41),
+          backgroundColor: kPopupMenuBackgroundColor,
           insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
@@ -155,6 +155,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
                               },
                               child: PlaylistTitleDisplay(
                                 playlistInfo: item,
+                                refreshFunction: () {},
                               ),
                             );
                           }),

@@ -7,8 +7,8 @@ class AlbumProvider extends ChangeNotifier {
   List<Album> albums = [];
 
   bool isLoading = false;
-  static const _pageSize = 10;
-  Album searchalbum = Album(
+
+  Album searchAlbum = Album(
       id: 5,
       count: 5,
       title: 'title',
@@ -20,6 +20,7 @@ class AlbumProvider extends ChangeNotifier {
       isPurchasedByUser: false);
 
   MusicApiService musicApiService = MusicApiService();
+  List albumMusics = [];
 
 // get new albums
   Future<List<Album>> getAlbums({required int pageSize}) async {
@@ -40,22 +41,22 @@ class AlbumProvider extends ChangeNotifier {
     isLoading = true;
 
     final res = await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
-    debugPrint("type of res=" + res.runtimeType.toString());
+
     albums = res as List<Album>;
-    debugPrint("album artist" + albums.toString());
+
     isLoading = false;
     notifyListeners();
   }
 
-  Future<Album> getAlbumForsearch(id) async {
+  Future<Album> getAlbumForSearch(id) async {
     isLoading = true;
-    final List<Album> album = await Future.delayed(Duration(seconds: 1));
-    final res = await getAlbumsforSearch(id);
-    searchalbum = res;
+
+    final res = await getAlbumsForSearch(id);
+    searchAlbum = res;
 
     isLoading = false;
 
     notifyListeners();
-    return searchalbum; //album as List<Album>; //album;
+    return searchAlbum;
   }
 }

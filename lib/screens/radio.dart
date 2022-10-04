@@ -66,9 +66,12 @@ class _RadioScreenState extends State<RadioScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: CachedNetworkImageProvider(
-                                  '${radioProvider.stations[radioProvider.currentIndex].coverImage}')),
+                            fit: BoxFit.fill,
+                            image: CachedNetworkImageProvider(
+                              radioProvider.stations[radioProvider.currentIndex]
+                                  .coverImage,
+                            ),
+                          ),
                           // color: Colors.red,
                         ),
                         child: BackdropFilter(
@@ -83,18 +86,11 @@ class _RadioScreenState extends State<RadioScreen> {
                                     refreshIndicatorBackgroundColor,
                                 color: refreshIndicatorForegroundColor,
                                 child: Container(
-                                  // ignore: prefer_const_constructors
                                   decoration:
-
-                                      BoxDecoration(color: Colors.black),
-
                                       const BoxDecoration(color: Colors.black),
-
                                 ),
                               ),
                               Column(
-                                // crossAxisAlignment: CrossAxisAlignment.stretch,
-
                                 children: [
                                   SizedBox(
                                     height: getProportionateScreenHeight(50),
@@ -105,8 +101,8 @@ class _RadioScreenState extends State<RadioScreen> {
                                     child: Card(
                                       elevation: 25,
                                       shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
                                       child: Stack(
                                         children: [
                                           Container(
@@ -116,8 +112,12 @@ class _RadioScreenState extends State<RadioScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(25),
                                               image: DecorationImage(
-                                                  image: CachedNetworkImageProvider(
-                                                      '${radioProvider.stations[radioProvider.currentIndex].coverImage}')),
+                                                image: CachedNetworkImageProvider(
+                                                    radioProvider
+                                                        .stations[radioProvider
+                                                            .currentIndex]
+                                                        .coverImage),
+                                              ),
                                             ),
                                           ),
                                           Container(
@@ -157,16 +157,18 @@ class _RadioScreenState extends State<RadioScreen> {
                                             .mhz
                                             .toString(),
                                         style: const TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 35,
-                                            fontWeight: FontWeight.w900),
+                                          color: Colors.white70,
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.w900,
+                                        ),
                                       ),
                                       const Text(
                                         'mhz',
                                         style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 16,
-                                            fontStyle: FontStyle.italic),
+                                          color: Colors.white70,
+                                          fontSize: 16,
+                                          fontStyle: FontStyle.italic,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -204,8 +206,10 @@ class _RadioScreenState extends State<RadioScreen> {
               } else if (snapshot.hasError) {
                 return Container(
                   color: Colors.red,
-                  child: Text('No Internet Connection',
-                      style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'No Internet Connection',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 );
               }
               return const Center(
@@ -215,7 +219,7 @@ class _RadioScreenState extends State<RadioScreen> {
                 ),
               );
             }
-            return Center(
+            return const Center(
               child: KinProgressIndicator(),
             );
           },
@@ -335,19 +339,20 @@ class _RadioScreenState extends State<RadioScreen> {
           padding: const EdgeInsets.all(20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  offset: const Offset(
-                    5.0,
-                    5.0,
-                  ),
-                  blurRadius: 20.0,
-                  spreadRadius: 5.0,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black,
+                offset: Offset(
+                  5.0,
+                  5.0,
                 ),
-              ],
-              color: kSecondaryColor.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(1000)),
+                blurRadius: 20.0,
+                spreadRadius: 5.0,
+              ),
+            ],
+            color: kSecondaryColor.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(1000),
+          ),
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: 50,

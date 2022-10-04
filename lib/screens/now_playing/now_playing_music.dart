@@ -2,13 +2,10 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:kin_music_player_app/coins/buy_coin.dart';
-import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/animation_rotate.dart';
-import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +18,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
-import 'package:flutter_html/flutter_html.dart';
 
-import '../../services/network/model/playlist_title.dart';
-import '../../services/network/model/playlist_titles.dart';
-import '../../services/provider/drop_down_provider.dart';
 import '../../services/provider/playlist_provider.dart';
-import '../playlist/playlist.dart';
 
 class NowPlayingMusic extends StatefulWidget {
   static const String routeName = '/nowPlaying';
@@ -46,7 +38,6 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
   @override
   void initState() {
-    // TODO: implement initState
     musicId = widget.musicForId!.id;
 
     Provider.of<FavoriteMusicProvider>(context, listen: false)
@@ -65,183 +56,176 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     playerProvider.audioSessionListener();
 
     return Scaffold(
-        backgroundColor: kPrimaryColor,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text('Now Playing'),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
-        body: PlayerBuilder.realtimePlayingInfos(
-          player: playerProvider.player,
-          builder: (context, info) {
-            music = playerProvider.currentMusic;
-            return Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      '$kinAssetBaseUrl/${music!.cover}',
+      backgroundColor: kPrimaryColor,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - 50,
+          child: SingleChildScrollView(
+            child: PlayerBuilder.realtimePlayingInfos(
+              player: playerProvider.player,
+              builder: (context, info) {
+                music = playerProvider.currentMusic;
+                return Container(
+                  height: MediaQuery.of(context).size.height - 45,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        '$kinAssetBaseUrl/${music!.cover}',
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                child: Container(
-                  color: kPrimaryColor.withOpacity(0.5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: getProportionateScreenHeight(5),
-                      ),
-                      _buildAlbumCover(
-                        playerProvider,
-                        music!,
-                      ),
-                      _buildSongTitle(music),
-                      SizedBox(
-                        height: getProportionateScreenHeight(25),
-                      ),
-                      _buildProgressBar(info, music!, playerProvider),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                    child: Container(
+                      color: kPrimaryColor.withOpacity(0.5),
+                      child: Column(
                         children: [
-                          _buildRepeatButton(playerProvider),
-                          SizedBox(
-                            width: getProportionateScreenWidth(5),
+                          Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Icon
+                                InkWell(
+                                  child: const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+
+                                const SizedBox(
+                                  width: 10,
+                                ),
+
+                                const Text(
+                                  "Now Playing",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          _buildPreviousButton(playerProvider),
+                          // spacer
                           SizedBox(
-                            width: getProportionateScreenWidth(5),
+                            height: getProportionateScreenHeight(60),
                           ),
-                          _buildPlayPauseButton(playerProvider),
+
+                          // album image
+                          _buildAlbumCover(
+                            albumCoverUrl: "$kinAssetBaseUrl/${music!.cover}",
+                          ),
+                          // spacer
                           SizedBox(
-                            width: getProportionateScreenWidth(5),
+                            height: getProportionateScreenHeight(60),
                           ),
-                          _buildNextButton(playerProvider),
+                          // song title
+                          _buildSongTitle(music),
+
+                          // spacer
                           SizedBox(
-                            width: getProportionateScreenWidth(5),
+                            height: getProportionateScreenHeight(30),
                           ),
-                          _buildShuffleButton(playerProvider)
+
+                          // action center
+                          _buildActionCenter(),
+
+                          // spacer
+                          SizedBox(
+                            height: getProportionateScreenHeight(40),
+                          ),
+
+                          //  progress bar
+                          _buildProgressBar(info, music!, playerProvider),
+
+                          // spacer
+                          SizedBox(
+                            height: getProportionateScreenHeight(20),
+                          ),
+
+                          // control center
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildRepeatButton(playerProvider),
+                              SizedBox(
+                                width: getProportionateScreenWidth(5),
+                              ),
+                              _buildPreviousButton(playerProvider),
+                              SizedBox(
+                                width: getProportionateScreenWidth(5),
+                              ),
+                              _buildPlayPauseButton(playerProvider),
+                              SizedBox(
+                                width: getProportionateScreenWidth(5),
+                              ),
+                              _buildNextButton(playerProvider),
+                              SizedBox(
+                                width: getProportionateScreenWidth(5),
+                              ),
+                              _buildShuffleButton(playerProvider)
+                            ],
+                          ),
+                          SizedBox(
+                            width: getProportionateScreenWidth(25),
+                            height: 35,
+                          ),
+                          music!.lyrics!.isNotEmpty
+                              ? _buildScrollableLyrics(
+                                  context,
+                                  utf8.decode(
+                                    music!.lyrics!
+                                        .replaceAll('<p>', '')
+                                        .replaceAll('</p>', '')
+                                        .replaceAll('\\r', '')
+                                        .replaceAll('\\n', '\n')
+                                        .replaceAll('\\', '')
+                                        .runes
+                                        .toList(),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
-                      SizedBox(
-                        width: getProportionateScreenWidth(15),
-                      ),
-                      music!.lyrics!.isNotEmpty
-                          ? _buildScrollableLyrics(
-                              context,
-                              utf8.decode(
-                                music!.lyrics!
-                                    .replaceAll('<p>', '')
-                                    .replaceAll('</p>', '')
-                                    .replaceAll('\\r', '')
-                                    .replaceAll('\\n', '\n')
-                                    .replaceAll('\\', '')
-                                    .runes
-                                    .toList(),
-                              ),
-                            )
-                          : Container(),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ));
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildAlbumCover(
-    MusicPlayer playerProvider,
-    Music music,
-  ) {
-    return Container(
-        height: 250,
-        margin: EdgeInsets.symmetric(
-            vertical: getProportionateScreenHeight(30),
-            horizontal: getProportionateScreenWidth(30)),
-        child: AnimationRotate(
-          stop: !playerProvider.isPlaying(),
-          child: SizedBox(
-            height: 250,
-            width: 250,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(1000),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: playerProvider.getMusicCover(),
-                      height: 250,
-                      width: 250,
-                    ),
-                    Container(
-                      height: 250,
-                      width: 250,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            const Color(0xFF343434).withOpacity(0.4),
-                            const Color(0xFF343434).withOpacity(0.15),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 75,
-                          width: 75,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                  ],
-                )),
+  Widget _buildAlbumCover({required String albumCoverUrl}) {
+    return CachedNetworkImage(
+      imageUrl: albumCoverUrl,
+      imageBuilder: (context, imageProvider) => Container(
+        height: MediaQuery.of(context).size.width * 0.65,
+        width: MediaQuery.of(context).size.width * 0.65,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: imageProvider,
+            fit: BoxFit.fill,
           ),
-        ));
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    );
   }
 
   Widget _buildProgressBar(
@@ -253,6 +237,78 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
       seekTo: (to) {
         playerProvider.player.seek(to);
       },
+    );
+  }
+
+  Widget _buildActionCenter() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(30)),
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // favorite button
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ),
+
+          // Tip Button
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.money_sharp,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ),
+
+          // buy
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.monetization_on,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ),
+
+          // add to playlist
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) {
+                  return PlaylistSelectorDialog(
+                    trackId: musicId.toString(),
+                  );
+                },
+              );
+            },
+            icon: Icon(
+              Icons.add,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ),
+
+          // Download
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.download,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -268,349 +324,24 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
             children: [
               Text(
                 music!.title,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.36,
-                height: 30,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // add to playlist
-                    IconButton(
-                      onPressed: () {
-                        final provider = Provider.of<PlayListProvider>(context,
-                            listen: false);
-
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: kPrimaryColor,
-                                title: Text(
-                                  'Choose Playlist',
-                                  style: TextStyle(
-                                      color: Colors.white.withOpacity(0.7)),
-                                ),
-                                content: SizedBox(
-                                  height: 200,
-                                  width: 200,
-                                  child: FutureBuilder<List<PlayListTitles>>(
-                                    // future: provider.getPlayListTitle(),
-                                    builder: (context,
-                                        AsyncSnapshot //< List<PlayListTitles>>
-                                            snapshot) {
-                                      if (snapshot.hasData) {
-                                        return ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: snapshot.data!.length,
-                                          itemBuilder: (context, index) {
-                                            return Consumer<PlayListProvider>(
-                                              builder: (BuildContext context,
-                                                  provider, _) {
-                                                return TextButton(
-                                                    onPressed: () async {
-                                                      var playlistInfo = {
-                                                        'playlist_id': snapshot
-                                                            .data![index].id,
-                                                        'track_id': music.id
-                                                      };
-
-                                                      var result = await provider
-                                                          .addMusicToPlaylist(
-                                                        playlistId: snapshot
-                                                            .data![index].id,
-                                                        trackId:
-                                                            music.id.toString(),
-                                                      );
-
-                                                      if (result) {
-                                                        Navigator.of(context)
-                                                            .pushReplacement(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const PlaylistsScreen(),
-                                                          ),
-                                                        );
-
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                                'Successfully added'),
-                                                          ),
-                                                        );
-                                                        setState(() {});
-                                                      } else {
-                                                        setState(() {});
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text(
-                                                              'Music Already added',
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      setState(() {});
-                                                    },
-                                                    child: Text(
-                                                      snapshot
-                                                          .data![index].title,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        color:
-                                                            kLightSecondaryColor,
-                                                      ),
-                                                    ));
-                                              },
-                                            );
-                                          },
-                                        );
-                                      }
-                                      return const Center(
-                                        child: KinProgressIndicator(),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            });
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: kSecondaryColor,
-                        size: 24,
-                      ),
-                    ),
-
-                    // tip artist
-                    IconButton(
-                      onPressed: () {
-                        showMaterialModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            // coin provider
-                            final provider = Provider.of<CoinProvider>(context,
-                                listen: false);
-
-                            // UI
-                            return StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                void refresherFunction() {
-                                  setState(() {});
-                                }
-
-                                return FutureBuilder(
-                                    future: provider.getCoinBalance(),
-                                    builder: (context, snapshot) {
-                                      // if loading coin balance
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.65,
-                                          color: Colors.black,
-                                          child: KinProgressIndicator(),
-                                        );
-                                      }
-
-                                      // coin info got
-                                      else {
-                                        return Container(
-                                          color: kPrimaryColor,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.7,
-                                          child: Column(
-                                            children: [
-                                              // modal header
-                                              SizedBox(
-                                                height: MODAL_HEADER_HEIGHT,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Column(
-                                                  children: [
-                                                    // spacer
-                                                    const SizedBox(
-                                                      height: 18,
-                                                    ),
-
-                                                    // title
-                                                    Text(
-                                                      "Coin Balance",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.white
-                                                            .withOpacity(0.75),
-                                                      ),
-                                                    ),
-
-                                                    // spacer
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-
-                                                    // remaining coin value
-                                                    Text(
-                                                      "${snapshot.data ?? '0'} ETB",
-                                                      style: TextStyle(
-                                                        fontSize: 32,
-                                                        color: Colors.white
-                                                            .withOpacity(0.75),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-
-                                                    // spacer
-                                                    const SizedBox(
-                                                      height: 24,
-                                                    ),
-
-                                                    // buy coins button
-                                                    InkWell(
-                                                      onTap: () async {
-                                                        // remove modal sheet
-                                                        Navigator.pop(context);
-
-                                                        // route to buy coin page
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const BuyCoinPage(),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        child: const Text(
-                                                          "Buy Coins",
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                          ),
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 8,
-                                                                horizontal: 25),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              kSecondaryColor,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(25),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-
-                                              // modal list values
-                                              SizedBox(
-                                                height: (MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.65 -
-                                                    MODAL_HEADER_HEIGHT),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ListView.builder(
-                                                  itemCount:
-                                                      allowedCoinValues.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return TipArtistCard(
-                                                      value: allowedCoinValues[
-                                                          index],
-                                                      refresher:
-                                                          refresherFunction,
-                                                      artistName: music.artist,
-                                                      artistId: music.artist_id,
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    });
-                              },
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.money,
-                        color: kSecondaryColor,
-                        size: 24,
-                      ),
-                    ),
-
-                    // fav
-                    Consumer<FavoriteMusicProvider>(
-                      builder: (context, provider, _) {
-                        return provider.isFavorite == 1
-                            ? IconButton(
-                                onPressed: () {
-                                  provider.unFavMusic(musicId);
-
-                                  provider.getFavMusic();
-                                },
-                                icon: const Icon(
-                                  Icons.favorite,
-                                  color: kSecondaryColor,
-                                  size: 24,
-                                ),
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  provider.favMusic(musicId);
-                                  provider.getFavMusic();
-                                },
-                                icon: const Icon(
-                                  Icons.favorite_border,
-                                  color: kSecondaryColor,
-                                  size: 24,
-                                ),
-                              );
-                      },
-                    )
-                  ],
-                ),
-              )
             ],
           ),
           Text(
             music.artist.isNotEmpty ? music.artist : "kin artist",
-            style: const TextStyle(color: kGrey, fontSize: 16),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: const TextStyle(
+              color: kGrey,
+              fontSize: 16,
+            ),
           )
         ],
       ),
@@ -619,9 +350,12 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
   Widget _buildRepeatButton(MusicPlayer playerProvider) {
     return IconButton(
-      icon: Icon(!playerProvider.loopPlaylist && playerProvider.loopMode
-          ? Icons.repeat_one
-          : Icons.repeat),
+      icon: Icon(
+        !playerProvider.loopPlaylist && playerProvider.loopMode
+            ? Icons.repeat_one_rounded
+            : Icons.repeat_rounded,
+        size: 20,
+      ),
       color: playerProvider.shuffled ? Colors.white : kGrey,
       onPressed: () => playerProvider.handleLoop(),
     );
@@ -629,7 +363,10 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
   Widget _buildPreviousButton(MusicPlayer playerProvider) {
     return IconButton(
-      icon: const Icon(Icons.skip_previous),
+      icon: const Icon(
+        Icons.skip_next_rounded,
+        size: 28,
+      ),
       color: playerProvider.isFirstMusic() ? kGrey : Colors.white,
       onPressed: () {
         playerProvider.prev();
@@ -641,50 +378,53 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
 
     return PlayerBuilder.isPlaying(
-        player: playerProvider.player,
-        builder: (context, isPlaying) {
-          return InkWell(
-            onTap: () {
-              if (isPlaying || playerProvider.player.isBuffering.value) {
-                playerProvider.player.pause();
+      player: playerProvider.player,
+      builder: (context, isPlaying) {
+        return InkWell(
+          onTap: () {
+            if (isPlaying || playerProvider.player.isBuffering.value) {
+              playerProvider.player.pause();
+            } else {
+              if (checkConnection(status)) {
+                playerProvider.player.play();
               } else {
-                if (checkConnection(status)) {
-                  playerProvider.player.play();
-                } else {
-                  kShowToast();
-                }
+                kShowToast();
               }
-            },
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: 15,
-              child: !playerProvider.isMusicLoaded
-                  ? SpinKitFadingCircle(
-                      itemBuilder: (BuildContext context, int index) {
-                        return DecoratedBox(
-                          decoration: BoxDecoration(
-                            color:
-                                index.isEven ? kSecondaryColor : Colors.white,
-                          ),
-                        );
-                      },
-                      size: 30,
+            }
+          },
+          child: !playerProvider.isMusicLoaded
+              ? SpinKitFadingCircle(
+                  itemBuilder: (BuildContext context, int index) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: index.isEven ? kSecondaryColor : Colors.white,
+                      ),
+                    );
+                  },
+                  size: 30,
+                )
+              : isPlaying
+                  ? const Icon(
+                      Icons.pause_rounded,
+                      size: 36,
+                      color: Colors.white,
                     )
-                  : SvgPicture.asset(
-                      isPlaying
-                          ? 'assets/icons/pause.svg'
-                          : 'assets/icons/play-triangle.svg',
-                      fit: BoxFit.contain,
+                  : const Icon(
+                      Icons.play_arrow_rounded,
+                      size: 36,
                       color: Colors.white,
                     ),
-            ),
-          );
-        });
+        );
+      },
+    );
   }
 
   Widget _buildNextButton(MusicPlayer playerProvider) {
     return IconButton(
-      icon: const Icon(Icons.skip_next),
+      icon: const Icon(
+        Icons.skip_next_rounded,
+        size: 28,
+      ),
       color: playerProvider.isLastMusic(playerProvider.currentIndex! + 1)
           ? kGrey
           : Colors.white,
@@ -699,7 +439,10 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
   Widget _buildShuffleButton(MusicPlayer playerProvider) {
     return IconButton(
-      icon: const Icon(Icons.shuffle),
+      icon: const Icon(
+        Icons.shuffle_rounded,
+        size: 20,
+      ),
       color: playerProvider.shuffled ? Colors.white : kGrey,
       onPressed: () => playerProvider.handleShuffle(),
     );
@@ -775,167 +518,6 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
               child: Text(
                 'Lyrics',
                 style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buttonBar(context, data, index) {
-    PlaylistTitle value = data[index];
-    selectedPlaylistId = data[index].id;
-    return Container(
-      width: double.infinity,
-      color: kGrey.withOpacity(0.2),
-      height: getProportionateScreenHeight(75),
-      padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.6,
-            child: Consumer<DropDownProvider>(
-              builder: (ctx, provider, _) {
-                return DropdownButton<PlaylistTitle>(
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
-                  ),
-                  value: value,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  onChanged: (val) {
-                    provider.setPlaylist(val!);
-                    // setState(() {
-                    //   selectedPlaylistId = val!.id;
-                    // });
-                  },
-                  hint: Text(
-                    value.title,
-                  ),
-                  underline: Container(),
-                  items: data.map((PlaylistTitle playlist) {
-                    return DropdownMenuItem<PlaylistTitle>(
-                      key: Key(playlist.id.toString()),
-                      value: playlist,
-                      child: Text(playlist.title),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: PopupMenuButton(
-              initialValue: 0,
-              child: const Icon(
-                Icons.more_vert,
-                color: Colors.white,
-              ),
-              itemBuilder: (context) {
-                return kDeletePlaylistTitle;
-              },
-              onSelected: (value) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      backgroundColor: kPrimaryColor,
-                      title: const Text(
-                        'Are you sure? Musics under this playlist will also be deleted',
-                        style: TextStyle(color: Colors.white60, fontSize: 15),
-                      ),
-                      actions: [
-                        Consumer<DropDownProvider>(
-                          builder: (context, provider, _) {
-                            return TextButton(
-                                onPressed: () async {
-                                  var id = data.length == 1
-                                      ? selectedPlaylistId
-                                      : provider.playlistId;
-                                  setState(() {
-                                    context
-                                        .read<PlayListProvider>()
-                                        .deletePlaylistTitle(id);
-                                  });
-                                  Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Successfully Deleted'),
-                                    ),
-                                  );
-
-                                  // TODO:Improve implementation
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PlaylistsScreen(),
-                                    ),
-                                  );
-                                },
-                                child: const Text(
-                                  'Yes',
-                                  style: TextStyle(color: kSecondaryColor),
-                                ));
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('No',
-                              style: TextStyle(color: kSecondaryColor)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _playListAppBar(
-      BuildContext context, List<PlaylistTitle> data, index) {
-    return SliverAppBar(
-      expandedHeight: 175,
-      pinned: true,
-      backgroundColor: kPrimaryColor,
-      elevation: 2,
-      automaticallyImplyLeading: false,
-      title: const Text('My Playlist'),
-      bottom: PreferredSize(
-        preferredSize: const Size(double.infinity, 75),
-        child: _buttonBar(context, data, index),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/logo.png',
-              fit: BoxFit.contain,
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    const Color(0xFF343434).withOpacity(0.4),
-                    const Color(0xFF343434).withOpacity(0.7),
-                  ],
-                ),
               ),
             )
           ],

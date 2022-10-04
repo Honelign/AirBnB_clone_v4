@@ -72,8 +72,6 @@ class MusicApiService {
       String uid = await helper.getUserId();
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?page=$pageSize"));
-      //?userId=$uid
-      print("$kinMusicBaseUrl$apiEndPoint");
 
       if (response.statusCode == 200) {
         final item = json.decode(response.body) as List;
@@ -83,10 +81,13 @@ class MusicApiService {
         }).toList();
       }
     } catch (e) {
-      print("$kinMusicBaseUrl$apiEndPoint");
-      print("@music_service -> getArtists error - $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: "music_service",
+        functionName: "getArtists",
+        errorInfo: e.toString(),
+      );
     }
-    print(artists.toString());
+
     return artists;
   }
 
@@ -253,9 +254,17 @@ class MusicApiService {
     return tracksUnderGenre;
   }
 
-  Future addPopularCount(
-      {required String track_id, required String user_id}) async {
-    var data = {"user_id": user_id, "track_id": track_id};
+  Future addPopularCount({required Music music}) async {
+    String uid = await helper.getUserId();
+    var data = {
+      "user_FUI": uid,
+      "track_id": music.id,
+      "genre_id": music.genreId,
+      "album_id": music.albumId,
+      "artist_id": {music.artist_id: music.artist_id},
+      "encoder_FUI": music.encoder_id,
+    };
+
     Response response = await post(
       Uri.parse("$kAnalyticsBaseUrl/view_count"),
       headers: {

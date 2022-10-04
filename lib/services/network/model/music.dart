@@ -17,6 +17,9 @@ class Music {
   final String genreId;
   final String artist;
   final bool isPurchasedByUser;
+  final String encoder_id;
+
+  final int? trackIdInPlaylist;
 
   Music({
     required this.id,
@@ -26,11 +29,13 @@ class Music {
     required this.description,
     required this.audio,
     required this.artist_id,
+    required this.encoder_id,
     required this.isPurchasedByUser,
     required this.priceETB,
     required this.albumId,
     required this.genreId,
     this.lyrics,
+    this.trackIdInPlaylist,
   });
 
   factory Music.fromJson(Map<String, dynamic> json) {

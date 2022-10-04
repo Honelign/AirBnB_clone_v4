@@ -8,7 +8,7 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/album.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_titles.dart';
+
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
@@ -96,8 +96,8 @@ class MusicCardsearch extends StatelessWidget {
                         artist: 'kin',
                         description: '',
                         cover: 'assets/images/kin.png',
-                        count: musics.length ,
-                        artist_id:1,
+                        count: musics.length,
+                        artist_id: 1,
                         isPurchasedByUser: false,
                         price: 60,
                       ),
@@ -183,15 +183,17 @@ class MusicCardsearch extends StatelessWidget {
                                   initialValue: 0,
                                   child: const Icon(
                                     Icons.more_vert,
-                                    color: Colors.transparent,
+                                    color: kPopupMenuForegroundColor,
                                   ),
+                                  color: kPopupMenuBackgroundColor,
                                   onSelected: (value) {
                                     if (value == 2) {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              backgroundColor: kPrimaryColor,
+                                              backgroundColor:
+                                                  kPopupMenuBackgroundColor,
                                               title: const Text(
                                                 'Music Detail',
                                                 style: TextStyle(
@@ -347,7 +349,7 @@ class MusicCardsearch extends StatelessWidget {
                                               description: '',
                                               cover: 'assets/images/kin.png',
                                               // cover:'$kinAssetBaseUrl/${music.cover}',
-                                              count: musics.length ,
+                                              count: musics.length,
                                               artist_id: 1,
                                               isPurchasedByUser: false,
                                               price: 60,

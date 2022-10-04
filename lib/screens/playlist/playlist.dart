@@ -19,7 +19,8 @@ class PlaylistsScreen extends StatefulWidget {
   State<PlaylistsScreen> createState() => _PlaylistsScreenState();
 }
 
-class _PlaylistsScreenState extends State<PlaylistsScreen> {
+class _PlaylistsScreenState extends State<PlaylistsScreen>
+  {
   late PlayListProvider playListProvider;
   static const _pageSize = 1;
   final PagingController<int, PlaylistInfo> _pagingController =
@@ -37,6 +38,11 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
     super.initState();
   }
 
+  void refreshFunction() {
+    _pagingController.refresh();
+    setState(() {});
+  }
+
   Future _fetchMorePlaylists(int pageKey) async {
     try {
       final newItems = await playListProvider.getPlayList(pageKey: pageKey);
@@ -52,6 +58,8 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
     }
   }
 
+
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -60,6 +68,7 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
 
   @override
   Widget build(BuildContext context) {
+  
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(
@@ -134,6 +143,7 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                           },
                           child: PlaylistTitleDisplay(
                             playlistInfo: item,
+                            refreshFunction: refreshFunction,
                           ),
                         );
                       }),
@@ -160,7 +170,7 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
               return Consumer<PlayListProvider>(
                 builder: (BuildContext context, playListProvider, _) {
                   return SimpleDialog(
-                    backgroundColor: const Color.fromARGB(255, 42, 41, 41),
+                    backgroundColor: kPopupMenuBackgroundColor,
                     insetPadding: const EdgeInsets.symmetric(horizontal: 20),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 30, horizontal: 30),
@@ -258,6 +268,7 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                                               playlistNameController.text,
                                         );
                                         await playListProvider.getPlayList();
+                                        playlistNameController.text = "";
 
                                         Navigator.pop(context, true);
                                         refersh();
