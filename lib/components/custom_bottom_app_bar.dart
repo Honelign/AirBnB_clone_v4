@@ -13,6 +13,7 @@ import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
@@ -218,7 +219,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-              icon: const Icon(Icons.home),
+              icon: FaIcon(FontAwesomeIcons.house),
               title: const Text('Home'),
               activeColor: kSecondaryColor,
               inactiveColor: _inactiveColor,
@@ -234,14 +235,14 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.podcasts),
+              icon: FaIcon(FontAwesomeIcons.microphoneLines),
               title: const Text('Podcast'),
               activeColor: kSecondaryColor,
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.radio),
+              icon: FaIcon(FontAwesomeIcons.radio),
               title: const Text('Radio'),
               activeColor: kSecondaryColor,
               inactiveColor: _inactiveColor,

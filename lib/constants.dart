@@ -269,3 +269,9 @@ const possibleUploadTypesArtist = [
   'Albums',
   'Tracks',
 ];
+
+TextStyle headerTextStyle= TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white.withOpacity(0.9),
+          );

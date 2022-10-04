@@ -1,24 +1,34 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
+import 'package:kin_music_player_app/components/artist_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
 import 'package:kin_music_player_app/components/music_list_card.dart';
+import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_titile_recently.dart';
 
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
+import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
+import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/network/model/genre.dart';
+import '../../../services/provider/genre_provider.dart';
 import '../../../size_config.dart';
+import '../../artist/components/artist_detail.dart';
 import 'all_music_list.dart';
 
 class Songs extends StatefulWidget {
@@ -47,16 +57,23 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                height: getProportionateScreenHeight(15),
+                height: getProportionateScreenHeight(6),
               ),
-              const AdBanner(),
+              
               _buildRecentlyPlayedMusics(context),
-              SizedBox(height: getProportionateScreenWidth(20)),
+              
+              SizedBox(height: getProportionateScreenWidth(15)),
+              const AdBanner(),
+              SizedBox(height: getProportionateScreenWidth(10)),
               _buildNewReleasedAlbums(context),
               SizedBox(height: getProportionateScreenWidth(30)),
               _buildPopularMusics(context),
               SizedBox(height: getProportionateScreenWidth(20)),
+              _buildArtist(context),
+              SizedBox(height:getProportionateScreenHeight(20) ,),
               _buildRecentMusics(context),
+              SizedBox(height: getProportionateScreenHeight(20),),
+              _buildGenres(context)
             ],
           ),
         ),
@@ -74,12 +91,9 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getProportionateScreenWidth(20)),
-              child: const Text(
+              child:  Text(
                 'New Albums',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
+                style:headerTextStyle
               ),
             )
           ],
@@ -161,7 +175,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             title: "Recently Played",
           ),
         ),
-        SizedBox(height: getProportionateScreenHeight(20)),
+        SizedBox(height: getProportionateScreenHeight(10)),
         FutureBuilder(
           future: provider.getRecentlyPlayed(),
           builder: (context, AsyncSnapshot<List<Music>> snapshot) {
@@ -199,7 +213,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 return SizedBox(
                   height: 66.0 * length!.toDouble(),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -317,6 +331,147 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
     );
   }
 
+
+
+   Widget _buildArtist(BuildContext context) {
+    final provider = Provider.of<ArtistProvider>(context, listen: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(20)),
+              child:  Text(
+                'Artists',
+                style: headerTextStyle
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: getProportionateScreenWidth(20)),
+        SizedBox(
+          height: getProportionateScreenHeight(180),
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: FutureBuilder<List<Artist>>(
+                future: provider.getArtist(pageSize: 1),
+                builder: (context,  snapshot) {
+                  if (!(snapshot.connectionState == ConnectionState.waiting)) {
+                    if (snapshot.hasData) {
+                      List<Artist> artists = snapshot.data!;
+                     // print('@@${artists.toString()}');
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: (artists.length > 8 ? 8 : artists.length),
+                        itemBuilder: (context, index) {
+                          return SpecialOfferCardartist(artist: artists[index]);
+                        },
+                      );
+                    } else {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            kConnectionErrorMessage,
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return Container(
+                      margin:
+                          EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+                      child: Center(
+                        child: KinProgressIndicator(),
+                      ));
+                },
+              )),
+        ),
+      ],
+    );
+  }
+
+
+
+
+Widget _buildGenres(BuildContext context) {
+    final provider = Provider.of<GenreProvider>(context, listen: false);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(22),
+          ),
+          child: SectionTitle(
+              title: "Genres",
+              press: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AllMusicList(),
+                  ),
+                );
+              }),
+        ),
+        SizedBox(height: getProportionateScreenHeight(20)),
+        SizedBox(
+          height: getProportionateScreenHeight(160),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: FutureBuilder(
+              future: provider.getAllGenres(),
+              builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
+                // loading
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: KinProgressIndicator(),
+                  );
+                }
+
+                // data loaded
+                else if (snapshot.hasData && !snapshot.hasError) {
+                  return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data == null
+                          ? 0
+                          : (snapshot.data!.length > 5
+                              ? 5
+                              : snapshot.data!.length),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return GenreHomeDisplay(genre: snapshot.data![index]);
+                      });
+                }
+
+                // error
+                else {
+                  return OnSnapshotError(
+                    error: snapshot.error.toString(),
+                  );
+                }
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+
+
+
+
+
+
   Widget _buildRecentMusics(BuildContext context) {
     final provider = Provider.of<MusicProvider>(context, listen: false);
 
@@ -338,39 +493,52 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         SizedBox(
           height: getProportionateScreenHeight(20),
         ),
-        FutureBuilder(
-            future: provider.getNewMusics(),
-            builder: (context, AsyncSnapshot<List<Music>> snapshot) {
-              if (!(snapshot.connectionState == ConnectionState.waiting)) {
-                if (snapshot.hasData) {
-                  List<Music> musics = snapshot.data!;
-                  return ListView.builder(
-                      itemCount: snapshot.data == null
-                          ? 0
-                          : (snapshot.data!.length > 8
-                              ? 8
-                              : snapshot.data!.length),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return MusicListCard(
-                            music: musics[index],
-                            musics: musics,
-                            musicIndex: index);
-                      });
-                } else {
-                  kShowToast();
-                  return Text(
-                    kConnectionErrorMessage,
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
+        SizedBox(
+          height: getProportionateScreenHeight(200),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: FutureBuilder(
+                future: provider.getNewMusics(),
+                builder: (context, AsyncSnapshot<List<Music>> snapshot) {
+                  if (!(snapshot.connectionState == ConnectionState.waiting)) {
+                    if (snapshot.hasData) {
+                      List<Music> musics = snapshot.data!;
+                      return ListView.builder(
+                          itemCount: snapshot.data == null
+                              ? 0
+                              : (snapshot.data!.length > 5
+                                  ? 5
+                                  : snapshot.data!.length),
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return MusicCard(
+                                music: musics[index],
+                                musics: musics,
+                                musicIndex: index);
+                          });
+                    } else {
+                     kShowToast();
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          kConnectionErrorMessage,
+                          style:
+                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                        ),
+                      ),
+                    );
+                    }
+                  }
+                  return Center(
+                    child: KinProgressIndicator(),
                   );
-                }
-              }
-              return Center(
-                child: KinProgressIndicator(),
-              );
-            })
+                }),
+          ),
+        )
       ],
     );
   }
@@ -442,6 +610,76 @@ class SpecialOfferCard extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class SpecialOfferCardartist extends StatelessWidget {
+  const SpecialOfferCardartist({
+    Key? key, required this.artist,
+    // required this.numOfMusics,
+    
+  }) : super(key: key);
+
+  final Artist artist;
+  // final int numOfMusics;
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+          Navigator.of(context).push(
+         
+                               MaterialPageRoute(
+            builder: (context) => ArtistDetail(
+              artist_id: artist.id.toString(),
+              artist: artist,
+            ),
+          )
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: getProportionateScreenWidth(10)),
+        child: SizedBox(
+          width: getProportionateScreenWidth(150),
+          height: getProportionateScreenWidth(100),
+          child: Column(
+            children: [
+              CachedNetworkImage(
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    
+                    height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: imageProvider)),
+                  );
+                },
+                imageUrl: '$kinAssetBaseUrl/${artist.artist_profileImage}',
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     gradient: LinearGradient(
+              //       begin: Alignment.topCenter,
+              //       end: Alignment.bottomCenter,
+              //       colors: [
+              //         const Color(0xFF343434).withOpacity(0.3),
+              //         const Color(0xFF343434).withOpacity(0.45),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              SizedBox(height: 10,),
+              
+              Text(artist.artist_name,style: TextStyle(color: Colors.white),)
+            ],
           ),
         ),
       ),

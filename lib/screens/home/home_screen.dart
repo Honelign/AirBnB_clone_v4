@@ -35,26 +35,27 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
+          toolbarHeight: 15,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 2,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, HomeSearchScreen.routeName);
-                },
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+          // actions: [
+          //   Padding(
+          //     padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
+          //     child: IconButton(
+          //       onPressed: () {
+          //         Navigator.pushNamed(context, HomeSearchScreen.routeName);
+          //       },
+          //       icon: const Icon(
+          //         Icons.search,
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //   ),
+          // ],
           bottom: const TabBar(
             indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(5),
+            labelPadding: EdgeInsets.all(0),
             indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(
@@ -74,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: TabBarView(
+
           children: [
             Songs(),
             Albums(),

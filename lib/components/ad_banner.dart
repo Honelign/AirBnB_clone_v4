@@ -14,12 +14,12 @@ class AdBanner extends StatelessWidget {
       // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUyBTw5J4u3OpkQpq9DE6g2rUPcv0Vde9Nkg&usqp=CAU',
       // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdBrJnhzlS504lqvTbJHd-PPxFHUJilbkD5A&usqp=CAU',
       // ""
-      "assets/images/kuraz kin banner_am.jpg",
-      "assets/images/kuraz kin banner_en.jpg"
+      "assets/images/i3.jpg",
+      "assets/images/i4.jpg"
     ];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      height: 100,
+      height: 90,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
