@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/constants.dart';
 
 class SectionTitle extends StatelessWidget {
   const SectionTitle({
@@ -17,10 +18,7 @@ class SectionTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
+          style:headerTextStyle
         ),
         // GestureDetector(
         //   onTap: press,

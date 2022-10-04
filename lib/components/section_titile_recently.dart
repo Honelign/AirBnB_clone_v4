@@ -1,6 +1,9 @@
 // This section title is only for recently played
 
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/constants.dart';
+
+import '../screens/home/components/home_search_screen.dart';
 
 class SectionTitleRecently extends StatelessWidget {
   const SectionTitleRecently({
@@ -17,11 +20,11 @@ class SectionTitleRecently extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
+          style: headerTextStyle
         ),
+        IconButton(icon: Icon(Icons.search,color: Colors.white,),onPressed: () {
+          Navigator.pushNamed(context, HomeSearchScreen.routeName);
+        },)
       ],
     );
   }

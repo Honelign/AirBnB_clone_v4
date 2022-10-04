@@ -66,3 +66,4 @@ class GenreHomeDisplay extends StatelessWidget {
     );
   }
 }
+
