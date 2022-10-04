@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:kin_music_player_app/main.dart';
 
-import 'package:kin_music_player_app/screens/home/components/favorite.dart';
+import 'package:kin_music_player_app/screens/library/favorite/favorite.dart';
 import 'package:kin_music_player_app/screens/home/components/home_search_screen.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/forget_password.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';

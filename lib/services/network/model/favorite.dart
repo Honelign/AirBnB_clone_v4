@@ -6,11 +6,9 @@ part 'favorite.g.dart';
 @JsonSerializable()
 class Favorite {
   final String id;
-  final List<Music> music;
+  final Music music;
 
-  Favorite(
-      {required this.id,
-        required this.music});
+  Favorite({required this.id, required this.music});
 
   factory Favorite.fromJson(Map<String, dynamic> json) {
     return _$FavoriteFromJson(json);

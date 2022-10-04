@@ -19,6 +19,7 @@ class GenreProvider extends ChangeNotifier {
 
   // get all genres
   Future<List<Genre>> getAllGenres({ int pageKey=1}) async {
+
     // endpoint
     const String apiEndPoint = 'mobileApp/genres';
 

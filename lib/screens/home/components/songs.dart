@@ -14,6 +14,7 @@ import 'package:kin_music_player_app/components/section_titile_recently.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
+
 import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
 
 import 'package:kin_music_player_app/services/network/model/album.dart';
@@ -21,6 +22,16 @@ import 'package:kin_music_player_app/services/network/model/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
+
+import 'package:kin_music_player_app/screens/genre/components/genre_card.dart';
+import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
+
+import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/provider/album_provider.dart';
+import 'package:kin_music_player_app/services/provider/genre_provider.dart';
+
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,11 +50,11 @@ class Songs extends StatefulWidget {
 }
 
 class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
-    @override
+  @override
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
-        super.build(context);
+    super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {});
@@ -73,6 +84,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               SizedBox(height:getProportionateScreenHeight(20) ,),
               _buildRecentMusics(context),
               SizedBox(height: getProportionateScreenHeight(20),),
+
               _buildGenres(context)
             ],
           ),
@@ -403,7 +415,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
 
 Widget _buildGenres(BuildContext context) {
     final provider = Provider.of<GenreProvider>(context, listen: false);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -537,6 +548,71 @@ Widget _buildGenres(BuildContext context) {
                     child: KinProgressIndicator(),
                   );
                 }),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildGenres(BuildContext context) {
+    final provider = Provider.of<GenreProvider>(context, listen: false);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(22),
+          ),
+          child: SectionTitle(
+              title: "Genres",
+              press: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AllMusicList(),
+                  ),
+                );
+              }),
+        ),
+        SizedBox(height: getProportionateScreenHeight(20)),
+        SizedBox(
+          height: getProportionateScreenHeight(160),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: FutureBuilder(
+              future: provider.getAllGenres(),
+              builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
+                // loading
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: KinProgressIndicator(),
+                  );
+                }
+
+                // data loaded
+                else if (snapshot.hasData && !snapshot.hasError) {
+                  return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data == null
+                          ? 0
+                          : (snapshot.data!.length > 5
+                              ? 5
+                              : snapshot.data!.length),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return GenreHomeDisplay(genre: snapshot.data![index]);
+                      });
+                }
+
+                // error
+                else {
+                  return OnSnapshotError(
+                    error: snapshot.error.toString(),
+                  );
+                }
+              },
+            ),
           ),
         )
       ],

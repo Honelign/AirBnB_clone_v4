@@ -311,48 +311,98 @@ class _AlbumBodyState extends State<AlbumBody> {
                       }
                     }
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 9,
-                      horizontal: 30,
-                    ),
-                    decoration: BoxDecoration(
-                      color: kPopupMenuBackgroundColor,
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: kPrimaryColor,
-                          offset: Offset(
-                            1.0,
-                            1.0,
+                  child: isPlaying &&
+                          widget.album.id == playerProvider.currentAlbum.id
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 30,
                           ),
-                          blurRadius: 2.0,
-                          spreadRadius: 1.0,
-                        ), //BoxShadow
-                        //BoxShadow
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.play_arrow,
-                          color: kSecondaryColor,
-                          size: 22,
-                        ),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          "Play All",
-                          style: TextStyle(
-                            color: kSecondaryColor,
-                            fontSize: 20,
+                          decoration: BoxDecoration(
+                            color: kPopupMenuBackgroundColor,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: kPrimaryColor,
+                                offset: Offset(
+                                  1.0,
+                                  1.0,
+                                ),
+                                blurRadius: 2.0,
+                                spreadRadius: 1.0,
+                              ), //BoxShadow
+                              //BoxShadow
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Center(
+                                child: Icon(
+                                  Icons.pause,
+                                  color: kSecondaryColor,
+                                  size: 24,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(
+                                "Playing",
+                                style: TextStyle(
+                                  color: kSecondaryColor,
+                                  fontSize: 22,
+                                ),
+                              )
+                            ],
                           ),
                         )
-                      ],
-                    ),
-                  ),
+                      : Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 30,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kPopupMenuBackgroundColor,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: kPrimaryColor,
+                                offset: Offset(
+                                  1.0,
+                                  1.0,
+                                ),
+                                blurRadius: 2.0,
+                                spreadRadius: 1.0,
+                              ), //BoxShadow
+                              //BoxShadow
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.play_arrow,
+                                color: kSecondaryColor,
+                                size: 24,
+                              ),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(
+                                "Play All",
+                                style: TextStyle(
+                                  color: kSecondaryColor,
+                                  fontSize: 22,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                 );
               }),
             );

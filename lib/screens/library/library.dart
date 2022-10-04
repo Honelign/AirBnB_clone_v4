@@ -5,7 +5,7 @@ import '../../size_config.dart';
 import '../album/album.dart';
 import '../artist/artist.dart';
 import '../genre/genre.dart';
-import '../home/components/favorite.dart';
+import 'favorite/favorite.dart';
 import '../home/components/home_search_screen.dart';
 import '../home/components/songs.dart';
 import '../playlist/playlist.dart';
