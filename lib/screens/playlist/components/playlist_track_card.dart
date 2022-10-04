@@ -73,6 +73,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
         return GestureDetector(
           onTap: () {
             incrementMusicView(widget.music.id);
+            p.albumMusicss = widget.musics;
             p.setBuffering(widget.musicIndex);
             if (checkConnection(status)) {
               if (p.isMusicInProgress(widget.music)) {

@@ -261,7 +261,7 @@ class MusicApiService {
       "track_id": music.id,
       "genre_id": music.genreId,
       "album_id": music.albumId,
-      "artist_id": music.artist_id,
+      "artist_id": {music.artist_id: music.artist_id},
       "encoder_FUI": music.encoder_id,
     };
 

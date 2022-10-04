@@ -153,6 +153,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                 newPageProgressIndicatorBuilder: (_) =>
                     const KinProgressIndicator(),
                 itemBuilder: (context, item, index) {
+                  print("@@@ ${_pagingController.itemList!.length}");
                   allTracksInPlaylist = _pagingController.itemList ?? [];
                   return PlaylistListCard(
                     music: item,
@@ -165,6 +166,157 @@ class _PlaylistBodyState extends State<PlaylistBody> {
             ),
           ),
         ),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: _buildPlayAllButton(ctx: context),
+    );
+  }
+
+  Widget _buildPlayAllButton({required BuildContext ctx}) {
+    var playerProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var podcastProvider = Provider.of<PodcastPlayer>(
+      ctx,
+      listen: false,
+    );
+    var musicProvider = Provider.of<MusicPlayer>(
+      ctx,
+      listen: false,
+    );
+    var radioProvider = Provider.of<RadioProvider>(
+      ctx,
+      listen: false,
+    );
+
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
+
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: FutureBuilder<List<Music>>(
+        future: playListProvider.getTracksUnderPlaylistById(
+          playlistId: widget.playlistId,
+        ),
+        builder: (context, snapshot) {
+          //
+          if (snapshot.connectionState != ConnectionState.waiting &&
+              !snapshot.hasError &&
+              snapshot.hasData) {
+            return PlayerBuilder.isPlaying(
+              player: playerProvider.player,
+              builder: ((context, isPlaying) {
+                return FloatingActionButton(
+                  backgroundColor: kSecondaryColor,
+                  onPressed: () async {
+                    playerProvider.albumMusicss = allTracksInPlaylist;
+
+                    if (playerProvider.currentMusic == null) {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+
+                        musicProvider.setPlayer(musicProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: Album(
+                            id: -1,
+                            title: "Kin Music",
+                            artist: "Kin",
+                            description: "",
+                            cover: "",
+                            artist_id: -1,
+                            price: 0,
+                            isPurchasedByUser: false,
+                          ),
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        podcastProvider.setEpisodeStopped(true);
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    } else if (playerProvider.player.getCurrentAudioTitle ==
+                        playerProvider.currentMusic!.title) {
+                      if (isPlaying ||
+                          playerProvider.player.isBuffering.value) {
+                        playerProvider.player.pause();
+                      } else {
+                        if (checkConnection(status)) {
+                          playerProvider.player.play();
+                        } else {
+                          kShowToast();
+                        }
+                      }
+                    } else {
+                      if (checkConnection(status)) {
+                        radioProvider.player.stop();
+                        podcastProvider.player.stop();
+                        playerProvider.player.stop();
+
+                        playerProvider.setMusicStopped(true);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+
+                        playerProvider.setPlayer(playerProvider.player,
+                            podcastProvider, radioProvider);
+                        playerProvider.handlePlayButton(
+                          musics: snapshot.data!,
+                          album: Album(
+                            id: -1,
+                            title: "Kin Music",
+                            artist: "Kin",
+                            description: "",
+                            cover: "",
+                            artist_id: -1,
+                            price: 0,
+                            isPurchasedByUser: false,
+                          ),
+                          music: snapshot.data![0],
+                          index: 0,
+                        );
+                        playerProvider.setMusicStopped(false);
+                        podcastProvider.setEpisodeStopped(true);
+                        playerProvider.listenMusicStreaming();
+                        podcastProvider.listenPodcastStreaming();
+                      } else {
+                        kShowToast();
+                      }
+                    }
+                  },
+                  child: const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                );
+              }),
+            );
+          }
+
+          //
+          else {
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: kSecondaryColor,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: const KinProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

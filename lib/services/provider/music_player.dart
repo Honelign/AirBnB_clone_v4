@@ -166,20 +166,23 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
     if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
       setPlaying(_currentAlbum, 0, musics);
+      print("@if");
       play(
         0,
       );
     } else if (!action && _loopMode && !_loopPlaylist) {
+      print("@elseif");
       setPlaying(_currentAlbum, _currentIndex!, musics);
       play(_currentIndex);
     } else {
+      print("@else + ${next}");
       play(next);
     }
   }
 
   prev() async {
     int pre = _currentIndex! - 1;
-    print('@@@$pre');
+
     if (pre >= 0 && pre < _albumMusics.length) {
       play(pre);
     }
@@ -331,8 +334,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     _shuffled = false;
 
     setBuffering(index);
-
-    print("@@@lookie ${musics}");
 
     try {
       if (isMusicInProgress(music)) {
