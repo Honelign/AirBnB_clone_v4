@@ -90,9 +90,6 @@ class MusicProvider extends ChangeNotifier {
       ),
     );
 
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String id = pref.getString("id") ?? "";
-
     var result = await musicApiService.addPopularCount(music: music);
   }
 

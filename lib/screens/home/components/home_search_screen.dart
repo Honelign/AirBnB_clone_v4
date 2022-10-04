@@ -291,7 +291,7 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
       ),
       child: TextFormField(

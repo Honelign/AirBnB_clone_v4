@@ -49,7 +49,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
   @override
   void initState() {
     playlistProvider = Provider.of<PlayListProvider>(context, listen: false);
-    print("here - ${widget.musics[0].title}");
+    print("@lookie + ${widget.musics}");
     super.initState();
   }
 

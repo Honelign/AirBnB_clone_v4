@@ -332,6 +332,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
     setBuffering(index);
 
+    print("@@@lookie ${musics}");
+
     try {
       if (isMusicInProgress(music)) {
         player.stop();
