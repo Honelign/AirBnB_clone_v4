@@ -153,7 +153,6 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                 newPageProgressIndicatorBuilder: (_) =>
                     const KinProgressIndicator(),
                 itemBuilder: (context, item, index) {
-                  print("@@@ ${_pagingController.itemList!.length}");
                   allTracksInPlaylist = _pagingController.itemList ?? [];
                   return PlaylistListCard(
                     music: item,
