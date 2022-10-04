@@ -17,7 +17,7 @@ class CachedFavoriteProvider extends ChangeNotifier {
     SharedPreferences prefss = await SharedPreferences.getInstance();
     final id = prefss.getString('id');
 
-    String apiEndPoint = '/favourite/';
+    String apiEndPoint = '/mobileApp/favTracks?userId=$id';
 
     List<Favorite> fav =
         await favoriteApiService.getFavoriteMusics(apiEndPoint, id);
@@ -28,6 +28,8 @@ class CachedFavoriteProvider extends ChangeNotifier {
       // favorite.music.forEach((music) {
       //   favmusicIds.add(music.id);
       // });
+
+      favmusicIds.add(favorite.music.id);
     }
 
     String favMusics = jsonEncode(favmusicIds);
@@ -38,6 +40,7 @@ class CachedFavoriteProvider extends ChangeNotifier {
 
   void addCachedFav(id) async {
     final prefs = await SharedPreferences.getInstance();
+
     String? favorites = prefs.getString("fav") ?? "[]";
     List<dynamic> favMusics = jsonDecode(favorites);
     favMusics.add(id);

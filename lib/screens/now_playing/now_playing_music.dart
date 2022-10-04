@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
@@ -245,6 +246,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
   }
 
   Widget _buildActionCenter({required Music music}) {
+    var favprovider =
+        Provider.of<CachedFavoriteProvider>(context, listen: false);
     return Consumer<FavoriteMusicProvider>(builder: (context, provider, _) {
       return Container(
         width: MediaQuery.of(context).size.width,
@@ -257,11 +260,21 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
           children: [
             // favorite button
             IconButton(
-              onPressed: () {
-                provider.favMusic(musicId);
-                provider.getFavMusic();
+              onPressed: () async {
+                if (favprovider.favMusics.contains(music.id)) {
+                  favprovider.removeCachedFav(music.id);
+                  favprovider.getFavids();
+
+                  await provider.unFavMusic(music.id);
+                } else {
+                  favprovider.addCachedFav(music.id);
+                  favprovider.getFavids();
+                  await provider.favMusic(music.id);
+                }
+
+                await provider.getFavMusic();
               },
-              icon: provider.isFavorite == 1
+              icon: favprovider.favMusics.contains(music.id)
                   ? Icon(
                       Icons.favorite,
                       color: kSecondaryColor.withOpacity(0.8),
