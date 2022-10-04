@@ -17,6 +17,7 @@ class Music {
   final String genreId;
   final String artist;
   final bool isPurchasedByUser;
+  final String encoder_id;
 
   final int? trackIdInPlaylist;
 
@@ -28,6 +29,7 @@ class Music {
     required this.description,
     required this.audio,
     required this.artist_id,
+    required this.encoder_id,
     required this.isPurchasedByUser,
     required this.priceETB,
     required this.albumId,

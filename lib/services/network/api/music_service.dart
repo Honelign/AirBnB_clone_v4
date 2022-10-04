@@ -254,9 +254,17 @@ class MusicApiService {
     return tracksUnderGenre;
   }
 
-  Future addPopularCount(
-      {required String track_id, required String user_id}) async {
-    var data = {"user_id": user_id, "track_id": track_id};
+  Future addPopularCount({required Music music}) async {
+    String uid = await helper.getUserId();
+    var data = {
+      "user_FUI": uid,
+      "track_id": music.id,
+      "genre_id": music.genreId,
+      "album_id": music.albumId,
+      "artist_id": music.artist_id,
+      "encoder_FUI": music.encoder_id,
+    };
+
     Response response = await post(
       Uri.parse("$kAnalyticsBaseUrl/view_count"),
       headers: {
@@ -265,6 +273,8 @@ class MusicApiService {
       },
       body: json.encode(data),
     );
+
+    print("@@@@here - ${response.statusCode}");
 
     if (response.statusCode == 201) {
       return true;

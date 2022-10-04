@@ -31,6 +31,7 @@ class MusicProvider extends ChangeNotifier {
     title: 'men',
     albumId: '2',
     genreId: '1',
+    encoder_id: "",
   );
 
   MusicApiService musicApiService = MusicApiService();
@@ -92,10 +93,7 @@ class MusicProvider extends ChangeNotifier {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String id = pref.getString("id") ?? "";
 
-    var result = await musicApiService.addPopularCount(
-      track_id: music.id.toString(),
-      user_id: id,
-    );
+    var result = await musicApiService.addPopularCount(music: music);
   }
 
   // add to recently played

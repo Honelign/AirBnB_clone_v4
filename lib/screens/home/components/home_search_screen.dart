@@ -78,17 +78,19 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
         // TODO:Replace Album and GenreId
         musics.add(
           Music(
-              artist: searchedTracks[i].artistId.artistName,
-              audio: searchedTracks[i].trackFile,
-              cover: searchedTracks[i].albumId.albumCover,
-              description: searchedTracks[i].trackDescription,
-              id: searchedTracks[i].id,
-              title: searchedTracks[i].trackName,
-              artist_id: searchedTracks[i].artistId.id.toString(),
-              isPurchasedByUser: false,
-              priceETB: 32.50.toString(),
-              albumId: "1",
-              genreId: "1"),
+            artist: searchedTracks[i].artistId.artistName,
+            audio: searchedTracks[i].trackFile,
+            cover: searchedTracks[i].albumId.albumCover,
+            description: searchedTracks[i].trackDescription,
+            id: searchedTracks[i].id,
+            title: searchedTracks[i].trackName,
+            artist_id: searchedTracks[i].artistId.id.toString(),
+            isPurchasedByUser: false,
+            priceETB: 32.50.toString(),
+            albumId: "1",
+            genreId: "1",
+            encoder_id: "",
+          ),
         );
       }
     }
@@ -134,147 +136,150 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                 ),
               ),
               Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(
-                      height: getProportionateScreenHeight(10),
-                    ),
-                    SafeArea(
-                      child: Row(
-                        children: [
-                          // BackButton(
-                          //   color: Colors.white,
-                          //   onPressed: () {
-                          //     Navigator.pop(context);
-                          //   },
-                          // ),
-                          SizedBox(
-                            width: getProportionateScreenWidth(10),
-                          ),
-                          Expanded(
-                              child: _buildSearchBar(
-                                  context, 'Searching ${title}s...', provider)),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(10),
+                  ),
+                  SafeArea(
+                    child: Row(
+                      children: [
+                        // BackButton(
+                        //   color: Colors.white,
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        // ),
+                        SizedBox(
+                          width: getProportionateScreenWidth(10),
+                        ),
+                        Expanded(
+                            child: _buildSearchBar(
+                                context, 'Searching ${title}s...', provider)),
 
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  bottomRight: Radius.circular(20)),
-                              color: Colors.white.withOpacity(0.1),
-                            ),
-                            width: MediaQuery.of(context).size.width * 0.20,
-                            child: Center(
-                              child: DropdownButton(
-                                underline: Container(),
-                                value: currentSearchType,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    overflow: TextOverflow.ellipsis),
-                                isExpanded: true,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white,
-                                ),
-                                // Array list of items
-                                items: possibleSearchTypes.map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(
-                                      items,
-                                      style: TextStyle(color: kGrey),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    currentSearchType = newValue!;
-                                    title = newValue;
-                                  });
-                                },
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                bottomRight: Radius.circular(20)),
+                            color: Colors.white.withOpacity(0.1),
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.20,
+                          child: Center(
+                            child: DropdownButton(
+                              underline: Container(),
+                              value: currentSearchType,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  overflow: TextOverflow.ellipsis),
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white,
                               ),
+                              // Array list of items
+                              items: possibleSearchTypes.map((String items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  child: Text(
+                                    items,
+                                    style: TextStyle(color: kGrey),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  currentSearchType = newValue!;
+                                  title = newValue;
+                                });
+                              },
                             ),
                           ),
-                          SizedBox(
-                            width: getProportionateScreenWidth(15),
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          width: getProportionateScreenWidth(15),
+                        ),
+                      ],
                     ),
-                    Container(
-                        child: title == 'track'
-                            ? Expanded(
-                                child: provider.isLoading == true
-                                    ? KinProgressIndicator()
-                                    : count == 0
-                                        ? provider.searchedMusics.isEmpty
-                                            ? const Center(
-                                                child: Text(
-                                                'No data',
-                                                style: TextStyle(color: kGrey),
-                                              ))
-                                            : ListView.builder(
-                                                itemCount: provider
-                                                    .searchedMusics.length,
-                                                itemBuilder: (context, index) {
-                                                  // return MusicListCard(
-                                                  //   music: provider.searchedMusics[index],
-                                                  //   musics: searchedMusicsList,
-                                                  //   musicIndex: index,
-                                                  // );
-                                                  return YoutubeSearchCard(
-                                                    result: searchedMusicsList[
-                                                        index],
-                                                  );
-                                                },
-                                              )
+                  ),
+                  Container(
+                    child: title == 'track'
+                        ? Expanded(
+                            child: provider.isLoading == true
+                                ? KinProgressIndicator()
+                                : count == 0
+                                    ? provider.searchedMusics.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                            'No data',
+                                            style: TextStyle(color: kGrey),
+                                          ))
                                         : ListView.builder(
-                                            itemCount: searchedTracks.length,
-                                            itemBuilder: ((context, index) {
-                                              // TODO: Replace Artist and Album ID
-                                              return MusicCardsearch(
-                                                artistname:
-                                                    searchedTracks[index]
-                                                        .artistId
-                                                        .artistName,
-                                                music: Music(
-                                                  isPurchasedByUser: false,
-                                                  priceETB: 32.50.toString(),
-                                                  albumId: "1",
-                                                  genreId: "1",
-                                                  artist_id:
-                                                      searchedTracks[index]
-                                                          .artistId
-                                                          .id
-                                                          .toString(),
-                                                  artist: searchedTracks[index]
-                                                      .artistId
-                                                      .artistName,
-                                                  audio: searchedTracks[index]
-                                                      .trackFile,
-                                                  cover: searchedTracks[index]
-                                                      .albumId
-                                                      .albumCover,
-                                                  description:
-                                                      searchedTracks[index]
-                                                          .trackDescription,
-                                                  id: searchedTracks[index].id,
-                                                  title: searchedTracks[index]
-                                                      .trackName,
-                                                ),
-                                                musics: musics,
-                                                musicIndex: index,
+                                            itemCount:
+                                                provider.searchedMusics.length,
+                                            itemBuilder: (context, index) {
+                                              // return MusicListCard(
+                                              //   music: provider.searchedMusics[index],
+                                              //   musics: searchedMusicsList,
+                                              //   musicIndex: index,
+                                              // );
+                                              return YoutubeSearchCard(
+                                                result:
+                                                    searchedMusicsList[index],
                                               );
-                                            })))
-                            : title == 'artist'
-                                ? ArtistSearchResult(
-                                    searchedMusicsList: searchedMusicsList,
-                                    searchedArtistList: searchedArtist,
-                                  )
-                                : AlbumSearchResult(
-                                    searchedMusicsList: searchedMusicsList,
-                                    searchedAlbumList: searchedAlbum))
-                  ]),
+                                            },
+                                          )
+                                    : ListView.builder(
+                                        itemCount: searchedTracks.length,
+                                        itemBuilder: ((context, index) {
+                                          // TODO: Replace Artist and Album ID
+                                          return MusicCardsearch(
+                                            artistname: searchedTracks[index]
+                                                .artistId
+                                                .artistName,
+                                            music: Music(
+                                                isPurchasedByUser: false,
+                                                priceETB: 32.50.toString(),
+                                                albumId: "1",
+                                                genreId: "1",
+                                                artist_id: searchedTracks[index]
+                                                    .artistId
+                                                    .id
+                                                    .toString(),
+                                                artist: searchedTracks[index]
+                                                    .artistId
+                                                    .artistName,
+                                                audio: searchedTracks[index]
+                                                    .trackFile,
+                                                cover: searchedTracks[index]
+                                                    .albumId
+                                                    .albumCover,
+                                                description:
+                                                    searchedTracks[index]
+                                                        .trackDescription,
+                                                id: searchedTracks[index].id,
+                                                title: searchedTracks[index]
+                                                    .trackName,
+                                                encoder_id: ""),
+                                            musics: musics,
+                                            musicIndex: index,
+                                          );
+                                        }),
+                                      ),
+                          )
+                        : title == 'artist'
+                            ? ArtistSearchResult(
+                                searchedMusicsList: searchedMusicsList,
+                                searchedArtistList: searchedArtist,
+                              )
+                            : AlbumSearchResult(
+                                searchedMusicsList: searchedMusicsList,
+                                searchedAlbumList: searchedAlbum,
+                              ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
