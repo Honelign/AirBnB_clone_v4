@@ -25,9 +25,9 @@ class CachedFavoriteProvider extends ChangeNotifier {
     List<int> favmusicIds = [];
 
     for (var favorite in fav) {
-      favorite.music.forEach((music) {
-        favmusicIds.add(music.id);
-      });
+      // favorite.music.forEach((music) {
+      //   favmusicIds.add(music.id);
+      // });
     }
 
     String favMusics = jsonEncode(favmusicIds);

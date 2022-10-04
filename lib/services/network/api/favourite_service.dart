@@ -2,75 +2,107 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/services/network/model/favorite.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/model/music.dart';
+
+import '../model/favorite.dart';
 
 class FavoriteApiService {
+  String fileName = "favourite_service.dart";
+  String className = "FavoriteApiService";
+  //
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+
+  //
   Future getFavoriteMusics(apiEndPoint, id) async {
-    Response response =
-        await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$id"));
-
+    List<Favorite> items = [];
     try {
-      List<Map<String, dynamic>> item = [];
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$id"));
+
       if (response.statusCode == 200) {
-        final res = json.decode(response.body);
+        var res = json.decode(response.body);
+
         if (res != null) {
-          item.add(res);
+          for (var element in res) {
+            Music currentMusic = Music.fromJson(element);
+            Favorite currentFav =
+                Favorite(id: element['fav_id'].toString(), music: currentMusic);
 
-          List<Favorite> musics = item.map((value) {
-            return Favorite.fromJson(value);
-          }).toList();
+            items.add(currentFav);
+          }
 
-          return musics;
-        } else {
-          return <Favorite>[];
+          return items;
         }
-      } else {
-        return <Favorite>[];
       }
     } catch (e) {
-      print("@api_service--getFavMusic" + e.toString());
-      return <Favorite>[];
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getFavoriteMusics",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    return items;
   }
 
   Future deleteFavMusic(apiEndPoint, musicId, userId) async {
-    Response response = await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint"));
+    try {
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl/mobileApp/favTracks?userId=$userId"));
 
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        var body = jsonDecode(response.body);
 
-      List music = body['results']
-          .where(
-            (fav) =>
-                fav['user_FUI'] == userId.toString() &&
-                fav['track_id'] ==
-                    int.parse(
-                      musicId.toString(),
-                    ),
-          )
-          .toList();
+        List music = body
+            .where(
+              (fav) =>
+                  fav['track_id'] ==
+                  int.parse(
+                    musicId.toString(),
+                  ),
+            )
+            .toList();
 
-      var id = music[0]['id'];
+        var id = music[0]['fav_id'];
 
-      Response response2 =
-          await delete(Uri.parse("$kinMusicBaseUrl/api/favourites/$id/"));
-      if (response2.statusCode == 200) {
-      } else {}
-    } else {}
+        Response response2 =
+            await delete(Uri.parse("$kinMusicBaseUrl/mobileApp/favTracks/$id"));
+
+        if (response2.statusCode == 200) {
+          print('deleted');
+        }
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "deleteFavMusic",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
   Future markusFavMusic(apiEndPoint, musicId, userId) async {
-    var body = json.encode({'user_FUI': userId, 'track_id': musicId});
-    Response response = await post(Uri.parse("$kinMusicBaseUrl$apiEndPoint"),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json'
-        },
-        body: body);
-    print("$kinMusicBaseUrl$apiEndPoint");
+    try {
+      var body = json.encode({'user_FUI': userId, 'track_id': musicId});
+      Response response = await post(
+          Uri.parse("$kinMusicBaseUrl$apiEndPoint?userId=$userId"),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+          },
+          body: body);
 
-    if (response.statusCode == 201) {
-    } else {}
+      if (response.statusCode == 201) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "markusFavMusic",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
   Future<int> isMusicFavorite(apiEndPoint, musicid) async {
