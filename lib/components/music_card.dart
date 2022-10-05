@@ -63,6 +63,8 @@ class _MusicCardState extends State<MusicCard> {
             width: getProportionateScreenWidth(widget.width),
             child: InkWell(
               onTap: () async {
+                p.albumMusicss = widget.musics;
+                p.setBuffering(widget.musicIndex);
                 if (checkConnection(status)) {
                   // incrementMusicView(music.id);
                   p.setBuffering(widget.musicIndex);

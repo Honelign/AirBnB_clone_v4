@@ -18,6 +18,7 @@ class MusicProvider extends ChangeNotifier {
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
   List<Music> albumMusics = [];
+  List<Music> popularMusic = [];
 
   int count = -1;
   Music music = Music(
@@ -54,11 +55,11 @@ class MusicProvider extends ChangeNotifier {
     const String apiEndPoint = '/mobileApp/popularTracks';
     isLoading = true;
 
-    List<Music> musics =
+    popularMusic =
         await musicApiService.getMusic(apiEndPoint: apiEndPoint, pageKey: 1);
     isLoading = false;
     notifyListeners();
-    return musics;
+    return popularMusic;
   }
 
   //get music for artist page with album id

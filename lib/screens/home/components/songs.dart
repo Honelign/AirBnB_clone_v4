@@ -285,6 +285,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 if (!(snapshot.connectionState == ConnectionState.waiting)) {
                   if (snapshot.hasData) {
                     List<Music> musics = snapshot.data!;
+
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data == null
@@ -310,19 +311,20 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                         alignment: Alignment.center,
                         child: Text(
                           kConnectionErrorMessage,
-                          style:
-                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
                         ),
                       ),
                     );
                   }
                 }
                 return Container(
-                    margin:
-                        EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                    child: const Center(
-                      child: KinProgressIndicator(),
-                    ));
+                  margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+                  child: const Center(
+                    child: KinProgressIndicator(),
+                  ),
+                );
               },
             ),
           ),
@@ -434,9 +436,10 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return MusicCard(
-                                music: musics[index],
-                                musics: musics,
-                                musicIndex: index);
+                              music: musics[index],
+                              musics: musics,
+                              musicIndex: index,
+                            );
                           });
                     } else {
                       kShowToast();
