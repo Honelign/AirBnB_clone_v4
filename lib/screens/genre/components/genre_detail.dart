@@ -121,7 +121,7 @@ class _GenreDetailState extends State<GenreDetail> {
                   itemBuilder: (context, item, index) {
                     return MusicListCard(
                       music: item,
-                      musics: genreProvider.allTracksUnderGenre,
+                      musics: _pagingController.itemList ?? [],
                       musicIndex: index,
                     );
                   },
