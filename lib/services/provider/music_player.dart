@@ -1,17 +1,13 @@
-import 'dart:async';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
-import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
-import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 
 class SingletonPlayer {
   SingletonPlayer._privateConstructor();

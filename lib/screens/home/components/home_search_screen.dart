@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/music_card_recently.dart';
 import 'package:kin_music_player_app/components/music_card_search.dart';
-import 'package:kin_music_player_app/components/search/track_search_card.dart';
 import 'package:kin_music_player_app/components/search/youtube_search_card.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/components/album_search_result.dart';
 import 'package:kin_music_player_app/screens/home/components/artist_search_result.dart';
-import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +71,6 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
       for (int i = 0; i < provider.searchedTracks!.length; i++) {
         searchedTracks.add(provider.searchedTracks![i]);
 
-        // TODO:Replace Album and GenreId
         musics.add(
           Music(
             artist: searchedTracks[i].artistId.artistName,

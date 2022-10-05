@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(
-                text: 'Songs',
+                text: 'Home',
               ),
               Tab(
                 text: 'Albums',
@@ -74,8 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             indicatorColor: kSecondaryColor,
           ),
         ),
-        body: TabBarView(
-
+        body: const TabBarView(
           children: [
             Songs(),
             Albums(),

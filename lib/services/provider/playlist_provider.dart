@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:kin_music_player_app/services/network/api/playlist_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/playlist_info.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

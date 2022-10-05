@@ -13,11 +13,6 @@ Artist _$ArtistFromJson(Map<String, dynamic> json) => Artist(
       noOfAlbums: json['noOfAlbums'] as int,
       noOfTracks: json['noOfTracks'] as int,
     );
-    /* "id": 5,
-        "artist_name": "aewfsdc",
-        "artist_profileImage": "Media_Files/Artists_Profile_Images/aewfsdc_kid.jpg",
-        "noOfAlbums": 0,
-        "noOfTracks": 0 */
 
 Map<String, dynamic> _$ArtistToJson(Artist instance) => <String, dynamic>{
       'id': instance.id,

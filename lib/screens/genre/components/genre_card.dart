@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/genre/components/genre_detail.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';

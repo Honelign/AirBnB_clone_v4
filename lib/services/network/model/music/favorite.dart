@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 part 'favorite.g.dart';
 

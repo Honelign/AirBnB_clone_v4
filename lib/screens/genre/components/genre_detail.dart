@@ -9,8 +9,9 @@ import 'package:kin_music_player_app/components/music_list_card.dart';
 import 'package:kin_music_player_app/constants.dart';
 
 import 'package:kin_music_player_app/screens/genre/components/genre_app_bar.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/services/provider/genre_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -120,7 +121,7 @@ class _GenreDetailState extends State<GenreDetail> {
                   itemBuilder: (context, item, index) {
                     return MusicListCard(
                       music: item,
-                      musics: genreProvider.allTracksUnderGenre,
+                      musics: _pagingController.itemList ?? [],
                       musicIndex: index,
                     );
                   },

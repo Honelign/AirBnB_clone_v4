@@ -3,7 +3,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_title.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
+import 'package:kin_music_player_app/services/network/model/music/playlist_info.dart';
+
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';

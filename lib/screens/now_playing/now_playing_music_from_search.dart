@@ -8,23 +8,18 @@ import 'package:kin_music_player_app/components/animation_rotate.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert' show utf8;
-
 import '../../constants.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
-import 'package:flutter_html/flutter_html.dart';
-
-import '../../services/provider/playlist_provider.dart';
-import '../playlist/playlist.dart';
 
 class NowPlayingMusicFromsearch extends StatefulWidget {
   static const String routeName = '/nowPlaying';

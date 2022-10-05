@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,10 +51,9 @@ class MusicProvider extends ChangeNotifier {
   // popular
   Future<List<Music>> getPopularMusic() async {
     // const String apiEndPoint = '/mobileApp/popular_tracks';
-    const String apiEndPoint = '/mobileApp/tracks';
+    const String apiEndPoint = '/mobileApp/popularTracks';
     isLoading = true;
 
-    // TODO: Replace
     List<Music> musics =
         await musicApiService.getMusic(apiEndPoint: apiEndPoint, pageKey: 1);
     isLoading = false;

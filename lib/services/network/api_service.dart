@@ -1,20 +1,19 @@
 import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
+import 'package:kin_music_player_app/services/network/model/companyProfile.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
+import 'package:kin_music_player_app/services/network/model/music/favorite.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
 import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-import 'package:kin_music_player_app/services/network/model/companyProfile.dart';
-import 'package:kin_music_player_app/services/network/model/favorite.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';

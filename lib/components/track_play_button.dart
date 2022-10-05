@@ -2,8 +2,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/components/kin_audio_wave.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';

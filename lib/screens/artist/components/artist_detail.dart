@@ -8,12 +8,12 @@ import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/grid_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/music_list_card.dart';
+import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/artist/components/popular_tracks.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
+
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -42,93 +42,83 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
   @override
   void initState() {
-    final albumProvider = Provider.of<AlbumProvider>(context, listen: false)
-        .getArtistAlbums(widget.artist_id);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final albumProvider = Provider.of<AlbumProvider>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: FutureBuilder(
-        builder: (context, snapshot) {
-          final album = snapshot.data;
-
-          return SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                    '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
-                  ),
-                  fit: BoxFit.cover,
-                ),
+      body: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(
+                '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
               ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                child: Container(
-                  color: kPrimaryColor.withOpacity(0.5),
-                  child: Stack(
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+            child: Container(
+              color: kPrimaryColor.withOpacity(0.5),
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Column(
                           children: [
-                            Column(
-                              children: [
-                                // artist header with name image
-                                _buildHeader(),
+                            // artist header with name image
+                            _buildHeader(),
 
-                                // spacer
-                                const SizedBox(
-                                  height: 32,
-                                ),
+                            // spacer
+                            const SizedBox(
+                              height: 32,
+                            ),
 
-                                // tip button
-                                _buildTipButton()
-                              ],
-                            ),
-                            SizedBox(
-                              height: getProportionateScreenHeight(15),
-                            ),
-                            _buildAlbum(context),
-                            SizedBox(
-                              height: getProportionateScreenHeight(25),
-                            ),
-                            // _buildTrackList(context),
+                            // tip button
+                            _buildTipButton()
                           ],
                         ),
-                      ),
-                      BackButton(
-                        color: Colors.white,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
+                        SizedBox(
+                          height: getProportionateScreenHeight(15),
+                        ),
+                        _buildAlbum(context),
+                        SizedBox(
+                          height: getProportionateScreenHeight(25),
+                        ),
+                        // _buildTrackList(context),
+                      ],
+                    ),
                   ),
-                ),
+                  BackButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildHeader() {
-    final albumProvider = Provider.of<AlbumProvider>(context);
     return Container(
         height: getProportionateScreenWidth(225),
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: CachedNetworkImageProvider(
-                '$kinAssetBaseUrl/${widget.artist.artist_profileImage}'),
+              '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -144,7 +134,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
                   ),
                   CircleAvatar(
                     backgroundImage: CachedNetworkImageProvider(
-                        '$kinAssetBaseUrl/${widget.artist.artist_profileImage}'),
+                      '$kinAssetBaseUrl/${widget.artist.artist_profileImage}',
+                    ),
                     maxRadius: getProportionateScreenHeight(60),
                   ),
                   SizedBox(
@@ -219,7 +210,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.7,
                                 color: Colors.black,
-                                child: KinProgressIndicator(),
+                                child: const KinProgressIndicator(),
                               );
                             }
 
@@ -272,7 +263,6 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildModalHeader({String remainingCoinValue = "0"}) {
-    final albumProvider = Provider.of<AlbumProvider>(context);
     return SizedBox(
       height: MODAL_HEADER_HEIGHT,
       width: MediaQuery.of(context).size.width,
@@ -359,7 +349,6 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildCoinTipList(Function refreshParent) {
-    final albumProvider = Provider.of<AlbumProvider>(context);
     return SizedBox(
       height: (MediaQuery.of(context).size.height * 0.7 - MODAL_HEADER_HEIGHT),
       width: MediaQuery.of(context).size.width,
@@ -378,87 +367,94 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget _buildAlbum(BuildContext context) {
-    final albumProvider = Provider.of<AlbumProvider>(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-          child: SectionTitle(
-              title: "Albums",
-              press: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ArtistAlbum(
-                    albums: albumProvider.albums,
-                    // widget.artist.albums!,
-                    artistCover: widget.artist.artist_profileImage,
-                  ),
-                ));
-              }),
-        ),
-        SizedBox(height: getProportionateScreenHeight(20)),
-        SizedBox(
-            height: getProportionateScreenHeight(450),
-            child: GridView.builder(
-              itemCount:
-                  albumProvider.albums.length, //widget.artist.albums!.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1,
-                crossAxisSpacing: getProportionateScreenWidth(25),
-                mainAxisSpacing: getProportionateScreenWidth(25),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: getProportionateScreenHeight(25),
-                vertical: getProportionateScreenHeight(25),
-              ),
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: getProportionateScreenWidth(20),
-                  ),
-                  child: GridCard(
-                    album: albumProvider
-                        .albums[index], //widget.artist.albums![index],
-                  ),
-                );
-              },
-            ))
-      ],
-    );
-  }
-
-  Widget _buildTrackList(BuildContext context) {
-    final albumProvider = Provider.of<AlbumProvider>(context);
-    return Column(children: [
-      Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-        child: SectionTitle(
-            title: "Popular Tracks",
-            press: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PopularTracks(
-                        album_id: '5', //albumProvider.album.id.toString(),
-                        artist: widget.artist,
-                      )));
-            }),
-      ),
-      SizedBox(height: getProportionateScreenHeight(20)),
-      ListView.builder(
-        itemCount: 5,
-        // widget.artist.musics.length > 6 ? 6 : widget.artist.musics.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return MusicListCard(
-            music: [] as Music, //widget.artist.musics[index],
-            musics: [], //widget.artist.musics,
-            musicIndex: index,
+    final albumProvider = Provider.of<AlbumProvider>(context, listen: false);
+    return FutureBuilder<List<Album>>(
+      future: albumProvider.getArtistAlbums(widget.artist_id.toString()),
+      builder: (context, snapshot) {
+        // loading
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 300,
+            child: const Center(
+              child: KinProgressIndicator(),
+            ),
           );
-        },
-      )
-    ]);
+        }
+
+        // data loaded
+        else if (snapshot.hasData && !snapshot.hasError) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: getProportionateScreenWidth(20),
+                ),
+                child: SectionTitle(
+                  title: snapshot.data!.isEmpty ? "" : "Albums",
+                  press: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ArtistAlbum(
+                          albums: snapshot.data!,
+                          // widget.artist.albums!,
+                          artistCover: widget.artist.artist_profileImage,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: getProportionateScreenHeight(20)),
+              SizedBox(
+                height: snapshot.data!.isEmpty
+                    ? getProportionateScreenHeight(250)
+                    : getProportionateScreenHeight(450),
+                child: snapshot.data!.isEmpty
+                    ? Center(
+                        child: Text(
+                          "No Albums",
+                          style: noDataDisplayStyle,
+                        ),
+                      )
+                    : GridView.builder(
+                        itemCount: snapshot
+                            .data!.length, //widget.artist.albums!.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1,
+                          crossAxisSpacing: getProportionateScreenWidth(25),
+                          mainAxisSpacing: getProportionateScreenWidth(25),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenHeight(25),
+                          vertical: getProportionateScreenHeight(25),
+                        ),
+                        itemBuilder: (context, index) {
+                          // has data
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: getProportionateScreenWidth(20),
+                            ),
+                            child: GridCard(
+                              album: snapshot
+                                  .data![index], //widget.artist.albums![index],
+                            ),
+                          );
+                        },
+                      ),
+              )
+            ],
+          );
+        }
+
+        // error
+        else {
+          return OnSnapshotError(error: snapshot.error.toString());
+        }
+      },
+    );
   }
 }

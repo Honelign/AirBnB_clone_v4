@@ -15,16 +15,16 @@ class SettingsBody extends StatelessWidget {
 
   // get user ID
   Future<String> getUserID() async {
-    // try {
-    //   SharedPreferences pref = await SharedPreferences.getInstance();
-    //   String privilege = pref.getString("prev") ?? "";
+    // TODO: Replace
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String privilege = pref.getString("prev") ?? "";
 
-    //   print("@@@ settings_body getUserId $privilege");
-    //   return privilege;
-    // } catch (e) {
-    //   return "-1";
-    // }
-    return "1";
+      print("@@@ settings_body getUserId $privilege");
+      return privilege;
+    } catch (e) {
+      return "-1";
+    }
   }
 
   @override

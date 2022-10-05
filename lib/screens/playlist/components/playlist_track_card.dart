@@ -6,13 +6,11 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
-
-import 'package:kin_music_player_app/services/network/model/music.dart';
-
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';

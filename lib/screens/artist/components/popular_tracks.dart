@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/music_list_card.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-import 'package:provider/provider.dart';
+import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
+import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 
-import '../../../constants.dart';
-import '../../../services/provider/music_provider.dart';
-import '../../../size_config.dart';
+import 'package:provider/provider.dart';
 
 class PopularTracks extends StatefulWidget {
   static String routeName = 'popularTracks';

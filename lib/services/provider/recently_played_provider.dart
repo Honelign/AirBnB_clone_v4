@@ -1,8 +1,8 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RecentlyPlayedProvider extends ChangeNotifier {

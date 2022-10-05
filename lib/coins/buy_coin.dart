@@ -29,6 +29,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
         title: const Text("Buy Coins"),
         backgroundColor: kPrimaryColor,
       ),
+      backgroundColor: kPrimaryColor,
       body: FutureBuilder(
         future: provider.getCoinBalance(),
         builder: (context, snapshot) {

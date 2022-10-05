@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-
-import '../model/favorite.dart';
+import 'package:kin_music_player_app/services/network/model/music/favorite.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 class FavoriteApiService {
   String fileName = "favourite_service.dart";
