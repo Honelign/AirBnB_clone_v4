@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/size_config.dart';
 
 class GridCard extends StatelessWidget {

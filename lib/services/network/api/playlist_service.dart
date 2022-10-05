@@ -3,8 +3,8 @@ import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/playlist_info.dart';
 
 class PlaylistApiService {
   //

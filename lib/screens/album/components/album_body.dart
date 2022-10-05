@@ -4,11 +4,11 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
@@ -145,11 +145,11 @@ class _AlbumBodyState extends State<AlbumBody> {
                     ),
 
                     // Scrollable Album View
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: SingleChildScrollView(
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
                         child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
+                          height: MediaQuery.of(context).size.height * 0.5 - 20,
                           child: _buildAlbumMusics(widget.albumMusicsFromCard,
                               context, widget.album.id),
                         ),
@@ -196,22 +196,45 @@ class _AlbumBodyState extends State<AlbumBody> {
       future: Provider.of<MusicProvider>(context, listen: false)
           .albumMusicsGetter(id),
       builder: (context, snapshot) {
+        // loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        List<Music> albumMusics = snapshot.data ?? [];
-        _showLoader = false;
-        return ListView.builder(
-          itemCount: albumMusics.length,
-          itemBuilder: (context, index) {
-            return AlbumCard(
-              albumMusics: albumMusics,
-              music: albumMusics[index],
-              musicIndex: index,
-              album: widget.album,
-            );
-          },
-        );
+
+        // album has song
+        if (snapshot.data!.length > 0) {
+          List<Music> albumMusics = snapshot.data ?? [];
+          _showLoader = false;
+          return ListView.builder(
+            itemCount: albumMusics.length,
+            itemBuilder: (context, index) {
+              return AlbumCard(
+                albumMusics: albumMusics,
+                music: albumMusics[index],
+                musicIndex: index,
+                album: widget.album,
+              );
+            },
+          );
+        }
+        // no tracks
+        else {
+          return Column(
+            children: [
+              // Spacer
+              SizedBox(
+                height: getProportionateScreenHeight(60),
+              ),
+              // ignore: avoid_unnecessary_containers
+              Container(
+                child: Text(
+                  "No Tracks",
+                  style: noDataDisplayStyle,
+                ),
+              ),
+            ],
+          );
+        }
       },
     );
   }
@@ -242,7 +265,10 @@ class _AlbumBodyState extends State<AlbumBody> {
         future: musicProv.albumMusicsGetter(widget.album.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const KinProgressIndicator();
+            return Container(
+              margin: const EdgeInsets.only(top: 32),
+              child: const KinProgressIndicator(),
+            );
           } else {
             return PlayerBuilder.isPlaying(
               player: playerProvider.player,

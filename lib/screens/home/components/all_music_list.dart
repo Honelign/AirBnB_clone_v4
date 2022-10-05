@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/music_list_card.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
-import 'package:kin_music_player_app/services/provider/music_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
-import '../../../constants.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
+import 'package:provider/provider.dart';
 
 class AllMusicList extends StatefulWidget {
   int? from;

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_body.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_title.dart';
-import 'package:kin_music_player_app/services/network/model/playlist_info.dart';
+import 'package:kin_music_player_app/services/network/model/music/playlist_info.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +18,7 @@ class PlaylistsScreen extends StatefulWidget {
   State<PlaylistsScreen> createState() => _PlaylistsScreenState();
 }
 
-class _PlaylistsScreenState extends State<PlaylistsScreen>
-  {
+class _PlaylistsScreenState extends State<PlaylistsScreen> {
   late PlayListProvider playListProvider;
   static const _pageSize = 1;
   final PagingController<int, PlaylistInfo> _pagingController =
@@ -58,8 +56,6 @@ class _PlaylistsScreenState extends State<PlaylistsScreen>
     }
   }
 
-
-
   @override
   void dispose() {
     _pagingController.dispose();
@@ -68,7 +64,6 @@ class _PlaylistsScreenState extends State<PlaylistsScreen>
 
   @override
   Widget build(BuildContext context) {
-  
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(

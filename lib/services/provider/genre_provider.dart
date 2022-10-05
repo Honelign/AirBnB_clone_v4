@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-
-import '../network/model/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 class GenreProvider extends ChangeNotifier {
   // music api service
@@ -18,8 +17,7 @@ class GenreProvider extends ChangeNotifier {
   List<Music> allTracksUnderGenre = [];
 
   // get all genres
-  Future<List<Genre>> getAllGenres({ int pageKey=1}) async {
-
+  Future<List<Genre>> getAllGenres({int pageKey = 1}) async {
     // endpoint
     const String apiEndPoint = 'mobileApp/genres';
 

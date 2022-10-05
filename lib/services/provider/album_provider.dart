@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
 
 class AlbumProvider extends ChangeNotifier {
   List<Album> albums = [];
@@ -36,16 +36,13 @@ class AlbumProvider extends ChangeNotifier {
   }
 
   //get albums for artist
-  Future<void> getArtistAlbums(String artist_id) async {
+  Future<List<Album>> getArtistAlbums(String artistId) async {
     const String apiEndPoint = '/mobileApp/albumByArtistId';
     isLoading = true;
-
-    final res = await musicApiService.getArtistAlbums(apiEndPoint, artist_id);
-
-    albums = res as List<Album>;
-
+    albums = await musicApiService.getArtistAlbums(apiEndPoint, artistId);
     isLoading = false;
     notifyListeners();
+    return albums;
   }
 
   Future<Album> getAlbumForSearch(id) async {

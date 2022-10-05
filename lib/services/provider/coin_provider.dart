@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/coin_service.dart';
-// ignore: unused_import
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-
-import '../network/api_service.dart';
 
 class CoinProvider extends ChangeNotifier {
   int currentCoinValue = 0;

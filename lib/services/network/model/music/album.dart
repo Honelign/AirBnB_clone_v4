@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+
 part 'album.g.dart';
 
 @JsonSerializable()
 class Album {
-  final int id, count,price, artist_id;
+  final int id, count, price, artist_id;
   final String title, artist, description, cover;
   final bool isPurchasedByUser;
 

@@ -37,93 +37,101 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
   String currentUploadType = possibleUploadTypesProducer[0];
 
   Future<List> getAllDropDownValues() async {
-    // decide step value
+    try {
+      // decide step value
 
-    // initialize provider
-    final analyticsProvider = Provider.of<AnalyticsProvider>(
-      context,
-      listen: false,
-    ); // get producer based info
-    await analyticsProvider.getProducerOwnedInfo(infoType: currentUploadType);
-    List result = await analyticsProvider.getProducerGeneralInfo();
-    barData = [];
-    dateValues = [];
-
-    List statValue;
-
-    if (result.isNotEmpty) {
-      if (currentAnalyticsType == "Daily") {
-        statValue = result[0].total_daily;
-      } else if (currentAnalyticsType == "Weekly") {
-        statValue = result[0].total_weekly;
-      } else {
-        statValue = result[0].total_monthly;
-      }
-    } else {
-      statValue = [];
+      // initialize provider
+      final analyticsProvider = Provider.of<AnalyticsProvider>(
+        context,
+        listen: false,
+      ); // get producer based info
+      await analyticsProvider.getProducerOwnedInfo(infoType: currentUploadType);
+      List result = await analyticsProvider.getProducerGeneralInfo();
       barData = [];
-      return barData;
-    }
+      dateValues = [];
 
-    //  find max
-    maxCount = int.parse(statValue[0].viewCount);
-    int xIndex = 1;
-    statValue.forEach((stat) {
-      if (int.parse(stat.viewCount) > maxCount) {
-        maxCount = int.parse(stat.viewCount);
+      List statValue;
+
+      if (result.isNotEmpty) {
+        if (currentAnalyticsType == "Daily") {
+          statValue = result[0].total_daily;
+        } else if (currentAnalyticsType == "Weekly") {
+          statValue = result[0].total_weekly;
+        } else {
+          statValue = result[0].total_monthly;
+        }
+      } else {
+        statValue = [];
+        barData = [];
+        return barData;
       }
-      barData.add(
-        BarChartGroupData(
-          x: xIndex,
-          barRods: [
-            BarChartRodData(
-              fromY: 0,
-              toY: int.parse(stat.viewCount).toDouble(),
-              width: 15,
-              color: int.parse(stat.viewCount) > maxCount * 0.65
-                  ? Colors.green
-                  : int.parse(stat.viewCount) > maxCount * 0.35
-                      ? Colors.yellow
-                      : Colors.red,
-            ),
-          ],
-        ),
-      );
 
-      String dateFormatterString =
-          currentAnalyticsType == "Daily" ? "EEEE" : "MMM";
+      //  find max
+      maxCount = int.parse(statValue[0].viewCount);
+      int xIndex = 1;
+      statValue.forEach((stat) {
+        if (int.parse(stat.viewCount) > maxCount) {
+          maxCount = int.parse(stat.viewCount);
+        }
+        barData.add(
+          BarChartGroupData(
+            x: xIndex,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: int.parse(stat.viewCount).toDouble(),
+                width: 15,
+                color: int.parse(stat.viewCount) > maxCount * 0.65
+                    ? Colors.green
+                    : int.parse(stat.viewCount) > maxCount * 0.35
+                        ? Colors.yellow
+                        : Colors.red,
+              ),
+            ],
+          ),
+        );
 
-      var formattedDate = DateFormat(dateFormatterString).format(
-        DateTime.parse(
-          stat.viewTimeLine,
-        ),
-      );
-      dateValues.add(formattedDate.substring(0, 3));
+        String dateFormatterString =
+            currentAnalyticsType == "Daily" ? "EEEE" : "MMM";
 
-      xIndex++;
-    });
+        var formattedDate = DateFormat(dateFormatterString).format(
+          DateTime.parse(
+            stat.viewTimeLine,
+          ),
+        );
+        dateValues.add(formattedDate.substring(0, 3));
 
-    return barData;
+        xIndex++;
+      });
+
+      return barData;
+    } catch (e) {
+      return [];
+    }
   }
 
   // get formatted display name for profile display
   String formatDisplayName() {
-    var currentUser = FirebaseAuth.instance.currentUser;
-    String displayValue = "PD";
-    if (currentUser != null) {
-      String firstName = currentUser.displayName!.split(" ")[0];
-      String lastName = currentUser.displayName!.split(" ")[1];
+    try {
+      var currentUser = FirebaseAuth.instance.currentUser;
+      String displayValue = "PD";
+      if (currentUser != null) {
+        String firstName = currentUser.displayName!.split(" ")[0];
+        String lastName = currentUser.displayName!.split(" ")[1];
 
-      if (firstName != null && lastName != null) {
-        displayValue = firstName[0] + lastName[0];
-      } else if (firstName != null) {
-        displayValue = firstName[0] + firstName[1];
-      } else if (lastName != null) {
-        displayValue = lastName[0] + lastName[1];
+        if (firstName != null && lastName != null) {
+          displayValue = firstName[0] + lastName[0];
+        } else if (firstName != null) {
+          displayValue = firstName[0] + firstName[1];
+        } else if (lastName != null) {
+          displayValue = lastName[0] + lastName[1];
+        }
       }
-    }
 
-    return displayValue;
+      return displayValue;
+    } catch (e) {
+      return "";
+    }
   }
 
   // get phone or email to display
@@ -246,11 +254,19 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                               ),
                             )
                           : Container(
-                              width: 120,
-                              height: 120,
-                              decoration: BoxDecoration(
+                              width: 150,
+                              height: 150,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 15),
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.grey.withOpacity(0.55),
+                                // color: Colors.grey.withOpacity(0.55),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/logo.png",
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               child: Center(
                                 child: Text(

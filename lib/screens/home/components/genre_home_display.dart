@@ -1,12 +1,8 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/genre/components/genre_detail.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
-
-import '../../../constants.dart';
-import '../../../size_config.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
 
 class GenreHomeDisplay extends StatelessWidget {
   const GenreHomeDisplay({
@@ -42,7 +38,8 @@ class GenreHomeDisplay extends StatelessWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: CachedNetworkImageProvider(
-                    "$kinAssetBaseUrl/${genre.cover}"),
+                  "$kinAssetBaseUrl/${genre.cover}",
+                ),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(15),
@@ -66,4 +63,3 @@ class GenreHomeDisplay extends StatelessWidget {
     );
   }
 }
-

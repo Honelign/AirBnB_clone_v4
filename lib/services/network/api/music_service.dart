@@ -1,17 +1,19 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicApiService {
+  // const
+  String fileName = "music_service.dart";
+  String className = "MusicApiService";
+
   // helper class
   HelperUtils helper = HelperUtils();
 
@@ -33,9 +35,10 @@ class MusicApiService {
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "music_service",
+        fileName: fileName,
         functionName: "getMusic",
         errorInfo: e.toString(),
+        className: className,
       );
     }
     return music;
@@ -57,9 +60,10 @@ class MusicApiService {
       } else {}
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "music_service",
+        fileName: fileName,
         functionName: "getAlbumMusic",
         errorInfo: e.toString(),
+        className: className,
       );
     }
     return music;
@@ -69,22 +73,22 @@ class MusicApiService {
   Future getArtists({required String apiEndPoint, int pageSize = 1}) async {
     List<Artist> artists = [];
     try {
-      String uid = await helper.getUserId();
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl$apiEndPoint?page=$pageSize"));
 
       if (response.statusCode == 200) {
-        final item = json.decode(response.body) as List;
+        final items = json.decode(response.body) as List;
 
-        artists = item.map((value) {
+        artists = items.map((value) {
           return Artist.fromJson(value);
         }).toList();
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "music_service",
+        fileName: fileName,
         functionName: "getArtists",
         errorInfo: e.toString(),
+        className: className,
       );
     }
 
@@ -108,63 +112,74 @@ class MusicApiService {
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
-        fileName: "music_service",
+        fileName: fileName,
         functionName: "getAlbums",
         errorInfo: e.toString(),
+        className: className,
       );
     }
+
     return albums;
   }
 
-  Future getArtistAlbums(apiEndPoint, artist_id) async {
+  Future getArtistAlbums(apiEndPoint, artistId) async {
     List<Album> album = [];
     try {
       String uid = await helper.getUserId();
       Response response = await get(Uri.parse(
-          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id"));
-      print("$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id");
-      print("statuscode=" + response.statusCode.toString());
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artistId"));
 
       if (response.statusCode == 200) {
-        print("body" + response.body.toString());
-        final item = json.decode(response.body) as List;
-        print("item type" + item.runtimeType.toString());
+        final items = json.decode(response.body) as List;
 
-        album = item.map((e) {
-          return Album(
-              artist: e['artist_name'],
-              artist_id: e['artist_id'],
-              count: e['noOfTracks'],
-              cover: e['album_coverImage'],
-              description: e['album_description'],
-              id: e['id'],
-              isPurchasedByUser: e['is_purchasedByUser'],
-              price: e['album_price'],
-              title: e['album_name']);
-        }).toList();
-        print("done");
-      } else {
-        print("error");
+        // album = item.map((e) {
+        //   return Album(
+        //       artist: e['artist_name'],
+        //       artist_id: e['artist_id'],
+        //       count: e['noOfTracks'],
+        //       cover: e['album_coverImage'],
+        //       description: e['album_description'],
+        //       id: e['id'],
+        //       isPurchasedByUser: e['is_purchasedByUser'],
+        //       price: e['album_price'],
+        //       title: e['album_name']);
+        // }).toList();
+        items.forEach((album) {
+          if (album['noOfTracks'] > 0) {
+            Album(
+                artist: album['artist_name'],
+                artist_id: album['artist_id'],
+                count: album['noOfTracks'],
+                cover: album['album_coverImage'],
+                description: album['album_description'],
+                id: album['id'],
+                isPurchasedByUser: album['is_purchasedByUser'],
+                price: album['album_price'],
+                title: album['album_name']);
+          }
+        });
       }
     } catch (e) {
-      print("album artist error shit" + e.toString());
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getArtistAlbums",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
+    print(album);
     return album;
   }
 
-  Future getArtistAlbumsTracks(apiEndPoint, artist_id) async {
+  Future getArtistAlbumsTracks(apiEndPoint, artistId) async {
     List<Album> album = [];
     try {
       String uid = await helper.getUserId();
       Response response = await get(Uri.parse(
-          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id"));
-      print("$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artist_id");
-      print("statuscode=" + response.statusCode.toString());
+          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&artistId=$artistId"));
 
       if (response.statusCode == 200) {
-        print("body" + response.body.toString());
         final item = json.decode(response.body) as List;
-        print("item type" + item.runtimeType.toString());
 
         album = item.map((e) {
           return Album(
@@ -178,12 +193,14 @@ class MusicApiService {
               price: e['album_price'],
               title: e['album_name']);
         }).toList();
-        print("done");
-      } else {
-        print("error");
       }
     } catch (e) {
-      print("album artist error shit" + e.toString());
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getArtistAlbumsTracks",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
     return album;
   }
@@ -248,7 +265,12 @@ class MusicApiService {
         }).toList();
       }
     } catch (e) {
-      print("@music_service -> getMusicByGenreID error $e");
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getMusicByGenreID",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
 
     return tracksUnderGenre;

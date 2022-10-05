@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
-import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/home/components/all_music_list.dart';
 import 'package:kin_music_player_app/screens/podcast/components/all_podcasts.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_card.dart';
-import 'package:kin_music_player_app/screens/podcast/components/podcast_list.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
 class PopularPodcasts extends StatelessWidget {
+  const PopularPodcasts({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PodCastProvider>(context, listen: false);
@@ -71,14 +68,13 @@ class PopularPodcasts extends StatelessWidget {
                   }
                 }
                 return Container(
-                    margin:
-                        EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                    //  padding:  EdgeInsets.only(right: getProportionateScreenWidth(2)),
+                  margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+                  //  padding:  EdgeInsets.only(right: getProportionateScreenWidth(2)),
 
-                    child: Center(
-                      child: KinProgressIndicator(),
-                    ));
-                ;
+                  child: const Center(
+                    child: KinProgressIndicator(),
+                  ),
+                );
               },
             ),
           ),

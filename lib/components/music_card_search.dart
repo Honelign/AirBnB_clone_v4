@@ -2,24 +2,21 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music_from_search.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
-import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
-
-import '../constants.dart';
-import '../size_config.dart';
-import 'kin_progress_indicator.dart';
 
 // ignore: must_be_immutable
 class MusicCardsearch extends StatelessWidget {
@@ -140,12 +137,14 @@ class MusicCardsearch extends StatelessWidget {
                   Container(
                     height: 50,
                     width: 320,
-                    padding: EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(5),
-                            bottomRight: Radius.circular(5))),
+                    padding: const EdgeInsets.only(left: 10),
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(5),
+                        bottomRight: Radius.circular(5),
+                      ),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -209,17 +208,22 @@ class MusicCardsearch extends StatelessWidget {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        '${music.description.isNotEmpty ? music.description : ''}',
+                                                        music.description
+                                                                .isNotEmpty
+                                                            ? music.description
+                                                            : '',
                                                         style: const TextStyle(
                                                             color:
                                                                 kLightSecondaryColor),
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),
-                                                      Text('By ${music.artist}',
-                                                          style: const TextStyle(
-                                                              color:
-                                                                  kLightSecondaryColor))
+                                                      Text(
+                                                        'By ${music.artist}',
+                                                        style: const TextStyle(
+                                                            color:
+                                                                kLightSecondaryColor),
+                                                      )
                                                     ],
                                                   ),
                                                 ),

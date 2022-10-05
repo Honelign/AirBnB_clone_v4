@@ -4,23 +4,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
-import 'package:kin_music_player_app/components/animation_rotate.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert' show utf8;
 
 import '../../constants.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
 
@@ -542,7 +540,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
   Widget _buildPreviousButton(MusicPlayer playerProvider) {
     return IconButton(
       icon: const Icon(
-        Icons.skip_next_rounded,
+        Icons.skip_previous_rounded,
         size: 28,
       ),
       color: playerProvider.isFirstMusic() ? kGrey : Colors.white,
@@ -651,26 +649,27 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                       top: getProportionateScreenHeight(50),
                       left: getProportionateScreenWidth(100)),
                   child: SizedBox(
-                      width: double.infinity,
-                      child:
-                          // child: Html(
-                          //   data: lyrics,
+                    width: double.infinity,
+                    child:
+                        // child: Html(
+                        //   data: lyrics,
 
-                          //   style: {
-                          //     'p': Style(
-                          //         color: Colors.white,
-                          //         fontFamily: 'Nokia',
-                          //         lineHeight: LineHeight.number(2))
-                          //   },
-                          // )
-                          Text(
-                        lyrics,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontFamily: 'Nokia',
-                          fontSize: 18,
-                        ),
-                      )),
+                        //   style: {
+                        //     'p': Style(
+                        //         color: Colors.white,
+                        //         fontFamily: 'Nokia',
+                        //         lineHeight: LineHeight.number(2))
+                        //   },
+                        // )
+                        Text(
+                      lyrics,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontFamily: 'Nokia',
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -682,7 +681,9 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
         decoration: BoxDecoration(
           color: kGrey.withOpacity(0.15),
           borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(50),
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

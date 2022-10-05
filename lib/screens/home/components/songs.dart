@@ -3,44 +3,30 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
-import 'package:kin_music_player_app/components/artist_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
-import 'package:kin_music_player_app/components/music_list_card.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_titile_recently.dart';
-
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/components/album_body.dart';
-
+import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
+import 'package:kin_music_player_app/screens/home/components/all_music_list.dart';
 import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
-
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
+import 'package:kin_music_player_app/services/network/model/music/genre.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 
-import 'package:kin_music_player_app/screens/genre/components/genre_card.dart';
-import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
-
-import 'package:kin_music_player_app/services/network/model/album.dart';
-import 'package:kin_music_player_app/services/network/model/genre.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
-import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/genre_provider.dart';
 
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
-
-import '../../../services/network/model/genre.dart';
-import '../../../services/provider/genre_provider.dart';
-import '../../../size_config.dart';
-import '../../artist/components/artist_detail.dart';
-import 'all_music_list.dart';
 
 class Songs extends StatefulWidget {
   const Songs({Key? key}) : super(key: key);
@@ -161,7 +147,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                   return Container(
                       margin:
                           EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                      child: Center(
+                      child: const Center(
                         child: KinProgressIndicator(),
                       ));
                 },
@@ -258,10 +244,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               }
             }
             return Container(
-                margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                child: Center(
-                  child: KinProgressIndicator(),
-                ));
+              margin: EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
+              child: const Center(
+                child: KinProgressIndicator(),
+              ),
+            );
           },
         )
       ],
@@ -281,7 +268,10 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               title: "Popular Musics",
               press: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AllMusicList()));
+                  MaterialPageRoute(
+                    builder: (context) => AllMusicList(),
+                  ),
+                );
               }),
         ),
         SizedBox(height: getProportionateScreenHeight(20)),
@@ -314,7 +304,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                     );
                   } else {
                     kShowToast();
-                    return Container(
+                    return SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Container(
                         alignment: Alignment.center,
@@ -330,7 +320,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 return Container(
                     margin:
                         EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                    child: Center(
+                    child: const Center(
                       child: KinProgressIndicator(),
                     ));
               },
@@ -366,7 +356,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                   if (!(snapshot.connectionState == ConnectionState.waiting)) {
                     if (snapshot.hasData) {
                       List<Artist> artists = snapshot.data!;
-                      // print('@@${artists.toString()}');
 
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -393,7 +382,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                   return Container(
                       margin:
                           EdgeInsets.only(left: SizeConfig.screenWidth * 0.46),
-                      child: Center(
+                      child: const Center(
                         child: KinProgressIndicator(),
                       ));
                 },
@@ -464,7 +453,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                       );
                     }
                   }
-                  return Center(
+                  return const Center(
                     child: KinProgressIndicator(),
                   );
                 }),
@@ -627,12 +616,14 @@ class SpecialOfferCardartist extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ArtistDetail(
-            artist_id: artist.id.toString(),
-            artist: artist,
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ArtistDetail(
+              artist_id: artist.id.toString(),
+              artist: artist,
+            ),
           ),
-        ));
+        );
       },
       child: Padding(
         padding: EdgeInsets.only(left: getProportionateScreenWidth(10)),
@@ -654,25 +645,12 @@ class SpecialOfferCardartist extends StatelessWidget {
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
-              // Container(
-              //   decoration: BoxDecoration(
-              //     gradient: LinearGradient(
-              //       begin: Alignment.topCenter,
-              //       end: Alignment.bottomCenter,
-              //       colors: [
-              //         const Color(0xFF343434).withOpacity(0.3),
-              //         const Color(0xFF343434).withOpacity(0.45),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-
               Text(
                 artist.artist_name,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               )
             ],
           ),

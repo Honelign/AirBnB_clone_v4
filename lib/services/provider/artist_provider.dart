@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
-import 'package:kin_music_player_app/services/network/model/artist.dart';
+import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 
 class ArtistProvider extends ChangeNotifier {
   bool isLoading = false;

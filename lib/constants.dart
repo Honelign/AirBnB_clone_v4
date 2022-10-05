@@ -270,8 +270,14 @@ const possibleUploadTypesArtist = [
   'Tracks',
 ];
 
-TextStyle headerTextStyle= TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Colors.white.withOpacity(0.9),
-          );
+TextStyle headerTextStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+  color: Colors.white.withOpacity(0.9),
+);
+
+TextStyle noDataDisplayStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+  color: Colors.white.withOpacity(0.9),
+);

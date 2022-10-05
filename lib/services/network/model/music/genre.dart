@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kin_music_player_app/services/network/model/music.dart';
 
 part 'genre.g.dart';
 
