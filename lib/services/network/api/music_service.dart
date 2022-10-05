@@ -132,32 +132,32 @@ class MusicApiService {
       if (response.statusCode == 200) {
         final items = json.decode(response.body) as List;
 
-        // album = item.map((e) {
-        //   return Album(
-        //       artist: e['artist_name'],
-        //       artist_id: e['artist_id'],
-        //       count: e['noOfTracks'],
-        //       cover: e['album_coverImage'],
-        //       description: e['album_description'],
-        //       id: e['id'],
-        //       isPurchasedByUser: e['is_purchasedByUser'],
-        //       price: e['album_price'],
-        //       title: e['album_name']);
-        // }).toList();
-        items.forEach((album) {
-          if (album['noOfTracks'] > 0) {
-            Album(
-                artist: album['artist_name'],
-                artist_id: album['artist_id'],
-                count: album['noOfTracks'],
-                cover: album['album_coverImage'],
-                description: album['album_description'],
-                id: album['id'],
-                isPurchasedByUser: album['is_purchasedByUser'],
-                price: album['album_price'],
-                title: album['album_name']);
-          }
-        });
+        album = items.map((e) {
+          return Album(
+              artist: e['artist_name'],
+              artist_id: e['artist_id'],
+              count: e['noOfTracks'],
+              cover: e['album_coverImage'],
+              description: e['album_description'],
+              id: e['id'],
+              isPurchasedByUser: e['is_purchasedByUser'],
+              price: e['album_price'],
+              title: e['album_name']);
+        }).toList();
+        // items.forEach((album) {
+        //   if (album['noOfTracks'] > 0) {
+        //     Album(
+        //         artist: album['artist_name'],
+        //         artist_id: album['artist_id'],
+        //         count: album['noOfTracks'],
+        //         cover: album['album_coverImage'],
+        //         description: album['album_description'],
+        //         id: album['id'],
+        //         isPurchasedByUser: album['is_purchasedByUser'],
+        //         price: album['album_price'],
+        //         title: album['album_name']);
+        //   }
+        // });
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(

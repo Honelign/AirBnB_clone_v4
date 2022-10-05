@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/kurztech/com/kin_music_player_app/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/kotlin/kurztech/com/kin_music_player_app/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kin_music_player_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kin_music_player_app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/ad_banner.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/ad_banner.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/album_card_search.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/album_card_search.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/music_card_recently.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card_recently.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mixins/BaseMixins.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mixins/BaseMixins.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/album/components/album_body.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/album/components/album_body.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/album/components/playlist_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/album/components/playlist_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/artist/components/artist_detail.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/artist/components/artist_detail.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/album_graph_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/album_graph_info.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_info.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_graph_info.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/settings/components/settings_body.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/settings/components/settings_body.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/settings/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/settings/settings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/network/api/analytics_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api/analytics_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/network/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/provider/album_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/album_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/provider/login_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/login_provider.dart" afterDir="false" />
-    </list>
+    <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,6 +45,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="true" />

@@ -16,14 +16,14 @@ class Albums extends StatefulWidget {
 }
 
 class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
-  late AlbumProvider albumProvider;
+  // late AlbumProvider albumProvider;
   static const _pageSize = 1;
   final PagingController<int, Album> _pagingController =
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 3);
 
   @override
   void initState() {
-    albumProvider = Provider.of<AlbumProvider>(context, listen: false);
+    // albumProvider = Provider.of<AlbumProvider>(context, listen: false);
     // infinite scroll pagination
     _pagingController.addPageRequestListener((pageKey) {
       _fetchMoreAlbums(pageKey);
@@ -32,6 +32,8 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> _fetchMoreAlbums(int pageKey) async {
+    AlbumProvider albumProvider =
+        Provider.of<AlbumProvider>(context, listen: false);
     try {
       final newItems = await albumProvider.getAlbums(pageSize: pageKey);
 
@@ -58,6 +60,8 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    AlbumProvider albumProvider =
+        Provider.of<AlbumProvider>(context, listen: false);
     super.build(context);
     return RefreshIndicator(
       onRefresh: () async {

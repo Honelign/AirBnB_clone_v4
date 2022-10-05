@@ -408,43 +408,34 @@ class _ArtistDetailState extends State<ArtistDetail> {
               ),
               SizedBox(height: getProportionateScreenHeight(20)),
               SizedBox(
-                height: snapshot.data!.isEmpty
-                    ? getProportionateScreenHeight(250)
-                    : getProportionateScreenHeight(450),
-                child: snapshot.data!.isEmpty
-                    ? Center(
-                        child: Text(
-                          "No Albums",
-                          style: noDataDisplayStyle,
-                        ),
-                      )
-                    : GridView.builder(
-                        itemCount: snapshot
-                            .data!.length, //widget.artist.albums!.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: getProportionateScreenWidth(25),
-                          mainAxisSpacing: getProportionateScreenWidth(25),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: getProportionateScreenHeight(25),
-                          vertical: getProportionateScreenHeight(25),
-                        ),
-                        itemBuilder: (context, index) {
-                          // has data
+                height: getProportionateScreenHeight(450),
+                child: GridView.builder(
+                  itemCount:
+                      snapshot.data!.length, //widget.artist.albums!.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                    crossAxisSpacing: getProportionateScreenWidth(25),
+                    mainAxisSpacing: getProportionateScreenWidth(25),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenHeight(25),
+                    vertical: getProportionateScreenHeight(25),
+                  ),
+                  itemBuilder: (context, index) {
+                    // has data
 
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: getProportionateScreenWidth(20),
-                            ),
-                            child: GridCard(
-                              album: snapshot
-                                  .data![index], //widget.artist.albums![index],
-                            ),
-                          );
-                        },
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left: getProportionateScreenWidth(20),
                       ),
+                      child: GridCard(
+                        album: snapshot
+                            .data![index], //widget.artist.albums![index],
+                      ),
+                    );
+                  },
+                ),
               )
             ],
           );
