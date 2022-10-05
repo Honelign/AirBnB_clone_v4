@@ -70,9 +70,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               SizedBox(
                 height: getProportionateScreenHeight(6),
               ),
-              
               _buildRecentlyPlayedMusics(context),
-              
               SizedBox(height: getProportionateScreenWidth(15)),
               const AdBanner(),
               SizedBox(height: getProportionateScreenWidth(10)),
@@ -81,10 +79,13 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               _buildPopularMusics(context),
               SizedBox(height: getProportionateScreenWidth(20)),
               _buildArtist(context),
-              SizedBox(height:getProportionateScreenHeight(20) ,),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
               _buildRecentMusics(context),
-              SizedBox(height: getProportionateScreenHeight(20),),
-
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
               _buildGenres(context)
             ],
           ),
@@ -103,10 +104,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getProportionateScreenWidth(20)),
-              child:  Text(
-                'New Albums',
-                style:headerTextStyle
-              ),
+              child: Text('New Albums', style: headerTextStyle),
             )
           ],
         ),
@@ -343,9 +341,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
     );
   }
 
-
-
-   Widget _buildArtist(BuildContext context) {
+  Widget _buildArtist(BuildContext context) {
     final provider = Provider.of<ArtistProvider>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,10 +351,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getProportionateScreenWidth(20)),
-              child:  Text(
-                'Artists',
-                style: headerTextStyle
-              ),
+              child: Text('Artists', style: headerTextStyle),
             )
           ],
         ),
@@ -369,11 +362,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               scrollDirection: Axis.horizontal,
               child: FutureBuilder<List<Artist>>(
                 future: provider.getArtist(pageSize: 1),
-                builder: (context,  snapshot) {
+                builder: (context, snapshot) {
                   if (!(snapshot.connectionState == ConnectionState.waiting)) {
                     if (snapshot.hasData) {
                       List<Artist> artists = snapshot.data!;
-                     // print('@@${artists.toString()}');
+                      // print('@@${artists.toString()}');
 
                       return ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -409,79 +402,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
       ],
     );
   }
-
-
-
-
-Widget _buildGenres(BuildContext context) {
-    final provider = Provider.of<GenreProvider>(context, listen: false);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: getProportionateScreenWidth(22),
-          ),
-          child: SectionTitle(
-              title: "Genres",
-              press: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AllMusicList(),
-                  ),
-                );
-              }),
-        ),
-        SizedBox(height: getProportionateScreenHeight(20)),
-        SizedBox(
-          height: getProportionateScreenHeight(160),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: FutureBuilder(
-              future: provider.getAllGenres(),
-              builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
-                // loading
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: KinProgressIndicator(),
-                  );
-                }
-
-                // data loaded
-                else if (snapshot.hasData && !snapshot.hasError) {
-                  return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data == null
-                          ? 0
-                          : (snapshot.data!.length > 5
-                              ? 5
-                              : snapshot.data!.length),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return GenreHomeDisplay(genre: snapshot.data![index]);
-                      });
-                }
-
-                // error
-                else {
-                  return OnSnapshotError(
-                    error: snapshot.error.toString(),
-                  );
-                }
-              },
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-
-
-
-
-
 
   Widget _buildRecentMusics(BuildContext context) {
     final provider = Provider.of<MusicProvider>(context, listen: false);
@@ -530,18 +450,18 @@ Widget _buildGenres(BuildContext context) {
                                 musicIndex: index);
                           });
                     } else {
-                     kShowToast();
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          kConnectionErrorMessage,
-                          style:
-                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                      kShowToast();
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            kConnectionErrorMessage,
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                          ),
                         ),
-                      ),
-                    );
+                      );
                     }
                   }
                   return Center(
@@ -693,31 +613,26 @@ class SpecialOfferCard extends StatelessWidget {
   }
 }
 
-
 class SpecialOfferCardartist extends StatelessWidget {
   const SpecialOfferCardartist({
-    Key? key, required this.artist,
+    Key? key,
+    required this.artist,
     // required this.numOfMusics,
-    
   }) : super(key: key);
 
   final Artist artist;
   // final int numOfMusics;
-  
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          Navigator.of(context).push(
-         
-                               MaterialPageRoute(
-            builder: (context) => ArtistDetail(
-              artist_id: artist.id.toString(),
-              artist: artist,
-            ),
-          )
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ArtistDetail(
+            artist_id: artist.id.toString(),
+            artist: artist,
+          ),
+        ));
       },
       child: Padding(
         padding: EdgeInsets.only(left: getProportionateScreenWidth(10)),
@@ -729,11 +644,10 @@ class SpecialOfferCardartist extends StatelessWidget {
               CachedNetworkImage(
                 imageBuilder: (context, imageProvider) {
                   return Container(
-                    
                     height: 150,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(image: imageProvider)),
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: imageProvider)),
                   );
                 },
                 imageUrl: '$kinAssetBaseUrl/${artist.artist_profileImage}',
@@ -752,9 +666,14 @@ class SpecialOfferCardartist extends StatelessWidget {
               //     ),
               //   ),
               // ),
-              SizedBox(height: 10,),
-              
-              Text(artist.artist_name,style: TextStyle(color: Colors.white),)
+              SizedBox(
+                height: 10,
+              ),
+
+              Text(
+                artist.artist_name,
+                style: TextStyle(color: Colors.white),
+              )
             ],
           ),
         ),
