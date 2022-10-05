@@ -154,9 +154,8 @@ class FavoriteList extends StatelessWidget {
                                         fontSize:
                                             getProportionateScreenHeight(18)),
                                   ),
-                                  const Text(
-                                    // music.artist,
-                                    'artist',
+                                  Text(
+                                    music.artist,
                                     style: TextStyle(color: kGrey),
                                   ),
                                 ],

@@ -22,6 +22,8 @@ class UserApiService {
       Response response =
           await get(Uri.parse("$kinProfileBaseUrl$apiEndPoint/$uid"));
 
+      print("$kinProfileBaseUrl$apiEndPoint/$uid");
+
       // check response code
       if (response.statusCode == 200) {
         var item = jsonDecode(response.body);

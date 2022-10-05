@@ -18,6 +18,8 @@ class _SettingsState extends State<Settings> {
         onRefresh: () async {
           setState(() {});
         },
+        backgroundColor: refreshIndicatorBackgroundColor,
+        color: refreshIndicatorForegroundColor,
         child: SingleChildScrollView(
           child: SizedBox(
             width: MediaQuery.of(context).size.width,

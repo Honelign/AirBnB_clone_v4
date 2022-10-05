@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
+
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/library/favorite/components/favorite_list.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../../constants.dart';
-import '../../../size_config.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({Key? key}) : super(key: key);
@@ -54,22 +52,25 @@ class _FavoriteState extends State<Favorite> {
                               style: TextStyle(color: Colors.white),
                             ),
                           )
-                        : ListView.builder(
-                            itemCount: provider.favoriteMusics.isNotEmpty
-                                ? provider.favoriteMusics.length
-                                : 0,
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return FavoriteList(
-                                id: provider.favoriteMusics[index].music.id
-                                    .toString(),
-                                music: provider.favoriteMusics[index].music,
-                                musicIndex: index,
-                                favoriteMusics: provider.favoriteMusics,
-                              );
-                            },
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: ListView.builder(
+                              itemCount: provider.favoriteMusics.isNotEmpty
+                                  ? provider.favoriteMusics.length
+                                  : 0,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return FavoriteList(
+                                  id: provider.favoriteMusics[index].music.id
+                                      .toString(),
+                                  music: provider.favoriteMusics[index].music,
+                                  musicIndex: index,
+                                  favoriteMusics: provider.favoriteMusics,
+                                );
+                              },
+                            ),
                           ),
               ),
             ),
