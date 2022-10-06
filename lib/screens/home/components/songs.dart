@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
@@ -14,6 +17,7 @@ import 'package:kin_music_player_app/screens/album/components/album_body.dart';
 import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/screens/home/components/all_music_list.dart';
 import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music/genre.dart';
@@ -22,10 +26,15 @@ import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 
 import 'package:kin_music_player_app/services/provider/genre_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/podcast_player.dart';
+import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class Songs extends StatefulWidget {
@@ -36,6 +45,55 @@ class Songs extends StatefulWidget {
 }
 
 class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
+  Future<String> _getPath() async {
+    String path;
+
+    path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+
+    // path = await getApplicationDocumentsDirectory();
+
+    return path;
+  }
+
+  // Future<String?> _getPath() async {
+  //   Directory path;
+
+  //   path = await ExternalPath.getExternalStoragePublicDirectory(
+  //       ExternalPath.DIRECTORY_DOWNLOADS);
+
+  //   // path = await getApplicationDocumentsDirectory();
+
+  //   return path.path;
+  // }
+
+  Future downloadFile(String fileUrl) async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+      //add more permission to request here.
+    ].request();
+    if (statuses[Permission.storage]!.isGranted) {
+      var dir = await _getPath();
+      try {
+        Dio dio = Dio();
+
+        await dio.download(fileUrl, "${dir}/song.mp3",
+            onReceiveProgress: (rec, total) {
+          print("Progress - ${((rec / total) * 100).toStringAsFixed(0) + "%"}");
+        });
+      } catch (e) {
+        print(e);
+      }
+
+      print("Download completed");
+      print("${dir}/song.mp3");
+      File file = File("${dir}/song.mp3");
+      print(file);
+    } else {
+      print("No permission to read and write.");
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
   @override
@@ -56,6 +114,194 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               SizedBox(
                 height: getProportionateScreenHeight(6),
               ),
+
+              // TODO:REMOVE
+              SizedBox(
+                height: getProportionateScreenHeight(6),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              InkWell(
+                child: Container(
+                  child: Text("Play URL"),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                  color: Colors.blue,
+                ),
+                onTap: () async {
+                  // Media_Files/Tracks_Audio_Files/17-Checheho-2022-10-05/2022-10-05/Nafkote_Nafkot.mp3
+                  Music currMusic = Music(
+                    id: 1,
+                    cover:
+                        "Media_Files/Tracks_Cover_Images/Tefetawit_jor_bak_n.jpg",
+                    artist: "Mr X",
+                    title: "X's Song",
+                    description: "",
+                    audio:
+                        "Media_Files/Tracks_Audio_Files/23-Raey-2022-10-05/2022-10-05/Tefetawit_Jordan___Bek_Ge_ez_-_Tefe.mp3",
+                    artist_id: "1",
+                    encoder_id: "encoder_id",
+                    isPurchasedByUser: false,
+                    priceETB: "100",
+                    albumId: "1",
+                    genreId: "1",
+                  );
+                  List<Music> lis = [currMusic];
+
+                  MusicPlayer p =
+                      Provider.of<MusicPlayer>(context, listen: false);
+
+                  var musicProvider =
+                      Provider.of<MusicProvider>(context, listen: false);
+                  var podcastProvider = Provider.of<PodcastPlayer>(
+                    context,
+                    listen: false,
+                  );
+                  var radioProvider = Provider.of<RadioProvider>(
+                    context,
+                    listen: false,
+                  );
+
+                  p.albumMusicss = lis;
+                  p.setBuffering(0);
+
+                  p.player.stop();
+
+                  p.setMusicStopped(true);
+
+                  p.listenMusicStreaming();
+
+                  p.setPlayer(p.player, podcastProvider, radioProvider);
+
+                  p.handlePlayButton(
+                    music: currMusic,
+                    index: 0,
+                    album: Album(
+                      id: -2,
+                      title: 'Single Music ',
+                      artist: 'kin',
+                      description: '',
+                      cover: 'assets/images/kin.png',
+                      count: 1,
+                      artist_id: 1,
+                      isPurchasedByUser: false,
+                      price: 60,
+                    ),
+                    musics: lis,
+                  );
+
+                  p.setMusicStopped(false);
+                  podcastProvider.setEpisodeStopped(true);
+                  p.listenMusicStreaming();
+                  podcastProvider.listenPodcastStreaming();
+                },
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(6),
+              ),
+              InkWell(
+                child: Container(
+                  child: Text("Play Local"),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                  color: Colors.blue,
+                ),
+                onTap: () async {
+                  // Media_Files/Tracks_Audio_Files/17-Checheho-2022-10-05/2022-10-05/Nafkote_Nafkot.mp3
+                  Music currMusic = Music(
+                    id: 1,
+                    cover:
+                        "Media_Files/Tracks_Cover_Images/Tefetawit_jor_bak_n.jpg",
+                    artist: "Mr X",
+                    title: "X's Song",
+                    description: "",
+                    audio:
+                        '/data/user/0/com.kinideas.android/app_flutter/song.mp3',
+                    artist_id: "1",
+                    encoder_id: "encoder_id",
+                    isPurchasedByUser: false,
+                    priceETB: "100",
+                    albumId: "1",
+                    genreId: "1",
+                  );
+                  List<Music> lis = [currMusic];
+
+                  MusicPlayer p =
+                      Provider.of<MusicPlayer>(context, listen: false);
+
+                  var musicProvider =
+                      Provider.of<MusicProvider>(context, listen: false);
+                  var podcastProvider = Provider.of<PodcastPlayer>(
+                    context,
+                    listen: false,
+                  );
+                  var radioProvider = Provider.of<RadioProvider>(
+                    context,
+                    listen: false,
+                  );
+
+                  p.albumMusicss = lis;
+                  p.setBuffering(0);
+
+                  p.player.stop();
+
+                  p.setMusicStopped(true);
+
+                  p.listenMusicStreaming();
+
+                  p.setPlayer(p.player, podcastProvider, radioProvider);
+
+                  p.handlePlayButtonLocal(
+                    music: currMusic,
+                    index: 0,
+                    album: Album(
+                      id: -2,
+                      title: 'Single Music ',
+                      artist: 'kin',
+                      description: '',
+                      cover: 'assets/images/kin.png',
+                      count: 1,
+                      artist_id: 1,
+                      isPurchasedByUser: false,
+                      price: 60,
+                    ),
+                    musics: lis,
+                  );
+
+                  p.setMusicStopped(false);
+                  podcastProvider.setEpisodeStopped(true);
+                  p.listenMusicStreaming();
+                  podcastProvider.listenPodcastStreaming();
+                },
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(6),
+              ),
+              InkWell(
+                child: Container(
+                  child: Text("Download"),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                  color: Colors.blue,
+                ),
+                onTap: () async {
+                  await downloadFile(
+                      "$kinAssetBaseUrl/Media_Files/Tracks_Audio_Files/23-Raey-2022-10-05/2022-10-05/Tefetawit_Jordan___Bek_Ge_ez_-_Tefe.mp3");
+                },
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(6),
+              ),
+
+              // END
+
               _buildRecentlyPlayedMusics(context),
               SizedBox(height: getProportionateScreenWidth(15)),
               const AdBanner(),

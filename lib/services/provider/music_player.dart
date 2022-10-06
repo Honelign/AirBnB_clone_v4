@@ -325,6 +325,55 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
+  _openLocal(Music music) async {
+    // give meta info
+    var metas = Metas(
+      title: music.title,
+      artist: music.artist,
+      image: MetasImage.network('$kinAssetBaseUrl/${music.cover}'),
+      id: music.id.toString(),
+    );
+    try {
+      // kill any existing player
+      // player.pause();
+      player.stop();
+
+      // open new player
+      await player.open(
+        Audio.file(
+          music.audio,
+          // music.audio,
+          metas: metas,
+        ),
+        showNotification: true,
+        playInBackground: PlayInBackground.enabled,
+        notificationSettings: NotificationSettings(
+          customPrevAction: (player) {
+            prev();
+            setMiniPlayerVisibility(true);
+          },
+          customNextAction: (player) {
+            next();
+            setMiniPlayerVisibility(true);
+          },
+          customPlayPauseAction: (player) => playOrPause(),
+          customStopAction: (player) {
+            setMusicStopped(true);
+            player.stop();
+            setMiniPlayerVisibility(false);
+          },
+        ),
+      );
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "_open",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
+  }
+
   handlePlayButton(
       {album, required Music music, index, required List<Music> musics}) async {
     _shuffled = false;
@@ -339,6 +388,35 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         notifyListeners();
         _currentIndex = index;
         await _open(music);
+        _isMusicLoaded = true;
+        notifyListeners();
+
+        setPlaying(album, index, musics);
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "handlePlayButton",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
+  }
+
+  handlePlayButtonLocal(
+      {album, required Music music, index, required List<Music> musics}) async {
+    _shuffled = false;
+
+    setBuffering(index);
+
+    try {
+      if (isMusicInProgress(music)) {
+        player.stop();
+      } else {
+        _isMusicLoaded = false;
+        notifyListeners();
+        _currentIndex = index;
+        await _openLocal(music);
         _isMusicLoaded = true;
         notifyListeners();
 

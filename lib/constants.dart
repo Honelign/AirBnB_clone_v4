@@ -142,6 +142,8 @@ checkConnection(status) {
 
 // POPUP MENU ITEMS
 const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
+
+// For Music Card
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(
     child: Text(
@@ -156,6 +158,13 @@ const List<PopupMenuItem> kMusicPopupMenuItem = [
       style: popupTextStyle,
     ),
     value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Download',
+      style: popupTextStyle,
+    ),
+    value: 3,
   ),
 ];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [
