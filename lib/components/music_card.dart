@@ -15,6 +15,7 @@ import 'package:kin_music_player_app/services/provider/offline_play_provider.dar
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 
@@ -59,7 +60,7 @@ class _MusicCardState extends State<MusicCard> {
     OfflineMusicProvider offlineMusicProvider =
         Provider.of<OfflineMusicProvider>(
       context,
-      // listen: false,
+      listen: false,
     );
     return PlayerBuilder.isPlaying(
       player: p.player,
@@ -230,12 +231,36 @@ class _MusicCardState extends State<MusicCard> {
                             }
                             // download
                             else if (value == 3) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return DownloadProgressDisplayComponent();
-                                },
+                              bool isMusicDownloaded =
+                                  await offlineMusicProvider
+                                      .checkTrackInOfflineCache(
+                                musicId: widget.music.id.toString(),
                               );
+
+                              if (isMusicDownloaded == true) {
+                                kShowToast(
+                                    message: "Music already available offline");
+                              } else {
+                                // request permission
+                                Map<Permission, PermissionStatus> statuses =
+                                    await [
+                                  Permission.storage,
+                                  //add more permission to request here.
+                                ].request();
+                                if (statuses[Permission.storage]!.isGranted) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return DownloadProgressDisplayComponent(
+                                        music: widget.music,
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  kShowToast(
+                                      message: "Storage Permission Denied");
+                                }
+                              }
                             }
                           },
                           itemBuilder: (context) {

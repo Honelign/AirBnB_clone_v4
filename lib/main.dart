@@ -34,9 +34,7 @@ import 'routes.dart';
 import 'services/provider/genre_provider.dart';
 import 'services/provider/podcast_player.dart';
 import 'theme.dart';
-// payment import
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import './services/provider/payment_provider.dart';
 
 void main() async {

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
+import 'package:kin_music_player_app/components/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
@@ -11,6 +12,8 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
+import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -186,7 +189,9 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                             width: getProportionateScreenWidth(25),
                             height: 20,
                           ),
-                          music!.lyrics!.isNotEmpty
+                          music!.lyrics!.isNotEmpty &&
+                                  music!.lyrics != "null" &&
+                                  music!.lyrics != null
                               ? _buildScrollableLyrics(
                                   context,
                                   utf8.decode(
@@ -246,6 +251,11 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
   Widget _buildActionCenter({required Music music}) {
     var favprovider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
+    OfflineMusicProvider offlineMusicProvider =
+        Provider.of<OfflineMusicProvider>(
+      context,
+      listen: false,
+    );
     return Consumer<FavoriteMusicProvider>(builder: (context, provider, _) {
       return Container(
         width: MediaQuery.of(context).size.width,
@@ -475,7 +485,34 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
             // Download
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                bool isMusicDownloaded =
+                    await offlineMusicProvider.checkTrackInOfflineCache(
+                  musicId: music.id.toString(),
+                );
+
+                if (isMusicDownloaded == true) {
+                  kShowToast(message: "Music already available offline");
+                } else {
+                  // request permission
+                  Map<Permission, PermissionStatus> statuses = await [
+                    Permission.storage,
+                    //add more permission to request here.
+                  ].request();
+                  if (statuses[Permission.storage]!.isGranted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return DownloadProgressDisplayComponent(
+                          music: music,
+                        );
+                      },
+                    );
+                  } else {
+                    kShowToast(message: "Storage Permission Denied");
+                  }
+                }
+              },
               icon: Icon(
                 Icons.download,
                 color: Colors.white.withOpacity(0.8),

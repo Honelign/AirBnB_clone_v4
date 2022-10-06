@@ -133,7 +133,6 @@ Future fetchSearchedAlbums(String title) async {
 }
 
 Future fetchAlbumMusics(int id) async {
-  print("@@@$id");
   List<Music> albumMusic = [];
   try {
     String uid = await helper.getUserId();
@@ -146,7 +145,6 @@ Future fetchAlbumMusics(int id) async {
       albumMusic = body.map((track) {
         return Music.fromJson(track);
       }).toList();
-      print("@@@ $albumMusic");
     }
   } catch (e) {
     print("@api_service -> fetchSearchedAlbums error - " + e.toString());
@@ -640,11 +638,8 @@ Future saveUserPaymentInfo({
         'Accept': 'application/json'
       },
     );
-    debugPrint('body' + body.toString());
-    debugPrint('url' + url.toString());
-    debugPrint('netcall' + response.statusCode.toString());
+
     if (response.statusCode == 201) {
-      debugPrint("done" + response.body);
       var body = json.decode(response.body);
       var pay_id = body['id'];
       verifyTrack(context, pay_id, userId, paymentAmount, track_id);

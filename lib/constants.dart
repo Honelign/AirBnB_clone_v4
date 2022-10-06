@@ -143,7 +143,6 @@ checkConnection(status) {
 // POPUP MENU ITEMS
 const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
 
-// For Music Card
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(
     child: Text(
@@ -167,6 +166,30 @@ const List<PopupMenuItem> kMusicPopupMenuItem = [
     value: 3,
   ),
 ];
+// For Music Card
+const List<PopupMenuItem> kMusicOfflinePopupMenuItem = [
+  PopupMenuItem(
+    child: Text(
+      'Add to playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Detail',
+      style: popupTextStyle,
+    ),
+    value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Remove',
+      style: popupTextStyle,
+    ),
+    value: 3,
+  ),
+];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [
   PopupMenuItem(
     child: Text(
@@ -181,6 +204,13 @@ const List<PopupMenuItem> kPlaylistPopupMenuItem = [
       style: popupTextStyle,
     ),
     value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Download',
+      style: popupTextStyle,
+    ),
+    value: 3,
   ),
 ];
 const List<PopupMenuItem> kPodcastPopupMenuItem = [

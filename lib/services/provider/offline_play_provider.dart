@@ -1,26 +1,55 @@
 import 'package:flutter/cupertino.dart';
+import 'package:kin_music_player_app/services/network/api/offline_music_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 class OfflineMusicProvider extends ChangeNotifier {
   bool isLoading = false;
-  String currentDownloadFileName = "";
-  String currentDownloadProgress = "";
+  List<Music> offlineMusic = [];
 
-  // download file to private directory
-  Future<bool> downloadAudio({required Music music}) async {
+  final OfflineMusicService _offlineMusicService = OfflineMusicService();
+
+  Future<bool> checkTrackInOfflineCache({required String musicId}) async {
     isLoading = true;
-    currentDownloadFileName = "File Bro";
-    await Future.delayed(const Duration(seconds: 4));
-    currentDownloadProgress = "25";
+    bool result =
+        await _offlineMusicService.checkTrackInOfflineCache(id: musicId);
 
-    await Future.delayed(const Duration(seconds: 2));
-    currentDownloadProgress = "50";
+    isLoading = false;
+    notifyListeners();
+    return result;
+  }
 
-    await Future.delayed(const Duration(seconds: 2));
-    currentDownloadProgress = "75";
+  Future<bool> saveOfflineMusicInfoToCache({required Music music}) async {
+    isLoading = true;
 
-    print("Downloading File");
+    var result =
+        await _offlineMusicService.saveOfflineMusicInfoToCache(music: music);
+    isLoading = false;
+    notifyListeners();
+    return result;
+  }
 
-    return false;
+  Future<List<Music>> getOfflineMusic() async {
+    isLoading = true;
+    offlineMusic = await _offlineMusicService.getOfflineMusic();
+    isLoading = false;
+    notifyListeners();
+    return offlineMusic;
+  }
+
+  Future<bool> removeOfflineMusic({required Music music}) async {
+    isLoading = true;
+    offlineMusic = await _offlineMusicService.removeOfflineMusic(music: music);
+    isLoading = false;
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> clearCache() async {
+    isLoading = true;
+
+    bool result = await _offlineMusicService.clearOfflineCache();
+    isLoading = false;
+    notifyListeners();
+    return result;
   }
 }
