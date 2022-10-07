@@ -2,14 +2,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +53,7 @@ class _DownloadProgressDisplayComponentState
                 onReceiveProgress: (rec, total) {
           setState(() {
             currentDownloadProgressValue =
-                ((rec / total) * 100).toStringAsFixed(0) + "%";
+                ((rec / total) * 100).toStringAsFixed(0);
           });
         });
       } catch (e) {
@@ -79,12 +76,12 @@ class _DownloadProgressDisplayComponentState
         music: Music.fromJson(_jsonMusic),
       );
 
+      await Provider.of<OfflineMusicProvider>(context, listen: false)
+          .getOfflineMusic();
+
       if (result == true) {
         Navigator.pop(context);
       }
-
-      await Provider.of<OfflineMusicProvider>(context, listen: false)
-          .getOfflineMusic();
     } else {
       kShowToast(message: "Storage Permission Denied");
     }
@@ -99,15 +96,35 @@ class _DownloadProgressDisplayComponentState
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(
+      color: Colors.white60,
+      fontSize: 15,
+    );
     return AlertDialog(
-      backgroundColor: kSecondaryColor.withOpacity(0.2),
+      backgroundColor: kPopupMenuBackgroundColor,
       insetPadding: EdgeInsets.symmetric(horizontal: 100),
-      title: Text(
-        'Downloading ${widget.music.title} by ${widget.music.artist}',
-        style: TextStyle(
-          color: Colors.white60,
-          fontSize: 15,
-        ),
+      title: Column(
+        children: [
+          // Title
+          Text(
+            'Downloading ${widget.music.title}',
+            style: textStyle,
+            overflow: TextOverflow.ellipsis,
+          ),
+
+          const SizedBox(
+            height: 4,
+          ),
+
+          // Artist
+          Text(
+            "By ${widget.music.artist}",
+            style: textStyle.copyWith(
+              fontWeight: FontWeight.w600,
+              overflow: TextOverflow.ellipsis,
+            ),
+          )
+        ],
       ),
       content: SizedBox(
         height: 60,
@@ -115,15 +132,57 @@ class _DownloadProgressDisplayComponentState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                currentDownloadProgressValue,
-                style: const TextStyle(
-                  color: Colors.green,
-                ),
-              )
+              // Spacer
+              currentDownloadProgressValue == "Preparing" ||
+                      currentDownloadProgressValue == "Completed"
+                  ? const SizedBox(
+                      height: 8,
+                    )
+                  : Container(),
+
+              currentDownloadProgressValue == "Preparing" ||
+                      currentDownloadProgressValue == "Completed"
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        currentDownloadProgressValue == "Completed"
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
+                            : Container(),
+
+                        // spacer
+                        const SizedBox(
+                          width: 4,
+                        ),
+
+                        Text(
+                          currentDownloadProgressValue,
+                          style: TextStyle(
+                            color: currentDownloadProgressValue == "Completed"
+                                ? Colors.green
+                                : Colors.grey,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    )
+                  :
+                  // Progress Indicator
+                  CircularPercentIndicator(
+                      radius: 25.0,
+                      lineWidth: 5.0,
+                      animation: true,
+                      percent: double.parse(currentDownloadProgressValue) / 100,
+                      animateFromLastPercent: true,
+                      circularStrokeCap: CircularStrokeCap.round,
+                      progressColor: Colors.green,
+                      center: Text(
+                        currentDownloadProgressValue + "%",
+                        style: textStyle,
+                      ),
+                    ),
             ],
           ),
         ),

@@ -94,9 +94,6 @@ class OfflineMusicService {
     List<Music> allMusic = [];
 
     try {
-      final path = File(music.audio);
-      await path.delete();
-
       SharedPreferences instance = await SharedPreferences.getInstance();
       String uid = await helper.getUserId();
 
@@ -108,7 +105,8 @@ class OfflineMusicService {
           .toList();
 
       instance.setString("offline-access-${uid}", jsonEncode(filtered));
-      allMusic = filtered.map((e) => Music.fromJson(e)).toList();
+      final path = File(music.audio);
+      await path.delete();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,

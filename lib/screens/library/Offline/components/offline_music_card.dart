@@ -63,8 +63,10 @@ class _OfflineMusicCardState extends State<OfflineMusicCard> {
       player: p.player,
       builder: (context, isPlaying) {
         return GestureDetector(
-          onTap: () {
+          onTap: () async {
+            print("negro ${widget.musics}");
             // incrementMusicView(music!.id);
+            p.albumMusicss = widget.musics;
 
             p.setBuffering(widget.musicIndex);
 

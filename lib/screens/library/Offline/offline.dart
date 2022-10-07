@@ -24,7 +24,6 @@ class _OfflineState extends State<Offline> {
         child: FutureBuilder<List<Music>>(
           future: _offlineMusicProvider.getOfflineMusic(),
           builder: (context, snapshot) {
-           
             if (snapshot.connectionState == ConnectionState.waiting ||
                 _offlineMusicProvider.isLoading == true) {
               return const Center(
@@ -42,22 +41,27 @@ class _OfflineState extends State<Offline> {
                 ),
               );
             }
-            return SingleChildScrollView(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: kPrimaryColor,
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length ?? 0,
-                  itemBuilder: (context, index) {
-                    return OfflineMusicCard(
-                      music: snapshot.data![index],
-                      musics: snapshot.data! ?? [],
-                      musicIndex: index,
-                      refresherFunction: refresherFunction,
-                    );
-                  },
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+              },
+              child: SingleChildScrollView(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: kPrimaryColor,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return OfflineMusicCard(
+                        music: snapshot.data![index],
+                        musics: snapshot.data! ?? [],
+                        musicIndex: index,
+                        refresherFunction: refresherFunction,
+                      );
+                    },
+                  ),
                 ),
               ),
             );

@@ -162,16 +162,14 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
     if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
       setPlaying(_currentAlbum, 0, musics);
-      print("@if");
+
       play(
         0,
       );
     } else if (!action && _loopMode && !_loopPlaylist) {
-      print("@elseif");
       setPlaying(_currentAlbum, _currentIndex!, musics);
       play(_currentIndex);
     } else {
-      print("@else + ${next}");
       play(next);
     }
   }
@@ -367,7 +365,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
-        functionName: "_open",
+        functionName: "_openLocal",
         errorInfo: e.toString(),
         className: className,
       );
@@ -425,7 +423,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
-        functionName: "handlePlayButton",
+        functionName: "handlePlayButtonLocal",
         errorInfo: e.toString(),
         className: className,
       );

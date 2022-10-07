@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
+import 'package:kin_music_player_app/components/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
@@ -87,6 +88,24 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         ),
       ),
     );
+    //   return DownloadProgressDisplayComponent(
+    //     music: Music(
+    //       id: 1,
+    //       cover:
+    //           "Media_Files/Tracks_Cover_Images/Kante_new_photo_2022-09-07_12-29-01.jpg",
+    //       artist: "Tsedi",
+    //       title: "Kante new",
+    //       description: "",
+    //       audio:
+    //           "Media_Files/Tracks_Audio_Files/25-2:11-2022-10-06/2022-10-06/Kante_new_Tsedi_-_Kante_New.mp3",
+    //       artist_id: "11",
+    //       encoder_id: "encoder_id",
+    //       isPurchasedByUser: false,
+    //       priceETB: "0",
+    //       albumId: "2",
+    //       genreId: "1",
+    //     ),
+    //   );
   }
 
   Widget _buildNewReleasedAlbums(BuildContext context) {

@@ -61,8 +61,9 @@ class FavoriteList extends StatelessWidget {
         return Container(
           height: getProportionateScreenHeight(height),
           margin: EdgeInsets.symmetric(
-              horizontal: getProportionateScreenWidth(20),
-              vertical: getProportionateScreenHeight(10)),
+            horizontal: getProportionateScreenWidth(20),
+            vertical: getProportionateScreenHeight(10),
+          ),
           child: Column(
             children: [
               Expanded(
@@ -72,6 +73,7 @@ class FavoriteList extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
+                          p.albumMusicss = favoriteMusicsList;
                           p.setBuffering(musicIndex);
                           if (checkConnection(status)) {
                             if (p.isMusicInProgress(music)) {
