@@ -8,9 +8,11 @@ import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/grid_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 
@@ -47,6 +49,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -67,6 +70,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
               child: Stack(
                 children: [
                   SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -81,13 +85,27 @@ class _ArtistDetailState extends State<ArtistDetail> {
                             ),
 
                             // tip button
-                            _buildTipButton()
+                            checkConnection(status) == false
+                                ? Container()
+                                : _buildTipButton()
                           ],
                         ),
                         SizedBox(
                           height: getProportionateScreenHeight(15),
                         ),
-                        _buildAlbum(context),
+                        checkConnection(status) == false
+                            ? RefreshIndicator(
+                                child: SizedBox(
+                                  height: getProportionateScreenHeight(450),
+                                  child: const NoConnectionDisplay(),
+                                ),
+                                backgroundColor:
+                                    refreshIndicatorBackgroundColor,
+                                color: refreshIndicatorForegroundColor,
+                                onRefresh: () async {
+                                  setState(() {});
+                                })
+                            : _buildAlbum(context),
                         SizedBox(
                           height: getProportionateScreenHeight(25),
                         ),
@@ -153,7 +171,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "albums ${widget.artist.noOfAlbums}",
+                        "Albums ${widget.artist.noOfAlbums}",
                         // "${widget.artist.albums!.length.toString()} albums",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
@@ -162,7 +180,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       ),
                       SizedBox(width: getProportionateScreenWidth(10)),
                       Text(
-                        "tracks ${widget.artist.noOfTracks}",
+                        "Tracks ${widget.artist.noOfTracks}",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontWeight: FontWeight.w500,
@@ -409,33 +427,40 @@ class _ArtistDetailState extends State<ArtistDetail> {
               SizedBox(height: getProportionateScreenHeight(20)),
               SizedBox(
                 height: getProportionateScreenHeight(450),
-                child: GridView.builder(
-                  itemCount:
-                      snapshot.data!.length, //widget.artist.albums!.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: getProportionateScreenWidth(25),
-                    mainAxisSpacing: getProportionateScreenWidth(25),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: getProportionateScreenHeight(25),
-                    vertical: getProportionateScreenHeight(25),
-                  ),
-                  itemBuilder: (context, index) {
-                    // has data
+                child: snapshot.data!.isEmpty
+                    ? Center(
+                        child: Text(
+                          "No Albums",
+                          style: headerTextStyle,
+                        ),
+                      )
+                    : GridView.builder(
+                        itemCount: snapshot
+                            .data!.length, //widget.artist.albums!.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1,
+                          crossAxisSpacing: getProportionateScreenWidth(25),
+                          mainAxisSpacing: getProportionateScreenWidth(25),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenHeight(25),
+                          vertical: getProportionateScreenHeight(25),
+                        ),
+                        itemBuilder: (context, index) {
+                          // has data
 
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: getProportionateScreenWidth(20),
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: getProportionateScreenWidth(20),
+                            ),
+                            child: GridCard(
+                              album: snapshot
+                                  .data![index], //widget.artist.albums![index],
+                            ),
+                          );
+                        },
                       ),
-                      child: GridCard(
-                        album: snapshot
-                            .data![index], //widget.artist.albums![index],
-                      ),
-                    );
-                  },
-                ),
               )
             ],
           );

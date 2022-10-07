@@ -4,6 +4,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
@@ -51,7 +52,7 @@ class _AlbumBodyState extends State<AlbumBody> {
 
   @override
   Widget build(BuildContext context) {
-    // _showLoader = false;
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -134,7 +135,9 @@ class _AlbumBodyState extends State<AlbumBody> {
                           ),
 
                           // play all button
-                          _buildPlayAllButton(context),
+                          checkConnection(status) == false
+                              ? Container()
+                              : _buildPlayAllButton(context),
                         ],
                       ),
                     ),
@@ -150,8 +153,18 @@ class _AlbumBodyState extends State<AlbumBody> {
                         padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5 - 20,
-                          child: _buildAlbumMusics(widget.albumMusicsFromCard,
-                              context, widget.album.id),
+                          child: checkConnection(status) == false
+                              ? RefreshIndicator(
+                                  onRefresh: () async {
+                                    setState(() {});
+                                  },
+                                  backgroundColor:
+                                      refreshIndicatorBackgroundColor,
+                                  color: refreshIndicatorForegroundColor,
+                                  child: const NoConnectionDisplay(),
+                                )
+                              : _buildAlbumMusics(widget.albumMusicsFromCard,
+                                  context, widget.album.id),
                         ),
                       ),
                     )
@@ -205,16 +218,21 @@ class _AlbumBodyState extends State<AlbumBody> {
         if (snapshot.data!.length > 0) {
           List<Music> albumMusics = snapshot.data ?? [];
           _showLoader = false;
-          return ListView.builder(
-            itemCount: albumMusics.length,
-            itemBuilder: (context, index) {
-              return AlbumCard(
-                albumMusics: albumMusics,
-                music: albumMusics[index],
-                musicIndex: index,
-                album: widget.album,
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {});
             },
+            child: ListView.builder(
+              itemCount: albumMusics.length,
+              itemBuilder: (context, index) {
+                return AlbumCard(
+                  albumMusics: albumMusics,
+                  music: albumMusics[index],
+                  musicIndex: index,
+                  album: widget.album,
+                );
+              },
+            ),
           );
         }
         // no tracks

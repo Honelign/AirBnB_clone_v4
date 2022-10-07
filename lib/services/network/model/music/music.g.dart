@@ -9,7 +9,7 @@ part of 'music.dart';
 Music _$MusicFromJson(Map<String, dynamic> json) => Music(
       id: json['id'] as int,
       title: json['track_name'] as String,
-      description: json['track_description'] as String ?? 'related result',
+      description: json['track_description'] ?? 'related result',
       cover: json['track_coverImage'] as String ?? 'kinmusic',
       audio: json['track_audioFile'] as String,
       lyrics: json['track_lyrics'] as String ?? '',

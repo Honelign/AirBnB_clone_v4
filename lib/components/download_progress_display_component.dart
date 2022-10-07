@@ -68,7 +68,6 @@ class _DownloadProgressDisplayComponentState
       Map<String, dynamic> _jsonMusic = widget.music.toJson();
       _jsonMusic['track_audioFile'] = trackLocalPath;
 
-      print(_jsonMusic);
       //
       bool result =
           await Provider.of<OfflineMusicProvider>(context, listen: false)
@@ -180,7 +179,7 @@ class _DownloadProgressDisplayComponentState
                       progressColor: Colors.green,
                       center: Text(
                         currentDownloadProgressValue + "%",
-                        style: textStyle,
+                        style: textStyle.copyWith(fontSize: 13),
                       ),
                     ),
             ],
