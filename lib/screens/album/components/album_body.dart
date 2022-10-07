@@ -215,7 +215,7 @@ class _AlbumBodyState extends State<AlbumBody> {
         }
 
         // album has song
-        if (snapshot.data!.length > 0) {
+        if (snapshot.data!.isNotEmpty) {
           List<Music> albumMusics = snapshot.data ?? [];
           _showLoader = false;
           return RefreshIndicator(

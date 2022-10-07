@@ -6,6 +6,7 @@ import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
@@ -256,6 +257,10 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
       context,
       listen: false,
     );
+    MusicPlayer p = Provider.of<MusicPlayer>(
+      context,
+      listen: false,
+    );
     return Consumer<FavoriteMusicProvider>(builder: (context, provider, _) {
       return Container(
         width: MediaQuery.of(context).size.width,
@@ -456,7 +461,26 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
             // buy
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                // not purchased
+                if (p.currentMusic!.isPurchasedByUser == false) {
+                  // payment modal
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => PaymentComponent(
+                      track_id: (p.currentMusic!.id) as int,
+                      successFunction: () {},
+                      paymentPrice: p.currentMusic!.priceETB.toString(),
+                    ),
+                  );
+                }
+
+                //  purchased
+                else {
+                  kShowToast(message: "Track already purchased");
+                }
+              },
               icon: Icon(
                 Icons.monetization_on,
                 color: Colors.white.withOpacity(0.8),

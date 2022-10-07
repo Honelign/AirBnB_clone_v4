@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -10,7 +13,6 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
-import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,9 +35,7 @@ class PaymentComponent extends StatefulWidget {
 }
 
 class _PaymentComponentState extends State<PaymentComponent> {
-  late PaymentProvider payProvider;
-  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
-  bool loading = false;
+  late PaymentProvider payprovider;
 //getting user id from shared preference
   late String id;
   void getUserId() async {
@@ -46,11 +46,11 @@ class _PaymentComponentState extends State<PaymentComponent> {
     // String apiEndPoint = '/playlists/?user=$idstatic';
 
     id = prefs.getString('id').toString();
+    debugPrint("userId " + id.toString());
   }
 
   //get telebirr url
   Future getUrl() async {
-    loading = true;
     var linkMap;
     var link;
     var paymentData;
@@ -69,16 +69,27 @@ class _PaymentComponentState extends State<PaymentComponent> {
           'Accept': 'application/json'
         },
         body: body);
-
+    debugPrint(res.statusCode.toString());
     if (res.statusCode == 200) {
-      Map<String, dynamic> urlBody = json.decode(res.body);
+      debugPrint(body.toString());
+      debugPrint("done" + res.statusCode.toString());
+      //  debugPrint("done2" + res.body.toString());
+      Map<String, dynamic> urlbody = json.decode(res.body);
+      debugPrint("urlBody" + urlbody.toString());
+      // debugPrint("typee" + urlbody.runtimeType());
 
-      for (var key in urlBody.keys) {
-        linkMap = urlBody['pay'];
-        paymentData = urlBody['data'];
+      for (var key in urlbody.keys) {
+        //  debugPrint('Value: ${urlbody['data']}');
+        linkMap = urlbody['pay'];
+        paymentData = urlbody['data'];
+        debugPrint("payment data" + paymentData.toString());
+        debugPrint("linkk" + linkMap.toString());
+        debugPrint("data" + linkMap['data'].toString());
 
         link = linkMap['data'];
         paymentId = paymentData['id'];
+        debugPrint("paymentId=" + paymentId.toString());
+        debugPrint("data" + link['toPayUrl'].toString());
       }
       return Navigator.push(context, MaterialPageRoute(builder: (context) {
         return PaymentView(
@@ -90,12 +101,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
           track_id: widget.track_id,
         );
       }));
-    } else if (res.statusCode != 200) {
-      kTelebirrToast();
-      loading = false;
     }
-    loading = false;
-    setState(() {});
   }
 
   //payment methods for paypal
@@ -178,14 +184,10 @@ class _PaymentComponentState extends State<PaymentComponent> {
           )
           .then((value) {});
 
-      ///now finally display payment sheet
+      ///now finally display payment sheeet
       displayPaymentSheet();
     } catch (e, s) {
-      errorLoggingApiService.logErrorToServer(
-        fileName: "payment_component",
-        functionName: "payWithStripe-UI",
-        errorInfo: e.toString(),
-      );
+      debugPrint('exception:$e$s');
     }
   }
 
@@ -193,44 +195,31 @@ class _PaymentComponentState extends State<PaymentComponent> {
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
-        await payProvider.savePaymentInfo(
-            paymentAmount: double.parse(widget.paymentPrice),
-            paymentMethod: 'stripe',
-            track_id: widget.track_id.toString(),
-            paymentState: 'COMPLETED');
+        print("@@payment Pay Success - 1");
+        await payprovider.savePaymentInfo(
+          paymentAmount: double.parse(widget.paymentPrice),
+          paymentMethod: 'stripe',
+          track_id: widget.track_id.toString(),
+          paymentState: 'COMPLETED',
+        );
         showSucessDialog(
           context,
         );
 
         paymentIntent = null;
+        print("@@payment Pay Success - 2 - track id ${widget.track_id}");
       }).onError((error, stackTrace) {
-        errorLoggingApiService.logErrorToServer(
-          fileName: "payment_component",
-          functionName: "displayPaymentSheet-UI",
-          errorInfo: error.toString(),
-        );
+        print('@@@ now_playing_music_indicator :--->$error $stackTrace');
       });
     } on StripeException catch (e) {
-      errorLoggingApiService.logErrorToServer(
-        fileName: "payment_component",
-        functionName: "displayPaymentSheet-UI",
-        errorInfo: e.toString(),
-        remark: "Stripe Exception",
-      );
+      print('@@@ now_playing_music_indicator :---> $e');
       showDialog(
-        context: context,
-        builder: (_) => const AlertDialog(
-          backgroundColor: kPopupMenuBackgroundColor,
-          content: Text("Cancelled "),
-        ),
-      );
+          context: context,
+          builder: (_) => const AlertDialog(
+                content: Text("Cancelled "),
+              ));
     } catch (e) {
-      errorLoggingApiService.logErrorToServer(
-        fileName: "payment_component",
-        functionName: "displayPaymentSheet-UI",
-        errorInfo: e.toString(),
-        remark: "Stripe Exception",
-      );
+      print('@@@ now_playing_music_indicator $e');
     }
   }
 
@@ -251,14 +240,12 @@ class _PaymentComponentState extends State<PaymentComponent> {
         },
         body: body,
       );
-
+      // ignore: avoid_print
+      print(
+          '@@@ now_playing_music_indicator Payment Intent Body->>> ${response.body.toString()}');
       return jsonDecode(response.body);
     } catch (err) {
-      errorLoggingApiService.logErrorToServer(
-        fileName: "payment_component",
-        functionName: "createPaymentIntent-UI",
-        errorInfo: err.toString(),
-      );
+      print('@@ now_playing_music_indicator : ${err.toString()}');
     }
   }
 
@@ -269,8 +256,9 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   @override
   void initState() {
+    // TODO: implement initState
     getUserId();
-    payProvider = Provider.of<PaymentProvider>(context, listen: false);
+    payprovider = Provider.of<PaymentProvider>(context, listen: false);
     super.initState();
   }
 
@@ -363,37 +351,30 @@ class _PaymentComponentState extends State<PaymentComponent> {
                                   2.0,
                                 ),
                                 child: Container(
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      50,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        50,
+                                      ),
                                     ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                        20,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        20,
-                                      ),
-                                    ), // Image border
-                                    child: SizedBox.fromSize(
-                                      size: const Size.fromRadius(
-                                        48,
-                                      ),
-                                      child: loading
-                                          ? const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            )
-                                          : Image.asset(
-                                              'assets/images/2.png',
-                                              fit: BoxFit.fill,
-                                            ),
-                                    ),
-                                  ),
-                                ),
+                                    child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                            20,
+                                          ),
+                                          bottomLeft: Radius.circular(
+                                            20,
+                                          ),
+                                        ), // Image border
+                                        child: SizedBox.fromSize(
+                                          size: const Size.fromRadius(
+                                            48,
+                                          ),
+                                          child: Image.asset(
+                                            'assets/images/2.png',
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ))),
                               ),
 
                               // spacer

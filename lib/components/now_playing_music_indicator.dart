@@ -14,7 +14,9 @@ import 'package:kin_music_player_app/services/provider/music_player.dart';
 
 class NowPlayingMusicIndicator extends StatefulWidget {
   final String trackPrice;
-  const NowPlayingMusicIndicator({Key? key, required this.trackPrice})
+  final bool isPurchased;
+  const NowPlayingMusicIndicator(
+      {Key? key, required this.trackPrice, this.isPurchased = false})
       : super(key: key);
 
   @override
@@ -52,45 +54,47 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Buy Button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () {
-                  Future successFunction() async {}
+          widget.isPurchased == false
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Future successFunction() async {}
 
-                  // payment modal
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) => PaymentComponent(
-                      track_id: (p.currentIndex) as int,
-                      successFunction: successFunction,
-                      paymentPrice: p.currentMusic!.priceETB.toString(),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                  margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
-                  decoration: BoxDecoration(
-                    color: kSecondaryColor,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Text(
-                    "Buy ${widget.trackPrice} ETB",
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.55,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+                        // payment modal
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) => PaymentComponent(
+                            track_id: (p.currentMusic!.id) as int,
+                            successFunction: successFunction,
+                            paymentPrice: p.currentMusic!.priceETB.toString(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 6),
+                        margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
+                        decoration: BoxDecoration(
+                          color: kSecondaryColor,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Text(
+                          "Buy ${widget.trackPrice} ETB",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.75),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.55,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              : Container(),
 
           // Playing Indicator
           PlayerBuilder.isPlaying(

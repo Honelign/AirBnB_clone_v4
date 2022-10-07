@@ -144,6 +144,8 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             child: NowPlayingMusicIndicator(
                               trackPrice: musicProvider.currentMusic!.priceETB
                                   .toString(),
+                              isPurchased:
+                                  musicProvider.currentMusic!.isPurchasedByUser,
                             ),
                           )
                         : Container();
