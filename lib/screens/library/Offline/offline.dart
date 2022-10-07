@@ -24,7 +24,7 @@ class _OfflineState extends State<Offline> {
         child: FutureBuilder<List<Music>>(
           future: _offlineMusicProvider.getOfflineMusic(),
           builder: (context, snapshot) {
-            print(snapshot);
+           
             if (snapshot.connectionState == ConnectionState.waiting ||
                 _offlineMusicProvider.isLoading == true) {
               return const Center(

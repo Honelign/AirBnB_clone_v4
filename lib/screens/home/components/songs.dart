@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
-import 'package:kin_music_player_app/components/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
@@ -51,58 +50,43 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // return RefreshIndicator(
-    //   onRefresh: () async {
-    //     setState(() {});
-    //   },
-    //   backgroundColor: refreshIndicatorBackgroundColor,
-    //   color: refreshIndicatorForegroundColor,
-    //   child: Container(
-    //     color: kPrimaryColor,
-    //     child: SingleChildScrollView(
-    //       child: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           SizedBox(
-    //             height: getProportionateScreenHeight(6),
-    //           ),
-    //           _buildRecentlyPlayedMusics(context),
-    //           SizedBox(height: getProportionateScreenWidth(15)),
-    //           const AdBanner(),
-    //           SizedBox(height: getProportionateScreenWidth(10)),
-    //           _buildNewReleasedAlbums(context),
-    //           SizedBox(height: getProportionateScreenWidth(30)),
-    //           _buildPopularMusics(context),
-    //           SizedBox(height: getProportionateScreenWidth(20)),
-    //           _buildArtist(context),
-    //           SizedBox(
-    //             height: getProportionateScreenHeight(20),
-    //           ),
-    //           _buildRecentMusics(context),
-    //           SizedBox(
-    //             height: getProportionateScreenHeight(20),
-    //           ),
-    //           _buildGenres(context)
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
-
-    return DownloadProgressDisplayComponent(
-        music: Music(
-            id: 1,
-            cover: "",
-            artist: "Artist Name",
-            title: "Song X",
-            description: "",
-            audio: "audio",
-            artist_id: "artist_id",
-            encoder_id: "encoder_id",
-            isPurchasedByUser: false,
-            priceETB: "priceETB",
-            albumId: "albumId",
-            genreId: "genreId"));
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {});
+      },
+      backgroundColor: refreshIndicatorBackgroundColor,
+      color: refreshIndicatorForegroundColor,
+      child: Container(
+        color: kPrimaryColor,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: getProportionateScreenHeight(6),
+              ),
+              _buildRecentlyPlayedMusics(context),
+              SizedBox(height: getProportionateScreenWidth(15)),
+              const AdBanner(),
+              SizedBox(height: getProportionateScreenWidth(10)),
+              _buildNewReleasedAlbums(context),
+              SizedBox(height: getProportionateScreenWidth(30)),
+              _buildPopularMusics(context),
+              SizedBox(height: getProportionateScreenWidth(20)),
+              _buildArtist(context),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              _buildRecentMusics(context),
+              SizedBox(
+                height: getProportionateScreenHeight(20),
+              ),
+              _buildGenres(context)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildNewReleasedAlbums(BuildContext context) {
