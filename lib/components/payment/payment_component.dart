@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -13,6 +10,8 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,30 +19,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/provider/payment_provider.dart';
 
 class PaymentComponent extends StatefulWidget {
-  Function successFunction;
   String paymentPrice;
-  int track_id;
-  PaymentComponent(
-      {Key? key,
-      required this.successFunction,
-      required this.paymentPrice,
-      required this.track_id})
-      : super(key: key);
+  int trackId;
+  String paymentReason;
+  Function onSuccessFunction;
+  PaymentComponent({
+    Key? key,
+    required this.paymentPrice,
+    required this.trackId,
+    required this.paymentReason,
+    required this.onSuccessFunction,
+  }) : super(key: key);
 
   @override
   State<PaymentComponent> createState() => _PaymentComponentState();
 }
 
 class _PaymentComponentState extends State<PaymentComponent> {
-  late PaymentProvider payprovider;
+  final String className = "_PaymentComponentState";
+  final String fileName = "payment_component.dart";
+
+  ErrorLoggingApiService _errorLoggingApiService = ErrorLoggingApiService();
+
+  //
+  late PaymentProvider paymentProvider;
 //getting user id from shared preference
   late String id;
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // final id = prefs.getInt('id');
-    // const idstatic = 12345;
-    // String apiEndPoint = '/playlists/?user=$idstatic';
 
     id = prefs.getString('id').toString();
     debugPrint("userId " + id.toString());
@@ -61,46 +64,40 @@ class _PaymentComponentState extends State<PaymentComponent> {
       'payment_method': "telebirr",
       "payment_state": "PENDING"
     });
-//http://104.199.33.9/payment/save-payment-info/
+
     var res = await http.post(
-        Uri.parse("http://104.199.33.9/payment/purchase-with-telebirr/"),
+        Uri.parse("$kinPaymentUrl/payment/purchase-with-telebirr/"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
         },
         body: body);
-    debugPrint(res.statusCode.toString());
-    if (res.statusCode == 200) {
-      debugPrint(body.toString());
-      debugPrint("done" + res.statusCode.toString());
-      //  debugPrint("done2" + res.body.toString());
-      Map<String, dynamic> urlbody = json.decode(res.body);
-      debugPrint("urlBody" + urlbody.toString());
-      // debugPrint("typee" + urlbody.runtimeType());
 
-      for (var key in urlbody.keys) {
-        //  debugPrint('Value: ${urlbody['data']}');
-        linkMap = urlbody['pay'];
-        paymentData = urlbody['data'];
-        debugPrint("payment data" + paymentData.toString());
-        debugPrint("linkk" + linkMap.toString());
-        debugPrint("data" + linkMap['data'].toString());
+    if (res.statusCode == 200) {
+      Map<String, dynamic> response = json.decode(res.body);
+
+      for (var key in response.keys) {
+        linkMap = response['pay'];
+        paymentData = response['data'];
 
         link = linkMap['data'];
         paymentId = paymentData['id'];
-        debugPrint("paymentId=" + paymentId.toString());
-        debugPrint("data" + link['toPayUrl'].toString());
       }
-      return Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return PaymentView(
-          userId: id,
-          payment_amount: widget.paymentPrice,
-          payment_method: "telebirr",
-          url: link['toPayUrl'].toString(),
-          payment_id: paymentId.toString(),
-          track_id: widget.track_id,
-        );
-      }));
+      return Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return PaymentView(
+              userId: id,
+              paymentAmount: widget.paymentPrice,
+              paymentMethod: "telebirr",
+              url: link['toPayUrl'].toString(),
+              paymentId: paymentId.toString(),
+              trackId: widget.trackId.toString(),
+            );
+          },
+        ),
+      );
     }
   }
 
@@ -126,13 +123,13 @@ class _PaymentComponentState extends State<PaymentComponent> {
             builder: (context) => PaypalWebview(
               paymentAmount: double.parse(widget.paymentPrice),
               paymentMethod: 'Paypal',
-              track_id: widget.track_id.toString(),
+              trackId: widget.trackId.toString(),
               paymentState: 'COMPLETED',
               approveUrl: payment.approvalUrl!,
               executeUrl: payment.executeUrl!,
               accessToken: accessToken.token!,
               sdk: sdk,
-              successFunction: widget.successFunction,
+              successFunction: () {},
             ),
           ),
         );
@@ -195,31 +192,46 @@ class _PaymentComponentState extends State<PaymentComponent> {
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
-        print("@@payment Pay Success - 1");
-        await payprovider.savePaymentInfo(
-          paymentAmount: double.parse(widget.paymentPrice),
-          paymentMethod: 'stripe',
-          track_id: widget.track_id.toString(),
-          paymentState: 'COMPLETED',
-        );
-        showSucessDialog(
-          context,
-        );
+        if (widget.paymentReason == "trackPurchase") {
+          await paymentProvider.saveUserPaymentAndTrackInfo(
+            paymentAmount: double.parse(widget.paymentPrice),
+            paymentMethod: 'stripe',
+            trackId: widget.trackId.toString(),
+            paymentState: 'COMPLETED',
+          );
+        }
+        Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =
+            true;
+
+        kShowToast(message: "Payment Completed");
 
         paymentIntent = null;
-        print("@@payment Pay Success - 2 - track id ${widget.track_id}");
       }).onError((error, stackTrace) {
-        print('@@@ now_playing_music_indicator :--->$error $stackTrace');
+        kShowToast(message: "Could not complete payment");
+        _errorLoggingApiService.logErrorToServer(
+          fileName: fileName,
+          functionName: "displayPaymentSheet",
+          errorInfo: error.toString(),
+          className: className,
+        );
       });
     } on StripeException catch (e) {
-      print('@@@ now_playing_music_indicator :---> $e');
-      showDialog(
-          context: context,
-          builder: (_) => const AlertDialog(
-                content: Text("Cancelled "),
-              ));
+      kShowToast(message: "Could not complete payment");
+
+      _errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "displayPaymentSheet",
+        errorInfo: e.toString(),
+        className: className,
+      );
     } catch (e) {
-      print('@@@ now_playing_music_indicator $e');
+      kShowToast(message: "Could not complete payment");
+      _errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "displayPaymentSheet",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
   }
 
@@ -256,9 +268,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   @override
   void initState() {
-    // TODO: implement initState
     getUserId();
-    payprovider = Provider.of<PaymentProvider>(context, listen: false);
+    paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
     super.initState();
   }
 
@@ -351,30 +362,32 @@ class _PaymentComponentState extends State<PaymentComponent> {
                                   2.0,
                                 ),
                                 child: Container(
-                                    width: 150,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                        50,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      50,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                        20,
+                                      ),
+                                      bottomLeft: Radius.circular(
+                                        20,
+                                      ),
+                                    ), // Image border
+                                    child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(
+                                        48,
+                                      ),
+                                      child: Image.asset(
+                                        'assets/images/2.png',
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
-                                    child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                            20,
-                                          ),
-                                          bottomLeft: Radius.circular(
-                                            20,
-                                          ),
-                                        ), // Image border
-                                        child: SizedBox.fromSize(
-                                          size: const Size.fromRadius(
-                                            48,
-                                          ),
-                                          child: Image.asset(
-                                            'assets/images/2.png',
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ))),
+                                  ),
+                                ),
                               ),
 
                               // spacer

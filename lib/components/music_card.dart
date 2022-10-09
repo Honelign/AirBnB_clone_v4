@@ -231,36 +231,89 @@ class _MusicCardState extends State<MusicCard> {
                             }
                             // download
                             else if (value == 3) {
-                              bool isMusicDownloaded =
-                                  await offlineMusicProvider
-                                      .checkTrackInOfflineCache(
-                                musicId: widget.music.id.toString(),
-                              );
-
-                              if (isMusicDownloaded == true) {
+                              // check connectivity
+                              // check if purchased by user
+                              // check if already downloaded
+                              if (checkConnection(status) == false) {
                                 kShowToast(
-                                    message: "Music already available offline");
+                                    message: "No connection to download");
+                              } else if (widget.music.isPurchasedByUser ==
+                                  false) {
+                                kShowToast(
+                                    message:
+                                        "Purchase music to access it offline");
                               } else {
-                                // request permission
-                                Map<Permission, PermissionStatus> statuses =
-                                    await [
-                                  Permission.storage,
-                                  //add more permission to request here.
-                                ].request();
-                                if (statuses[Permission.storage]!.isGranted) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DownloadProgressDisplayComponent(
-                                        music: widget.music,
-                                      );
-                                    },
-                                  );
-                                } else {
+                                bool isMusicDownloaded =
+                                    await offlineMusicProvider
+                                        .checkTrackInOfflineCache(
+                                  musicId: widget.music.id.toString(),
+                                );
+
+                                if (isMusicDownloaded == true) {
                                   kShowToast(
-                                      message: "Storage Permission Denied");
+                                      message:
+                                          "Music already available offline");
+                                } else {
+                                  // request permission
+                                  Map<Permission, PermissionStatus>
+                                      storagePermissionStatus = await [
+                                    Permission.storage,
+                                    //add more permission to request here.
+                                  ].request();
+
+                                  if (storagePermissionStatus[
+                                          Permission.storage]!
+                                      .isGranted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return DownloadProgressDisplayComponent(
+                                          music: widget.music,
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    kShowToast(
+                                        message: "Storage Permission Denied");
+                                  }
                                 }
                               }
+                              //   print(widget.music.isPurchasedByUser);
+                              //   if (widget.music.isPurchasedByUser == true) {
+                              //     bool isMusicDownloaded =
+                              //         await offlineMusicProvider
+                              //             .checkTrackInOfflineCache(
+                              //       musicId: widget.music.id.toString(),
+                              //     );
+
+                              //     if (isMusicDownloaded == true) {
+                              //       kShowToast(
+                              //           message:
+                              //               "Music already available offline");
+                              //     } else {
+                              //       // request permission
+                              //       Map<Permission, PermissionStatus> statuses =
+                              //           await [
+                              //         Permission.storage,
+                              //         //add more permission to request here.
+                              //       ].request();
+                              //       if (statuses[Permission.storage]!.isGranted) {
+                              //         showDialog(
+                              //           context: context,
+                              //           builder: (context) {
+                              //             return DownloadProgressDisplayComponent(
+                              //               music: widget.music,
+                              //             );
+                              //           },
+                              //         );
+                              //       } else {
+                              //         kShowToast(
+                              //             message: "Storage Permission Denied");
+                              //       }
+                              //     }
+                              //   }
+                              // } else {
+                              //   kShowToast(message: "Purchase to download music");
                             }
                           },
                           itemBuilder: (context) {

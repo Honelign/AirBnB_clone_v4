@@ -10,6 +10,7 @@ import '../network/api_service.dart';
 
 class MusicProvider extends ChangeNotifier {
   bool isLoading = false;
+  bool isPurchaseMade = false;
   late int isFavorite;
   bool hasfinishedtyping = false;
   String value = '';

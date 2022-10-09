@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="" />
+    <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/coins/components/purchase_coin_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/now_playing_music_indicator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/now_playing_music_indicator.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/payment/payment_component.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/payment/payment_component.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_info_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/dashboard/components/artist_info_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/library/Offline/offline.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/library/Offline/offline.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/payment/paypal/paypalview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/payment/paypal/paypalview.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/payment/telebirr/paymentview.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/payment/telebirr/paymentview.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api/music_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api/music_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api/offline_music_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api/offline_music_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/network/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/payment_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/payment_provider.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

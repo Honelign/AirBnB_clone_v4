@@ -45,23 +45,19 @@ class _OfflineState extends State<Offline> {
               onRefresh: () async {
                 setState(() {});
               },
-              child: SingleChildScrollView(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: kPrimaryColor,
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length ?? 0,
-                    itemBuilder: (context, index) {
-                      return OfflineMusicCard(
-                        music: snapshot.data![index],
-                        musics: snapshot.data! ?? [],
-                        musicIndex: index,
-                        refresherFunction: refresherFunction,
-                      );
-                    },
-                  ),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return OfflineMusicCard(
+                      music: snapshot.data![index],
+                      musics: snapshot.data! ?? [],
+                      musicIndex: index,
+                      refresherFunction: refresherFunction,
+                    );
+                  },
                 ),
               ),
             );

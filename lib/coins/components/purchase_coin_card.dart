@@ -73,9 +73,11 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
                 isScrollControlled: true,
                 context: context,
                 builder: (context) => PaymentComponent(
-                  track_id: 1,
-                  successFunction: makeCoinPurchaseSaveRequest,
+                  trackId: 1,
+                  // successFunction: makeCoinPurchaseSaveRequest,
                   paymentPrice: widget.value,
+                  onSuccessFunction: () {},
+                  paymentReason: "tip",
                   // refresherFunction: refresherFunction,
                 ),
               );

@@ -17,7 +17,7 @@ class PaypalWebview extends StatefulWidget {
   final Function successFunction;
   final double paymentAmount;
   final String paymentMethod;
-  final String track_id;
+  final String trackId;
   final String paymentState;
   const PaypalWebview({
     Key? key,
@@ -28,7 +28,7 @@ class PaypalWebview extends StatefulWidget {
     required this.successFunction,
     required this.paymentAmount,
     required this.paymentMethod,
-    required this.track_id,
+    required this.trackId,
     required this.paymentState,
   }) : super(key: key);
 
@@ -37,7 +37,7 @@ class PaypalWebview extends StatefulWidget {
 }
 
 class _PaypalWebviewState extends State<PaypalWebview> {
-  var payprovider;
+  var paymentProvider;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
@@ -45,7 +45,7 @@ class _PaypalWebviewState extends State<PaypalWebview> {
   @override
   void initState() {
     super.initState();
-    payprovider = Provider.of<PaymentProvider>(context, listen: false);
+    paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
   }
 
   @override
@@ -82,10 +82,10 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                       widget.executeUrl, payerId!, widget.accessToken);
 
                   // Navigator.pop(context);
-                  await payprovider.savePaymentInfo(
+                  await paymentProvider.savePaymentInfo(
                       paymentAmount: widget.paymentAmount,
                       paymentMethod: 'stripe',
-                      track_id: widget.track_id.toString(),
+                      track_id: widget.trackId.toString(),
                       paymentState: 'COMPLETED');
                   kShowToast(message: "Payment Successful!");
                 }

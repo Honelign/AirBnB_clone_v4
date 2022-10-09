@@ -469,9 +469,10 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                     isScrollControlled: true,
                     context: context,
                     builder: (context) => PaymentComponent(
-                      track_id: (p.currentMusic!.id) as int,
-                      successFunction: () {},
+                      trackId: (p.currentMusic!.id),
                       paymentPrice: p.currentMusic!.priceETB.toString(),
+                      paymentReason: "trackPurchase",
+                      onSuccessFunction: () {},
                     ),
                   );
                 }
