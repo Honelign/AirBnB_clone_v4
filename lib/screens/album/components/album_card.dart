@@ -1,7 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/components/download_progress_display_component.dart';
+import 'package:kin_music_player_app/components/download/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/music_detail_display.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
@@ -72,6 +72,7 @@ class _AlbumCardState extends State<AlbumCard> {
           child: InkWell(
             onTap: () async {
               p.albumMusicss = widget.albumMusics;
+              p.isPlayingLocal = false;
               p.setBuffering(widget.musicIndex);
 
               if (checkConnection(status)) {

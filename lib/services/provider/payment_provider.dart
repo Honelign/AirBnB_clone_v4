@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/payment_service.dart';
-import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentProvider extends ChangeNotifier {
   bool isLoading = false;
@@ -13,6 +11,7 @@ class PaymentProvider extends ChangeNotifier {
     required String paymentMethod,
     required String paymentState,
     required String trackId,
+    required Function onPaymentCompleteFunction,
   }) async {
     isLoading = true;
 
@@ -24,6 +23,7 @@ class PaymentProvider extends ChangeNotifier {
     );
 
     isLoading = false;
+
     notifyListeners();
   }
 }

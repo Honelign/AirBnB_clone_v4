@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
@@ -38,13 +39,19 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    bool showBuyButton = widget.isPurchased;
-
     var p = Provider.of<MusicPlayer>(context, listen: false);
+    bool showBuyButton = !widget.isPurchased;
 
-    void onTrackPurchaseSuccess() async {}
-    MusicProvider musicProvider =
-        Provider.of<MusicProvider>(context, listen: false);
+    void onTrackPurchaseSuccess() async {
+      print("lookie - setting showBuyButton to false;");
+      setState(() {
+        showBuyButton = false;
+      });
+    }
+
+    MusicProvider musicProvider = Provider.of<MusicProvider>(context);
+
+    PaymentProvider paymentProvider = Provider.of<PaymentProvider>(context);
 
     // get providers
 
@@ -53,187 +60,176 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(p.currentMusic!.id);
 
-    return Consumer<MusicProvider>(
-      builder: ((context, musicProvider, _) {
-        print("lookie - rebuild again");
-        if (musicProvider.isPurchaseMade == true) {
-          musicProvider.isPurchaseMade = false;
-          setState(() {
-            showBuyButton = true;
-          });
-        }
-        return Container(
-          // height: 125,
-          decoration: BoxDecoration(
-            border: Border.all(width: 0),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Buy Button
-              showBuyButton == false
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              // payment modal
-                              showModalBottomSheet(
-                                isScrollControlled: true,
-                                context: context,
-                                builder: (context) => PaymentComponent(
-                                  trackId: (p.currentMusic!.id),
-                                  paymentPrice:
-                                      p.currentMusic!.priceETB.toString(),
-                                  paymentReason: "trackPurchase",
-                                  onSuccessFunction: onTrackPurchaseSuccess,
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 6,
-                              ),
-                              margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
-                              decoration: BoxDecoration(
-                                color: kSecondaryColor,
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Text(
-                                "Buy ${widget.trackPrice} ETB",
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.75),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.55,
-                                ),
-                              ),
+    return Container(
+      // height: 125,
+      decoration: BoxDecoration(
+        color: kPrimaryColor,
+        border: Border.all(width: 0),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Buy Button
+          showBuyButton == true
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // payment modal
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => PaymentComponent(
+                              trackId: (p.currentMusic!.id),
+                              paymentPrice: p.currentMusic!.priceETB.toString(),
+                              paymentReason: "trackPurchase",
+                              onSuccessFunction: onTrackPurchaseSuccess,
                             ),
-                          )
-                        ],
-                      ),
-                    )
-                  : Container(
-                      height: 0,
-                    ),
-
-              // Playing Indicator
-              PlayerBuilder.isPlaying(
-                player: p.player,
-                builder: (context, isPlaying) {
-                  return SizedBox(
-                    height: minPlayerHeight,
-                    width: double.infinity,
-                    child: Stack(
-                      children: [
-                        _buildBlurBackground(p.getMusicCover()),
-                        _buildDarkContainer(),
-                        Container(
-                          height: minPlayerHeight,
-                          color: Colors.transparent,
-                          width: double.infinity,
-                          padding: EdgeInsets.fromLTRB(
-                            getProportionateScreenWidth(15),
-                            getProportionateScreenHeight(8),
-                            getProportionateScreenWidth(15),
-                            getProportionateScreenHeight(8),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 6,
                           ),
-                          child: GestureDetector(
-                            onTap: () {
-                              p.setBuffering(p.tIndex);
-                              p.isMusicInProgress(p.currentMusic!)
-                                  ? Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            NowPlayingMusic(p.currentMusic),
-                                      ),
-                                    )
-                                  : Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            NowPlayingMusic(p.currentMusic),
-                                      ),
-                                    );
-                            },
-                            child: Row(
-                              children: [
-                                // small image
-                                _buildCover(p),
-
-                                // spacer
-                                SizedBox(
-                                  width: getProportionateScreenWidth(10),
-                                ),
-
-                                // title info
-                                _buildTitleAndArtist(
-                                  p.currentMusic!.title,
-                                  p.currentMusic!.artist,
-                                ),
-
-                                // favorite button
-                                Consumer<FavoriteMusicProvider>(
-                                  builder: (context, provider, _) {
-                                    return favoriteProvider.favMusics
-                                            .contains(p.currentMusic!.id)
-                                        ? IconButton(
-                                            onPressed: () async {
-                                              favoriteProvider.removeCachedFav(
-                                                  p.currentMusic!.id);
-                                              favoriteProvider.getFavids();
-                                              await provider.unFavMusic(
-                                                  p.currentMusic!.id);
-
-                                              await provider.getFavMusic();
-                                            },
-                                            icon: const Icon(
-                                              Icons.favorite,
-                                              color: kSecondaryColor,
-                                              size: 23,
-                                            ),
-                                          )
-                                        : IconButton(
-                                            onPressed: () async {
-                                              favoriteProvider.addCachedFav(
-                                                  p.currentMusic!.id);
-                                              favoriteProvider.getFavids();
-                                              await provider
-                                                  .favMusic(p.currentMusic!.id);
-
-                                              await provider.getFavMusic();
-                                            },
-                                            icon: const Icon(
-                                              Icons.favorite_border,
-                                              color: Colors.white,
-                                              size: 23,
-                                            ),
-                                          );
-                                  },
-                                ),
-
-                                // play button
-                                _buildPlayPauseButton(
-                                  p,
-                                ),
-
-                                // next button
-                                _buildNextButton(p)
-                              ],
+                          margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
+                          decoration: BoxDecoration(
+                            color: kSecondaryColor,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Text(
+                            "Buy ${widget.trackPrice} ETB",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.75),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.55,
                             ),
                           ),
                         ),
-                      ],
+                      )
+                    ],
+                  ),
+                )
+              : Container(
+                  height: 0,
+                ),
+
+          // Playing Indicator
+          PlayerBuilder.isPlaying(
+            player: p.player,
+            builder: (context, isPlaying) {
+              return SizedBox(
+                height: minPlayerHeight,
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    _buildBlurBackground(p.getMusicCover()),
+                    _buildDarkContainer(),
+                    Container(
+                      height: minPlayerHeight,
+                      color: Colors.transparent,
+                      width: double.infinity,
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(8),
+                        getProportionateScreenWidth(15),
+                        getProportionateScreenHeight(8),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          p.setBuffering(p.tIndex);
+                          p.isMusicInProgress(p.currentMusic!)
+                              ? Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NowPlayingMusic(p.currentMusic),
+                                  ),
+                                )
+                              : Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NowPlayingMusic(p.currentMusic),
+                                  ),
+                                );
+                        },
+                        child: Row(
+                          children: [
+                            // small image
+                            _buildCover(p),
+
+                            // spacer
+                            SizedBox(
+                              width: getProportionateScreenWidth(10),
+                            ),
+
+                            // title info
+                            _buildTitleAndArtist(
+                              p.currentMusic!.title,
+                              p.currentMusic!.artist,
+                            ),
+
+                            // favorite button
+                            Consumer<FavoriteMusicProvider>(
+                              builder: (context, provider, _) {
+                                return favoriteProvider.favMusics
+                                        .contains(p.currentMusic!.id)
+                                    ? IconButton(
+                                        onPressed: () async {
+                                          favoriteProvider.removeCachedFav(
+                                              p.currentMusic!.id);
+                                          favoriteProvider.getFavids();
+                                          await provider
+                                              .unFavMusic(p.currentMusic!.id);
+
+                                          await provider.getFavMusic();
+                                        },
+                                        icon: const Icon(
+                                          Icons.favorite,
+                                          color: kSecondaryColor,
+                                          size: 23,
+                                        ),
+                                      )
+                                    : IconButton(
+                                        onPressed: () async {
+                                          favoriteProvider
+                                              .addCachedFav(p.currentMusic!.id);
+                                          favoriteProvider.getFavids();
+                                          await provider
+                                              .favMusic(p.currentMusic!.id);
+
+                                          await provider.getFavMusic();
+                                        },
+                                        icon: const Icon(
+                                          Icons.favorite_border,
+                                          color: Colors.white,
+                                          size: 23,
+                                        ),
+                                      );
+                              },
+                            ),
+
+                            // play button
+                            _buildPlayPauseButton(
+                              p,
+                            ),
+
+                            // next button
+                            _buildNextButton(p)
+                          ],
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ],
+                ),
+              );
+            },
           ),
-        );
-      }),
+        ],
+      ),
     );
 
     // build UI

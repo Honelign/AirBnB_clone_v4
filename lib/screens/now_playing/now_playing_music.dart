@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
-import 'package:kin_music_player_app/components/download_progress_display_component.dart';
+import 'package:kin_music_player_app/components/download/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';

@@ -67,6 +67,7 @@ class _OfflineMusicCardState extends State<OfflineMusicCard> {
             print("negro ${widget.musics}");
             // incrementMusicView(music!.id);
             p.albumMusicss = widget.musics;
+            p.isPlayingLocal = true;
 
             p.setBuffering(widget.musicIndex);
 
@@ -110,11 +111,11 @@ class _OfflineMusicCardState extends State<OfflineMusicCard> {
               p.listenMusicStreaming();
               podcastProvider.listenPodcastStreaming();
 
-              // add to recently played
-              musicProvider.addToRecentlyPlayed(music: widget.music!);
+              // // add to recently played
+              // musicProvider.addToRecentlyPlayed(music: widget.music!);
 
-              // add to popular
-              musicProvider.countPopular(music: widget.music!);
+              // // add to popular
+              // musicProvider.countPopular(music: widget.music!);
             }
           },
           child: Container(

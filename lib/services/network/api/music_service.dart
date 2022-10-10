@@ -298,4 +298,30 @@ class MusicApiService {
 
     return false;
   }
+
+  Future<List<Music>> getPurchasedTracks(
+      {required String apiEndPoint, required int pageKey}) async {
+    List<Music> purchasedTracks = [];
+    try {
+      String uid = await helper.getUserId();
+
+      Response response =
+          await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid"));
+
+      if (response.statusCode == 200) {
+        final items = json.decode(response.body) as List;
+
+        purchasedTracks = items.map((e) => Music.fromJson(e)).toList();
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getPurchasedTracks",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
+
+    return purchasedTracks;
+  }
 }

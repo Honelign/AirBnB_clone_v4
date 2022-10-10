@@ -198,6 +198,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
             paymentMethod: 'stripe',
             trackId: widget.trackId.toString(),
             paymentState: 'COMPLETED',
+            onPaymentCompleteFunction: widget.onSuccessFunction,
           );
         }
         Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =

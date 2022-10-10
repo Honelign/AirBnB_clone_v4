@@ -31,6 +31,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
   bool _miniPlayerVisibility = false;
   bool _isMusicStopped = true;
+  bool isPlayingLocal = false;
 
   bool get isMusicStopped => _isMusicStopped;
 
@@ -235,7 +236,11 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
       notifyListeners();
       player.stop();
 
-      await _open(_albumMusics[index]);
+      if (isPlayingLocal == false) {
+        await _open(_albumMusics[index]);
+      } else {
+        await _openLocal(_albumMusics[index]);
+      }
 
       _currentIndex = index;
     } catch (e) {

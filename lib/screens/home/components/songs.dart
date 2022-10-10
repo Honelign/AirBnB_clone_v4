@@ -1,12 +1,8 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
-import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/ad_banner.dart';
-import 'package:kin_music_player_app/components/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
@@ -18,7 +14,6 @@ import 'package:kin_music_player_app/screens/album/components/album_body.dart';
 import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/screens/home/components/all_music_list.dart';
 import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
-import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music/genre.dart';
@@ -27,15 +22,10 @@ import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 
 import 'package:kin_music_player_app/services/provider/genre_provider.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
 
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
-import 'package:kin_music_player_app/services/provider/podcast_player.dart';
-import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class Songs extends StatefulWidget {
