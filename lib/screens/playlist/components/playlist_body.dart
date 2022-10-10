@@ -14,7 +14,10 @@ import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../../components/download/multiple_download_progress_display_component.dart';
 
 class PlaylistBody extends StatefulWidget {
   final int playlistId;
@@ -78,12 +81,14 @@ class _PlaylistBodyState extends State<PlaylistBody> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         elevation: 0,
         title: Text(widget.playlistName),
         actions: [
+          // Add tracks button
           Padding(
             padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
             child: IconButton(
@@ -101,10 +106,69 @@ class _PlaylistBodyState extends State<PlaylistBody> {
               },
               icon: const Icon(
                 Icons.add,
-                color: Colors.white,
+                color: kGrey,
               ),
             ),
           ),
+
+          // download all button
+          FutureBuilder<List<Music>>(
+            future: playListProvider.getTracksUnderPlaylistById(
+                playlistId: widget.playlistId),
+            builder: ((context, snapshot) {
+              // loading
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container();
+              }
+
+              // loaded
+              else {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(top: getProportionateScreenHeight(8)),
+                  child: IconButton(
+                    onPressed: () async {
+                      // print(snapshot.data);
+                      // if connection
+                      if (checkConnection(status) == true) {
+                        print("Downloading All");
+                        // request permission
+                        Map<Permission, PermissionStatus>
+                            storagePermissionStatus = await [
+                          Permission.storage,
+                        ].request();
+
+                        // if permission given
+                        if (storagePermissionStatus[Permission.storage]!
+                            .isGranted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return MultipleDownloadProgressDisplayComponent(
+                                musics: snapshot.data!,
+                              );
+                            },
+                          );
+                        }
+                        // permission denied
+                        else {
+                          kShowToast(message: "Storage Permission Denied");
+                        }
+                      }
+                      // no connection
+                      else {
+                        kShowToast(message: "No Connection");
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.download,
+                      color: kGrey,
+                    ),
+                  ),
+                );
+              }
+            }),
+          )
         ],
       ),
       backgroundColor: kPrimaryColor,

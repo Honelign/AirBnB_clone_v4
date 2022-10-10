@@ -1,7 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/components/download/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/music_detail_display.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
@@ -10,36 +9,37 @@ import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart'
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
+import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
-import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-class MusicListCard extends StatefulWidget {
-  const MusicListCard({
+class OfflineMusicCard extends StatefulWidget {
+  const OfflineMusicCard({
     Key? key,
     this.height = 70,
     this.aspectRatio = 1.2,
     required this.musics,
     required this.music,
     required this.musicIndex,
+    required this.refresherFunction,
   }) : super(key: key);
 
   final double height, aspectRatio;
   final Music? music;
   final int musicIndex;
   final List<Music> musics;
+  final Function refresherFunction;
 
   @override
-  State<MusicListCard> createState() => _MusicListCardState();
+  State<OfflineMusicCard> createState() => _OfflineMusicCardState();
 }
 
-class _MusicListCardState extends State<MusicListCard> {
+class _OfflineMusicCardState extends State<OfflineMusicCard> {
   @override
   Widget build(BuildContext context) {
     // get provider
@@ -56,70 +56,66 @@ class _MusicListCardState extends State<MusicListCard> {
       context,
     );
     OfflineMusicProvider offlineMusicProvider =
-        Provider.of<OfflineMusicProvider>(
-      context,
-      listen: false,
-    );
+        Provider.of<OfflineMusicProvider>(context);
 
     // build UI
     return PlayerBuilder.isPlaying(
       player: p.player,
       builder: (context, isPlaying) {
         return GestureDetector(
-          onTap: () {
+          onTap: () async {
+            print("negro ${widget.musics}");
             // incrementMusicView(music!.id);
             p.albumMusicss = widget.musics;
-            p.isPlayingLocal = false;
+            p.isPlayingLocal = true;
+
             p.setBuffering(widget.musicIndex);
-            if (checkConnection(status)) {
-              if (p.isMusicInProgress(widget.music!)) {
-                // redirect to now playing
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => NowPlayingMusic(widget.music),
-                  ),
-                );
-              } else {
-                radioProvider.player.stop();
-                podcastProvider.player.stop();
-                p.player.stop();
 
-                p.setMusicStopped(true);
-                podcastProvider.setEpisodeStopped(true);
-                p.listenMusicStreaming();
-                podcastProvider.listenPodcastStreaming();
-
-                p.setPlayer(p.player, podcastProvider, radioProvider);
-                radioProvider.setMiniPlayerVisibility(false);
-                p.handlePlayButton(
-                    music: widget.music!,
-                    index: widget.musicIndex,
-                    album: Album(
-                      id: -2,
-                      title: 'Single Music ${widget.musicIndex}',
-                      artist: 'kin',
-                      description: '',
-                      cover: 'assets/images/kin.png',
-                      count: widget.musics.length,
-                      artist_id: 1,
-                      isPurchasedByUser: false,
-                      price: 60,
-                    ),
-                    musics: widget.musics);
-
-                p.setMusicStopped(false);
-                podcastProvider.setEpisodeStopped(true);
-                p.listenMusicStreaming();
-                podcastProvider.listenPodcastStreaming();
-
-                // add to recently played
-                musicProvider.addToRecentlyPlayed(music: widget.music!);
-
-                // add to popular
-                musicProvider.countPopular(music: widget.music!);
-              }
+            if (p.isMusicInProgress(widget.music!)) {
+              // redirect to now playing
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NowPlayingMusic(widget.music),
+                ),
+              );
             } else {
-              kShowToast();
+              radioProvider.player.stop();
+              podcastProvider.player.stop();
+              p.player.stop();
+
+              p.setMusicStopped(true);
+              podcastProvider.setEpisodeStopped(true);
+              p.listenMusicStreaming();
+              podcastProvider.listenPodcastStreaming();
+
+              p.setPlayer(p.player, podcastProvider, radioProvider);
+              radioProvider.setMiniPlayerVisibility(false);
+              p.handlePlayButtonLocal(
+                  music: widget.music!,
+                  index: widget.musicIndex,
+                  album: Album(
+                    id: -2,
+                    title: 'Single Music ${widget.musicIndex}',
+                    artist: 'kin',
+                    description: '',
+                    cover: 'assets/images/kin.png',
+                    count: widget.musics.length,
+                    artist_id: 1,
+                    isPurchasedByUser: false,
+                    price: 60,
+                  ),
+                  musics: widget.musics);
+
+              p.setMusicStopped(false);
+              podcastProvider.setEpisodeStopped(true);
+              p.listenMusicStreaming();
+              podcastProvider.listenPodcastStreaming();
+
+              // // add to recently played
+              // musicProvider.addToRecentlyPlayed(music: widget.music!);
+
+              // // add to popular
+              // musicProvider.countPopular(music: widget.music!);
             }
           },
           child: Container(
@@ -223,7 +219,7 @@ class _MusicListCardState extends State<MusicListCard> {
                     ),
                     color: kPopupMenuBackgroundColor,
                     onSelected: (value) async {
-                      // Add to playlist
+                      // add to playlist
                       if (value == 1) {
                         showDialog(
                           context: context,
@@ -234,50 +230,23 @@ class _MusicListCardState extends State<MusicListCard> {
                           },
                         );
                       }
-                      // music detail
+
+                      // detail
                       else if (value == 2) {
                         showDialog(
-                          context: context,
-                          builder: (context) {
-                            return MusicDetailDisplay(
-                              music: widget.music!,
-                            );
-                          },
-                        );
-                      }
-                      // download
-                      else if (value == 3) {
-                        bool isMusicDownloaded =
-                            await offlineMusicProvider.checkTrackInOfflineCache(
-                          musicId: widget.music!.id.toString(),
-                        );
+                            context: context,
+                            builder: (context) {
+                              return MusicDetailDisplay(music: widget.music!);
+                            });
+                      } else if (value == 3) {
+                        await offlineMusicProvider.removeOfflineMusic(
+                            music: widget.music!);
 
-                        if (isMusicDownloaded == true) {
-                          kShowToast(
-                              message: "Music already available offline");
-                        } else {
-                          // request permission
-                          Map<Permission, PermissionStatus> statuses = await [
-                            Permission.storage,
-                            //add more permission to request here.
-                          ].request();
-                          if (statuses[Permission.storage]!.isGranted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return DownloadProgressDisplayComponent(
-                                  music: widget.music!,
-                                );
-                              },
-                            );
-                          } else {
-                            kShowToast(message: "Storage Permission Denied");
-                          }
-                        }
+                        widget.refresherFunction();
                       }
                     },
                     itemBuilder: (context) {
-                      return kMusicPopupMenuItem;
+                      return kMusicOfflinePopupMenuItem;
                     },
                   ),
                 ),

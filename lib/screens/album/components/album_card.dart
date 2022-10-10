@@ -1,6 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/download/download_progress_display_component.dart';
+import 'package:kin_music_player_app/components/music_detail_display.dart';
 import 'package:kin_music_player_app/components/playlist_selector_dialog.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/constants.dart';
@@ -10,9 +12,11 @@ import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class AlbumCard extends StatefulWidget {
@@ -49,6 +53,11 @@ class _AlbumCardState extends State<AlbumCard> {
     var radioProvider = Provider.of<RadioProvider>(
       context,
     );
+    OfflineMusicProvider offlineMusicProvider =
+        Provider.of<OfflineMusicProvider>(
+      context,
+      listen: false,
+    );
     var musicProvider = Provider.of<MusicProvider>(context);
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return PlayerBuilder.isPlaying(
@@ -63,6 +72,7 @@ class _AlbumCardState extends State<AlbumCard> {
           child: InkWell(
             onTap: () async {
               p.albumMusicss = widget.albumMusics;
+              p.isPlayingLocal = false;
               p.setBuffering(widget.musicIndex);
 
               if (checkConnection(status)) {
@@ -194,44 +204,9 @@ class _AlbumCardState extends State<AlbumCard> {
                               ],
                             ),
                             color: kPopupMenuBackgroundColor,
-                            onSelected: (value) {
-                              if (value == 2) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      backgroundColor:
-                                          kPopupMenuBackgroundColor,
-                                      title: const Text(
-                                        'Music Detail',
-                                        style: TextStyle(
-                                          color: Colors.white60,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      content: SizedBox(
-                                        height: 100,
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              widget.music.description,
-                                              style: const TextStyle(
-                                                color: kLightSecondaryColor,
-                                              ),
-                                            ),
-                                            Text(
-                                              'By ${widget.music.artist}',
-                                              style: const TextStyle(
-                                                color: kLightSecondaryColor,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
+                            onSelected: (value) async {
+                              // Add to playlist
+                              if (value == 1) {
                                 showDialog(
                                   context: context,
                                   builder: (_) {
@@ -240,6 +215,53 @@ class _AlbumCardState extends State<AlbumCard> {
                                     );
                                   },
                                 );
+                              }
+
+                              // music detail
+                              else if (value == 2) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return MusicDetailDisplay(
+                                      music: widget.music,
+                                    );
+                                  },
+                                );
+                              }
+
+                              // download
+                              else if (value == 3) {
+                                bool isMusicDownloaded =
+                                    await offlineMusicProvider
+                                        .checkTrackInOfflineCache(
+                                            musicId:
+                                                widget.music.id.toString());
+
+                                if (isMusicDownloaded == true) {
+                                  kShowToast(
+                                      message:
+                                          "Music already available offline");
+                                } else {
+                                  // request permission
+                                  Map<Permission, PermissionStatus> statuses =
+                                      await [
+                                    Permission.storage,
+                                    //add more permission to request here.
+                                  ].request();
+                                  if (statuses[Permission.storage]!.isGranted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return DownloadProgressDisplayComponent(
+                                          music: widget.music,
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    kShowToast(
+                                        message: "Storage Permission Denied");
+                                  }
+                                }
                               }
                             },
                             itemBuilder: (context) {

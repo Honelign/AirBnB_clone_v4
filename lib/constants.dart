@@ -37,13 +37,14 @@ const int previewWaitDuration = 45;
 
 const String apiUrl = 'https://kinmusic.gamdsolutions.com';
 
-// service urls
+// asset urls
 const String kinAssetBaseUrl =
     'https://storage.googleapis.com/kin-project-352614-kinmusic-storage';
 
 const String kinAssetsBaseUrlOld =
     "https://storage.googleapis.com/kin-project-352614-storage";
 
+// service urls
 const String kinMusicBaseUrl = 'https://music-service-vdzflryflq-ew.a.run.app';
 
 const String kinRadioBaseUrl = 'https://radioservice.kinideas.com';
@@ -51,7 +52,7 @@ const String kinPodcastBaseUrl = 'https://podcastservice.kinideas.com';
 const String kinSearchBaseUrl = 'https://searchservice.kinideas.com';
 const String kAnalyticsBaseUrl =
     "https://analytics-service-vdzflryflq-ew.a.run.app";
-const String kinPaymentUrl = "http://104.199.33.9/";
+const String kinPaymentUrl = "http://104.199.33.9";
 const String kinProfileBaseUrl =
     "https://kinideas-profile-vdzflryflq-ew.a.run.app";
 const String KinRadioUrl =
@@ -142,6 +143,7 @@ checkConnection(status) {
 
 // POPUP MENU ITEMS
 const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
+
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(
     child: Text(
@@ -156,6 +158,37 @@ const List<PopupMenuItem> kMusicPopupMenuItem = [
       style: popupTextStyle,
     ),
     value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Download',
+      style: popupTextStyle,
+    ),
+    value: 3,
+  ),
+];
+// For Music Card
+const List<PopupMenuItem> kMusicOfflinePopupMenuItem = [
+  PopupMenuItem(
+    child: Text(
+      'Add to playlist',
+      style: popupTextStyle,
+    ),
+    value: 1,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Detail',
+      style: popupTextStyle,
+    ),
+    value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Remove',
+      style: popupTextStyle,
+    ),
+    value: 3,
   ),
 ];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [
@@ -172,6 +205,13 @@ const List<PopupMenuItem> kPlaylistPopupMenuItem = [
       style: popupTextStyle,
     ),
     value: 2,
+  ),
+  PopupMenuItem(
+    child: Text(
+      'Download',
+      style: popupTextStyle,
+    ),
+    value: 3,
   ),
 ];
 const List<PopupMenuItem> kPodcastPopupMenuItem = [
@@ -218,7 +258,7 @@ const String kNameNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 const String kConnectionErrorMessage =
-    "Something went wrong. Please refresh the page.";
+    "No Connection. Connect to Cellular data or Wifi";
 
 const String kPrivacyPolicy =
     "We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the &ldquo;Last updated&rdquo; date of this Privacy Policy. You are encouraged to periodically review this Privacy Policy to stay informed of updates. You will be deemed to have been made aware of, will be subject to, and will be deemed to have accepted the changes in any revised Privacy Policy by your continued use of the Application after the date such revised Privacy Policy is posted.";

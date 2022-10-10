@@ -8,6 +8,7 @@ import 'package:kin_music_player_app/services/provider/analytics_provider.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/multi_select_provider.dart';
+import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,9 +34,7 @@ import 'routes.dart';
 import 'services/provider/genre_provider.dart';
 import 'services/provider/podcast_player.dart';
 import 'theme.dart';
-// payment import
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import './services/provider/payment_provider.dart';
 
 void main() async {
@@ -83,6 +82,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => MultiSelectProvider()),
+        ChangeNotifierProvider(create: (_) => OfflineMusicProvider()),
         StreamProvider(
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,

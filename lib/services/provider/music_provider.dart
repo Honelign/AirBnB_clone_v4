@@ -10,6 +10,7 @@ import '../network/api_service.dart';
 
 class MusicProvider extends ChangeNotifier {
   bool isLoading = false;
+  bool isPurchaseMade = false;
   late int isFavorite;
   bool hasfinishedtyping = false;
   String value = '';
@@ -18,6 +19,8 @@ class MusicProvider extends ChangeNotifier {
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
   List<Music> albumMusics = [];
+  List<Music> popularMusic = [];
+  List<Music> purchasedMusic = [];
 
   int count = -1;
   Music music = Music(
@@ -37,6 +40,16 @@ class MusicProvider extends ChangeNotifier {
 
   MusicApiService musicApiService = MusicApiService();
 
+  Future tester() async {
+    isLoading = true;
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 5));
+    isLoading = false;
+
+    notifyListeners();
+  }
+
   // get new music
   Future<List<Music>> getNewMusics({int pageKey = 1}) async {
     const String apiEndPoint = '/mobileApp/tracks';
@@ -54,11 +67,11 @@ class MusicProvider extends ChangeNotifier {
     const String apiEndPoint = '/mobileApp/popularTracks';
     isLoading = true;
 
-    List<Music> musics =
+    popularMusic =
         await musicApiService.getMusic(apiEndPoint: apiEndPoint, pageKey: 1);
     isLoading = false;
     notifyListeners();
-    return musics;
+    return popularMusic;
   }
 
   //get music for artist page with album id
@@ -141,5 +154,15 @@ class MusicProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return albumMusics;
+  }
+
+  Future<List<Music>> getPurchasedTracks({int pageKey = 1}) async {
+    String apiEndPoint = "mobileApp/purchasedTracksByUserId";
+    isLoading = true;
+    purchasedMusic = await musicApiService.getPurchasedTracks(
+        apiEndPoint: apiEndPoint, pageKey: pageKey);
+    isLoading = false;
+    notifyListeners();
+    return purchasedMusic;
   }
 }

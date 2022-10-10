@@ -60,6 +60,8 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
           width: getProportionateScreenWidth(widget.width),
           child: GestureDetector(
             onTap: () {
+              p.albumMusicss = widget.musics;
+              p.isPlayingLocal = false;
               incrementMusicView(widget.music.id);
               p.setBuffering(widget.musicIndex);
               if (checkConnection(status)) {

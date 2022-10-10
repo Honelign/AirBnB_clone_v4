@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_body.dart';
 import 'package:kin_music_player_app/screens/playlist/components/playlist_title.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/connectivity_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/playlist_info.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -64,96 +67,108 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
-        child: FutureBuilder(
-          future: playListProvider.getPlayList(),
-          builder: (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
-            // loading
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: KinProgressIndicator(),
-              );
-            }
+        child: checkConnection(status) == false
+            ? RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {});
+                },
+                backgroundColor: refreshIndicatorBackgroundColor,
+                color: refreshIndicatorForegroundColor,
+                child: NoConnectionDisplay(),
+              )
+            : FutureBuilder(
+                future: playListProvider.getPlayList(),
+                builder: (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
+                  // loading
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: KinProgressIndicator(),
+                    );
+                  }
 
-            // data loaded
-            else if (snapshot.hasData && !snapshot.hasError) {
-              return Container(
-                padding: const EdgeInsets.fromLTRB(0, 24, 0, 36),
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    _pagingController.refresh();
-                  },
-                  backgroundColor: refreshIndicatorBackgroundColor,
-                  color: refreshIndicatorForegroundColor,
-                  child: PagedListView<int, PlaylistInfo>(
-                    pagingController: _pagingController,
-                    builderDelegate: PagedChildBuilderDelegate<PlaylistInfo>(
-                      animateTransitions: true,
-                      transitionDuration: const Duration(milliseconds: 500),
-                      noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: const Center(
-                          child: Text(
-                            "No Playlist",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      noMoreItemsIndicatorBuilder: (_) => Container(
-                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                        child: const Center(
-                          child: Text(
-                            "No More Playlists",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                      firstPageProgressIndicatorBuilder: (_) =>
-                          const KinProgressIndicator(),
-                      newPageProgressIndicatorBuilder: (_) =>
-                          const KinProgressIndicator(),
-                      itemBuilder: ((context, item, index) {
-                        return InkWell(
-                          onTap: () {
-                            // go to detail page
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PlaylistBody(
-                                  playlistId: item.id,
-                                  playlistName: item.name,
+                  // data loaded
+                  else if (snapshot.hasData && !snapshot.hasError) {
+                    return Container(
+                      padding: const EdgeInsets.fromLTRB(0, 24, 0, 36),
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          _pagingController.refresh();
+                        },
+                        backgroundColor: refreshIndicatorBackgroundColor,
+                        color: refreshIndicatorForegroundColor,
+                        child: PagedListView<int, PlaylistInfo>(
+                          pagingController: _pagingController,
+                          builderDelegate:
+                              PagedChildBuilderDelegate<PlaylistInfo>(
+                            animateTransitions: true,
+                            transitionDuration:
+                                const Duration(milliseconds: 500),
+                            noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: const Center(
+                                child: Text(
+                                  "No Playlist",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                          child: PlaylistTitleDisplay(
-                            playlistInfo: item,
-                            refreshFunction: refreshFunction,
+                            ),
+                            noMoreItemsIndicatorBuilder: (_) => Container(
+                              padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                              child: const Center(
+                                child: Text(
+                                  "No More Playlists",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            firstPageProgressIndicatorBuilder: (_) =>
+                                const KinProgressIndicator(),
+                            newPageProgressIndicatorBuilder: (_) =>
+                                const KinProgressIndicator(),
+                            itemBuilder: ((context, item, index) {
+                              return InkWell(
+                                onTap: () {
+                                  // go to detail page
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => PlaylistBody(
+                                        playlistId: item.id,
+                                        playlistName: item.name,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: PlaylistTitleDisplay(
+                                  playlistInfo: item,
+                                  refreshFunction: refreshFunction,
+                                ),
+                              );
+                            }),
                           ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-              );
-            }
+                        ),
+                      ),
+                    );
+                  }
 
-            // error
-            else {
-              return OnSnapshotError(error: snapshot.error.toString());
-            }
-          },
-        ),
+                  // error
+                  else {
+                    return OnSnapshotError(error: snapshot.error.toString());
+                  }
+                },
+              ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kSecondaryColor,

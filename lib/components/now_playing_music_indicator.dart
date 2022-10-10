@@ -8,13 +8,17 @@ import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart'
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 
 class NowPlayingMusicIndicator extends StatefulWidget {
   final String trackPrice;
-  const NowPlayingMusicIndicator({Key? key, required this.trackPrice})
+  final bool isPurchased;
+  const NowPlayingMusicIndicator(
+      {Key? key, required this.trackPrice, this.isPurchased = false})
       : super(key: key);
 
   @override
@@ -24,26 +28,40 @@ class NowPlayingMusicIndicator extends StatefulWidget {
 
 class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
   double minPlayerHeight = 70;
+
   @override
   void initState() {
-    var favprovider =
+    var favoriteProvider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
-    favprovider.getFavids();
+    favoriteProvider.getFavids();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // get providers
     var p = Provider.of<MusicPlayer>(context, listen: false);
-    var favprovider =
+    bool showBuyButton = !widget.isPurchased;
+
+    void onTrackPurchaseSuccess() async {
+      print("lookie - setting showBuyButton to false;");
+      setState(() {
+        showBuyButton = false;
+      });
+    }
+
+    MusicProvider musicProvider = Provider.of<MusicProvider>(context);
+
+    PaymentProvider paymentProvider = Provider.of<PaymentProvider>(context);
+
+    // get providers
+
+    var favoriteProvider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(p.currentMusic!.id);
 
-    // build UI
     return Container(
-      height: 125,
+      // height: 125,
       decoration: BoxDecoration(
         color: kPrimaryColor,
         border: Border.all(width: 0),
@@ -52,47 +70,53 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Buy Button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () {
-                  Future successFunction() async {
-                    // print("@@@@@lookie-payment-stripe");
-                  }
-
-                  // payment modal
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) => PaymentComponent(
-                      track_id: (p.currentIndex) as int,
-                      successFunction: successFunction,
-                      paymentPrice: p.currentMusic!.priceETB.toString(),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                  margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
-                  decoration: BoxDecoration(
-                    color: kSecondaryColor,
-                    borderRadius: BorderRadius.circular(25),
+          showBuyButton == true
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // payment modal
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => PaymentComponent(
+                              trackId: (p.currentMusic!.id),
+                              paymentPrice: p.currentMusic!.priceETB.toString(),
+                              paymentReason: "trackPurchase",
+                              onSuccessFunction: onTrackPurchaseSuccess,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 6,
+                          ),
+                          margin: const EdgeInsets.fromLTRB(0, 0, 6, 8),
+                          decoration: BoxDecoration(
+                            color: kSecondaryColor,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Text(
+                            "Buy ${widget.trackPrice} ETB",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.75),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.55,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  child: Text(
-                    "Buy ${widget.trackPrice} ETB",
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.55,
-                    ),
-                  ),
+                )
+              : Container(
+                  height: 0,
                 ),
-              )
-            ],
-          ),
 
           // Playing Indicator
           PlayerBuilder.isPlaying(
@@ -151,13 +175,13 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                             // favorite button
                             Consumer<FavoriteMusicProvider>(
                               builder: (context, provider, _) {
-                                return favprovider.favMusics
+                                return favoriteProvider.favMusics
                                         .contains(p.currentMusic!.id)
                                     ? IconButton(
                                         onPressed: () async {
-                                          favprovider.removeCachedFav(
+                                          favoriteProvider.removeCachedFav(
                                               p.currentMusic!.id);
-                                          favprovider.getFavids();
+                                          favoriteProvider.getFavids();
                                           await provider
                                               .unFavMusic(p.currentMusic!.id);
 
@@ -171,9 +195,9 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                       )
                                     : IconButton(
                                         onPressed: () async {
-                                          favprovider
+                                          favoriteProvider
                                               .addCachedFav(p.currentMusic!.id);
-                                          favprovider.getFavids();
+                                          favoriteProvider.getFavids();
                                           await provider
                                               .favMusic(p.currentMusic!.id);
 
@@ -207,6 +231,8 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
         ],
       ),
     );
+
+    // build UI
   }
 
   Widget _buildBlurBackground(musicCover) {

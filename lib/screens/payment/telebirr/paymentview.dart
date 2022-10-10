@@ -12,33 +12,32 @@ import 'package:http/http.dart' as http;
 class PaymentView extends StatefulWidget {
   final String url;
   final String userId;
-  final String payment_amount;
-  final String payment_method;
-  final payment_id;
-  final track_id;
+  final String paymentAmount;
+  final String paymentMethod;
+  final String paymentId;
+  final String trackId;
 
   const PaymentView({
     Key? key,
     required this.url,
     required this.userId,
-    required this.payment_amount,
-    required this.payment_method,
-    required this.payment_id,
-    required this.track_id,
+    required this.paymentAmount,
+    required this.paymentMethod,
+    required this.paymentId,
+    required this.trackId,
   }) : super(key: key);
   @override
-  _PaymentViewState createState() => new _PaymentViewState();
+  _PaymentViewState createState() => _PaymentViewState();
 }
 
 class _PaymentViewState extends State<PaymentView> {
 //send data to verify the track is bought
-  Future sendTrack(
-      pay_id, String userId, String payment_amount, track_id) async {
+  Future sendTrack(payId, String userId, String paymentAmount, trackId) async {
     var body = jsonEncode({
       "userId": userId,
-      "payment_id": pay_id,
-      "trackId": track_id,
-      "track_price_amount": payment_amount,
+      "payment_id": payId,
+      "trackId": trackId,
+      "track_price_amount": paymentAmount,
       "isPurcahsed": true
     });
 
@@ -81,7 +80,7 @@ class _PaymentViewState extends State<PaymentView> {
 
       var pay_id = resbody['id'];
 
-      sendTrack(pay_id, widget.userId, widget.payment_amount, widget.track_id);
+      sendTrack(pay_id, widget.userId, widget.paymentAmount, widget.trackId);
     }
   }
 
@@ -111,7 +110,7 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   void initState() {
     url = widget.url;
-    pay_id = widget.payment_id;
+    pay_id = widget.paymentId;
 
     super.initState();
 
