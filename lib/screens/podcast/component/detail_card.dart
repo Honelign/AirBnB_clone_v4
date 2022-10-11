@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/podcast/components/custom_list_tile.dart';
+import 'package:kin_music_player_app/screens/podcast/component/custom_list_tile.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 
 import '../../../size_config.dart';

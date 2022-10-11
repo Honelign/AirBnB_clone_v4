@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/podcast/components/detail.dart';
+import 'package:kin_music_player_app/screens/podcast/component/detail.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/size_config.dart';
-
 
 import '../../../constants.dart';
 
@@ -22,11 +21,12 @@ class PodCastListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Detail(podCast:podCast,)));
-
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Detail(
+                  podCast: podCast,
+                )));
       },
       child: Container(
           height: getProportionateScreenHeight(height),
@@ -45,8 +45,7 @@ class PodCastListCard extends StatelessWidget {
                         color: kSecondaryColor.withOpacity(0.1),
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl:
-                          '$apiUrl/${podCast.cover}',
+                          imageUrl: '$apiUrl/${podCast.cover}',
                         )),
                   )),
               SizedBox(
@@ -69,7 +68,6 @@ class PodCastListCard extends StatelessWidget {
                   ],
                 ),
               ),
-
             ],
           )),
     );

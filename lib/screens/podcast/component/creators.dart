@@ -7,9 +7,8 @@ class Creators extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return         Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(20)),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(20),
           vertical: getProportionateScreenHeight(15)),
@@ -34,12 +33,12 @@ class Creators extends StatelessWidget {
                 horizontal: getProportionateScreenWidth(10)),
             child: Text(
               'Bisrat Hailu',
-              style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: 18),
+              style:
+                  TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 18),
             ),
           ),
         ],
       ),
-    )
-;
+    );
   }
 }

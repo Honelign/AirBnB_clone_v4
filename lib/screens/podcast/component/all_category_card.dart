@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/podcast/components/podcast_list.dart';
+import 'package:kin_music_player_app/screens/podcast/component/podcast_list.dart';
 import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 
 import '../../../constants.dart';

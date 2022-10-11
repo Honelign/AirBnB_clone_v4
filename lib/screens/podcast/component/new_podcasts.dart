@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/screens/podcast/components/detail.dart';
+import 'package:kin_music_player_app/screens/podcast/component/detail.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';

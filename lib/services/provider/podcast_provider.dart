@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/podcast_service.dart';
-import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 

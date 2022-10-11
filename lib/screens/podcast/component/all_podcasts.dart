@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:kin_music_player_app/screens/podcast/components/podcast_list_card.dart';
+import 'package:kin_music_player_app/screens/podcast/component/podcast_list_card.dart';
 import 'package:kin_music_player_app/services/network/api/podcast_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/podcast.dart';
