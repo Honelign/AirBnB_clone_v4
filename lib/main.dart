@@ -8,6 +8,7 @@ import 'package:kin_music_player_app/services/provider/analytics_provider.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/multi_select_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_player_controller.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ void main() async {
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
 */
-
+//
   runApp(
     MultiProvider(
       child: const Kin(),
@@ -83,6 +84,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => MultiSelectProvider()),
         ChangeNotifierProvider(create: (_) => OfflineMusicProvider()),
+        ChangeNotifierProvider(create: (_) => MusicPlayerController()),
         StreamProvider(
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,
@@ -103,7 +105,6 @@ class Kin extends StatefulWidget {
 class _KinState extends State<Kin> {
   @override
   void initState() {
-    SingletonPlayer.instance.stop();
     super.initState();
 
     Provider.of<CachedFavoriteProvider>(context, listen: false).cacheFavorite();
@@ -118,7 +119,8 @@ class _KinState extends State<Kin> {
 
   @override
   void dispose() {
-    SingletonPlayer.instance.stop();
+    // SingletonPlayer.instance.stop();
+    Provider.of<MusicPlayer>(context, listen: false).player.stop();
     super.dispose();
   }
 

@@ -34,6 +34,8 @@ class _DownloadProgressDisplayComponentState
   }
 
   Future _downloadFile() async {
+    OfflineMusicProvider _offlineMusicProvider =
+        Provider.of<OfflineMusicProvider>(context, listen: false);
     Map<Permission, PermissionStatus> statuses = await [
       Permission.storage,
       //add more permission to request here.
@@ -80,6 +82,7 @@ class _DownloadProgressDisplayComponentState
 
       if (result == true) {
         Navigator.pop(context);
+        _offlineMusicProvider.getOfflineMusic();
       }
     } else {
       kShowToast(message: "Storage Permission Denied");
