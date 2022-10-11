@@ -62,6 +62,7 @@ class _MusicCardState extends State<MusicCard> {
       context,
       listen: false,
     );
+
     return PlayerBuilder.isPlaying(
       player: p.player,
       builder: (context, isPlaying) {
@@ -71,6 +72,9 @@ class _MusicCardState extends State<MusicCard> {
             width: getProportionateScreenWidth(widget.width),
             child: InkWell(
               onTap: () async {
+                // first play call
+                // if (_musicPlayerController.isProcessingPlay == false) {
+
                 p.albumMusicss = widget.musics;
                 p.isPlayingLocal = false;
                 p.setBuffering(widget.musicIndex);
@@ -97,25 +101,30 @@ class _MusicCardState extends State<MusicCard> {
                     p.setPlayer(p.player, podcastProvider, radioProvider);
 
                     p.handlePlayButton(
-                        music: widget.music,
-                        index: widget.musicIndex,
-                        album: Album(
-                          id: -2,
-                          title: 'Single Music ${widget.musicIndex}',
-                          artist: 'kin',
-                          description: '',
-                          cover: 'assets/images/kin.png',
-                          count: widget.musics.length,
-                          artist_id: 1,
-                          isPurchasedByUser: false,
-                          price: 60,
-                        ),
-                        musics: widget.musics);
+                      music: widget.music,
+                      index: widget.musicIndex,
+                      album: Album(
+                        id: -2,
+                        title: 'Single Music ${widget.musicIndex}',
+                        artist: 'kin',
+                        description: '',
+                        cover: 'assets/images/kin.png',
+                        count: widget.musics.length,
+                        artist_id: 1,
+                        isPurchasedByUser: false,
+                        price: 60,
+                      ),
+                      musics: widget.musics,
+                    );
+                    // _musicPlayerController.setIsProcessingPlayToFalse();
 
                     p.setMusicStopped(false);
                     podcastProvider.setEpisodeStopped(true);
                     p.listenMusicStreaming();
                     podcastProvider.listenPodcastStreaming();
+                    print(
+                      "negro + " + p.isProcessingPlay.toString(),
+                    );
 
                     // add to recently played
                     musicProvider.addToRecentlyPlayed(music: widget.music);
@@ -133,6 +142,13 @@ class _MusicCardState extends State<MusicCard> {
                     ),
                   );
                 }
+                // }
+
+                // already playing
+                // else {
+                //   print(_musicPlayerController.isProcessingPlay);
+                //   kShowToast(message: "Playing another track");
+                // }
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

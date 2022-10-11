@@ -97,6 +97,8 @@ class _MultipleDownloadProgressDisplayComponentState
   }
 
   Future _downloadAllFiles({required List<Music> musics}) async {
+    OfflineMusicProvider _offlineMusicProvider =
+        Provider.of<OfflineMusicProvider>(context, listen: false);
     try {
       bool isLastItem = false;
       int unPurchasedTrackCount = 0;
@@ -107,19 +109,24 @@ class _MultipleDownloadProgressDisplayComponentState
         if (i == musics.length - 1) {
           isLastItem = true;
         }
-        if (musics[i].isPurchasedByUser == true) {
+
+        print(_offlineMusicProvider.checkTrackInOfflineCache(
+            musicId: musics[i].id.toString()));
+
+        if (await _offlineMusicProvider.checkTrackInOfflineCache(
+                musicId: musics[i].id.toString()) ==
+            false) {
           await _downloadFile(music: musics[i], isLastItem: isLastItem);
+        } else if (await _offlineMusicProvider.checkTrackInOfflineCache(
+                musicId: musics[i].id.toString()) ==
+            true) {
+          kShowToast(message: "${musics[i].title} already available offline");
         }
+
+        // pop show info
         if (i == musics.length - 1) {
           Navigator.pop(context);
-
-          if (unPurchasedTrackCount != 0) {
-            kShowToast(
-                message: "$unPurchasedTrackCount not purchased tracks found.");
-          } else {
-            int count = musics.length - unPurchasedTrackCount;
-            kShowToast(message: "${count} not purchased tracks found");
-          }
+          _offlineMusicProvider.getOfflineMusic();
         }
       }
     } catch (e) {

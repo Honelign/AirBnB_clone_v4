@@ -305,8 +305,8 @@ class MusicApiService {
     try {
       String uid = await helper.getUserId();
 
-      Response response =
-          await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid"));
+      Response response = await get(
+          Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid&page=$pageKey"));
 
       if (response.statusCode == 200) {
         final items = json.decode(response.body) as List;

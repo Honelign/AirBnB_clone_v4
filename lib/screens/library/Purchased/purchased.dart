@@ -31,7 +31,8 @@ class _PurchasedState extends State<Purchased> {
   }
 
   Future<void> _fetchMorePurchasedTracks(int pageKey) async {
-    MusicProvider musicProvider = Provider.of<MusicProvider>(context);
+    MusicProvider musicProvider =
+        Provider.of<MusicProvider>(context, listen: false);
     try {
       final newItems = await musicProvider.getPurchasedTracks(pageKey: pageKey);
 
@@ -95,7 +96,7 @@ class _PurchasedState extends State<Purchased> {
                     padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
                     child: const Center(
                       child: Text(
-                        "",
+                        "No More Tracks",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

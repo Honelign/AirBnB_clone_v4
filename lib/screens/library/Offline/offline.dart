@@ -45,6 +45,8 @@ class _OfflineState extends State<Offline> {
               onRefresh: () async {
                 setState(() {});
               },
+              backgroundColor: refreshIndicatorBackgroundColor,
+              color: refreshIndicatorForegroundColor,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,

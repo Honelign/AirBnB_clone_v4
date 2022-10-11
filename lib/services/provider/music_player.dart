@@ -12,11 +12,11 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 class SingletonPlayer {
   SingletonPlayer._privateConstructor();
 
-  static AssetsAudioPlayer instance = AssetsAudioPlayer();
+  static AssetsAudioPlayer instance = AssetsAudioPlayer.withId("0");
 }
 
 class MusicPlayer extends ChangeNotifier with BaseMixins {
-  AssetsAudioPlayer player = SingletonPlayer.instance;
+  AssetsAudioPlayer player = AssetsAudioPlayer.withId("0");
 
   ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
   String fileName = "music_player.dart";
@@ -32,6 +32,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   bool _miniPlayerVisibility = false;
   bool _isMusicStopped = true;
   bool isPlayingLocal = false;
+  bool isProcessingPlay = false;
 
   bool get isMusicStopped => _isMusicStopped;
 
@@ -280,6 +281,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   }
 
   _open(Music music) async {
+    isProcessingPlay = true;
     // give meta info
     var metas = Metas(
       title: music.title,
@@ -318,6 +320,14 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
+      player.isPlaying.listen((event) {
+        if (event) {
+          isProcessingPlay = false;
+        }
+      });
+      // isProcessingPlay = false;
+
+      notifyListeners();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -390,11 +400,17 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         _isMusicLoaded = false;
         notifyListeners();
         _currentIndex = index;
-        await _open(music);
-        _isMusicLoaded = true;
-        notifyListeners();
+        if (isProcessingPlay == false) {
+          isProcessingPlay = true;
 
-        setPlaying(album, index, musics);
+          await _open(music);
+          _isMusicLoaded = true;
+          notifyListeners();
+
+          setPlaying(album, index, musics);
+        } else {
+          kShowToast(message: "Already Playing another track");
+        }
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
