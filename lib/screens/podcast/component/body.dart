@@ -4,7 +4,7 @@ import 'package:kin_music_player_app/components/ad_banner.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 
-import 'package:kin_music_player_app/screens/podcast/components/new_podcasts.dart';
+import 'package:kin_music_player_app/screens/podcast/component/new_podcasts.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'category_list.dart';

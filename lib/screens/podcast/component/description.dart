@@ -7,9 +7,8 @@ class Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return         Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenWidth(20)),
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(20),
           vertical: getProportionateScreenHeight(15)),
@@ -42,5 +41,6 @@ class Description extends StatelessWidget {
     );
   }
 }
+
 const String description =
     'Listen to the latest news on economic growth, education, gender equality & climate change. Each episode covers a different topic in 20min. Subscribe today - never miss an episode. Worldwide News. World Bank Group Podcast. Subscribe Today.';
