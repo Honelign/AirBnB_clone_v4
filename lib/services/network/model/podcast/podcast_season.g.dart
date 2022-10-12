@@ -5,12 +5,13 @@ PodcastSeason _$PodcastSeasonFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       seasonNumber: json['seasonNumber'],
       numberOfEpisodes: json['numberOfEpisodes'],
-      cover: json['podcast_coverImage'],
+      cover: json['cover'],
     );
 
 Map<String, dynamic> _$PodcastCategoryToJson(PodcastSeason instance) =>
     <String, dynamic>{
       'id': instance.id,
       'seasonNumber': instance.seasonNumber,
+      "numberOfEpisodes": instance.numberOfEpisodes,
       'cover': instance.cover,
     };

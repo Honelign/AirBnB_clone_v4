@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/podcast/components/season_card.dart';
+import 'package:kin_music_player_app/screens/podcast/components/episode_card.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 
-class SeasonsPage extends StatelessWidget {
+class PodcastSeasonPage extends StatelessWidget {
   String id;
-  SeasonsPage({Key? key, required this.id}) : super(key: key);
+
+  PodcastSeasonPage({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     PodcastProvider podcastProvider =
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+      ),
       backgroundColor: kPrimaryColor,
-      body: SizedBox(
+      body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
-          future: podcastProvider.getPodcastSeasons(
-            podcastId: int.parse(id),
+          future: podcastProvider.getPodcastEpisodes(
             pageSize: 1,
+            seasonId: int.parse(id),
           ),
           builder: (context, snapshot) {
             // loading
@@ -32,24 +39,18 @@ class SeasonsPage extends StatelessWidget {
               );
             }
 
-            // loaded
+            // loaded data
             else if (snapshot.hasData && !snapshot.hasError) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return SeasonCard(
-                      id: podcastProvider.podcastSeason[index].id.toString(),
-                      cover: podcastProvider.podcastSeason[index].cover,
-                      title: podcastProvider.podcastSeason[index].seasonNumber
-                          .toString(),
-                      numberOfEpisodes:
-                          podcastProvider.podcastSeason[index].numberOfEpisodes,
-                    );
-                  },
-                  itemCount: podcastProvider.podcastSeason.length,
-                ),
+              return ListView.builder(
+                itemCount: podcastProvider.podcastEpisodes.length,
+                itemBuilder: (context, index) {
+                  return EpisodeCard(
+                    cover: podcastProvider.podcastEpisodes[index].cover,
+                    title: podcastProvider.podcastEpisodes[index].episodeTitle
+                        .toString(),
+                    id: podcastProvider.podcastEpisodes[index].id.toString(),
+                  );
+                },
               );
             }
 

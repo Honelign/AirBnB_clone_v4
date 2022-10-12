@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/podcast/component/custom_list_tile.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
 
 import '../../../size_config.dart';
 

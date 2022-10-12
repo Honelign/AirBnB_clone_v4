@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/screens/podcast/component/podcast_list.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast_category.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -23,8 +23,11 @@ class AllCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => PodcastList(podcasts: category.podcasts)));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PodcastList(podcasts: category.podcasts),
+          ),
+        );
       },
       child: Container(
         // margin: EdgeInsets.only(bottom: 0),
@@ -32,13 +35,17 @@ class AllCategoryCard extends StatelessWidget {
         child: ClipRRect(
           child: Container(
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: category.podcasts.isEmpty
-                        ? const AssetImage('assets/images/kin.png')
-                            as ImageProvider
-                        : CachedNetworkImageProvider(
-                            "$apiUrl/${category.podcasts[0]}"),
-                    fit: BoxFit.cover)),
+              image: DecorationImage(
+                image: category.podcasts.isEmpty
+                    ? const AssetImage(
+                        'assets/images/kin.png',
+                      ) as ImageProvider
+                    : CachedNetworkImageProvider(
+                        "$apiUrl/${category.podcasts[0]}",
+                      ),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Stack(
               children: [
                 Container(

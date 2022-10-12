@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_podcast.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
+
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';

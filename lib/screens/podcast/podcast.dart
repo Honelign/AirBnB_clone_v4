@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
+import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/component/podcast_search_screen.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_scroller_view.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast_category.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../size_config.dart';
 
@@ -55,7 +60,6 @@ class Podcast extends StatelessWidget {
         "host": "Radio"
       },
     ];
-
     List podcastsTwo = [
       {
         "podcast_name": "Ethiopia by Ane Mitmita",
@@ -103,7 +107,6 @@ class Podcast extends StatelessWidget {
         "host": "Radio"
       },
     ];
-
     List podcastsThree = [
       {
         "podcast_name": "MERI Ethiopia",
@@ -159,6 +162,9 @@ class Podcast extends StatelessWidget {
       podcastsTwo,
       podcastsThree
     ];
+
+    PodcastProvider podcastProvider =
+        Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
@@ -185,15 +191,37 @@ class Podcast extends StatelessWidget {
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          itemCount: allPodcasts.length,
-          itemBuilder: ((context, index) {
-            print(allPodcasts[index]);
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: PodcastScrollerView(allPodcasts: allPodcasts[index]),
-            );
-          }),
+        child: FutureBuilder(
+          future: podcastProvider.getPodcastsByCategory(pageSize: 1),
+          builder: (context, snapshot) {
+            // loading
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: KinProgressIndicator(),
+              );
+            }
+            // data loaded
+            else if (snapshot.hasData && !snapshot.hasError) {
+              return ListView.builder(
+                itemCount: podcastProvider.podcastCategories.length,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: PodcastScrollerView(
+                      podcastCategory: podcastProvider.podcastCategories[index],
+                    ),
+                  );
+                }),
+              );
+            }
+
+            // error
+            else {
+              return OnSnapshotError(
+                error: snapshot.error.toString(),
+              );
+            }
+          },
         ),
       ),
     );

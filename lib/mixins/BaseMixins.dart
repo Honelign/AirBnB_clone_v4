@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
-
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
 
 mixin BaseMixins {
   dynamic responsive(BuildContext context, {isPhone, isSmallPhone, isTablet}) {

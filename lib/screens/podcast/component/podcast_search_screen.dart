@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/component/podcast_list_card.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider_old.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 

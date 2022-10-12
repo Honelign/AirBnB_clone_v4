@@ -3,8 +3,9 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
+
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 
@@ -40,7 +41,8 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     });
   }
 
-  void setPlayer(AssetsAudioPlayer podcastPlayer,MusicPlayer musicProvider, RadioProvider radioProvider) {
+  void setPlayer(AssetsAudioPlayer podcastPlayer, MusicPlayer musicProvider,
+      RadioProvider radioProvider) {
     player = podcastPlayer;
 
     setMiniPlayerVisibility(true);
@@ -100,7 +102,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
   playOrPause() async {
     try {
       await player.playOrPause();
-    } catch(_) { }
+    } catch (_) {}
   }
 
   isFirstEpisode() {
@@ -131,7 +133,6 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
-
   int c = 0;
 
   handleLoop() {
@@ -148,7 +149,6 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
-
   late PodCast _beforeShuffling;
   bool _shuffled = false;
 
@@ -158,7 +158,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     _shuffled = !_shuffled;
     List<PodCastEpisode?> episodes = _currentPodcast.episodes;
     _beforeShuffling = _currentPodcast;
-    List<PodCastEpisode?> shuffledMusics = shufflePodcast(episodes);
+    List shuffledMusics = shufflePodcast(episodes);
     if (_shuffled) {
       PodCast podCast = PodCast(
           id: currentPodcast.id,
@@ -174,15 +174,13 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     }
   }
 
-
   play(index) async {
     try {
       _currentEpisode = _currentPodcast.episodes[index];
       notifyListeners();
       await _open(_currentPodcast.episodes[index], _currentPodcast);
       _currentIndex = index;
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   isSamePodcast() {
@@ -227,7 +225,6 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
           customPrevAction: (player) {
             prev();
             setMiniPlayerVisibility(true);
-
           },
           customNextAction: (player) {
             next();
@@ -241,7 +238,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
-    } catch(_) { }
+    } catch (_) {}
   }
 
   handlePlayButton({podCast, required PodCastEpisode episode, index}) async {
@@ -261,7 +258,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
         notifyListeners();
         setPlaying(podCast, index);
       }
-    } catch(_) { }
+    } catch (_) {}
   }
 
   setPlaying(PodCast podCast, int index) {
@@ -278,4 +275,3 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     return '$kinAssetBaseUrl/${currentPodcast.cover}';
   }
 }
-

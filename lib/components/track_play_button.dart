@@ -4,9 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/components/kin_audio_wave.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
 
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:provider/provider.dart';

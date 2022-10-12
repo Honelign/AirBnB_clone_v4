@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,7 +26,7 @@ import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider_old.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import './services/provider/payment_provider.dart';
@@ -74,6 +75,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => MultiSelectProvider()),
         ChangeNotifierProvider(create: (_) => OfflineMusicProvider()),
+        ChangeNotifierProvider(create: (_) => PodcastProvider()),
         StreamProvider(
           create: (context) =>
               ConnectivityService().connectionStatusController.stream,

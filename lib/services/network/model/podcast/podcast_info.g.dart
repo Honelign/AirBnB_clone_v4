@@ -2,12 +2,12 @@ part of 'podcast_info.dart';
 
 PodcastInfo _$PodcastInfoFromJson(Map<String, dynamic> json) => PodcastInfo(
       id: json['id'],
-      categoryId: json['category_id'],
-      title: json['podcast_title'],
-      hostName: json['podcast_hostName'],
-      hostId: json['podcast_hostId'],
-      cover: json['podcast_coverImage'],
-      description: json['podcast_description'],
+      categoryId: json['categoryId'],
+      title: json['title'],
+      hostName: json['hostName'],
+      hostId: json['hostId'],
+      cover: json['cover'],
+      description: json['description'],
       numberOfEpisodes: json['numberOfEpisodes'],
       numberOfSeasons: json['numberOfSeasons'],
     );

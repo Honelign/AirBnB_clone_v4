@@ -3,9 +3,9 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/screens/podcast/component/all_podcasts.dart';
 import 'package:kin_music_player_app/screens/podcast/component/podcast_card.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
 
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider_old.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 

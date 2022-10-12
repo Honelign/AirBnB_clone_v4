@@ -5,12 +5,25 @@ import 'package:kin_music_player_app/screens/podcast/component/podcast_detail.da
 import 'package:kin_music_player_app/screens/podcast/components/podcast_detail_page.dart';
 
 class PodcastCard extends StatelessWidget {
+  int id;
   String url;
   String title;
   String host;
-  PodcastCard(
-      {Key? key, required this.url, required this.host, required this.title})
-      : super(key: key);
+  String hostId;
+  int numberOfSeasons;
+  int numberOfEpisodes;
+  String description;
+  PodcastCard({
+    Key? key,
+    required this.id,
+    required this.url,
+    required this.host,
+    required this.title,
+    required this.hostId,
+    required this.numberOfEpisodes,
+    required this.numberOfSeasons,
+    required this.description,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +32,14 @@ class PodcastCard extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PodcastDetailPage(
-              podcastId: "1",
+              podcastId: id.toString(),
               podcastName: title,
+              cover: url,
+              host: host,
+              hostId: hostId,
+              numberOfEpisodes: numberOfEpisodes,
+              numberOfSeasons: numberOfSeasons,
+              description: description,
             ),
           ),
         );

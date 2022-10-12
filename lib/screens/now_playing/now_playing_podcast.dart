@@ -7,8 +7,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/animation_rotate.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:provider/provider.dart';
 

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kin_music_player_app/services/network/model/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
 
 part 'podcastSeasons.g.dart';
 
@@ -10,17 +10,15 @@ class PodCastSeasons {
   final String cover;
 
   final List<PodCastEpisode> episodes;
-  
+
   final String narrator;
 
-  PodCastSeasons({
-    required this.id,
-    required this.title,
-    required this.cover,
-   
-    required this.episodes,
-    required this.narrator
-  });
+  PodCastSeasons(
+      {required this.id,
+      required this.title,
+      required this.cover,
+      required this.episodes,
+      required this.narrator});
 
   factory PodCastSeasons.fromJson(Map<String, dynamic> json) {
     return _$PodCastSeasonsFromJson(json);

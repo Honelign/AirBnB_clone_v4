@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
-
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/model/artist_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/companyProfile.dart';
@@ -10,13 +8,12 @@ import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music/favorite.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast_category.dart';
 import 'package:kin_music_player_app/services/network/model/track_for_search.dart';
 import 'package:kin_music_player_app/services/network/model/youtube_search_result.dart';
 import 'package:kin_music_player_app/services/utils/helpers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';
 
 HelperUtils helper = HelperUtils();

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/component/custom_list_tile.dart';
 import 'package:kin_music_player_app/screens/podcast/component/detail_card.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
 import 'package:kin_music_player_app/size_config.dart';
 
 class PodcastDetail extends StatelessWidget {
@@ -17,10 +17,12 @@ class PodcastDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: CachedNetworkImageProvider(
-                  '$kinAssetsBaseUrlOld/${podCast.cover}'),
-              fit: BoxFit.cover)),
+        image: DecorationImage(
+            image: CachedNetworkImageProvider(
+              '$kinAssetsBaseUrlOld/${podCast.cover}',
+            ),
+            fit: BoxFit.cover),
+      ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
         child: Column(

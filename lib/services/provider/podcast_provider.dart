@@ -1,46 +1,46 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:kin_music_player_app/services/network/api/podcast_service.dart';
-import 'package:kin_music_player_app/services/network/model/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_category.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_season.dart';
 
-class PodCastProvider extends ChangeNotifier {
+class PodcastProvider extends ChangeNotifier {
   bool isLoading = false;
-  List<dynamic> searchedPodCasts = [];
-  PodcastApiService podcastApiService = PodcastApiService();
-  Future<List<PodCast>> getPodCast() async {
-    String apiEndPoint = '/play_seasons/';
+  List<PodcastCategory> podcastCategories = [];
+  List<PodcastSeason> podcastSeason = [];
+  List<PodcastEpisode> podcastEpisodes = [];
+  PodcastApiService _podcastApiService = PodcastApiService();
+
+  // get podcasts by category
+  Future<List<PodcastCategory>> getPodcastsByCategory(
+      {required int pageSize}) async {
     isLoading = true;
-    List<PodCast> podCasts = await podcastApiService.getPodCasts(apiEndPoint);
+    podcastCategories =
+        await _podcastApiService.getPodcastsByCategory(pageSize: pageSize);
     isLoading = false;
     notifyListeners();
-    return podCasts;
+    return podcastCategories;
   }
 
-  Future<List<PodCast>> getPopularPodCast() async {
-    String apiEndPoint = '/play_seasons/';
+  // get podcast seasons by podcast id
+  Future<List<PodcastSeason>> getPodcastSeasons(
+      {required int podcastId, required int pageSize}) async {
     isLoading = true;
-    List<PodCast> podCasts = await podcastApiService.getPodCasts(apiEndPoint);
+    podcastSeason = await _podcastApiService.getPodcastSeasons(
+        podcastId: podcastId, pageSize: pageSize);
     isLoading = false;
     notifyListeners();
-    return podCasts;
+    return podcastSeason;
   }
 
-  Future<List<PodCastCategory>> getPodCastCategory() async {
-    String apiEndPoint = '/play_categories/';
+  // get podcast episode by season id
+  Future<List<PodcastEpisode>> getPodcastEpisodes(
+      {required int pageSize, required int seasonId}) async {
     isLoading = true;
-    List<PodCastCategory> categories =
-        await podcastApiService.getPodCastCategories(apiEndPoint);
+    podcastEpisodes = await _podcastApiService.getPodcastEpisodes(
+        pageSize: pageSize, seasonId: seasonId);
     isLoading = false;
     notifyListeners();
-    return categories;
-  }
-
-  Future searchedPodCast(keyword) async {
-    String apiEndPoint = '/podcast/search/$keyword';
-    isLoading = true;
-    searchedPodCasts = await podcastApiService.searchPodCast(apiEndPoint);
-    isLoading = false;
-    notifyListeners();
-    return searchedPodCasts;
+    return podcastEpisodes;
   }
 }

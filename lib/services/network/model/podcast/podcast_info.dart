@@ -2,14 +2,14 @@ part 'podcast_info.g.dart';
 
 class PodcastInfo {
   final int id;
-  final String categoryId;
-  final String title;
-  final String hostName;
-  final String hostId;
-  final String cover;
-  final String description;
+  final int hostId;
+  final int categoryId;
   final int numberOfSeasons;
   final int numberOfEpisodes;
+  final String title;
+  final String hostName;
+  final String cover;
+  final String description;
 
   PodcastInfo({
     required this.id,

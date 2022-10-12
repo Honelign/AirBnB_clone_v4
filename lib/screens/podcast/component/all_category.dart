@@ -3,7 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/component/all_category_card.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast_category.dart';
 
 class AllCategory extends StatefulWidget {
   const AllCategory({Key? key}) : super(key: key);

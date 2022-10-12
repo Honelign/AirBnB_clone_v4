@@ -4,8 +4,9 @@ import 'package:kin_music_player_app/components/section_title.dart';
 
 import 'package:kin_music_player_app/screens/podcast/component/all_category.dart';
 import 'package:kin_music_player_app/screens/podcast/component/category_list_card.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_category.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:kin_music_player_app/services/network/model/podcast_old/podcast_category.dart';
+
+import 'package:kin_music_player_app/services/provider/podcast_provider_old.dart';
 import 'package:provider/src/provider.dart';
 
 import '../../../constants.dart';
