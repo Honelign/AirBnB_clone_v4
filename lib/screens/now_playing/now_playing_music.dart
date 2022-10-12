@@ -620,14 +620,18 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
       builder: (context, isPlaying) {
         return InkWell(
           onTap: () {
-            if (isPlaying || playerProvider.player.isBuffering.value) {
-              playerProvider.player.pause();
-            } else {
-              if (checkConnection(status)) {
-                playerProvider.player.play();
+            if (playerProvider.isProcessingPlay == false) {
+              if (isPlaying || playerProvider.player.isBuffering.value) {
+                playerProvider.player.pause();
               } else {
-                kShowToast();
+                if (checkConnection(status)) {
+                  playerProvider.player.play();
+                } else {
+                  kShowToast();
+                }
               }
+            } else {
+              kShowRetry(message: "Processing Play");
             }
           },
           child: !playerProvider.isMusicLoaded
