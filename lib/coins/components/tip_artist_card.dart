@@ -62,7 +62,7 @@ class _TipArtistCardState extends State<TipArtistCard> {
                 isLoading = false;
               },
               child: isLoading == true
-                  ? KinProgressIndicator()
+                  ? const KinProgressIndicator()
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,

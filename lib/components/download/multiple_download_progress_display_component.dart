@@ -1,18 +1,16 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/services/network/model/music/music.dart';
-import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 
+// ignore: must_be_immutable
 class MultipleDownloadProgressDisplayComponent extends StatefulWidget {
   List<Music> musics;
   MultipleDownloadProgressDisplayComponent({Key? key, required this.musics})
@@ -25,6 +23,7 @@ class MultipleDownloadProgressDisplayComponent extends StatefulWidget {
 
 class _MultipleDownloadProgressDisplayComponentState
     extends State<MultipleDownloadProgressDisplayComponent> {
+  final ErrorLoggingApiService _errorLoggingService = ErrorLoggingApiService();
   bool isLoading = false;
   String currentDownloadProgressValue = "Preparing";
   String currentDownloadTrackTitle = "";
@@ -39,7 +38,6 @@ class _MultipleDownloadProgressDisplayComponentState
   }
 
   Future _downloadFile({required Music music, required bool isLastItem}) async {
-    print("_downloadFile");
     Map<Permission, PermissionStatus> statuses = await [
       Permission.storage,
       //add more permission to request here.
@@ -57,15 +55,24 @@ class _MultipleDownloadProgressDisplayComponentState
       try {
         Dio dio = Dio();
 
-        await dio.download("$kinAssetBaseUrl/${music.audio}", trackLocalPath,
-            onReceiveProgress: (rec, total) {
-          setState(() {
-            currentDownloadProgressValue =
-                ((rec / total) * 100).toStringAsFixed(0);
-          });
-        });
+        await dio.download(
+          "$kinAssetBaseUrl/${music.audio}",
+          trackLocalPath,
+          onReceiveProgress: (rec, total) {
+            setState(
+              () {
+                currentDownloadProgressValue =
+                    ((rec / total) * 100).toStringAsFixed(0);
+              },
+            );
+          },
+        );
       } catch (e) {
-        print(e);
+        _errorLoggingService.logErrorToServer(
+          fileName: "download_progress_display_component.dart",
+          functionName: "_downloadFile",
+          errorInfo: e.toString(),
+        );
       }
 
       if (isLastItem == true) {

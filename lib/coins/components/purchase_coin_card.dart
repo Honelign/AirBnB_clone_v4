@@ -61,6 +61,7 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
               });
               final provider =
                   Provider.of<CoinProvider>(context, listen: false);
+              // ignore: unused_element
               Future makeCoinPurchaseSaveRequest() async {
                 await provider.buyCoin(int.parse(widget.value), "paypal");
 

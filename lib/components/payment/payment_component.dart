@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
@@ -12,12 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
+import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../services/provider/payment_provider.dart';
-
+// ignore: must_be_immutable
 class PaymentComponent extends StatefulWidget {
   String paymentPrice;
   int trackId;
@@ -39,7 +37,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
   final String className = "_PaymentComponentState";
   final String fileName = "payment_component.dart";
 
-  ErrorLoggingApiService _errorLoggingApiService = ErrorLoggingApiService();
+  final ErrorLoggingApiService _errorLoggingApiService =
+      ErrorLoggingApiService();
 
   //
   late PaymentProvider paymentProvider;

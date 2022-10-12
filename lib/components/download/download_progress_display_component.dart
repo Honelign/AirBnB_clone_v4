@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class DownloadProgressDisplayComponent extends StatefulWidget {
   Music music;
   DownloadProgressDisplayComponent({Key? key, required this.music})
@@ -34,6 +36,7 @@ class _DownloadProgressDisplayComponentState
   }
 
   Future _downloadFile() async {
+    ErrorLoggingApiService _errorLoggingService = ErrorLoggingApiService();
     OfflineMusicProvider _offlineMusicProvider =
         Provider.of<OfflineMusicProvider>(context, listen: false);
     Map<Permission, PermissionStatus> statuses = await [
@@ -50,16 +53,24 @@ class _DownloadProgressDisplayComponentState
       try {
         Dio dio = Dio();
 
-        await dio
-            .download("$kinAssetBaseUrl/${widget.music.audio}", trackLocalPath,
-                onReceiveProgress: (rec, total) {
-          setState(() {
-            currentDownloadProgressValue =
-                ((rec / total) * 100).toStringAsFixed(0);
-          });
-        });
+        await dio.download(
+          "$kinAssetBaseUrl/${widget.music.audio}",
+          trackLocalPath,
+          onReceiveProgress: (rec, total) {
+            setState(
+              () {
+                currentDownloadProgressValue =
+                    ((rec / total) * 100).toStringAsFixed(0);
+              },
+            );
+          },
+        );
       } catch (e) {
-        print(e);
+        _errorLoggingService.logErrorToServer(
+          fileName: "download_progress_display_component.dart",
+          functionName: "_downloadFile",
+          errorInfo: e.toString(),
+        );
       }
 
       setState(() {
@@ -104,7 +115,7 @@ class _DownloadProgressDisplayComponentState
     );
     return AlertDialog(
       backgroundColor: kPopupMenuBackgroundColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 100),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       title: Column(
         children: [
           // Title
@@ -182,7 +193,9 @@ class _DownloadProgressDisplayComponentState
                       progressColor: Colors.green,
                       center: Text(
                         currentDownloadProgressValue + "%",
-                        style: textStyle.copyWith(fontSize: 13),
+                        style: textStyle.copyWith(
+                          fontSize: 13,
+                        ),
                       ),
                     ),
             ],
