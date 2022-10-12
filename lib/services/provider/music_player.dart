@@ -162,25 +162,33 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   next({action = true, musics}) {
     int next = _currentIndex! + 1;
 
-    if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
-      setPlaying(_currentAlbum, 0, musics);
+    if (isProcessingPlay == false) {
+      if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
+        setPlaying(_currentAlbum, 0, musics);
 
-      play(
-        0,
-      );
-    } else if (!action && _loopMode && !_loopPlaylist) {
-      setPlaying(_currentAlbum, _currentIndex!, musics);
-      play(_currentIndex);
+        play(
+          0,
+        );
+      } else if (!action && _loopMode && !_loopPlaylist) {
+        setPlaying(_currentAlbum, _currentIndex!, musics);
+        play(_currentIndex);
+      } else {
+        play(next);
+      }
     } else {
-      play(next);
+      kShowToast(message: "Processing Play");
     }
   }
 
   prev() async {
     int pre = _currentIndex! - 1;
 
-    if (pre >= 0 && pre < _albumMusics.length) {
-      play(pre);
+    if (isProcessingPlay == false) {
+      if (pre >= 0 && pre < _albumMusics.length) {
+        play(pre);
+      }
+    } else {
+      kShowToast(message: "Processing play");
     }
   }
 
@@ -234,8 +242,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   ) async {
     try {
       _currentMusic = _albumMusics[index];
-      notifyListeners();
       player.stop();
+      notifyListeners();
 
       if (isPlayingLocal == false) {
         await _open(_albumMusics[index]);
@@ -291,7 +299,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     );
     try {
       // kill any existing player
-      // player.pause();
+      player.pause();
       player.stop();
 
       // open new player
@@ -325,7 +333,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           isProcessingPlay = false;
         }
       });
-      // isProcessingPlay = false;
 
       notifyListeners();
     } catch (e) {

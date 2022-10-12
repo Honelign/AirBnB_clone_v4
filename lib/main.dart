@@ -28,7 +28,6 @@ import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
-
 import './services/provider/payment_provider.dart';
 import 'firebase_options.dart';
 import 'routes.dart';
@@ -53,13 +52,6 @@ void main() async {
     ),
   );
 
-  /*
-   ByteData data =
-      await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  SecurityContext.defaultContext
-      .setTrustedCertificatesBytes(data.buffer.asUint8List());
-*/
-//
   runApp(
     MultiProvider(
       child: const Kin(),
