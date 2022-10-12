@@ -30,9 +30,30 @@ class Podcast extends StatelessWidget {
         "podcast_name": "13 Months of Sunshine",
         "image_url": "assets/images/Podcast-4.jpg",
         "host": "TESFA"
-      }
+      },
 
       // 13 Months of Sunshine
+
+      {
+        "podcast_name": "MERI Ethiopia",
+        "image_url": "assets/images/Podcast-8.jpg",
+        "host": "MERI Ethiopia"
+      },
+      {
+        "podcast_name": "Tragedy In Ethiopia",
+        "image_url": "assets/images/Podcast-11.jpg",
+        "host": "Chris Anderson"
+      },
+      {
+        "podcast_name": "Rorshok Ethiopia Update",
+        "image_url": "assets/images/Podcast-5.png",
+        "host": "Rorshok"
+      },
+      {
+        "podcast_name": "EBC Ethiopia",
+        "image_url": "assets/images/Podcast-10.jpg",
+        "host": "Radio"
+      },
     ];
 
     List podcastsTwo = [
@@ -61,6 +82,26 @@ class Podcast extends StatelessWidget {
         "image_url": "assets/images/Podcast-7.jpg",
         "host": "Radio"
       },
+      {
+        "podcast_name": "MERI Ethiopia",
+        "image_url": "assets/images/Podcast-8.jpg",
+        "host": "MERI Ethiopia"
+      },
+      {
+        "podcast_name": "Tragedy In Ethiopia",
+        "image_url": "assets/images/Podcast-11.jpg",
+        "host": "Chris Anderson"
+      },
+      {
+        "podcast_name": "Rorshok Ethiopia Update",
+        "image_url": "assets/images/Podcast-5.png",
+        "host": "Rorshok"
+      },
+      {
+        "podcast_name": "EBC Ethiopia",
+        "image_url": "assets/images/Podcast-10.jpg",
+        "host": "Radio"
+      },
     ];
 
     List podcastsThree = [
@@ -84,8 +125,40 @@ class Podcast extends StatelessWidget {
         "image_url": "assets/images/Podcast-10.jpg",
         "host": "Radio"
       },
+      {
+        "podcast_name": "Ethiopia by Ane Mitmita",
+        "image_url": "assets/images/Podcast-9.jpg",
+        "host": "Ane Mitmia"
+      },
+      {
+        "podcast_name": "TARIK: The Ethiopian History Podcast",
+        "image_url": "assets/images/Podcast-10.jpg",
+        "host": "T A R I K"
+      },
+      {
+        "podcast_name": "Tragedy In Ethiopia",
+        "image_url": "assets/images/Podcast-11.jpg",
+        "host": "Chris Anderson"
+      },
+      {
+        "podcast_name": "MIInDs Ethiopia",
+        "image_url": "assets/images/Podcast-6.jpg",
+        "host": "MIInDs"
+      },
+      {
+        "podcast_name": "EBC Ethiopia",
+        "image_url": "assets/images/Podcast-7.jpg",
+        "host": "Radio"
+      },
     ];
-    List allPodcasts = [podcasts, podcastsTwo, podcastsThree];
+    List allPodcasts = [
+      podcasts,
+      podcastsTwo,
+      podcastsThree,
+      podcasts,
+      podcastsTwo,
+      podcastsThree
+    ];
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
