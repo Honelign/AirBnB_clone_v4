@@ -218,43 +218,42 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       }
 
                       return FutureBuilder(
-                          future: provider.getCoinBalance(),
-                          builder: (context, snapshot) {
-                            // if loading coin balance
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.7,
-                                color: Colors.black,
-                                child: const KinProgressIndicator(),
-                              );
-                            }
+                        future: provider.getCoinBalance(),
+                        builder: (context, snapshot) {
+                          // if loading coin balance
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              color: Colors.black,
+                              child: const KinProgressIndicator(),
+                            );
+                          }
 
 // coin info got
-                            else {
-                              return Container(
-                                color: kPrimaryColor,
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.7,
-                                child: Column(
-                                  children: [
-                                    // modal header
-                                    buildModalHeader(
-                                      remainingCoinValue: snapshot.hasData
-                                          ? snapshot.data.toString()
-                                          : "0",
-                                    ),
+                          else {
+                            return Container(
+                              color: kPrimaryColor,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: Column(
+                                children: [
+                                  // modal header
+                                  buildModalHeader(
+                                    remainingCoinValue: snapshot.hasData
+                                        ? snapshot.data.toString()
+                                        : "0",
+                                  ),
 
-                                    // modal list values
-                                    buildCoinTipList(refresherFunction),
-                                  ],
-                                ),
-                              );
-                            }
-                          });
+                                  // modal list values
+                                  buildCoinTipList(refresherFunction),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      );
                     },
                   );
                 },
@@ -267,12 +266,13 @@ class _ArtistDetailState extends State<ArtistDetail> {
                 color: kSecondaryColor,
               ),
               child: const Center(
-                  child: Text(
-                "Tip Artist",
-                style: TextStyle(
-                  fontSize: 16,
+                child: Text(
+                  "Tip Artist",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
-              )),
+              ),
             ),
           ),
         ],

@@ -74,103 +74,107 @@ class _AlbumBodyState extends State<AlbumBody> {
               filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
               child: Container(
                 color: kPrimaryColor.withOpacity(0.5),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // back button
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                _buildBackButton(context),
-                              ],
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // back button
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  _buildBackButton(context),
+                                ],
+                              ),
+                              height: 45,
+                              width: MediaQuery.of(context).size.width,
                             ),
-                            height: 45,
-                            width: MediaQuery.of(context).size.width,
-                          ),
 
-                          // spacer
-                          const SizedBox(
-                            height: 16,
-                          ),
-
-                          // Album Art
-                          _buildAlbumArt(
-                            "$kinAssetBaseUrl/${widget.album.cover}",
-                          ),
-
-                          // spacer
-                          const SizedBox(
-                            height: 12,
-                          ),
-
-                          // album title
-                          Text(
-                            widget.album.title,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
+                            // spacer
+                            const SizedBox(
+                              height: 16,
                             ),
-                          ),
 
-                          // spacer
-                          const SizedBox(
-                            height: 4,
-                          ),
-
-                          // artist title
-                          Text(
-                            widget.album.artist,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
+                            // Album Art
+                            _buildAlbumArt(
+                              "$kinAssetBaseUrl/${widget.album.cover}",
                             ),
-                          ),
 
-                          // spacer
-                          const SizedBox(
-                            height: 20,
-                          ),
+                            // spacer
+                            const SizedBox(
+                              height: 12,
+                            ),
 
-                          // play all button
-                          checkConnection(status) == false
-                              ? Container()
-                              : _buildPlayAllButton(context),
-                        ],
-                      ),
-                    ),
+                            // album title
+                            Text(
+                              widget.album.title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
 
-                    // spacer
-                    SizedBox(
-                      height: getProportionateScreenHeight(25),
-                    ),
+                            // spacer
+                            const SizedBox(
+                              height: 4,
+                            ),
 
-                    // Scrollable Album View
-                    SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5 - 20,
-                          child: checkConnection(status) == false
-                              ? RefreshIndicator(
-                                  onRefresh: () async {
-                                    setState(() {});
-                                  },
-                                  backgroundColor:
-                                      refreshIndicatorBackgroundColor,
-                                  color: refreshIndicatorForegroundColor,
-                                  child: const NoConnectionDisplay(),
-                                )
-                              : _buildAlbumMusics(widget.albumMusicsFromCard,
-                                  context, widget.album.id),
+                            // artist title
+                            Text(
+                              widget.album.artist,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+
+                            // spacer
+                            const SizedBox(
+                              height: 20,
+                            ),
+
+                            // play all button
+                            checkConnection(status) == false
+                                ? Container()
+                                : _buildPlayAllButton(context),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+
+                      // spacer
+                      SizedBox(
+                        height: getProportionateScreenHeight(25),
+                      ),
+
+                      // Scrollable Album View
+                      SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
+                          child: SizedBox(
+                            height:
+                                MediaQuery.of(context).size.height * 0.5 - 20,
+                            child: checkConnection(status) == false
+                                ? RefreshIndicator(
+                                    onRefresh: () async {
+                                      setState(() {});
+                                    },
+                                    backgroundColor:
+                                        refreshIndicatorBackgroundColor,
+                                    color: refreshIndicatorForegroundColor,
+                                    child: const NoConnectionDisplay(),
+                                  )
+                                : _buildAlbumMusics(widget.albumMusicsFromCard,
+                                    context, widget.album.id),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -184,7 +188,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     return CachedNetworkImage(
       imageUrl: image,
       imageBuilder: (context, imageProvider) => Container(
-        height: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.width * 0.45,
         width: MediaQuery.of(context).size.width * 0.4,
         decoration: BoxDecoration(
           image: DecorationImage(

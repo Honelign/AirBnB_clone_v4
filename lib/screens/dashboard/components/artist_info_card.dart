@@ -39,9 +39,13 @@ class ArtistInfoCard extends StatelessWidget {
                 width: 25,
                 height: 25,
                 child: cardType == "Views"
-                    ? Image.asset(
-                        "./assets/icons/Views.png",
-                      )
+                    ? cardType == "Tip"
+                        ? Image.asset(
+                            "./assets/icons/Tip Icon.png",
+                          )
+                        : Image.asset(
+                            "./assets/icons/Views.png",
+                          )
                     : Image.asset(
                         "./assets/icons/Revenue.png",
                       ),

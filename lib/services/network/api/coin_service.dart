@@ -92,7 +92,7 @@ class CoinApiService {
     try {
       // get user id
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("id") ?? "";
+      String id = await helper.getUserId();
 
       // request url & body
       String uri = "$kinPaymentUrl/gift/give-gift/";
