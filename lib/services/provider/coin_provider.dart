@@ -15,10 +15,12 @@ class CoinProvider extends ChangeNotifier {
     return currentCoinValue.toString();
   }
 
-  Future<String> buyCoin(int paymentAmount, String paymentMethod) async {
+  Future<String> buyCoin(
+      {required int paymentAmount, required String paymentMethod}) async {
     isLoading = true;
 
-    bool result = await coinApiService.buyGift(paymentAmount, paymentMethod);
+    bool result = await coinApiService.buyGift(
+        paymentAmount: paymentAmount, paymentMethod: paymentMethod);
 
     if (result == true) {
       currentCoinValue += paymentAmount;

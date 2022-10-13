@@ -68,6 +68,7 @@ class PaymentApiService {
         );
 
         if (trackResponse.statusCode == 201) {
+          print("lookie : payment saved");
           return true;
         }
 

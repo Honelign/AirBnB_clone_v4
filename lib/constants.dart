@@ -61,6 +61,7 @@ const String KinRadioUrl =
 const kAnimationDuration = Duration(milliseconds: 200);
 const String youtubeDataApiKey = "AIzaSyAzB1wCAyyNEUOY87xJYWbMMwaWeUhl-ms";
 List<String> allowedCoinValues = [
+  "1",
   "5",
   "10",
   "15",

@@ -17,10 +17,12 @@ class BuyCoinPage extends StatefulWidget {
 class _BuyCoinPageState extends State<BuyCoinPage> {
   @override
   Widget build(BuildContext context) {
+    print("lookie = buiding pahe");
     final provider = Provider.of<CoinProvider>(context, listen: false);
 
     // will be passed down to child to refresh state
-    void refreshFunction() {
+    void refreshFunction() async {
+      await provider.getCoinBalance();
       setState(() {});
     }
 
@@ -38,9 +40,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
           } else {
             return RefreshIndicator(
               onRefresh: () async {
-                setState(() async {
-                  await provider.getCoinBalance();
-                });
+                print("lookie - Refreshing");
               },
               backgroundColor: refreshIndicatorBackgroundColor,
               color: refreshIndicatorForegroundColor,
@@ -82,8 +82,8 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
 
                             // amount of remaining coins
                             Text(
-                              snapshot.data != "" && snapshot.data != null
-                                  ? "${snapshot.data} ETB"
+                              provider.currentCoinValue != ""
+                                  ? "${provider.currentCoinValue} ETB"
                                   : "0 ETB",
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.75),
@@ -113,7 +113,9 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
                                 // card component
                                 return PurchaseCoinCard(
                                   value: allowedCoinValues[index],
-                                  refresher: refreshFunction,
+                                  refresher: () {
+                                    setState(() {});
+                                  },
                                 );
                               },
                             ),

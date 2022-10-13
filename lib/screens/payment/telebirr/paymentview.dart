@@ -6,6 +6,8 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/home_screen.dart';
+import 'package:kin_music_player_app/services/provider/coin_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
@@ -139,6 +141,7 @@ class _PaymentViewState extends State<PaymentView> {
 
   @override
   Widget build(BuildContext context) {
+    CoinProvider coinProvider = Provider.of<CoinProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -209,7 +212,15 @@ class _PaymentViewState extends State<PaymentView> {
                       setState(() async {
                         final u = url.toString();
                         if (u.contains("result?status=200")) {
-                          savePayment();
+                          try {
+                            await coinProvider.buyCoin(
+                              paymentAmount: int.parse(widget.paymentAmount),
+                              paymentMethod: "telebirr",
+                            );
+                            Navigator.pop(context);
+                          } catch (e) {
+                            print("lookie $e");
+                          }
                         }
 
                         this.url = url.toString();

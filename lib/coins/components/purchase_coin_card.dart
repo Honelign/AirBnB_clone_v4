@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/coins/components/coin_icon.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/components/payment/payment_component.dart';
+import 'package:kin_music_player_app/components/payment/coin_payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/services/provider/coin_provider.dart';
-import 'package:provider/provider.dart';
 
 class PurchaseCoinCard extends StatefulWidget {
   final String value;
@@ -59,30 +57,18 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
               setState(() {
                 isButtonLoading = true;
               });
-              final provider =
-                  Provider.of<CoinProvider>(context, listen: false);
-              // ignore: unused_element
-              Future makeCoinPurchaseSaveRequest() async {
-                await provider.buyCoin(int.parse(widget.value), "paypal");
 
-                setState(() {
-                  isButtonLoading = false;
-                });
-              }
-
+              // show payment modal
               showModalBottomSheet(
                 isScrollControlled: true,
                 context: context,
-                builder: (context) => PaymentComponent(
-                  trackId: 1,
-                  // successFunction: makeCoinPurchaseSaveRequest,
+                builder: (context) => CoinPaymentComponent(
+                  trackId: 0,
                   paymentPrice: widget.value,
-                  onSuccessFunction: () {},
+                  onSuccessFunction: widget.refresher,
                   paymentReason: "tip",
-                  // refresherFunction: refresherFunction,
                 ),
               );
-              widget.refresher();
             },
             child: isButtonLoading == true
                 ? const Center(

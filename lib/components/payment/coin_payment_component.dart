@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -16,12 +17,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
-class PaymentComponent extends StatefulWidget {
+class CoinPaymentComponent extends StatefulWidget {
   String paymentPrice;
   int trackId;
   String paymentReason;
   Function onSuccessFunction;
-  PaymentComponent({
+  CoinPaymentComponent({
     Key? key,
     required this.paymentPrice,
     required this.trackId,
@@ -30,10 +31,10 @@ class PaymentComponent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PaymentComponent> createState() => _PaymentComponentState();
+  State<CoinPaymentComponent> createState() => _CoinPaymentComponentState();
 }
 
-class _PaymentComponentState extends State<PaymentComponent> {
+class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
   final String className = "_PaymentComponentState";
   final String fileName = "payment_component.dart";
 
@@ -201,8 +202,13 @@ class _PaymentComponentState extends State<PaymentComponent> {
             onPaymentCompleteFunction: widget.onSuccessFunction,
           );
         }
-        Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =
-            true;
+        CoinProvider coinProvider = Provider.of(context, listen: false);
+        await coinProvider.buyCoin(
+          paymentAmount: int.parse(widget.paymentPrice),
+          paymentMethod: "Stripe",
+        );
+
+        widget.onSuccessFunction();
 
         kShowToast(message: "Payment Completed");
 

@@ -626,12 +626,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
               } else {
                 if (checkConnection(status)) {
                   playerProvider.player.play();
-                } else {
-                  kShowToast();
                 }
               }
-            } else {
-              kShowRetry(message: "Processing Play");
             }
           },
           child: !playerProvider.isMusicLoaded

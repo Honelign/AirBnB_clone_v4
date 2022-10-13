@@ -175,20 +175,16 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
       } else {
         play(next);
       }
-    } else {
-      kShowToast(message: "Processing Play");
     }
   }
 
   prev() async {
-    int pre = _currentIndex! - 1;
-
     if (isProcessingPlay == false) {
+      int pre = _currentIndex! - 1;
+      print("lookie $pre");
       if (pre >= 0 && pre < _albumMusics.length) {
         play(pre);
       }
-    } else {
-      kShowToast(message: "Processing play");
     }
   }
 
@@ -240,6 +236,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   play(
     index,
   ) async {
+    print("lookie - play $index");
+    print("lookie - play ${isPlayingLocal}");
     try {
       _currentMusic = _albumMusics[index];
       player.stop();
@@ -415,8 +413,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           notifyListeners();
 
           setPlaying(album, index, musics);
-        } else {
-          kShowToast(message: "Already Playing another track");
         }
       }
     } catch (e) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CoinApiService {
@@ -11,16 +12,11 @@ class CoinApiService {
 
   // get the coin balance of a user
   Future getRemainingGift() async {
-    // get user id
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String id = prefs.getString("id") ?? "";
-
-    print("@@@@lookie - buy coin api call");
+    String id = await helper.getUserId();
 
     try {
-      Response response =
-          await get(Uri.parse("$kinPaymentUrl/gift/save-payment-info/$id"));
+      Response response = await get(
+          Uri.parse("$kinPaymentUrl/gift/save-gift-payment-info/$id"));
 
       if (response.statusCode == 200) {
         var body = jsonDecode(response.body);
@@ -39,18 +35,20 @@ class CoinApiService {
   }
 
   // buy / increase coin of  a user
-  Future buyGift(int paymentAmount, String paymentMethod) async {
+  Future buyGift(
+      {required int paymentAmount, required String paymentMethod}) async {
+    bool result = false;
+    print("lookie buy gift called");
     try {
-      // get user id
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("id") ?? "";
+      String id = await helper.getUserId();
 
       // request url & body
-      String uri = "$kinPaymentUrl/gift/save-payment-info/";
+      String uri = "$kinPaymentUrl/gift/save-gift-payment-info/";
       Map<String, dynamic> requestBody = {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
         "payment_method": paymentMethod,
+        "payment_state": "completed",
       };
 
       if (id != "") {
@@ -63,16 +61,16 @@ class CoinApiService {
 
           // put successful
           if (putResponse.statusCode == 200) {
-            return true;
+            result = true;
           }
           // put failed
           else {
-            return false;
+            result = false;
           }
         }
         // post is successful
         else if (postResponse.statusCode == 200) {
-          return true;
+          result = true;
         }
       }
     } catch (e) {
@@ -82,9 +80,11 @@ class CoinApiService {
         functionName: "buyGift",
         errorInfo: e.toString(),
       );
+      result = false;
     }
 
-    return false;
+    print("lookie buy gift called and result is $result");
+    return result;
   }
 
   // transfer coin to artist

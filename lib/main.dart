@@ -7,7 +7,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';

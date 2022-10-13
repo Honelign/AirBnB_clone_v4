@@ -6,19 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/music_card_recently.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card_recently.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/music_list_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_list_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/now_playing_music_indicator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/now_playing_music_indicator.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/components/payment/payment_component.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/payment/payment_component.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/album/components/album_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/album/components/album_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/library/Offline/components/offline_music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/library/Offline/components/offline_music_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/library/Purchased/purchased.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/library/Purchased/purchased.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_body.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_body.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/playlist/components/playlist_track_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kin_music_player_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kin_music_player_app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/services/provider/music_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/music_player.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/provider/music_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/music_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/services/provider/payment_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/payment_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
