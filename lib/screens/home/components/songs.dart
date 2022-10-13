@@ -367,7 +367,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         ),
         SizedBox(height: getProportionateScreenWidth(20)),
         SizedBox(
-          height: getProportionateScreenHeight(180),
+          height: getProportionateScreenHeight(200),
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder<List<Artist>>(

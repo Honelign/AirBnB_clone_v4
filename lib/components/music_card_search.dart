@@ -18,6 +18,8 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/now_playing/now_playing_music.dart';
+
 // ignore: must_be_immutable
 class MusicCardsearch extends StatelessWidget {
   MusicCardsearch(
@@ -60,15 +62,20 @@ class MusicCardsearch extends StatelessWidget {
           // height: 50,
           width: getProportionateScreenWidth(width),
           child: GestureDetector(
-            onTap: () {
+           
+            onTap: () async{
+              
+               p.albumMusicss = musics;
+                p.isPlayingLocal = false;
+                p.setBuffering(musicIndex);
               if (checkConnection(status)) {
-                incrementMusicView(music.id);
+               // incrementMusicView(music.id);
                 p.setBuffering(musicIndex);
 
                 if (p.isMusicInProgress(music)) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => NowPlayingMusicFromsearch(music),
+                      builder: (context) =>NowPlayingMusic(music),
                     ),
                   );
                 } else {
@@ -103,13 +110,16 @@ class MusicCardsearch extends StatelessWidget {
                   p.setMusicStopped(false);
                   podcastProvider.setEpisodeStopped(true);
                   p.listenMusicStreaming();
-                  podcastProvider.listenPodcastStreaming();
 
+                  podcastProvider.listenPodcastStreaming();
+                     // p.setMiniPlayerVisibility(true);
                   // add to recently played
                   musicProvider.addToRecentlyPlayed(music: music);
 
                   // add to popluar
                   musicProvider.countPopular(music: music);
+
+                  
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -155,20 +165,20 @@ class MusicCardsearch extends StatelessWidget {
                             Column(
                               children: [
                                 SizedBox(
-                                  width: getProportionateScreenWidth(80),
+                                  width: getProportionateScreenWidth(140),
                                   child: Text(
                                     music.title,
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     softWrap: false,
                                     style: const TextStyle(
                                         color: Colors.white, fontSize: 14),
                                   ),
                                 ),
                                 SizedBox(
-                                  width: getProportionateScreenWidth(80),
+                                  width: getProportionateScreenWidth(140),
                                   child: Text(
                                     artistname,
-                                    overflow: TextOverflow.fade,
+                                    overflow: TextOverflow.ellipsis,
                                     softWrap: false,
                                     style: const TextStyle(
                                         color: Colors.white, fontSize: 12),
@@ -338,28 +348,28 @@ class MusicCardsearch extends StatelessWidget {
                                     return kMusicPopupMenuItem;
                                   },
                                 ),
-                                p.currentMusic == null
-                                    ? Container()
-                                    : p.currentMusic!.title ==
-                                            musics[musicIndex].title
-                                        ? TrackMusicPlayButton(
-                                            music: music,
-                                            index: musicIndex,
-                                            // TODO: Replace
-                                            album: Album(
-                                              id: -2,
-                                              title: 'Single Music $musicIndex',
-                                              artist: 'kin',
-                                              description: '',
-                                              cover: 'assets/images/kin.png',
-                                              // cover:'$kinAssetBaseUrl/${music.cover}',
-                                              count: musics.length,
-                                              artist_id: 1,
-                                              isPurchasedByUser: false,
-                                              price: 60,
-                                            ),
-                                          )
-                                        : Container()
+                                // p.currentMusic == null
+                                //     ? Container()
+                                //     : p.currentMusic!.title ==
+                                //             musics[musicIndex].title
+                                //         ? TrackMusicPlayButton(
+                                //             music: music,
+                                //             index: musicIndex,
+                                //             // TODO: Replace
+                                //             album: Album(
+                                //               id: -2,
+                                //               title: 'Single Music $musicIndex',
+                                //               artist: 'kin',
+                                //               description: '',
+                                //               cover: 'assets/images/kin.png',
+                                //               // cover:'$kinAssetBaseUrl/${music.cover}',
+                                //               count: musics.length,
+                                //               artist_id: 1,
+                                //               isPurchasedByUser: false,
+                                //               price: 60,
+                                //             ),
+                                //           )
+                                //         : Container()
                               ],
                             ),
                           ],
@@ -378,7 +388,7 @@ class MusicCardsearch extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  
                 ],
               ),
             ),
