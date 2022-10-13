@@ -122,10 +122,7 @@ class _MusicCardState extends State<MusicCard> {
                     podcastProvider.setEpisodeStopped(true);
                     p.listenMusicStreaming();
                     podcastProvider.listenPodcastStreaming();
-                    print(
-                      "negro + " + p.isProcessingPlay.toString(),
-                    );
-
+                 
                     // add to recently played
                     musicProvider.addToRecentlyPlayed(music: widget.music);
 

@@ -431,111 +431,74 @@ Future removePlaylistTitle(apiEndPoint) async {
   }
 }
 
-Future searchMusic(apiEndPoint, searchQuery) async {
-  // // Response response =
-  // //     await get(Uri.parse("$kinMusicBaseUrl/api" "$apiEndPoint"));
-  // // if (response.statusCode == 200) {
-  // //   final item = json.decode(response.body) as List;
-  // //   List<dynamic> musics = item.map((value) {
-  // //     return Music.fromJson(value);
-  // //   }).toList();
-  // //   return musics;
-  // // } else {
-  // //   return [];
-  // // }
-  // try {
-  //   // Response response = await get(Uri.parse("$kinSearchBaseUrl$apiEndPoint"));
-
-  //   // // response
-  //   // if (response.statusCode == 200) {
-  //   //   final item = json.decode(response.body);
-
-  //   // if (item['count'] > 0) {
-  //   // final results = item['results'];
-  //   // results.forEach((result) => {
-  //   //       result['track_id'] = result['id'],
-  //   //       // track name
-  //   //       // track file
-  //   //       result['album_cover'] =
-  //   //           "https://storage.googleapis.com/kin-project-352614-storage/Media_Files/Albums_Cover_Images/2:%20Rophnan%20Nuri/Sidist-VI/Sidist-VI_-_sidistvialbumcover.jpeg",
-  //   //       result['artist_name'] = "Rophnan Nuri",
-  //   //       result['lyric_detail'] = "Lyric",
-  //   //       result['genre_title'] = "Desc",
-  //   //     });
-  //   List results = [
-  //     {
-  //       "track_id": 140,
-  //       "track_name": "TAMOLISHAL",
-  //       "track_file":
-  //           "Media_Files/Albums_Cover_Images/1:%20Tewodros%20Kassahun/TikurSew/TikurSew_-_tikursewalbumcover.jpeg",
-  //       "album_cover":
-  //           "Media_Files/Albums_Cover_Images/1:%20Tewodros%20Kassahun/Ethiopia/Ethiopia_-_ethiopiaabumcover.jpeg",
-  //       "artist_name": "Tewodros Kassahun",
-  //       "lyrics_detail": "Detail",
-  //       "genre_title": "Desc"
-  //     }
-  //   ];
-
-  //   // List<Music> musics = results.map((value) {
-  //   //   return Music.fromJson(value);
-  //   // }).toList();
-
-  //   Music music = Music.fromJson(results[0]);
-
-  //   //
-  //   // } else {
-  //   //
-  //   // }
-  //   // } else {
-  //   //
-  //   // }
-  //   return [music];
-  // } catch (e) {
-  //
-  // }
-
-  // youtube search
+Future<List<Music>> searchMusic(apiEndPoint, searchQuery) async {
+  List<Music> musics=[];
   try {
-    String url =
-        "https://www.googleapis.com/youtube/v3/search?key=${youtubeDataApiKey}&type=video&part=snippet&maxResults=12&q=$searchQuery";
-
-    Response youtubeResponse = await get(Uri.parse(url));
-    if (youtubeResponse.statusCode == 200) {
-      final items = jsonDecode(youtubeResponse.body)['items'] as List;
-      List results = [];
-
-      int index = 8;
-
-      if (items.length < 8) {
-        index = items.length;
-      }
-
-      for (var i = 0; i <= index; i++) {
-        String videoId = items[i]['id']['videoId'];
-
-        results.add({
-          "video_id": videoId,
-          "video_url": "https://www.youtube.com/watch?v=${videoId}",
-          "video_title": items[i]['snippet']['title'],
-          "video_cover": items[i]['snippet']['thumbnails']['medium']['url'],
-          "video_channel": items[i]['snippet']['channelTitle'],
-          "video_description": items[i]['snippet']['description'],
+    Response response = await get(Uri.parse("$apiEndPoint"));
+     if(response.statusCode==200){
+       final item = json.decode(response.body);
+    final results = item['results'];
+    results.forEach((result) => {
+          result['track_coverImage'] = result['track_coverimage'],
+           result['track_audioFile'] = result['track_audiofile'],
+          result['encoder_FUI'] = result['encoder_fui'],
+          result['artist_name'] = result['artist_name'][0],
+          result['artist_id'] = result['artist_id'][0],   
         });
-      }
+          print('dddd');
 
-      List<YoutubeSearchResult> youTubeResults = results
-          .map((result) => YoutubeSearchResult.fromJson(result))
-          .toList();
-
-      return youTubeResults;
-    }
+   results.forEach((value)=>{
+    musics.add( Music.fromJson(value))
+   }); }
   } catch (e) {
-    print("@api_service -> searchMusic error - ${e}");
+  print(e);
   }
-
-  return [];
+   return musics;
 }
 
+Future<List<Artist>> searchArtist(apiEndpoint)async{
+List<Artist> artists=[];
+try {
+  Response response=await get(Uri.parse("$apiEndpoint"));
+  if(response.statusCode==200){
+  final item = json.decode(response.body);
+    final results = item['results'];
+    results.forEach((result)=>{
+      result['artist_profileImage']=result['artist_profileimage']
+    });
+    results.forEach((value)=>{
+    artists.add( Artist.fromJson(value))
+   });
+  }
+  
+} catch (e) {
+  
+}
+return artists;
+}
+
+Future<List<Album>> searchAlbums(apiEndpoint)async{
+List<Album> albums=[];
+try {
+  Response response=await get(Uri.parse("$apiEndpoint"));
+  if(response.statusCode==200){
+  final item = json.decode(response.body);
+    final results = item['results'];
+    results.forEach((result)=>{
+      result['album_coverImage']=result['album_coverimage'],
+      result['artist_id']=result['artist_id'][0],
+      result['artist_name']=result['artist_name'][0],
+    });
+    results.forEach((value)=>{
+    albums.add( Album.fromJson(value))
+   });
+  }
+  
+} catch (e) {
+  
+}
+return albums;
+}
 Future getPodCasts(apiEndPoint) async {
   Response response = await get(Uri.parse("$kinPodcastBaseUrl$apiEndPoint"));
 

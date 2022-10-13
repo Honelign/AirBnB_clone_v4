@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/music_service.dart';
+import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network/api_service.dart';
+import '../network/model/music/artist.dart';
 
 class MusicProvider extends ChangeNotifier {
   bool isLoading = false;
@@ -14,7 +16,9 @@ class MusicProvider extends ChangeNotifier {
   late int isFavorite;
   bool hasfinishedtyping = false;
   String value = '';
-  List<dynamic> searchedMusics = [];
+  List<Music> searchedMusics = [];
+  List<Artist> artists=[];
+  List<Album> albums=[];
   List<dynamic>? searchedTracks = [];
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
@@ -86,13 +90,41 @@ class MusicProvider extends ChangeNotifier {
     return albumTracks;
   }
 
-  Future searchedMusic(keyword, searchType) async {
-    String apiEndPoint = "/search/$searchType/$keyword/";
+  Future<List<Music>> searchedMusic(keyword, ) async {
+   // String apiEndPoint = "/search/$searchType/$keyword/";
+   String id=await helper.getUserId();
+    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/track/?q=$keyword&userId=$id';
     isLoading = true;
-    searchedMusics = await searchMusic(apiEndPoint, keyword);
+    searchedMusics = await searchMusic(api, keyword);
+   
     isLoading = false;
     notifyListeners();
     return searchedMusics;
+  }
+
+  Future<List<Artist>> searchedArtists(keyword ) async {
+   // String apiEndPoint = "/search/$searchType/$keyword/";
+   
+   String id=await helper.getUserId();
+    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/artist/?q=$keyword&userId=$id';
+    isLoading = true;
+    artists = await searchArtist(api);
+    print('###$artists');
+    isLoading = false;
+    notifyListeners();
+    return artists;
+  }
+  Future<List<Album>> searchedAlbums(keyword ) async {
+   // String apiEndPoint = "/search/$searchType/$keyword/";
+   
+   String id=await helper.getUserId();
+    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/album/?q=$keyword&userId=$id';
+    isLoading = true;
+    albums = await searchAlbums(api);
+    print('###$artists');
+    isLoading = false;
+    notifyListeners();
+    return albums;
   }
 
   // count play
@@ -128,19 +160,19 @@ class MusicProvider extends ChangeNotifier {
     return searchedTracks ?? [];
   }
 
-  Future<List?> searchedArtists(title) async {
-    searchedArtist = await fetchSearchedArtists(title);
+  // Future<List?> searchedArtists(title) async {
+  //   searchedArtist = await fetchSearchedArtists(title);
 
-    notifyListeners();
-    return searchedArtist ?? [];
-  }
+  //   notifyListeners();
+  //   return searchedArtist ?? [];
+  // }
 
-  Future<List?> searchedAlbums(title) async {
-    searchedAlbum = await fetchSearchedAlbums(title);
+  // Future<List?> searchedAlbums(title) async {
+  //   searchedAlbum = await fetchSearchedAlbums(title);
 
-    notifyListeners();
-    return searchedAlbum ?? [];
-  }
+  //   notifyListeners();
+  //   return searchedAlbum ?? [];
+  // }
 
   Future<int> searchedtrackcount(title) async {
     count = await fetchSearchedTrackscount(title);
