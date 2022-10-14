@@ -143,7 +143,7 @@ checkConnection(status) {
 }
 
 // POPUP MENU ITEMS
-const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
+const TextStyle popupTextStyle = TextStyle(color: kPrimaryColor);
 
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(

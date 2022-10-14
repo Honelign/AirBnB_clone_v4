@@ -199,10 +199,13 @@ class FavoriteList extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    backgroundColor: kPrimaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    backgroundColor: Colors.white,
                                     title: const Text(
                                       'Are Your Sure',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.black),
                                     ),
                                     actions: [
                                       TextButton(
@@ -241,7 +244,7 @@ class FavoriteList extends StatelessWidget {
                           child: SvgPicture.asset(
                             'assets/icons/favorite.svg',
                             height: getProportionateScreenHeight(30),
-                            color: kSecondaryColor,
+                            color: Colors.white.withOpacity(0.5),
                           ),
                         ),
                       ],

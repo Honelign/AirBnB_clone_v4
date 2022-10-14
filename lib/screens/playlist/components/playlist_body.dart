@@ -84,8 +84,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        elevation: 0,
+        backgroundColor: Color(0xFF052c54),
         title: Text(widget.playlistName),
         actions: [
           // Add tracks button
@@ -172,6 +171,15 @@ class _PlaylistBodyState extends State<PlaylistBody> {
       backgroundColor: kPrimaryColor,
       body: SafeArea(
         child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF052C54),
+              const Color(0xFFD9D9D9).withOpacity(0.7)
+            ],
+          )),
           padding: const EdgeInsets.symmetric(vertical: 24),
           child: RefreshIndicator(
             onRefresh: () async {
