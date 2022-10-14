@@ -120,7 +120,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         ),
         SizedBox(height: getProportionateScreenWidth(10)),
         SizedBox(
-          height: getProportionateScreenHeight(120),
+          height: getProportionateScreenHeight(145),
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder(
@@ -575,50 +575,70 @@ class SpecialOfferCard extends StatelessWidget {
         child: SizedBox(
           width: getProportionateScreenWidth(242),
           height: getProportionateScreenWidth(100),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: '$kinAssetBaseUrl/$image',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CachedNetworkImage(
+                imageUrl: '$kinAssetBaseUrl/$image',
+                
+              //  width: double.infinity,
+                imageBuilder: (context, imageProvider) {
+                  return  Container(
+                    
+                    height: 115,
+                decoration: BoxDecoration(
+                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [BoxShadow(
+        offset: Offset(-5, 5),
+        spreadRadius: -3,
+        blurRadius: 5,
+        color: Color.fromRGBO(0, 0, 0, 0.76),
+    )],
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: imageProvider),
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topCenter,
+                  //   end: Alignment.bottomCenter,
+                  //   colors: [
+                  //     const Color(0xFF343434).withOpacity(0.3),
+                  //     const Color(0xFF343434).withOpacity(0.45),
+                  //   ],
+                  // ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(0xFF343434).withOpacity(0.3),
-                        const Color(0xFF343434).withOpacity(0.45),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: getProportionateScreenWidth(15.0),
-                    vertical: getProportionateScreenWidth(10),
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$genre\n",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        // TextSpan(text: "$numOfMusics Musics")
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              );
+                },
+              ),
+             Text(
+            genre,
+              overflow: TextOverflow.fade,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white),
+            )
+              // Padding(
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal: getProportionateScreenWidth(15.0),
+              //     vertical: getProportionateScreenWidth(10),
+              //   ),
+              //   child: Text.rich(
+              //     TextSpan(
+              //       style: const TextStyle(color: Colors.white),
+              //       children: [
+              //         TextSpan(
+              //           text: "$genre\n",
+              //           style: const TextStyle(
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //         // TextSpan(text: "$numOfMusics Musics")
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              
+            ],
           ),
         ),
       ),
@@ -661,6 +681,14 @@ class SpecialOfferCardartist extends StatelessWidget {
                   return Container(
                     height: 150,
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+        offset: Offset(-5, 5),
+        spreadRadius: -3,
+        blurRadius: 5,
+        color: Color.fromRGBO(0, 0, 0, 0.76),
+    )
+                      ],
                         shape: BoxShape.circle,
                         image: DecorationImage(image: imageProvider)),
                   );
@@ -674,6 +702,7 @@ class SpecialOfferCardartist extends StatelessWidget {
               ),
               Text(
                 artist.artist_name,
+                overflow: TextOverflow.fade,
                 style: const TextStyle(color: Colors.white),
               )
             ],

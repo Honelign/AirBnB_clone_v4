@@ -334,7 +334,9 @@ class _MusicCardState extends State<MusicCard> {
                     widget.music.artist.isNotEmpty
                         ? widget.music.artist
                         : 'kin artist',
-                    style: const TextStyle(color: kGrey),
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: kGrey),
                   ),
                   const SizedBox(height: 10),
                 ],
