@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/album.dart';
 import 'package:kin_music_player_app/screens/artist/artist.dart';
@@ -37,29 +38,20 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           toolbarHeight: 15,
           automaticallyImplyLeading: false,
-          backgroundColor: Color(0xFF052c54),
+          backgroundColor: const Color(0xFF052c54),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            systemNavigationBarColor: kSecondaryColor,
+            statusBarColor: kSecondaryColor,
+          ),
           elevation: 0,
-          // actions: [
-          //   Padding(
-          //     padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
-          //     child: IconButton(
-          //       onPressed: () {
-          //         Navigator.pushNamed(context, HomeSearchScreen.routeName);
-          //       },
-          //       icon: const Icon(
-          //         Icons.search,
-          //         color: Colors.white,
-          //       ),
-          //     ),
-          //   ),
-          // ],
-          bottom: const TabBar(
+          bottom: TabBar(
+            indicatorPadding: EdgeInsets.all(0),
             indicatorWeight: 3.0,
             labelPadding: EdgeInsets.all(0),
             indicatorSize: TabBarIndicatorSize.label,
-            tabs: [
+            tabs: const [
               Tab(
-                text: 'Home',
+                text: 'Explore',
               ),
               Tab(
                 text: 'Albums',

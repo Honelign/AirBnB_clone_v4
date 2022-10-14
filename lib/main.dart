@@ -119,6 +119,7 @@ class _KinState extends State<Kin> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     final AppRouter _appRouter = AppRouter();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
