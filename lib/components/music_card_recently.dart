@@ -114,45 +114,51 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                 kShowToast();
               }
             },
-            child: Row(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    bottomLeft: Radius.circular(5),
+            child: CachedNetworkImage(
+              imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
+              imageBuilder: (context,image) {
+                return Container(
+                  
+                  padding: const EdgeInsets.only(left: 10),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      opacity: 0.4,
+                      fit: BoxFit.cover,
+                      image:image ),
+                    //color:  Colors.red.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(5)
                   ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                       Padding(
+                         padding: const EdgeInsets.symmetric(vertical: 2),
+                         child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
+                   
                     height: 100,
                     imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
                     fit: BoxFit.cover,
                     width: getProportionateScreenWidth(widget.width) / 2,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xff333333).withOpacity(0.6),
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(5),
-                      bottomRight: Radius.circular(5),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       ),
+                       SizedBox(width: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            width: getProportionateScreenWidth(80),
+                            
+                            width: getProportionateScreenWidth(90),
                             child: Text(
                               widget.music.title,
                               overflow: TextOverflow.fade,
                               softWrap: false,
                               style: const TextStyle(
-                                  color: Colors.white, fontSize: 10),
+                                fontWeight: FontWeight.w700,
+                                  color: Colors.white, fontSize: 12),
                             ),
                           ),
                           Column(
@@ -242,9 +248,8 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 10),
-              ],
+                );
+              }
             ),
           ),
         );

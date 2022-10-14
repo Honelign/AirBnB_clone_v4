@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RecentlyPlayedProvider extends ChangeNotifier {
   bool isLoading = false;
-  static const _recentlyPlayedMaxCount = 6;
+  static const _recentlyPlayedMaxCount = 4;
 
   // get last played
   Future<List<Music>> getRecentlyPlayed() async {
