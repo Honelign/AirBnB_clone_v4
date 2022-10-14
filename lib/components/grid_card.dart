@@ -39,7 +39,7 @@ class GridCard extends StatelessWidget {
           );
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 107,

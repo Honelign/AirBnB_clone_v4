@@ -241,11 +241,7 @@ class FavoriteList extends StatelessWidget {
                                   );
                                 });
                           },
-                          child: SvgPicture.asset(
-                            'assets/icons/favorite.svg',
-                            height: getProportionateScreenHeight(30),
-                            color: Colors.white.withOpacity(0.5),
-                          ),
+                          child: Icon(Icons.favorite),
                         ),
                       ],
                     )

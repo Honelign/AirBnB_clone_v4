@@ -71,8 +71,10 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        padding:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
+        padding: EdgeInsets.symmetric(
+          vertical: getProportionateScreenHeight(30),
+          horizontal: 4,
+        ),
         decoration: linearGradientDecoration,
         child: checkConnection(status) == false
             ? const NoConnectionDisplay()

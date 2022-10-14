@@ -50,8 +50,8 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
                       backgroundColor: Colors.white,
                       child: Image.asset(
                         "assets/icons/Playlist Icon.png",
-                        width: 32,
-                        height: 32,
+                        width: 26,
+                        height: 26,
                       ),
                     ),
 

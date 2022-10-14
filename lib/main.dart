@@ -97,6 +97,14 @@ class _KinState extends State<Kin> {
   void initState() {
     super.initState();
 
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: kPrimaryColor,
+        statusBarColor: kPrimaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+
     Provider.of<CachedFavoriteProvider>(
       context,
       listen: false,
