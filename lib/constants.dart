@@ -12,7 +12,7 @@ const kArtistID = "";
 
 // colors
 const kPrimaryColor = Colors.black;
-const kSecondaryColor = Color(0xFF3D8361);
+const kSecondaryColor = Color(0xFF052C54);
 const kLightSecondaryColor = Color(0xFF009ddc);
 const kTertiaryColor = Color(0xFF7e9632);
 const kGrey = Color(0xFFBBBBBB);
@@ -321,4 +321,26 @@ TextStyle noDataDisplayStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w600,
   color: Colors.white.withOpacity(0.9),
+);
+
+// new styles
+TextStyle headerOneTextStyle = const TextStyle(
+  color: Colors.white,
+  fontSize: 24,
+  letterSpacing: 0.5,
+  fontWeight: FontWeight.w700,
+);
+
+TextStyle headerTwoTextStyle = const TextStyle(
+  color: Colors.white,
+  fontSize: 22,
+  letterSpacing: 0,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle headerThreeTextStyle = const TextStyle(
+  color: Colors.white,
+  fontSize: 20,
+  letterSpacing: 0.0,
+  fontWeight: FontWeight.w500,
 );

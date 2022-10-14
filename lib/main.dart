@@ -35,8 +35,6 @@ import 'services/provider/genre_provider.dart';
 import 'services/provider/podcast_player.dart';
 import 'theme.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // secret stripe key =sk_test_51LcOtyFvUcclFpL2Isr4xf7kyt67mCFY6LHxNy5mu06kfk5MzcZRU11W6dU211P4XGyMPoYTltDWBrftA3OoFhHz00pPkHiT4s

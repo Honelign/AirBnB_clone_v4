@@ -4,7 +4,6 @@ import 'package:kin_music_player_app/services/network/model/radio.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 
-import '../../constants.dart';
 import '../network/api_service.dart';
 
 class RadioProvider extends ChangeNotifier {
@@ -23,9 +22,7 @@ class RadioProvider extends ChangeNotifier {
   int _currentIndex = 0;
 
   int get currentIndex => _currentIndex;
-  List<RadioStation> _stations = [];
-
-  List<RadioStation> get stations => _stations;
+  List<RadioStation> stations = [];
 
   final _audios = <Audio>[];
 
@@ -45,7 +42,7 @@ class RadioProvider extends ChangeNotifier {
     var loading = true;
     const String apiEndPoint = 'stations';
 
-    _stations = await getRadioStations(apiEndPoint);
+    stations = await getRadioStations(apiEndPoint);
 
     loading = false;
     return stations;
@@ -84,7 +81,7 @@ class RadioProvider extends ChangeNotifier {
 
   prev() {
     int pre = _currentIndex - 1;
-    if (pre <= _stations.length) {
+    if (pre <= stations.length) {
       play(pre);
       _isPlaying = true;
       notifyListeners();
@@ -117,15 +114,15 @@ class RadioProvider extends ChangeNotifier {
       await _open(stations[index]);
       _isStationLoaded = true;
       notifyListeners();
-      setPlaying(_stations[index], index);
+      setPlaying(stations[index], index);
     } catch (_) {}
   }
 
   play(index) async {
     try {
-      _currentStation = _stations[index];
+      _currentStation = stations[index];
       notifyListeners();
-      await _open(_stations[index]);
+      await _open(stations[index]);
       _currentIndex = index;
     } catch (_) {}
   }
@@ -170,6 +167,6 @@ class RadioProvider extends ChangeNotifier {
   }
 
   isLastStation(next) {
-    return next == _stations.length;
+    return next == stations.length;
   }
 }

@@ -8,6 +8,7 @@ import 'package:kin_music_player_app/components/now_playing_podcast_indicator.da
 import 'package:kin_music_player_app/components/now_playing_radio_indicator.dart';
 import 'package:kin_music_player_app/screens/library/library.dart';
 import 'package:kin_music_player_app/screens/podcast/podcast.dart';
+import 'package:kin_music_player_app/screens/radio/radio.dart';
 import 'package:kin_music_player_app/screens/settings/settings.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
@@ -33,14 +34,14 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 0;
+  int _currentIndex = 3;
 
   final _inactiveColor = kGrey;
   List<Widget> pages = [
     const HomeScreen(),
     const MyLibrary(),
     const Podcast(),
-    const RadioScreen(),
+    const RadioScreenNew(),
     const Settings(),
     //makePayment(),
   ];
