@@ -72,11 +72,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               SizedBox(height: getProportionateScreenWidth(10)),
               _buildArtist(context),
               SizedBox(
-                height: getProportionateScreenHeight(20),
+                height: getProportionateScreenHeight(10),
               ),
               _buildRecentMusics(context),
               SizedBox(
-                height: getProportionateScreenHeight(20),
+                height: getProportionateScreenHeight(10),
               ),
               _buildGenres(context)
             ],

@@ -18,7 +18,7 @@ class NowPlayingMusicIndicator extends StatefulWidget {
   final String trackPrice;
   final bool isPurchased;
   const NowPlayingMusicIndicator(
-      {Key? key, required this.trackPrice, this.isPurchased = false})
+      {Key? key, required this.trackPrice, required this.isPurchased})
       : super(key: key);
 
   @override
@@ -40,7 +40,8 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
   @override
   Widget build(BuildContext context) {
     var p = Provider.of<MusicPlayer>(context, listen: false);
-    bool showBuyButton = !widget.isPurchased;
+    bool showBuyButton = !p.currentMusic!.isPurchasedByUser;
+    print("Lookie : ${!p.currentMusic!.isPurchasedByUser}");
 
     void onTrackPurchaseSuccess() async {
       setState(() {
@@ -112,7 +113,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                         p.currentMusic!.artist,
                       ),
 
-                      widget.isPurchased == false
+                      showBuyButton == true
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(

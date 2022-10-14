@@ -80,8 +80,8 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
                 scrollDirection: Axis.vertical,
                 showNoMoreItemsIndicatorAsGridChild: false,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 150,
-                  childAspectRatio: 0.75,
+                  maxCrossAxisExtent: 130,
+                  childAspectRatio: 0.9,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                 ),

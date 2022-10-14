@@ -124,7 +124,12 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         }
         // email not verified
         else {
-          return const KinProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
         }
       },
     );

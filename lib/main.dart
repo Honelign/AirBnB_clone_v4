@@ -192,14 +192,24 @@ class _LandingPageState extends State<LandingPage> {
       future: checkIfAuthenticated(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const KinProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
         } else {
           if (snapshot.hasData && !snapshot.hasError && snapshot.data == true) {
             return FutureBuilder(
               future: checkIfEmailIsVerified(),
               builder: ((context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const KinProgressIndicator();
+                  return Container(
+                    child: const KinProgressIndicator(),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: linearGradientDecoration,
+                  );
                 } else {
                   return const CustomBottomAppBar();
                 }
