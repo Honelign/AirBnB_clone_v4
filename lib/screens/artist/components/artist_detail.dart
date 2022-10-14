@@ -226,7 +226,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                             return Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.7,
-                              color: Colors.black,
+                              decoration: linearGradientDecoration,
                               child: const KinProgressIndicator(),
                             );
                           }
@@ -234,7 +234,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
 // coin info got
                           else {
                             return Container(
-                              color: kPrimaryColor,
+                              decoration: linearGradientDecoration,
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.7,
                               child: Column(
@@ -270,6 +270,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
                   "Tip Artist",
                   style: TextStyle(
                     fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -281,7 +282,8 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildModalHeader({String remainingCoinValue = "0"}) {
-    return SizedBox(
+    return Container(
+      // color: kSecondaryColor,
       height: MODAL_HEADER_HEIGHT,
       width: MediaQuery.of(context).size.width,
       child: Column(
@@ -338,11 +340,12 @@ class _ArtistDetailState extends State<ArtistDetail> {
                 "Buy Coins",
                 style: TextStyle(
                   fontSize: 16,
+                  color: kSecondaryColor,
                 ),
               ),
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
               decoration: BoxDecoration(
-                color: kSecondaryColor,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
@@ -367,7 +370,7 @@ class _ArtistDetailState extends State<ArtistDetail> {
   }
 
   Widget buildCoinTipList(Function refreshParent) {
-    return SizedBox(
+    return Container(
       height: (MediaQuery.of(context).size.height * 0.7 - MODAL_HEADER_HEIGHT),
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(

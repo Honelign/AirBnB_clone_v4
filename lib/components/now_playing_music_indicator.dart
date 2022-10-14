@@ -41,7 +41,6 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
   Widget build(BuildContext context) {
     var p = Provider.of<MusicPlayer>(context, listen: false);
     bool showBuyButton = !p.currentMusic!.isPurchasedByUser;
-    print("Lookie : ${!p.currentMusic!.isPurchasedByUser}");
 
     void onTrackPurchaseSuccess() async {
       setState(() {

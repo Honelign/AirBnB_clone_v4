@@ -18,7 +18,6 @@ class DailyGraphWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 0, right: 12, top: 10),
-      // color: ,
       height: MediaQuery.of(context).size.height * 0.45,
       width: MediaQuery.of(context).size.width,
       child: BarChart(
@@ -75,7 +74,7 @@ class DailyGraphWidget extends StatelessWidget {
 
   Widget _getBottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: kLightTextColor,
+      color: kSecondaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 10,
     );

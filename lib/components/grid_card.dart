@@ -48,9 +48,9 @@ class GridCard extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     offset: Offset(-5, 5),
-                    spreadRadius: -3,
-                    blurRadius: 5,
-                    color: Color.fromRGBO(0, 0, 0, 0.76),
+                    spreadRadius: -2,
+                    blurRadius: 1,
+                    color: Color.fromRGBO(0, 0, 0, 0.35),
                   )
                 ],
               ),

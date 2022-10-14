@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../constants.dart';
 import 'components/settings_body.dart';
 
 class Settings extends StatefulWidget {

@@ -9,7 +9,7 @@ class MusicDetailDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: kPopupMenuBackgroundColor,
+      backgroundColor: Colors.white.withOpacity(0.85),
       title: const Text(
         'Music Detail',
         style: TextStyle(

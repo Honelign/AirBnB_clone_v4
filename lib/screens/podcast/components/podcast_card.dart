@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/podcast/component/podcast_detail.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_detail_page.dart';
 
 class PodcastCard extends StatelessWidget {

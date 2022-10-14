@@ -153,11 +153,11 @@ class _MultipleDownloadProgressDisplayComponentState
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(
-      color: Colors.white60,
+      color: kSecondaryColor,
       fontSize: 15,
     );
     return AlertDialog(
-      backgroundColor: kPopupMenuBackgroundColor,
+      backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       title: Column(
         children: [

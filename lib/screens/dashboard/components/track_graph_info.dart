@@ -112,12 +112,17 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
       future: getInfoValues(),
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const KinProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
         } else if (snapshot.hasData && !snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: kPrimaryColor,
-              title: Text(widget.musicTitle.toString()),
+              backgroundColor: const Color(0xFF052c54),
+              elevation: 0,
             ),
             body: Container(
               padding: EdgeInsets.symmetric(
@@ -125,7 +130,7 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
                 horizontal: getProportionateScreenWidth(10),
               ),
               height: MediaQuery.of(context).size.height,
-              color: kPrimaryColor,
+              decoration: linearGradientDecoration,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,6 +157,23 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
                         ),
                         // drop down
                       ],
+                    ),
+
+                    SizedBox(
+                      height: 4,
+                    ),
+
+                    Text(
+                      widget.musicTitle.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
                     ),
 
                     snapshot.data!.isEmpty
@@ -217,39 +239,49 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
                                 cardType: "Revenue",
                               ),
 
+                              SizedBox(
+                                height: 12,
+                              ),
+
                               //  dropdown
                               SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: DropdownButton(
-                                        value: currentAnalyticsType,
-                                        isExpanded: true,
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: kSecondaryColor,
+                                    Theme(
+                                      data: Theme.of(context).copyWith(
+                                        canvasColor: kSecondaryColor,
+                                      ),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: DropdownButton(
+                                          value: currentAnalyticsType,
+                                          isExpanded: true,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: kSecondaryColor,
+                                          ),
+                                          // Array list of items
+                                          items: possibleAnalyticTypes
+                                              .map((String items) {
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(
+                                                items,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              currentAnalyticsType = newValue!;
+                                            });
+                                          },
                                         ),
-                                        // Array list of items
-                                        items: possibleAnalyticTypes
-                                            .map((String items) {
-                                          return DropdownMenuItem(
-                                            value: items,
-                                            child: Text(
-                                              items,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            currentAnalyticsType = newValue!;
-                                          });
-                                        },
                                       ),
                                     ),
                                   ],
@@ -264,7 +296,7 @@ class _TrackGraphPageState extends State<TrackGraphPage> {
                                 width: MediaQuery.of(context).size.width,
                                 height:
                                     MediaQuery.of(context).size.height * 0.5,
-                                color: kPrimaryColor,
+
                                 // child: InfoGraph(analyticsType: currentAnalyticsType),
                                 child: barData.isEmpty == true
                                     ? const Center(
