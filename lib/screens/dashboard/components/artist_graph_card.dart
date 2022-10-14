@@ -63,13 +63,13 @@ class ArtistGraphCard extends StatelessWidget {
           vertical: getProportionateScreenWidth(8),
         ),
         padding: EdgeInsets.symmetric(
-          horizontal: getProportionateScreenHeight(8),
+          horizontal: getProportionateScreenHeight(5),
         ),
         width: double.infinity,
-        height: getProportionateScreenHeight(80),
+        height: getProportionateScreenHeight(60),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
           children: [
@@ -91,7 +91,9 @@ class ArtistGraphCard extends StatelessWidget {
             Text(
               name,
               style: const TextStyle(
-                color: Colors.white,
+                color: kSecondaryColor,
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
               ),
             )
           ],

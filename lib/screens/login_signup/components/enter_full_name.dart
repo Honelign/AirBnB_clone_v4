@@ -27,65 +27,69 @@ class _EnterFullNameState extends State<EnterFullName> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: kPrimaryColor,
         key: _scaffoldKey,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Header(),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: getProportionateScreenWidth(20),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: getProportionateScreenHeight(50),
-                    ),
-                    Form(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: Column(
+              children: [
+                const Header(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: getProportionateScreenWidth(20),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: getProportionateScreenHeight(50),
+                      ),
+                      Form(
                         key: _fullNameFormKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: KinForm(
                           hint: 'Enter your Name',
                           controller: fullName,
                           headerTitle: 'Name',
-                        )),
-                  ],
-                ),
-              ),
-              SizedBox(height: getProportionateScreenHeight(20)),
-              Consumer<LoginProvider>(
-                builder: (context, loginProvider, _) {
-                  return loginProvider.isLoading
-                      ? Center(child: KinProgressIndicator())
-                      : CustomElevatedButton(
-                          onTap: () async {
-                            if (_fullNameFormKey.currentState!.validate()) {
-                              await loginProvider.requestOTP(
-                                  widget.phoneNumber, context, fullName.text);
-                            } else if (!_fullNameFormKey.currentState!
-                                .validate()) {}
-                          },
-                          text: 'Request OTP',
-                        );
-                },
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Back to Login',
-                  style: TextStyle(
-                    color: kGrey,
-                    fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
-            ],
+                SizedBox(height: getProportionateScreenHeight(20)),
+                Consumer<LoginProvider>(
+                  builder: (context, loginProvider, _) {
+                    return loginProvider.isLoading
+                        ? const Center(child: KinProgressIndicator())
+                        : CustomElevatedButton(
+                            onTap: () async {
+                              if (_fullNameFormKey.currentState!.validate()) {
+                                await loginProvider.requestOTP(
+                                    widget.phoneNumber, context, fullName.text);
+                              } else if (!_fullNameFormKey.currentState!
+                                  .validate()) {}
+                            },
+                            text: 'Request OTP',
+                          );
+                  },
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Back to Login',
+                    style: TextStyle(
+                      color: kLightTextColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

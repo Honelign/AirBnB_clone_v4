@@ -13,14 +13,14 @@ class CoinIcon extends StatelessWidget {
       // color: Colors.green,
       decoration: BoxDecoration(
         border: Border.all(
-          color: kSecondaryColor,
+          color: kLightTextColor,
           width: 2.0,
         ),
         shape: BoxShape.circle,
       ),
       child: const Icon(
         MdiIcons.currencyUsd,
-        color: kSecondaryColor,
+        color: kLightTextColor,
       ),
     );
   }

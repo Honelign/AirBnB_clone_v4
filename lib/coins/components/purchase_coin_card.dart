@@ -23,10 +23,10 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
       margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       width: MediaQuery.of(context).size.width,
-      height: 70,
+      height: 60,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.black.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,7 +42,7 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
               Text(
                 widget.value + " ETB",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   color: Colors.white.withOpacity(
                     0.75,
                   ),
@@ -77,13 +77,15 @@ class _PurchaseCoinCardState extends State<PurchaseCoinCard> {
                 : Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: kSecondaryColor.withOpacity(0.75),
+                      color: Colors.white.withOpacity(0.75),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
                     child: const Center(
                       child: Text(
                         "Recharge",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: kSecondaryColor,
+                        ),
                       ),
                     ),
                   ),

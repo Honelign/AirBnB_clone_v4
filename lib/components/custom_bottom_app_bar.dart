@@ -32,7 +32,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 3;
+  int _currentIndex = 4;
 
   final _inactiveColor = kGrey;
   List<Widget> pages = [

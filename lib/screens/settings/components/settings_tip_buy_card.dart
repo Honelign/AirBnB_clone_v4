@@ -23,23 +23,47 @@ class BuyTipCurrency extends StatelessWidget {
           vertical: getProportionateScreenHeight(15),
           horizontal: getProportionateScreenWidth(20),
         ),
-        height: 60,
-        width: double.infinity,
+        height: 112,
+        width: 112,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.black.withOpacity(0.3),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: ListTile(
-          leading: Icon(
-            MdiIcons.currencyUsd,
-            color: Colors.white.withOpacity(0.75),
-          ),
-          title: Text(
-            'Buy Coins',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.75),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Icon
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 4.0,
+                  color: Colors.white,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.attach_money_outlined,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
             ),
-          ),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              "Buy Coins",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          ],
         ),
       ),
     );

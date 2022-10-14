@@ -9,9 +9,14 @@ import 'package:kin_music_player_app/services/network/model/radio.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:provider/provider.dart';
 
-class RadioScreenNew extends StatelessWidget {
+class RadioScreenNew extends StatefulWidget {
   const RadioScreenNew({Key? key}) : super(key: key);
 
+  @override
+  State<RadioScreenNew> createState() => _RadioScreenNewState();
+}
+
+class _RadioScreenNewState extends State<RadioScreenNew> {
   @override
   Widget build(BuildContext context) {
     RadioProvider radioProvider =
@@ -19,7 +24,6 @@ class RadioScreenNew extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
@@ -32,85 +36,95 @@ class RadioScreenNew extends StatelessWidget {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            child: FutureBuilder<List<RadioStation>>(
-              future: radioProvider.getStations(),
-              builder: (context, snapshot) {
-                // loading
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          kSecondaryColor,
-                          Color(0xFFF5F5F5),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              setState(() {});
+            },
+            backgroundColor: kSecondaryColor,
+            color: Colors.white,
+            child: SingleChildScrollView(
+              child: FutureBuilder<List<RadioStation>>(
+                future: radioProvider.getStations(),
+                builder: (context, snapshot) {
+                  // loading
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            kSecondaryColor,
+                            Color(0xFFF5F5F5),
+                          ],
+                        ),
+                      ),
+                      child: const Center(
+                        child: KinProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  // data loaded
+                  else if (snapshot.hasData && !snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Search Bar
+                          const CustomSearchBar(),
+
+                          // Spacer
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // Title
+                          Text(
+                            "RADIO",
+                            style: headerOneTextStyle,
+                          ),
+
+                          const SizedBox(
+                            height: 8,
+                          ),
+
+                          _buildAdBanner(context: context),
+
+                          // Spacer
+                          const SizedBox(
+                            height: 18,
+                          ),
+
+                          _buildRecentlyPlayed(
+                            context: context,
+                            recentlyPlayedStations: snapshot.data!,
+                          ),
+
+                          // Spacer
+                          const SizedBox(
+                            height: 18,
+                          ),
+
+                          _buildAppStations(
+                            context: context,
+                            radioStations: snapshot.data!,
+                          ),
                         ],
                       ),
-                    ),
-                    child: const Center(
-                      child: KinProgressIndicator(),
-                    ),
-                  );
-                }
+                    );
+                  }
 
-                // data loaded
-                else if (snapshot.hasData && !snapshot.hasError) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Search Bar
-                      const CustomSearchBar(),
-
-                      // Spacer
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // Title
-                      Text(
-                        "RADIO",
-                        style: headerOneTextStyle,
-                      ),
-
-                      const SizedBox(
-                        height: 8,
-                      ),
-
-                      _buildAdBanner(context: context),
-
-                      // Spacer
-                      const SizedBox(
-                        height: 18,
-                      ),
-
-                      _buildRecentlyPlayed(
-                        context: context,
-                        recentlyPlayedStations: snapshot.data!,
-                      ),
-
-                      // Spacer
-                      const SizedBox(
-                        height: 18,
-                      ),
-
-                      _buildAppStations(
-                        context: context,
-                        radioStations: snapshot.data!,
-                      ),
-                    ],
-                  );
-                }
-
-                // error
-                else {
-                  return OnSnapshotError(
-                    error: snapshot.error.toString(),
-                  );
-                }
-              },
+                  // error
+                  else {
+                    return OnSnapshotError(
+                      error: snapshot.error.toString(),
+                    );
+                  }
+                },
+              ),
             ),
           ),
         ),

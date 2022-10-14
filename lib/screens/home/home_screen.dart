@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 2,
+
           // actions: [
           //   Padding(
           //     padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),

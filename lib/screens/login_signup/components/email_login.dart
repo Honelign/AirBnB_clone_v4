@@ -28,7 +28,7 @@ class _EmailLoginState extends State<EmailLogin> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
+      backgroundColor: Colors.transparent,
       key: _scaffoldKey,
       body: SingleChildScrollView(
         child: Padding(

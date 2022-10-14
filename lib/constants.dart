@@ -11,7 +11,7 @@ import 'size_config.dart';
 const kArtistID = "";
 
 // colors
-const kPrimaryColor = Colors.black;
+const kPrimaryColor = Color(0xFF052C54);
 const kSecondaryColor = Color(0xFF052C54);
 const kLightSecondaryColor = Color(0xFF009ddc);
 const kTertiaryColor = Color(0xFF7e9632);
@@ -343,4 +343,15 @@ TextStyle headerThreeTextStyle = const TextStyle(
   fontSize: 22,
   letterSpacing: 0.0,
   fontWeight: FontWeight.w600,
+);
+
+BoxDecoration linearGradientDecoration = BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      const Color(0xFF052C54),
+      const Color(0xFFD9D9D9).withOpacity(0.7),
+    ],
+  ),
 );

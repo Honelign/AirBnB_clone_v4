@@ -18,7 +18,7 @@ class ArtistInfoCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: kSecondaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.fromLTRB(
@@ -57,7 +57,8 @@ class ArtistInfoCard extends StatelessWidget {
                 infoLabel,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.85),
-                  fontSize: 16,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -66,7 +67,7 @@ class ArtistInfoCard extends StatelessWidget {
             infoValue,
             style: TextStyle(
               fontSize: getProportionateScreenWidth(24),
-              color: kSecondaryColor.withOpacity(0.85),
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           )

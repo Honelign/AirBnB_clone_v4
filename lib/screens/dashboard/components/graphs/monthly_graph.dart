@@ -18,7 +18,6 @@ class MonthlyGraphWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 0, right: 12, top: 10),
-      color: Colors.black,
       height: MediaQuery.of(context).size.height * 0.45,
       width: MediaQuery.of(context).size.width,
       child: BarChart(

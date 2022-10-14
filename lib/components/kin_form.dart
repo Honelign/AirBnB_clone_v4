@@ -30,9 +30,10 @@ class _KinFormState extends State<KinForm> {
         horizontal: getProportionateScreenWidth(15),
       ),
       decoration: const BoxDecoration(
-          border: Border(
-        bottom: BorderSide(color: kGrey, width: 1.75),
-      )),
+        border: Border(
+          bottom: BorderSide(color: kGrey, width: 1.75),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -45,62 +46,69 @@ class _KinFormState extends State<KinForm> {
             ),
           ),
           TextFormField(
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Empty field is not valid';
-                }
-                return null;
-              },
-              cursorColor: kGrey,
-              style: const TextStyle(color: kGrey),
-              controller: widget.controller,
-              obscureText: widget.hasIcon! ? widget.obscureText! : false,
-              autocorrect: false,
-              enableSuggestions: false,
-              decoration: InputDecoration(
-                  suffixIcon: widget.hasIcon!
-                      ? !widget.obscureText!
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  widget.obscureText = true;
-                                });
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Empty field is not valid';
+              }
+              return null;
+            },
+            cursorColor: kLightTextColor,
+            style: const TextStyle(
+              color: kSecondaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+            controller: widget.controller,
+            obscureText: widget.hasIcon! ? widget.obscureText! : false,
+            autocorrect: false,
+            enableSuggestions: false,
+            decoration: InputDecoration(
+              suffixIcon: widget.hasIcon!
+                  ? !widget.obscureText!
+                      ? IconButton(
+                          onPressed: () {
+                            setState(
+                              () {
+                                widget.obscureText = true;
                               },
-                              icon: const Icon(
-                                Icons.visibility,
-                                color: kGrey,
-                              ),
-                            )
-                          : IconButton(
-                              icon: const Icon(
-                                Icons.visibility_off,
-                                color: kGrey,
-                              ),
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    widget.obscureText = false;
-                                  },
-                                );
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.visibility,
+                            color: kLightTextColor,
+                          ),
+                        )
+                      : IconButton(
+                          icon: const Icon(
+                            Icons.visibility_off,
+                            color: kLightTextColor,
+                          ),
+                          onPressed: () {
+                            setState(
+                              () {
+                                widget.obscureText = false;
                               },
-                            )
-                      : const SizedBox(
-                          width: 0,
-                          height: 0,
-                        ),
-                  hintStyle: const TextStyle(color: kGrey),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: getProportionateScreenWidth(10),
-                    vertical: getProportionateScreenHeight(10),
-                  ),
-                  hintText: widget.hint,
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  fillColor: Colors.transparent,
-                  filled: true))
+                            );
+                          },
+                        )
+                  : const SizedBox(
+                      width: 0,
+                      height: 0,
+                    ),
+              hintStyle: const TextStyle(color: kGrey),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: getProportionateScreenWidth(10),
+                vertical: getProportionateScreenHeight(10),
+              ),
+              hintText: widget.hint,
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              fillColor: Colors.transparent,
+              filled: true,
+            ),
+          )
         ],
       ),
     );

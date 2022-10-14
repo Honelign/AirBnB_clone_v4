@@ -166,75 +166,79 @@ class Podcast extends StatelessWidget {
     PodcastProvider podcastProvider =
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
-        backgroundColor: kPrimaryColor,
-        appBar: AppBar(
-          title: const Text('Podcasts'),
-          automaticallyImplyLeading: false,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: getProportionateScreenHeight(8),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, PodcastSearchScreen.routeName);
-                },
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-              ),
+      backgroundColor: kPrimaryColor,
+      appBar: AppBar(
+        title: const Text('Podcasts'),
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: getProportionateScreenHeight(8),
             ),
-          ],
-          backgroundColor: Colors.transparent,
-        ),
-        body: const Center(
-          child: Text(
-            "Podcast Coming Soon ...",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              letterSpacing: 0.65,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, PodcastSearchScreen.routeName);
+              },
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
             ),
           ),
-        )
+        ],
+        backgroundColor: Colors.transparent,
+      ),
+      body:
 
-        // SizedBox(
-        //   height: MediaQuery.of(context).size.height,
-        //   width: MediaQuery.of(context).size.width,
-        //   child: FutureBuilder(
-        //     future: podcastProvider.getPodcastsByCategory(pageSize: 1),
-        //     builder: (context, snapshot) {
-        //       // loading
-        //       if (snapshot.connectionState == ConnectionState.waiting) {
-        //         return const Center(
-        //           child: KinProgressIndicator(),
-        //         );
-        //       }
-        //       // data loaded
-        //       else if (snapshot.hasData && !snapshot.hasError) {
-        //         return ListView.builder(
-        //           itemCount: podcastProvider.podcastCategories.length,
-        //           itemBuilder: ((context, index) {
-        //             return Padding(
-        //               padding: const EdgeInsets.symmetric(vertical: 2),
-        //               child: PodcastScrollerView(
-        //                 podcastCategory: podcastProvider.podcastCategories[index],
-        //               ),
-        //             );
-        //           }),
-        //         );
-        //       }
+          // const Center(
+          //   child: Text(
+          //     "Podcast Coming Soon ...",
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //       fontSize: 20,
+          //       letterSpacing: 0.65,
+          //     ),
+          //   ),
+          // )
 
-        //       // error
-        //       else {
-        //         return OnSnapshotError(
-        //           error: snapshot.error.toString(),
-        //         );
-        //       }
-        //     },
-        //   ),
-        // ),
-        );
+          Container(
+        decoration: linearGradientDecoration,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: FutureBuilder(
+          future: podcastProvider.getPodcastsByCategory(pageSize: 1),
+          builder: (context, snapshot) {
+            // loading
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: KinProgressIndicator(),
+              );
+            }
+            // data loaded
+            else if (snapshot.hasData && !snapshot.hasError) {
+              return ListView.builder(
+                itemCount: podcastProvider.podcastCategories.length,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: PodcastScrollerView(
+                      podcastCategory: podcastProvider.podcastCategories[index],
+                    ),
+                  );
+                }),
+              );
+            }
+
+            // error
+            else {
+              return OnSnapshotError(
+                error: snapshot.error.toString(),
+              );
+            }
+          },
+        ),
+      ),
+    );
   }
 }

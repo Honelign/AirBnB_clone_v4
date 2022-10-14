@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/social_login.dart';
+import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/size_config.dart';
 
-import '../../constants.dart';
-import '../../size_config.dart';
 import 'components/header.dart';
 import 'components/login_signup_tab_bar.dart';
 
@@ -14,15 +13,17 @@ class LoginSignUpBody extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: Column(
-        children: [
-          const Header(),
-          SizedBox(
-            height: getProportionateScreenHeight(10),
-          ),
-          const Expanded(child: LoginSignUpTabBar()),
-        ],
+      body: Container(
+        decoration: linearGradientDecoration,
+        child: Column(
+          children: [
+            const Header(),
+            SizedBox(
+              height: getProportionateScreenHeight(10),
+            ),
+            const Expanded(child: LoginSignUpTabBar()),
+          ],
+        ),
       ),
     );
   }
