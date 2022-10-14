@@ -11,7 +11,7 @@ import 'size_config.dart';
 const kArtistID = "";
 
 // colors
-const kPrimaryColor = Color(0xFF052C54);
+const kPrimaryColor = Colors.black;
 const kSecondaryColor = Color(0xFF052C54);
 const kLightSecondaryColor = Color(0xFF009ddc);
 const kTertiaryColor = Color(0xFF7e9632);

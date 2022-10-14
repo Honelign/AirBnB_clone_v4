@@ -181,7 +181,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         ),
         CustomAnimatedBottomBar(
           containerHeight: 60,
-          backgroundColor:kPrimaryColor,
+          backgroundColor: kPrimaryColor,
           selectedIndex: _currentIndex,
           showElevation: true,
           itemCornerRadius: 24,
@@ -228,14 +228,20 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.house),
+              icon: FaIcon(
+                FontAwesomeIcons.house,
+                size: 20,
+              ),
               title: const Text('Home'),
               activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.library_music),
+              icon: const Icon(
+                Icons.library_music,
+                size: 22,
+              ),
               title: const Text(
                 'My Library',
               ),
@@ -244,21 +250,30 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.microphoneLines),
+              icon: FaIcon(
+                FontAwesomeIcons.microphoneLines,
+                size: 22,
+              ),
               title: const Text('Podcast'),
               activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.radio),
+              icon: FaIcon(
+                FontAwesomeIcons.radio,
+                size: 20,
+              ),
               title: const Text('Radio'),
               activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.person),
+              icon: const Icon(
+                Icons.person,
+                size: 26,
+              ),
               title: const Text('Account'),
               activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,

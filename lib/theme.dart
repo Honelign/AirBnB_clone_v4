@@ -10,16 +10,15 @@ ThemeData theme() {
     inputDecorationTheme: inputDecorationTheme(),
     accentColor: kPrimaryColor.withOpacity(0.25),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-      canvasColor:kPrimaryColor,
+    canvasColor: kPrimaryColor,
     bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: Colors.black.withOpacity(0)),
-      appBarTheme: const AppBarTheme(
-        // 1
-        systemOverlayStyle: SystemUiOverlayStyle.light, // 2
-      ),
-
-    hintColor: Colors.white
-
+      backgroundColor: Colors.black.withOpacity(0),
+    ),
+    appBarTheme: const AppBarTheme(
+      // 1
+      systemOverlayStyle: SystemUiOverlayStyle.light, // 2
+    ),
+    hintColor: Colors.white,
   );
 }
 
@@ -37,6 +36,3 @@ InputDecorationTheme inputDecorationTheme() {
     border: outlineInputBorder,
   );
 }
-
-
-
