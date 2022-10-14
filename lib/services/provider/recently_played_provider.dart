@@ -26,7 +26,6 @@ class RecentlyPlayedProvider extends ChangeNotifier {
       notifyListeners();
       return List.from(recentlyPlayedMusic.reversed);
     } catch (e) {
-      print("@@@ recently_played provider - getRecentlyPlayed ${e}");
       return <Music>[];
     }
   }

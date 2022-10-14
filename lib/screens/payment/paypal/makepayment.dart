@@ -88,7 +88,7 @@ class _makePaymentState extends State<makePayment> {
       );
       if (payment.status) {
         Future successFunction() async {
-          print("@@@@lookie - payment success -paypal");
+         
         }
 
         Navigator.push(

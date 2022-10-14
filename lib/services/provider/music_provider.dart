@@ -17,8 +17,8 @@ class MusicProvider extends ChangeNotifier {
   bool hasfinishedtyping = false;
   String value = '';
   List<Music> searchedMusics = [];
-  List<Artist> artists=[];
-  List<Album> albums=[];
+  List<Artist> artists = [];
+  List<Album> albums = [];
   List<dynamic>? searchedTracks = [];
   List<dynamic>? searchedArtist = [];
   List<dynamic>? searchedAlbum = [];
@@ -90,38 +90,44 @@ class MusicProvider extends ChangeNotifier {
     return albumTracks;
   }
 
-  Future<List<Music>> searchedMusic(keyword, ) async {
-   // String apiEndPoint = "/search/$searchType/$keyword/";
-   String id=await helper.getUserId();
-    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/track/?q=$keyword&userId=$id';
+  Future<List<Music>> searchedMusic(
+    keyword,
+  ) async {
+    // String apiEndPoint = "/search/$searchType/$keyword/";
+    String id = await helper.getUserId();
+    String api =
+        'https://music-search-vdzflryflq-ew.a.run.app/search/api/track/?q=$keyword&userId=$id';
     isLoading = true;
     searchedMusics = await searchMusic(api, keyword);
-   
+
     isLoading = false;
     notifyListeners();
     return searchedMusics;
   }
 
-  Future<List<Artist>> searchedArtists(keyword ) async {
-   // String apiEndPoint = "/search/$searchType/$keyword/";
-   
-   String id=await helper.getUserId();
-    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/artist/?q=$keyword&userId=$id';
+  Future<List<Artist>> searchedArtists(keyword) async {
+    // String apiEndPoint = "/search/$searchType/$keyword/";
+
+    String id = await helper.getUserId();
+    String api =
+        'https://music-search-vdzflryflq-ew.a.run.app/search/api/artist/?q=$keyword&userId=$id';
     isLoading = true;
     artists = await searchArtist(api);
-    print('###$artists');
+
     isLoading = false;
     notifyListeners();
     return artists;
   }
-  Future<List<Album>> searchedAlbums(keyword ) async {
-   // String apiEndPoint = "/search/$searchType/$keyword/";
-   
-   String id=await helper.getUserId();
-    String api='https://music-search-vdzflryflq-ew.a.run.app/search/api/album/?q=$keyword&userId=$id';
+
+  Future<List<Album>> searchedAlbums(keyword) async {
+    // String apiEndPoint = "/search/$searchType/$keyword/";
+
+    String id = await helper.getUserId();
+    String api =
+        'https://music-search-vdzflryflq-ew.a.run.app/search/api/album/?q=$keyword&userId=$id';
     isLoading = true;
     albums = await searchAlbums(api);
-    print('###$artists');
+
     isLoading = false;
     notifyListeners();
     return albums;

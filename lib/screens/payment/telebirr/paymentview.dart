@@ -6,6 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/home_screen.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -212,15 +213,22 @@ class _PaymentViewState extends State<PaymentView> {
                       setState(() async {
                         final u = url.toString();
                         if (u.contains("result?status=200")) {
-                          try {
-                            await coinProvider.buyCoin(
-                              paymentAmount: int.parse(widget.paymentAmount),
-                              paymentMethod: "telebirr",
-                            );
-                            Navigator.pop(context);
-                          } catch (e) {
-                            print("lookie $e");
-                          }
+                          // try {
+                          //   if (true == true) {
+                          //     await coinProvider.buyCoinTeleBirr(
+                          //       paymentAmount: int.parse(widget.paymentAmount),
+                          //       paymentMethod: "telebirr",
+                          //     );
+                          //   }
+                          //   Navigator.pop(context);
+                          // } catch (e) {
+                          //   errorLoggingApiService.logErrorToServer(
+                          //     fileName: fileName,
+                          //     functionName: "onLoadStop",
+                          //     errorInfo: e.toString(),
+                          //   );
+                          // }
+                          await savePayment();
                         }
 
                         this.url = url.toString();

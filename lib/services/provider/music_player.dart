@@ -160,9 +160,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   }
 
   next({action = true, musics}) {
-    int next = _currentIndex! + 1;
-
     if (isProcessingPlay == false) {
+      int next = _currentIndex! + 1;
       if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
         setPlaying(_currentAlbum, 0, musics);
 
@@ -181,7 +180,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   prev() async {
     if (isProcessingPlay == false) {
       int pre = _currentIndex! - 1;
-      print("lookie $pre");
+
       if (pre >= 0 && pre < _albumMusics.length) {
         play(pre);
       }
@@ -236,8 +235,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   play(
     index,
   ) async {
-    print("lookie - play $index");
-    print("lookie - play ${isPlayingLocal}");
     try {
       _currentMusic = _albumMusics[index];
       player.stop();

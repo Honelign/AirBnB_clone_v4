@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -48,7 +49,6 @@ class _PaymentComponentState extends State<PaymentComponent> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     id = prefs.getString('id').toString();
-    debugPrint("userId " + id.toString());
   }
 
   //get telebirr url
@@ -184,7 +184,12 @@ class _PaymentComponentState extends State<PaymentComponent> {
       ///now finally display payment sheeet
       displayPaymentSheet();
     } catch (e, s) {
-      debugPrint('exception:$e$s');
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "payWithStripe",
+        errorInfo: e.toString(),
+        remark: s.toString(),
+      );
     }
   }
 
@@ -253,12 +258,14 @@ class _PaymentComponentState extends State<PaymentComponent> {
         },
         body: body,
       );
-      // ignore: avoid_print
-      print(
-          '@@@ now_playing_music_indicator Payment Intent Body->>> ${response.body.toString()}');
+
       return jsonDecode(response.body);
     } catch (err) {
-      print('@@ now_playing_music_indicator : ${err.toString()}');
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "createPaymentIntent",
+        errorInfo: err.toString(),
+      );
     }
   }
 

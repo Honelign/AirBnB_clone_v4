@@ -17,7 +17,6 @@ class BuyCoinPage extends StatefulWidget {
 class _BuyCoinPageState extends State<BuyCoinPage> {
   @override
   Widget build(BuildContext context) {
-    print("lookie = buiding pahe");
     final provider = Provider.of<CoinProvider>(context, listen: false);
 
     // will be passed down to child to refresh state
@@ -40,7 +39,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
           } else {
             return RefreshIndicator(
               onRefresh: () async {
-                print("lookie - Refreshing");
+                setState(() {});
               },
               backgroundColor: refreshIndicatorBackgroundColor,
               color: refreshIndicatorForegroundColor,

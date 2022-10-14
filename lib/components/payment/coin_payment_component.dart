@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/screens/payment/paypal/paypalview.dart';
 import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
@@ -48,8 +49,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
   void getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    id = prefs.getString('id').toString();
-    debugPrint("userId " + id.toString());
+    id = await helper.getUserId();
   }
 
   //get telebirr url
@@ -72,6 +72,8 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
           'Accept': 'application/json'
         },
         body: body);
+
+    print("lookie res code : ${res.statusCode}");
 
     if (res.statusCode == 200) {
       Map<String, dynamic> response = json.decode(res.body);
@@ -185,7 +187,12 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
       ///now finally display payment sheeet
       displayPaymentSheet();
     } catch (e, s) {
-      debugPrint('exception:$e$s');
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "payWithStripe",
+        errorInfo: e.toString(),
+        remark: s.toString(),
+      );
     }
   }
 
@@ -259,12 +266,14 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
         },
         body: body,
       );
-      // ignore: avoid_print
-      print(
-          '@@@ now_playing_music_indicator Payment Intent Body->>> ${response.body.toString()}');
+
       return jsonDecode(response.body);
     } catch (err) {
-      print('@@ now_playing_music_indicator : ${err.toString()}');
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "createPaymentIntent",
+        errorInfo: err.toString(),
+      );
     }
   }
 

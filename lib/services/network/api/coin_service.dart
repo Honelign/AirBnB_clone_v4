@@ -38,7 +38,7 @@ class CoinApiService {
   Future buyGift(
       {required int paymentAmount, required String paymentMethod}) async {
     bool result = false;
-    print("lookie buy gift called");
+
     try {
       String id = await helper.getUserId();
 
@@ -48,7 +48,7 @@ class CoinApiService {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
         "payment_method": paymentMethod,
-        "payment_state": "completed",
+        "payment_state": 'completed',
       };
 
       if (id != "") {
@@ -82,8 +82,60 @@ class CoinApiService {
       );
       result = false;
     }
+    print("lookie final res $result");
+    return result;
+  }
 
-    print("lookie buy gift called and result is $result");
+  // buy / increase coin of  a user
+  Future buyGiftTeleBirr(
+      {required int paymentAmount, required String paymentMethod}) async {
+    bool result = false;
+
+    try {
+      String id = await helper.getUserId();
+
+      // request url & body
+      String uri = "$kinPaymentUrl/gift/buy-gift-telebirr/";
+      Map<String, dynamic> requestBody = {
+        "userId": id.toString(),
+        "payment_amount": paymentAmount.toString(),
+        "payment_method": paymentMethod,
+        "payment_state": 'pending',
+      };
+
+      if (id != "") {
+        Response postResponse = await post(Uri.parse(uri), body: requestBody);
+
+        // user already has payment info
+        if (postResponse.statusCode == 400) {
+          Response putResponse =
+              await put(Uri.parse("$uri$id/"), body: requestBody);
+
+          // put successful
+          if (putResponse.statusCode == 200) {
+            result = true;
+          }
+          // put failed
+          else {
+            result = false;
+          }
+        }
+        // post is successful
+        else if (postResponse.statusCode == 200) {
+          print("result on posing");
+          result = true;
+        }
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: "coin_service.dart",
+        className: "CoinApiService",
+        functionName: "buyGift",
+        errorInfo: e.toString(),
+      );
+      result = false;
+    }
+    print("lookie final res $result");
     return result;
   }
 

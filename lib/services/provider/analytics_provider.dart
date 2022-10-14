@@ -44,8 +44,6 @@ class AnalyticsProvider extends ChangeNotifier {
     );
     isLoading = false;
 
-    print("@@@here ${generalAnalytics}");
-
     return generalAnalytics;
   }
 

@@ -250,9 +250,6 @@ class MusicApiService {
         ),
       );
 
-      print(
-          "$kinMusicBaseUrl$apiEndPoint?userId=$uid&genreId=$genreId&page=$pageKey");
-
       if (response.statusCode == 200) {
         final result = json.decode(response.body) as List;
 

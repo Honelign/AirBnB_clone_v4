@@ -122,7 +122,7 @@ class _MusicCardState extends State<MusicCard> {
                     podcastProvider.setEpisodeStopped(true);
                     p.listenMusicStreaming();
                     podcastProvider.listenPodcastStreaming();
-                 
+
                     // add to recently played
                     musicProvider.addToRecentlyPlayed(music: widget.music);
 
@@ -139,13 +139,6 @@ class _MusicCardState extends State<MusicCard> {
                     ),
                   );
                 }
-                // }
-
-                // already playing
-                // else {
-                //   print(_musicPlayerController.isProcessingPlay);
-                //   kShowToast(message: "Playing another track");
-                // }
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,7 +285,7 @@ class _MusicCardState extends State<MusicCard> {
                                   }
                                 }
                               }
-                              //   print(widget.music.isPurchasedByUser);
+
                               //   if (widget.music.isPurchasedByUser == true) {
                               //     bool isMusicDownloaded =
                               //         await offlineMusicProvider

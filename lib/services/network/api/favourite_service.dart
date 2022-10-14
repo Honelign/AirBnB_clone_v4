@@ -68,9 +68,7 @@ class FavoriteApiService {
         Response response2 =
             await delete(Uri.parse("$kinMusicBaseUrl/mobileApp/favTracks/$id"));
 
-        if (response2.statusCode == 200) {
-          print('deleted');
-        }
+        if (response2.statusCode == 200) {}
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(

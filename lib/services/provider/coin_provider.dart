@@ -31,6 +31,22 @@ class CoinProvider extends ChangeNotifier {
     return currentCoinValue.toString();
   }
 
+  Future<String> buyCoinTeleBirr(
+      {required int paymentAmount, required String paymentMethod}) async {
+    isLoading = true;
+
+    bool result = await coinApiService.buyGiftTeleBirr(
+        paymentAmount: paymentAmount, paymentMethod: paymentMethod);
+
+    if (result == true) {
+      currentCoinValue += paymentAmount;
+    }
+
+    isLoading = false;
+    notifyListeners();
+    return currentCoinValue.toString();
+  }
+
   Future<String> transferCoin(int valueTransferred, String artistId) async {
     isLoading = true;
 

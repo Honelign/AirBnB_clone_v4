@@ -83,8 +83,6 @@ class AnalyticsApiService {
       Response response =
           await get(Uri.parse("$kinMusicBaseUrl/$apiEndPoint?userId=$uid"));
 
-      print("@@@here - $kinMusicBaseUrl/$apiEndPoint?userId=$uid");
-
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 

@@ -37,17 +37,18 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
   @override
   void initState() {
     super.initState();
-      final provider = Provider.of<MusicProvider>(context, listen: false);
+    final provider = Provider.of<MusicProvider>(context, listen: false);
     provider.searchedMusics.clear();
     searchController.addListener(() {
-      
       if (searchController.text.isNotEmpty) {
         if (_debounce?.isActive ?? false) _debounce?.cancel();
         _debounce = Timer(const Duration(milliseconds: 100), () {
-          provider.searchedMusic(searchController.text, );
-          
+          provider.searchedMusic(
+            searchController.text,
+          );
+
           provider.searchedArtists(searchController.text);
-       provider.searchedAlbums(searchController.text);
+          provider.searchedAlbums(searchController.text);
         });
       } else {
         provider.searchedMusics.clear();
@@ -63,10 +64,9 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<MusicProvider>(context);
 
-   
     List<Music> musics = [];
-    List<Artist> artists=[];
-   List<Album> albums=[];
+    List<Artist> artists = [];
+    List<Album> albums = [];
     // if (provider.searchedMusics.isNotEmpty) {
     //   for (int i = 0; i < provider.searchedMusics.length; i++) {
     //     searchedMusicsList.add(provider.searchedMusics[i]);
@@ -75,26 +75,19 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
     if (provider.searchedMusics.isNotEmpty) {
       for (int i = 0; i < provider.searchedMusics.length; i++) {
         musics.add(provider.searchedMusics[i]);
-
-      
       }
     }
-     if (provider.artists.isNotEmpty) {
+    if (provider.artists.isNotEmpty) {
       for (int i = 0; i < provider.artists.length; i++) {
         artists.add(provider.artists[i]);
-
-       
       }
     }
-if (provider.albums.isNotEmpty) {
+    if (provider.albums.isNotEmpty) {
       for (int i = 0; i < provider.albums.length; i++) {
         albums.add(provider.albums[i]);
-
-       
       }
     }
 
- 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: kPrimaryColor,
@@ -191,109 +184,136 @@ if (provider.albums.isNotEmpty) {
                     ),
                   ),
                   Container(
-                    child:
-                        Expanded(
-                            child: provider.isLoading == true
-                                ? KinProgressIndicator()
-                                : 
-                                    provider.searchedMusics.isEmpty
-                                        ? const Center(
-                                            child: Text(
-                                            'No dataa',
-                                            style: TextStyle(color: kGrey),
-                                          ))
-                                        // : ListView.builder(
-                                        //     itemCount:
-                                        //         provider.searchedMusics.length,
-                                        //     itemBuilder: (context, index) {
-                                        //       // return MusicListCard(
-                                        //       //   music: provider.searchedMusics[index],
-                                        //       //   musics: searchedMusicsList,
-                                        //       //   musicIndex: index,
-                                        //       // );
-                                        //       return YoutubeSearchCard(
-                                        //         result:
-                                        //             searchedMusicsList[index],
-                                        //       );
-                                        //     },
-                                        //   )
-                                    : 
+                      child: Expanded(
+                    child: provider.isLoading == true
+                        ? KinProgressIndicator()
+                        : provider.searchedMusics.isEmpty
+                            ? const Center(
+                                child: Text(
+                                'No dataa',
+                                style: TextStyle(color: kGrey),
+                              ))
+                            // : ListView.builder(
+                            //     itemCount:
+                            //         provider.searchedMusics.length,
+                            //     itemBuilder: (context, index) {
+                            //       // return MusicListCard(
+                            //       //   music: provider.searchedMusics[index],
+                            //       //   musics: searchedMusicsList,
+                            //       //   musicIndex: index,
+                            //       // );
+                            //       return YoutubeSearchCard(
+                            //         result:
+                            //             searchedMusicsList[index],
+                            //       );
+                            //     },
+                            //   )
+                            : Container(
+                                height: 700,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Column(
+                                    children: [
                                       Container(
-                                        height: 700,
-                                      
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                                          child: Column(
-                                            children: [
-                                              // Container(
-                                              //   height: artists.length>0?150:0,
-                                              //   child: Column(
-                                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                                              //     children: [
-                                              //        Text('Artists',style: TextStyle(color: Colors.white),),
-                                              //       Container(
-                                              //         height: 130,
-                                              //         child: ListView.builder(
-                                              //           scrollDirection: Axis.horizontal,
-                                              //             itemCount: artists.length,
-                                              //             itemBuilder: ((context, index) {
-                                              //               // TODO: Replace Artist and Album ID
-                                              //               return ArtistCardSearch(artist: artists[index], index: index);
-                                              //             }),
-                                              //           ),
-                                              //       ),
-                                              //     ],
-                                              //   ),
-                                              // ),
-                                              // Container(
-                                              //   height: albums.length>0?180:0,
-                                              //   child: Column(
-                                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                                              //     children: [
-                                              //       Text('Albums',style: TextStyle(color: Colors.white),),
-                                              //       Container(
-                                              //         height: 150,
-                                              //         child: ListView.builder(
-                                              //           scrollDirection: Axis.horizontal,
-                                              //             itemCount: albums.length,
-                                              //             itemBuilder: ((context, index) {
-                                              //               // TODO: Replace Artist and Album ID
-                                              //               return AlbumCardSearch(album: albums[index], index: index);
-                                              //             }),
-                                              //           ),
-                                              //       ),
-                                              //     ],
-                                              //   ),
-                                              // ),
-                                                Container(
-                                                    width: double.infinity,
-                                                  height: provider.searchedMusics.length>0?350:0,
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text('Tracks',style: TextStyle(color: Colors.white),),
-                                                      Container(
-                                                        height: 330,
-                                                        child: ListView.builder(
-                                                 
-                                                          itemCount: provider.searchedMusics.length,
-                                                          itemBuilder: ((context, index) {
-                                                            // TODO: Replace Artist and Album ID
-                                                            return MusicCardsearch(music: provider.searchedMusics[index], musics: provider.searchedMusics, artistname: provider.searchedMusics[index].artist,musicIndex: index,);
-                                                          }),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
+                                        height: artists.length > 0 ? 150 : 0,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Artists',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Container(
+                                              height: 130,
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: artists.length,
+                                                itemBuilder: ((context, index) {
+                                                  // TODO: Replace Artist and Album ID
+                                                  return ArtistCardSearch(
+                                                      artist: artists[index],
+                                                      index: index);
+                                                }),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                  
-                          )
-                      
-                  )
+                                      Container(
+                                        height: albums.length > 0 ? 180 : 0,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Albums',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Container(
+                                              height: 150,
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: albums.length,
+                                                itemBuilder: ((context, index) {
+                                                  // TODO: Replace Artist and Album ID
+                                                  return AlbumCardSearch(
+                                                      album: albums[index],
+                                                      index: index);
+                                                }),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height:
+                                            provider.searchedMusics.length > 0
+                                                ? 350
+                                                : 0,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Tracks',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Container(
+                                              height: 330,
+                                              child: ListView.builder(
+                                                itemCount: provider
+                                                    .searchedMusics.length,
+                                                itemBuilder: ((context, index) {
+                                                  // TODO: Replace Artist and Album ID
+                                                  return MusicCardsearch(
+                                                    music: provider
+                                                        .searchedMusics[index],
+                                                    musics:
+                                                        provider.searchedMusics,
+                                                    artistname: provider
+                                                        .searchedMusics[index]
+                                                        .artist,
+                                                    musicIndex: index,
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                  ))
                 ],
               ),
             ],

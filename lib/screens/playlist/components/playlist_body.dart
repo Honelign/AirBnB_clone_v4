@@ -128,10 +128,8 @@ class _PlaylistBodyState extends State<PlaylistBody> {
                       EdgeInsets.only(top: getProportionateScreenHeight(8)),
                   child: IconButton(
                     onPressed: () async {
-                      // print(snapshot.data);
                       // if connection
                       if (checkConnection(status) == true) {
-                        print("Downloading All");
                         // request permission
                         Map<Permission, PermissionStatus>
                             storagePermissionStatus = await [

@@ -43,7 +43,6 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
     bool showBuyButton = !widget.isPurchased;
 
     void onTrackPurchaseSuccess() async {
-      print("lookie - setting showBuyButton to false;");
       setState(() {
         showBuyButton = false;
       });
@@ -327,10 +326,9 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
             if (isPlaying || playerProvider.player.isBuffering.value) {
               playerProvider.player.pause();
             } else {
-              if (checkConnection(status)) {
+              if (checkConnection(status) &&
+                  playerProvider.isProcessingPlay == false) {
                 playerProvider.player.play();
-              } else {
-                kShowToast();
               }
             }
           },
@@ -372,7 +370,9 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
         if (playerProvider.isLastMusic(playerProvider.currentIndex! + 1)) {
           return;
         }
-        playerProvider.next();
+        if (playerProvider.isProcessingPlay == false) {
+          playerProvider.next();
+        }
       },
     );
   }

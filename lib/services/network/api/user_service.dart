@@ -22,8 +22,6 @@ class UserApiService {
       Response response =
           await get(Uri.parse("$kinProfileBaseUrl$apiEndPoint/$uid"));
 
-      print("$kinProfileBaseUrl$apiEndPoint/$uid");
-
       // check response code
       if (response.statusCode == 200) {
         var item = jsonDecode(response.body);
@@ -76,12 +74,14 @@ class UserApiService {
       } else if (e.code == "invalid-password" || e.code == "weak-password") {
         return "Weak Password";
       } else {
-        print(
-          "@@api_service + " + e.toString(),
-        );
         return "Something went wrong";
       }
     } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "createAccount",
+        errorInfo: e.toString(),
+      );
       return 'Unknown Error Occurred';
     }
   }

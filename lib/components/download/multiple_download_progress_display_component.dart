@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -117,9 +118,6 @@ class _MultipleDownloadProgressDisplayComponentState
           isLastItem = true;
         }
 
-        print(_offlineMusicProvider.checkTrackInOfflineCache(
-            musicId: musics[i].id.toString()));
-
         if (await _offlineMusicProvider.checkTrackInOfflineCache(
                 musicId: musics[i].id.toString()) ==
             false) {
@@ -137,7 +135,11 @@ class _MultipleDownloadProgressDisplayComponentState
         }
       }
     } catch (e) {
-      print(e);
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "_downloadAllFiles",
+        errorInfo: e.toString(),
+      );
     }
   }
 
@@ -156,7 +158,7 @@ class _MultipleDownloadProgressDisplayComponentState
     );
     return AlertDialog(
       backgroundColor: kPopupMenuBackgroundColor,
-      insetPadding: EdgeInsets.symmetric(horizontal: 100),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       title: Column(
         children: [
           // Title

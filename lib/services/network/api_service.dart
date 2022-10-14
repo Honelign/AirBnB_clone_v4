@@ -88,7 +88,11 @@ Future fetchSearchedTracks(String title) async {
       return trackSearch;
     }
   } catch (e) {
-    print("@api_service -> fetchSearchedTracks error -> " + e.toString());
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "fetchSearchedTracks",
+      errorInfo: e.toString(),
+    );
   }
 }
 
@@ -107,7 +111,11 @@ Future fetchSearchedArtists(String title) async {
       return artistsearch;
     }
   } catch (e) {
-    print("@api_service -> fetchSearchedArtists error -> " + e.toString());
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "fetchSearchedArtists",
+      errorInfo: e.toString(),
+    );
   }
 }
 
@@ -126,7 +134,7 @@ Future fetchSearchedAlbums(String title) async {
   //     return albumsearch;
   //   }
   // } catch (e) {
-  //   print("@api_service -> fetchSearchedAlbums error - " + e.toString());
+  //
   // }
 }
 
@@ -145,7 +153,11 @@ Future fetchAlbumMusics(int id) async {
       }).toList();
     }
   } catch (e) {
-    print("@api_service -> fetchSearchedAlbums error - " + e.toString());
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "fetchAlbumMusics",
+      errorInfo: e.toString(),
+    );
   }
   return albumMusic;
 }
@@ -162,7 +174,11 @@ Future fetchSearchedTrackscount(String title) async {
       return results;
     }
   } catch (e) {
-    print("@api_service -> fetchSearchedTrackscount error - " + e.toString());
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "fetchSearchedTrackscount",
+      errorInfo: e.toString(),
+    );
   }
 }
 
@@ -287,7 +303,11 @@ Future getFavoriteMusics(apiEndPoint, id) async {
       return <Favorite>[];
     }
   } catch (e) {
-    print("@api_service--getFavMusic" + e.toString());
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "getFavoriteMusics",
+      errorInfo: e.toString(),
+    );
     return <Favorite>[];
   }
 }
@@ -429,73 +449,65 @@ Future removePlaylistTitle(apiEndPoint) async {
 }
 
 Future<List<Music>> searchMusic(apiEndPoint, searchQuery) async {
-  List<Music> musics=[];
+  List<Music> musics = [];
   try {
     Response response = await get(Uri.parse("$apiEndPoint"));
-     if(response.statusCode==200){
-       final item = json.decode(response.body);
-    final results = item['results'];
-    results.forEach((result) => {
-          result['track_coverImage'] = result['track_coverimage'],
-           result['track_audioFile'] = result['track_audiofile'],
-          result['encoder_FUI'] = result['encoder_fui'],
-          result['artist_name'] = result['artist_name'][0],
-          result['artist_id'] = result['artist_id'][0],   
-        });
-          print('dddd');
+    if (response.statusCode == 200) {
+      final item = json.decode(response.body);
+      final results = item['results'];
+      results.forEach((result) => {
+            result['track_coverImage'] = result['track_coverimage'],
+            result['track_audioFile'] = result['track_audiofile'],
+            result['encoder_FUI'] = result['encoder_fui'],
+            result['artist_name'] = result['artist_name'][0],
+            result['artist_id'] = result['artist_id'][0],
+          });
 
-   results.forEach((value)=>{
-    musics.add( Music.fromJson(value))
-   }); }
+      results.forEach((value) => {musics.add(Music.fromJson(value))});
+    }
   } catch (e) {
-  print(e);
+    errorLoggingApiService.logErrorToServer(
+      fileName: fileName,
+      functionName: "searchMusic",
+      errorInfo: e.toString(),
+    );
   }
-   return musics;
+  return musics;
 }
 
-Future<List<Artist>> searchArtist(apiEndpoint)async{
-List<Artist> artists=[];
-try {
-  Response response=await get(Uri.parse("$apiEndpoint"));
-  if(response.statusCode==200){
-  final item = json.decode(response.body);
-    final results = item['results'];
-    results.forEach((result)=>{
-      result['artist_profileImage']=result['artist_profileimage']
-    });
-    results.forEach((value)=>{
-    artists.add( Artist.fromJson(value))
-   });
-  }
-  
-} catch (e) {
-  
-}
-return artists;
+Future<List<Artist>> searchArtist(apiEndpoint) async {
+  List<Artist> artists = [];
+  try {
+    Response response = await get(Uri.parse("$apiEndpoint"));
+    if (response.statusCode == 200) {
+      final item = json.decode(response.body);
+      final results = item['results'];
+      results.forEach((result) =>
+          {result['artist_profileImage'] = result['artist_profileimage']});
+      results.forEach((value) => {artists.add(Artist.fromJson(value))});
+    }
+  } catch (e) {}
+  return artists;
 }
 
-Future<List<Album>> searchAlbums(apiEndpoint)async{
-List<Album> albums=[];
-try {
-  Response response=await get(Uri.parse("$apiEndpoint"));
-  if(response.statusCode==200){
-  final item = json.decode(response.body);
-    final results = item['results'];
-    results.forEach((result)=>{
-      result['album_coverImage']=result['album_coverimage'],
-      result['artist_id']=result['artist_id'][0],
-      result['artist_name']=result['artist_name'][0],
-    });
-    results.forEach((value)=>{
-    albums.add( Album.fromJson(value))
-   });
-  }
-  
-} catch (e) {
-  
+Future<List<Album>> searchAlbums(apiEndpoint) async {
+  List<Album> albums = [];
+  try {
+    Response response = await get(Uri.parse("$apiEndpoint"));
+    if (response.statusCode == 200) {
+      final item = json.decode(response.body);
+      final results = item['results'];
+      results.forEach((result) => {
+            result['album_coverImage'] = result['album_coverimage'],
+            result['artist_id'] = result['artist_id'][0],
+            result['artist_name'] = result['artist_name'][0],
+          });
+      results.forEach((value) => {albums.add(Album.fromJson(value))});
+    }
+  } catch (e) {}
+  return albums;
 }
-return albums;
-}
+
 Future getPodCasts(apiEndPoint) async {
   Response response = await get(Uri.parse("$kinPodcastBaseUrl$apiEndPoint"));
 

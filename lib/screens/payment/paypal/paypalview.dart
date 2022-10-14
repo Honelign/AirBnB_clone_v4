@@ -79,7 +79,6 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                 return NavigationDecision.navigate;
               },
               onPageStarted: (String url) async {
-                print("lookie : " + url);
                 // Check base on return_url from transaction params;
                 if (url.contains('/success')) {
                   final uri = Uri.parse(url);
@@ -112,8 +111,6 @@ class _PaypalWebviewState extends State<PaypalWebview> {
 
                   kShowToast(message: "Payment Completed");
                   kShowToast(message: "Payment Successful!");
-                } else {
-                  print("lookie : error");
                 }
               },
               gestureNavigationEnabled: true,
