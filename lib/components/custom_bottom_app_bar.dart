@@ -32,7 +32,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 4;
+  int _currentIndex = 0;
 
   final _inactiveColor = kGrey;
   List<Widget> pages = [
@@ -75,43 +75,45 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             onWillPop: () async {
               bool willLeave = false;
               await showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        backgroundColor: kPopupMenuBackgroundColor,
-                        title: Text(
-                          'Do you want to exit from Kin?',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Provider.of<MusicPlayer>(context, listen: false)
-                                    .player
-                                    .stop();
-                                Provider.of<MusicPlayer>(context, listen: false)
-                                    .player
-                                    .updateCurrentAudioNotification(
-                                      showNotifications: false,
-                                    );
-                                willLeave = true;
-                                Navigator.of(context).pop();
-                                exit(0);
-                              },
-                              child: const Text(
-                                'Yes',
-                                style: TextStyle(color: kSecondaryColor),
-                              )),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text(
-                              'No',
-                              style: TextStyle(color: kSecondaryColor),
-                            ),
-                          )
-                        ],
-                      ));
+                context: context,
+                builder: (_) => AlertDialog(
+                  backgroundColor: kPopupMenuBackgroundColor,
+                  title: Text(
+                    'Do you want to exit from Kin?',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Provider.of<MusicPlayer>(context, listen: false)
+                            .player
+                            .stop();
+                        Provider.of<MusicPlayer>(context, listen: false)
+                            .player
+                            .updateCurrentAudioNotification(
+                              showNotifications: false,
+                            );
+                        willLeave = true;
+                        Navigator.of(context).pop();
+                        exit(0);
+                      },
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        'No',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
+                    )
+                  ],
+                ),
+              );
               return willLeave;
             },
             child: Scaffold(
@@ -279,13 +281,6 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
-            /*  BottomNavyBarItem(
-              icon: const Icon(Icons.person),
-              title: const Text('Payment'),
-              activeColor: kSecondaryColor,
-              inactiveColor: _inactiveColor,
-              textAlign: TextAlign.center,
-            ), */
           ],
         ),
       ],

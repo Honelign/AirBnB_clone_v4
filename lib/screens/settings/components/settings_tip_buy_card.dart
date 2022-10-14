@@ -26,9 +26,16 @@ class BuyTipCurrency extends StatelessWidget {
         height: 112,
         width: 112,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(10),
-        ),
+            color: Colors.black.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              // BoxShadow(
+              //   offset: Offset(-7, 7),
+              //   spreadRadius: -5,
+              //   blurRadius: 5,
+              //   color: Color.fromRGBO(0, 0, 0, 0.16),
+              // )
+            ]),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,

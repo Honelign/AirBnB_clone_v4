@@ -26,16 +26,7 @@ class _RadioScreenNewState extends State<RadioScreenNew> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                kSecondaryColor,
-                Color(0xFFF5F5F5),
-              ],
-            ),
-          ),
+          decoration: linearGradientDecoration,
           child: RefreshIndicator(
             onRefresh: () async {
               setState(() {});

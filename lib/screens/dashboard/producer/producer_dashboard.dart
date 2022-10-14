@@ -449,32 +449,37 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                                                   .size
                                                   .width *
                                               0.5,
-                                          child: DropdownButton(
-                                            value: currentAnalyticsType,
-                                            isExpanded: true,
-                                            icon: const Icon(
-                                              Icons.keyboard_arrow_down,
-                                              color: kSecondaryColor,
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                              canvasColor: kSecondaryColor,
                                             ),
-                                            // Array list of items
-                                            items: possibleAnalyticTypes
-                                                .map((String items) {
-                                              return DropdownMenuItem(
-                                                value: items,
-                                                child: Text(
-                                                  items,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
+                                            child: DropdownButton(
+                                              value: currentAnalyticsType,
+                                              isExpanded: true,
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: kSecondaryColor,
+                                              ),
+                                              // Array list of items
+                                              items: possibleAnalyticTypes
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(
+                                                    items,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                currentAnalyticsType =
-                                                    newValue!;
-                                              });
-                                            },
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  currentAnalyticsType =
+                                                      newValue!;
+                                                });
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -526,7 +531,8 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                                               color: Colors.white,
                                               fontSize:
                                                   getProportionateScreenWidth(
-                                                      16),
+                                                16,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -535,33 +541,39 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                                                   .size
                                                   .width *
                                               0.4,
-                                          child: DropdownButton(
-                                            value: currentUploadType,
-                                            isExpanded: true,
-                                            icon: const Icon(
-                                              Icons.keyboard_arrow_down,
-                                              color: kSecondaryColor,
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                              canvasColor: kSecondaryColor,
                                             ),
-                                            // Array list of items
-                                            items: possibleUploadTypesProducer
-                                                .map((String items) {
-                                              return DropdownMenuItem(
-                                                value: items,
-                                                child: Text(
-                                                  items,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
+                                            child: DropdownButton(
+                                              value: currentUploadType,
+                                              isExpanded: true,
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: kSecondaryColor,
+                                              ),
+                                              // Array list of items
+                                              items: possibleUploadTypesProducer
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(
+                                                    items,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(
-                                                () {
-                                                  currentUploadType = newValue!;
-                                                },
-                                              );
-                                            },
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(
+                                                  () {
+                                                    currentUploadType =
+                                                        newValue!;
+                                                  },
+                                                );
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ],
