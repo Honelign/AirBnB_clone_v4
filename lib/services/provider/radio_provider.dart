@@ -19,9 +19,8 @@ class RadioProvider extends ChangeNotifier {
   RadioStation? get currentStation => _currentStation;
 
   bool get isPlaying => _isPlaying;
-  int _currentIndex = 0;
+  int currentIndex = 0;
 
-  int get currentIndex => _currentIndex;
   List<RadioStation> stations = [];
 
   final _audios = <Audio>[];
@@ -69,18 +68,18 @@ class RadioProvider extends ChangeNotifier {
 
   setPlaying(RadioStation radioStation, int index) {
     _currentStation = radioStation;
-    _currentIndex = index;
+    currentIndex = index;
   }
 
   next({action = true}) {
-    int next = _currentIndex + 1;
+    int next = currentIndex + 1;
     play(next);
     _isPlaying = true;
     notifyListeners();
   }
 
   prev() {
-    int pre = _currentIndex - 1;
+    int pre = currentIndex - 1;
     if (pre <= stations.length) {
       play(pre);
       _isPlaying = true;
@@ -110,7 +109,7 @@ class RadioProvider extends ChangeNotifier {
     try {
       _isStationLoaded = false;
       notifyListeners();
-      _currentIndex = index;
+      currentIndex = index;
       await _open(stations[index]);
       _isStationLoaded = true;
       notifyListeners();
@@ -123,15 +122,16 @@ class RadioProvider extends ChangeNotifier {
       _currentStation = stations[index];
       notifyListeners();
       await _open(stations[index]);
-      _currentIndex = index;
+      currentIndex = index;
     } catch (_) {}
   }
 
   _open(RadioStation station) async {
     var metas = Metas(
-        title: station.stationName,
-        artist: station.mhz.toString(),
-        image: MetasImage.network(station.coverImage));
+      title: station.stationName,
+      artist: station.mhz.toString(),
+      image: MetasImage.network(station.coverImage),
+    );
     try {
       await player.open(
         Audio.liveStream(station.url, metas: metas),
@@ -163,7 +163,7 @@ class RadioProvider extends ChangeNotifier {
   }
 
   isFirstStation() {
-    return _currentIndex == 0;
+    return currentIndex == 0;
   }
 
   isLastStation(next) {

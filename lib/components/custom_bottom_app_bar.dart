@@ -19,8 +19,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
 
-import '../screens/radio.dart';
-
 import 'custom_animated_bottom_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -212,7 +210,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 pages.removeAt(3);
                 pages.insert(
                   3,
-                  const RadioScreen(),
+                  const RadioScreenNew(),
                 );
               });
             }

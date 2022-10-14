@@ -340,7 +340,7 @@ TextStyle headerTwoTextStyle = const TextStyle(
 
 TextStyle headerThreeTextStyle = const TextStyle(
   color: Colors.white,
-  fontSize: 20,
+  fontSize: 22,
   letterSpacing: 0.0,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w600,
 );

@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kin_music_player_app/components/kin_audio_wave.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/model/radio.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
-import '../components/kin_audio_wave.dart';
-import '../services/network/model/radio.dart';
 
 class RadioScreen1 extends StatefulWidget {
   const RadioScreen1({Key? key}) : super(key: key);

@@ -14,9 +14,10 @@ class RadioScreenNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RadioProvider radioProvider = Provider.of<RadioProvider>(context);
-    return SafeArea(
-      child: SingleChildScrollView(
+    RadioProvider radioProvider =
+        Provider.of<RadioProvider>(context, listen: false);
+    return Scaffold(
+      body: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
           width: MediaQuery.of(context).size.width,
@@ -31,70 +32,86 @@ class RadioScreenNew extends StatelessWidget {
               ],
             ),
           ),
-          child: FutureBuilder<List<RadioStation>>(
-            future: radioProvider.getStations(),
-            builder: (context, snapshot) {
-              // loading
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: KinProgressIndicator(),
-                );
-              }
-
-              // data loaded
-              else if (snapshot.hasData && !snapshot.hasError) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Search Bar
-                    const CustomSearchBar(),
-
-                    // Spacer
-                    const SizedBox(
-                      height: 200,
+          child: SingleChildScrollView(
+            child: FutureBuilder<List<RadioStation>>(
+              future: radioProvider.getStations(),
+              builder: (context, snapshot) {
+                // loading
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          kSecondaryColor,
+                          Color(0xFFF5F5F5),
+                        ],
+                      ),
                     ),
-                    // Title
-                    Text(
-                      "RADIO",
-                      style: headerOneTextStyle,
+                    child: const Center(
+                      child: KinProgressIndicator(),
                     ),
+                  );
+                }
 
-                    const SizedBox(
-                      height: 8,
-                    ),
+                // data loaded
+                else if (snapshot.hasData && !snapshot.hasError) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Search Bar
+                      const CustomSearchBar(),
 
-                    _buildAdBanner(context: context),
+                      // Spacer
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      // Title
+                      Text(
+                        "RADIO",
+                        style: headerOneTextStyle,
+                      ),
 
-                    // Spacer
-                    const SizedBox(
-                      height: 18,
-                    ),
+                      const SizedBox(
+                        height: 8,
+                      ),
 
-                    _buildRecentlyPlayed(
-                      context: context,
-                      recentlyPlayedStations: snapshot.data!,
-                    ),
+                      _buildAdBanner(context: context),
 
-                    // Spacer
-                    const SizedBox(
-                      height: 18,
-                    ),
+                      // Spacer
+                      const SizedBox(
+                        height: 18,
+                      ),
 
-                    _buildAppStations(
-                      context: context,
-                      radioStations: snapshot.data!,
-                    ),
-                  ],
-                );
-              }
+                      _buildRecentlyPlayed(
+                        context: context,
+                        recentlyPlayedStations: snapshot.data!,
+                      ),
 
-              // error
-              else {
-                return OnSnapshotError(
-                  error: snapshot.error.toString(),
-                );
-              }
-            },
+                      // Spacer
+                      const SizedBox(
+                        height: 18,
+                      ),
+
+                      _buildAppStations(
+                        context: context,
+                        radioStations: snapshot.data!,
+                      ),
+                    ],
+                  );
+                }
+
+                // error
+                else {
+                  return OnSnapshotError(
+                    error: snapshot.error.toString(),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -149,35 +166,33 @@ Widget _buildRecentlyPlayed(
 Widget _buildAppStations(
     {required BuildContext context,
     required List<RadioStation> radioStations}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 12.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Title
-        Text(
-          "All Stations",
-          style: headerThreeTextStyle,
-        ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Title
+      Text(
+        "All Stations",
+        style: headerThreeTextStyle,
+      ),
 
-        const SizedBox(
-          height: 8,
-        ),
+      const SizedBox(
+        height: 8,
+      ),
 
-        SizedBox(
-          height: (MediaQuery.of(context).size.height * 0.45),
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            itemCount: radioStations.length,
-            itemBuilder: (context, index) {
-              return RadioCardList(
-                station: radioStations[index],
-              );
-            },
-          ),
-        )
-      ],
-    ),
+      SizedBox(
+        height: (MediaQuery.of(context).size.height * 0.45),
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          itemCount: radioStations.length,
+          itemBuilder: (context, index) {
+            return RadioCardList(
+              station: radioStations[index],
+              index: index,
+            );
+          },
+        ),
+      )
+    ],
   );
 }
