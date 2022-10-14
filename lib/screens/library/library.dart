@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 import '../../size_config.dart';
-import '../album/album.dart';
-import '../artist/artist.dart';
-import '../genre/genre.dart';
-import 'favorite/favorite.dart';
-import '../home/components/home_search_screen.dart';
-import '../home/components/songs.dart';
 import '../playlist/playlist.dart';
 import 'Offline/offline.dart';
 import 'Purchased/purchased.dart';
+import 'favorite/favorite.dart';
 
 class MyLibrary extends StatefulWidget {
   const MyLibrary({Key? key}) : super(key: key);
@@ -29,8 +24,8 @@ class _MyLibraryState extends State<MyLibrary> {
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
           //automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-
+          backgroundColor: Color(0xFF052c54),
+          elevation: 0,
           title: const TabBar(
             //  indicatorPadding: EdgeInsets.all(0),
             indicatorWeight: 3.0,
@@ -55,12 +50,22 @@ class _MyLibraryState extends State<MyLibrary> {
             indicatorColor: kSecondaryColor,
           ),
         ),
-        body: TabBarView(children: [
-          const PlaylistsScreen(),
-          const Favorite(),
-          const Offline(),
-          const Purchased(),
-        ]),
+        body: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.blue,
+                Colors.white,
+              ],
+            )),
+            child: const TabBarView(children: [
+              PlaylistsScreen(),
+              Favorite(),
+              Offline(),
+              Purchased(),
+            ])),
       ),
     );
   }

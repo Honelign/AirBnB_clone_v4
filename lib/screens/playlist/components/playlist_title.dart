@@ -46,10 +46,13 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
               : Row(
                   children: [
                     // icon
-                    Image.asset(
-                      "assets/icons/Playlist Icon.png",
-                      width: 32,
-                      height: 32,
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Image.asset(
+                        "assets/icons/Playlist Icon.png",
+                        width: 32,
+                        height: 32,
+                      ),
                     ),
 
                     // spacer
@@ -73,7 +76,7 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
                         children: [
                           PopupMenuButton(
                             initialValue: 0,
-                            color: kPopupMenuBackgroundColor,
+                            color: Colors.white,
                             child: const Icon(
                               Icons.more_vert,
                               color: kGrey,
