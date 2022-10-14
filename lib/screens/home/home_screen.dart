@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           toolbarHeight: 15,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          elevation: 2,
+          backgroundColor:Color(0xFF052c54),
+          elevation: 0,
           // actions: [
           //   Padding(
           //     padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
