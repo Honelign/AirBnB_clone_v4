@@ -12,7 +12,9 @@ class KinProgressIndicator extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return DecoratedBox(
             decoration: BoxDecoration(
-              color: index.isEven ? kSecondaryColor : Colors.green,
+              color: index.isEven
+                  ? kSecondaryColor
+                  : Color.fromARGB(255, 15, 57, 92),
             ),
           );
         },

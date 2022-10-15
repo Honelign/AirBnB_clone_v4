@@ -20,11 +20,11 @@ class GridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
-        color: kGrey.withOpacity(0.075),
         borderRadius: BorderRadius.circular(10),
       ),
-      width: getProportionateScreenWidth(width),
+      width: getProportionateScreenWidth(120),
       child: InkWell(
         onTap: () async {
           List<Music> musics = [];
@@ -39,12 +39,23 @@ class GridCard extends StatelessWidget {
           );
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 1.3,
+            Container(
+              width: 107,
+              height: 105,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(-5, 5),
+                    spreadRadius: -2,
+                    blurRadius: 1,
+                    color: Color.fromRGBO(0, 0, 0, 0.35),
+                  )
+                ],
+              ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
                 child: CachedNetworkImage(
                   placeholder: (context, url) {
                     return Image.asset("assets/images/logo.png");
@@ -60,14 +71,6 @@ class GridCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            SizedBox(
-              height: getProportionateScreenHeight(2),
-            ),
-            const Text(
-              '',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: kGrey),
             ),
           ],
         ),

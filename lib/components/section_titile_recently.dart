@@ -22,9 +22,9 @@ class SectionTitleRecently extends StatelessWidget {
           title,
           style: headerTextStyle
         ),
-        IconButton(icon: Icon(Icons.search,color: Colors.white,),onPressed: () {
-          Navigator.pushNamed(context, HomeSearchScreen.routeName);
-        },)
+        // IconButton(icon: Icon(Icons.search,color: Colors.white,),onPressed: () {
+        //   Navigator.pushNamed(context, HomeSearchScreen.routeName);
+        // },)
       ],
     );
   }

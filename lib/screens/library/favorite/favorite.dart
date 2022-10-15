@@ -51,29 +51,11 @@ class _FavoriteState extends State<Favorite> {
                   backgroundColor: refreshIndicatorBackgroundColor,
                   child: SingleChildScrollView(
                     child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          const Color(0xFF052C54),
-                          const Color(0xFFD9D9D9).withOpacity(0.7)
-                        ],
-                      )),
+                      decoration: linearGradientDecoration,
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       child: Column(
                         children: [
-                          /* const Padding(
-                            padding: EdgeInsets.only(left: 8.0, right: 180),
-                            child: Text(
-                              "Your Favorites",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ), */
                           provider.isLoading == true
                               ? Padding(
                                   padding: EdgeInsets.only(top: centerSize),

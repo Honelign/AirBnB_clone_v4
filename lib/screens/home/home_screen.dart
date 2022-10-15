@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kin_music_player_app/components/search/search_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/album.dart';
 import 'package:kin_music_player_app/screens/artist/artist.dart';
@@ -36,19 +37,33 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          toolbarHeight: 15,
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: CustomSearchBar(),
+          ),
+          toolbarHeight: 60,
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF052c54),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            systemNavigationBarColor: kSecondaryColor,
-            statusBarColor: kSecondaryColor,
-          ),
           elevation: 0,
           bottom: TabBar(
-            indicatorPadding: EdgeInsets.all(0),
-            indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(0),
-            indicatorSize: TabBarIndicatorSize.label,
+            labelColor: kSecondaryColor,
+            unselectedLabelColor: Colors.white,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 10,
+              right: 10,
+            ),
+            indicatorWeight: 5.0,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            //padding: EdgeInsets.symmetric(vertical: 20),
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+            //  indicatorSize: TabBarIndicatorSize.label,
             tabs: const [
               Tab(
                 text: 'Explore',

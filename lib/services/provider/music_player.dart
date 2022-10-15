@@ -91,7 +91,16 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     radioProvider.setMiniPlayerVisibility(false);
   }
 
-  late Album _currentAlbum;
+  Album _currentAlbum = Album(
+    id: -1,
+    title: "Kin",
+    artist: "Kin",
+    description: "",
+    cover: "",
+    artist_id: -1,
+    price: 0,
+    isPurchasedByUser: false,
+  );
 
   Album get currentAlbum => _currentAlbum;
 

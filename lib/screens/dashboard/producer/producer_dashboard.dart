@@ -81,11 +81,13 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                 fromY: 0,
                 toY: int.parse(stat.viewCount).toDouble(),
                 width: 15,
-                color: int.parse(stat.viewCount) > (maxCount * 0.65)
-                    ? kSecondaryColor.withOpacity(0.95)
-                    : int.parse(stat.viewCount) > (maxCount * 0.35)
-                        ? kSecondaryColor.withOpacity(0.75)
-                        : kSecondaryColor.withOpacity(0.55),
+                color: kSecondaryColor,
+
+                // int.parse(stat.viewCount) > (maxCount * 0.65)
+                //     ? kSecondaryColor.withOpacity(0.95)
+                //     : int.parse(stat.viewCount) > (maxCount * 0.35)
+                //         ? kSecondaryColor.withOpacity(0.75)
+                //         : kSecondaryColor.withOpacity(0.55),
               ),
             ],
           ),
@@ -114,7 +116,7 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
   String formatDisplayName() {
     try {
       var currentUser = FirebaseAuth.instance.currentUser;
-      String displayValue = "PD";
+      String displayValue = "KA";
       if (currentUser != null) {
         String firstName = currentUser.displayName!.split(" ")[0];
         String lastName = currentUser.displayName!.split(" ")[1];
@@ -130,7 +132,7 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
 
       return displayValue;
     } catch (e) {
-      return "";
+      return "KA";
     }
   }
 

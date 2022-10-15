@@ -22,27 +22,9 @@ class _OfflineState extends State<Offline> {
       backgroundColor: kPrimaryColor,
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xFF052C54),
-              const Color(0xFFD9D9D9).withOpacity(0.7)
-            ],
-          )),
+          decoration: linearGradientDecoration,
           child: ListView(
             children: [
-              /*  const Padding(
-                padding: EdgeInsets.only(left: 8.0, right: 180),
-                child: Text(
-                  "Downloads",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
-                ),
-              ), */
               FutureBuilder<List<Music>>(
                 future: _offlineMusicProvider.getOfflineMusic(),
                 builder: (context, snapshot) {
@@ -78,7 +60,7 @@ class _OfflineState extends State<Offline> {
                     color: refreshIndicatorForegroundColor,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height * 0.8,
                       child: ListView.builder(
                         itemCount: snapshot.data!.length ?? 0,
                         itemBuilder: (context, index) {

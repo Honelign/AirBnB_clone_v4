@@ -48,12 +48,15 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        // color: kPrimaryColor,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: [Color(0xFF052C54), Color(0xFFD9D9D9).withOpacity(0.7)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
+            colors: [
+              const Color(0xFF052C54),
+              const Color(0xFFD9D9D9).withOpacity(0.7),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -72,11 +75,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               SizedBox(height: getProportionateScreenWidth(10)),
               _buildArtist(context),
               SizedBox(
-                height: getProportionateScreenHeight(20),
+                height: getProportionateScreenHeight(10),
               ),
               _buildRecentMusics(context),
               SizedBox(
-                height: getProportionateScreenHeight(20),
+                height: getProportionateScreenHeight(10),
               ),
               _buildGenres(context)
             ],
@@ -84,24 +87,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         ),
       ),
     );
-    //   return DownloadProgressDisplayComponent(
-    //     music: Music(
-    //       id: 1,
-    //       cover:
-    //           "Media_Files/Tracks_Cover_Images/Kante_new_photo_2022-09-07_12-29-01.jpg",
-    //       artist: "Tsedi",
-    //       title: "Kante new",
-    //       description: "",
-    //       audio:
-    //           "Media_Files/Tracks_Audio_Files/25-2:11-2022-10-06/2022-10-06/Kante_new_Tsedi_-_Kante_New.mp3",
-    //       artist_id: "11",
-    //       encoder_id: "encoder_id",
-    //       isPurchasedByUser: false,
-    //       priceETB: "0",
-    //       albumId: "2",
-    //       genreId: "1",
-    //     ),
-    //   );
   }
 
   Widget _buildNewReleasedAlbums(BuildContext context) {
@@ -120,7 +105,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
         ),
         SizedBox(height: getProportionateScreenWidth(10)),
         SizedBox(
-          height: getProportionateScreenHeight(120),
+          height: getProportionateScreenHeight(145),
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder(
@@ -203,7 +188,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             if (!(snapshot.connectionState == ConnectionState.waiting)) {
               if (snapshot.hasData) {
                 List<Music> musics = snapshot.data!;
-                int? length;
+                int length = 0;
                 if (snapshot.data?.length == 1 || snapshot.data?.length == 2) {
                   length = 1;
                 } else {
@@ -228,7 +213,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 }
 
                 return SizedBox(
-                  height: 80.0 * length!.toDouble(),
+                  height: 80.0 * length.toDouble(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: GridView.builder(
@@ -575,50 +560,67 @@ class SpecialOfferCard extends StatelessWidget {
         child: SizedBox(
           width: getProportionateScreenWidth(242),
           height: getProportionateScreenWidth(100),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  imageUrl: '$kinAssetBaseUrl/$image',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(0xFF343434).withOpacity(0.3),
-                        const Color(0xFF343434).withOpacity(0.45),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CachedNetworkImage(
+                imageUrl: '$kinAssetBaseUrl/$image',
+
+                //  width: double.infinity,
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    height: 115,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(-5, 5),
+                          spreadRadius: -3,
+                          blurRadius: 5,
+                          color: Color.fromRGBO(0, 0, 0, 0.76),
+                        )
                       ],
+                      image: DecorationImage(
+                          fit: BoxFit.cover, image: imageProvider),
+                      // gradient: LinearGradient(
+                      //   begin: Alignment.topCenter,
+                      //   end: Alignment.bottomCenter,
+                      //   colors: [
+                      //     const Color(0xFF343434).withOpacity(0.3),
+                      //     const Color(0xFF343434).withOpacity(0.45),
+                      //   ],
+                      // ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: getProportionateScreenWidth(15.0),
-                    vertical: getProportionateScreenWidth(10),
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$genre\n",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        // TextSpan(text: "$numOfMusics Musics")
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
+              Text(
+                genre,
+                overflow: TextOverflow.fade,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              )
+              // Padding(
+              //   padding: EdgeInsets.symmetric(
+              //     horizontal: getProportionateScreenWidth(15.0),
+              //     vertical: getProportionateScreenWidth(10),
+              //   ),
+              //   child: Text.rich(
+              //     TextSpan(
+              //       style: const TextStyle(color: Colors.white),
+              //       children: [
+              //         TextSpan(
+              //           text: "$genre\n",
+              //           style: const TextStyle(
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //         // TextSpan(text: "$numOfMusics Musics")
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
         ),
       ),
@@ -661,6 +663,14 @@ class SpecialOfferCardartist extends StatelessWidget {
                   return Container(
                     height: 150,
                     decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(-5, 5),
+                            spreadRadius: -3,
+                            blurRadius: 5,
+                            color: Color.fromRGBO(0, 0, 0, 0.76),
+                          )
+                        ],
                         shape: BoxShape.circle,
                         image: DecorationImage(image: imageProvider)),
                   );
@@ -674,6 +684,7 @@ class SpecialOfferCardartist extends StatelessWidget {
               ),
               Text(
                 artist.artist_name,
+                overflow: TextOverflow.fade,
                 style: const TextStyle(color: Colors.white),
               )
             ],

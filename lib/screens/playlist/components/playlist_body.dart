@@ -85,6 +85,7 @@ class _PlaylistBodyState extends State<PlaylistBody> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF052c54),
+        elevation: 0,
         title: Text(widget.playlistName),
         actions: [
           // Add tracks button

@@ -65,7 +65,7 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                     );
                   } else if (_phoneNumberFormKey.currentState!.validate()) {}
                 },
-                text: 'Processed to OTP',
+                text: 'Proceed to OTP',
               ),
               SizedBox(
                 height: getProportionateScreenHeight(25),
@@ -76,11 +76,12 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
               ),
               const SocialLogin(),
               AccAltOption(
-                  buttonText: 'Register',
-                  leadingText: 'Don\'t have an account ?',
-                  onTap: () {
-                    Navigator.pushNamed(context, RegPage.routeName);
-                  }),
+                buttonText: 'Register',
+                leadingText: 'Don\'t have an account ?',
+                onTap: () {
+                  Navigator.pushNamed(context, RegPage.routeName);
+                },
+              ),
             ],
           ),
         ),

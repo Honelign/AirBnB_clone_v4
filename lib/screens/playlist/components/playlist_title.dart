@@ -50,8 +50,8 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
                       backgroundColor: Colors.white,
                       child: Image.asset(
                         "assets/icons/Playlist Icon.png",
-                        width: 32,
-                        height: 32,
+                        width: 20,
+                        height: 20,
                       ),
                     ),
 
@@ -64,9 +64,9 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
                     Text(
                       widget.playlistInfo.name,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                        color: kSecondaryColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
 

@@ -77,11 +77,11 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  backgroundColor: kPopupMenuBackgroundColor,
-                  title: Text(
+                  backgroundColor: Colors.white.withOpacity(0.85),
+                  title: const Text(
                     'Do you want to exit from Kin?',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: kSecondaryColor,
                     ),
                   ),
                   actions: [
@@ -124,7 +124,12 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         }
         // email not verified
         else {
-          return const KinProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
         }
       },
     );

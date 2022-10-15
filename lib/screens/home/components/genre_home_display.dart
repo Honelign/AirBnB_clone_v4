@@ -36,6 +36,12 @@ class GenreHomeDisplay extends StatelessWidget {
             height: 120,
             margin: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
+              boxShadow: [BoxShadow(
+        offset: Offset(-5, 5),
+        spreadRadius: -3,
+        blurRadius: 5,
+        color: Color.fromRGBO(0, 0, 0, 0.76),
+    )],
               image: DecorationImage(
                 image: CachedNetworkImageProvider(
                   "$kinAssetBaseUrl/${genre.cover}",

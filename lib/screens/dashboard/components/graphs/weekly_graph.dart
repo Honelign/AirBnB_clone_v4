@@ -71,7 +71,7 @@ class WeeklyGraphWidget extends StatelessWidget {
 
   Widget _getBottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: kLightTextColor,
+      color: kSecondaryColor,
       fontWeight: FontWeight.bold,
       fontSize: 10,
     );

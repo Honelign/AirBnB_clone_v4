@@ -84,10 +84,10 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
                   horizontal: getProportionateScreenHeight(10),
                   vertical: getProportionateScreenHeight(25),
                 ),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: getProportionateScreenWidth(15),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 130,
+                  childAspectRatio: 0.9,
+                  crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                 ),
                 builderDelegate: PagedChildBuilderDelegate(

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/download/multiple_download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/no_connection_display.dart';
@@ -188,7 +189,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     return CachedNetworkImage(
       imageUrl: image,
       imageBuilder: (context, imageProvider) => Container(
-        height: MediaQuery.of(context).size.width * 0.45,
+        height: MediaQuery.of(context).size.width * 0.4,
         width: MediaQuery.of(context).size.width * 0.4,
         decoration: BoxDecoration(
           image: DecorationImage(

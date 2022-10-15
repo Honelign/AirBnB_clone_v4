@@ -71,7 +71,6 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(
-      backgroundColor: Color(0xFF052c54),
       body: SafeArea(
         child: checkConnection(status) == false
             ? RefreshIndicator(
@@ -87,23 +86,20 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                 builder: (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
                   // loading
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: KinProgressIndicator(),
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: linearGradientDecoration,
+                      child: const Center(
+                        child: KinProgressIndicator(),
+                      ),
                     );
                   }
 
                   // data loaded
                   else if (snapshot.hasData && !snapshot.hasError) {
                     return Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          const Color(0xFF052C54),
-                          const Color(0xFFD9D9D9).withOpacity(0.7)
-                        ],
-                      )),
+                      decoration: linearGradientDecoration,
                       padding: const EdgeInsets.fromLTRB(0, 24, 0, 36),
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -128,9 +124,10 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                                   child: Text(
                                     "Your Playlist",
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: 150),

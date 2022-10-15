@@ -69,7 +69,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
     return Consumer<PlayListProvider>(
       builder: (BuildContext context, playListProvider, _) {
         return SimpleDialog(
-          backgroundColor: kPopupMenuBackgroundColor,
+          backgroundColor: Colors.white.withOpacity(0.85),
           insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
@@ -77,10 +77,10 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
           children: playListProvider.isLoading == false
               ? [
                   // title
-                  Text(
+                  const Text(
                     "Select a Playlist",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
+                      color: kSecondaryColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -113,7 +113,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
                               child: Text(
                                 "No Playlist",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: kSecondaryColor,
                                   fontSize: 18,
                                 ),
                               ),
@@ -125,7 +125,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
                               child: Text(
                                 "No More Playlists",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: kSecondaryColor,
                                   fontSize: 16,
                                 ),
                               ),
@@ -190,7 +190,7 @@ class _PlaylistSelectorDialogState extends State<PlaylistSelectorDialog> {
                             child: const Text(
                               "Cancel",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: kSecondaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),

@@ -21,56 +21,57 @@ class GenreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image:
-                CachedNetworkImageProvider("$kinAssetBaseUrl/${genre.cover}"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        width: getProportionateScreenWidth(width),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => GenreDetail(
-                  genre: genre,
+    return Container(
+      padding: const EdgeInsets.all(0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      width: getProportionateScreenWidth(120),
+      child: InkWell(
+        onTap: () async {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => GenreDetail(
+                genre: genre,
+              ),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 107,
+              height: 103,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(-5, 5),
+                    spreadRadius: -3,
+                    blurRadius: 5,
+                    color: Color.fromRGBO(0, 0, 0, 0.76),
+                  )
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  placeholder: (context, url) {
+                    return Image.asset("assets/images/logo.png");
+                  },
+                  fit: BoxFit.cover,
+                  imageUrl: '$kinAssetBaseUrl/${genre.cover}',
                 ),
               ),
-            );
-          },
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AspectRatio(
-                  aspectRatio: 2.0,
-                  child: ClipRRect(
-                      child: CachedNetworkImage(
-                    imageUrl: "$kinAssetBaseUrl/${genre.cover}",
-                    fit: BoxFit.cover,
-                  )),
-                ),
-                SizedBox(height: getProportionateScreenHeight(10)),
-
-                // Genre Title
-                Text(
-                  genre.title,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: getProportionateScreenHeight(4)),
-              ],
             ),
-          ),
+            SizedBox(height: getProportionateScreenHeight(5)),
+            Text(
+              genre.title,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ],
         ),
       ),
     );
