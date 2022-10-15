@@ -44,27 +44,28 @@ class _HomeScreenState extends State<HomeScreen> {
           toolbarHeight: 60,
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF052c54),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            systemNavigationBarColor: kSecondaryColor,
-            statusBarColor: kSecondaryColor,
-          ),
           elevation: 0,
-          bottom:  TabBar(
-            
-           // padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+          bottom: TabBar(
             labelColor: kSecondaryColor,
             unselectedLabelColor: Colors.white,
-            indicator: BoxDecoration(color: Colors.white,
-            borderRadius: BorderRadius.circular(15)),
-            indicatorPadding: EdgeInsets.only(top: 15,bottom: 19,left: 10,right: 10),
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 10,
+              right: 10,
+            ),
             indicatorWeight: 5.0,
-            labelStyle: TextStyle(fontWeight: FontWeight.w500),
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
             //padding: EdgeInsets.symmetric(vertical: 20),
-           labelPadding: EdgeInsets.symmetric(horizontal: 0,vertical: 5),
-          //  indicatorSize: TabBarIndicatorSize.label,
-            tabs:  [
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+            //  indicatorSize: TabBarIndicatorSize.label,
+            tabs: const [
               Tab(
-             
                 text: 'Explore',
               ),
               Tab(

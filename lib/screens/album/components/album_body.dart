@@ -43,13 +43,6 @@ class _AlbumBodyState extends State<AlbumBody> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.transparent,
-        statusBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
     _showLoader = true;
     super.initState();
   }
@@ -196,7 +189,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     return CachedNetworkImage(
       imageUrl: image,
       imageBuilder: (context, imageProvider) => Container(
-        height: MediaQuery.of(context).size.width * 0.45,
+        height: MediaQuery.of(context).size.width * 0.4,
         width: MediaQuery.of(context).size.width * 0.4,
         decoration: BoxDecoration(
           image: DecorationImage(

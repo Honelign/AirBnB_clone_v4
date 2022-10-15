@@ -42,7 +42,7 @@ class GenreCard extends StatelessWidget {
           children: [
             Container(
               width: 107,
-              height: 105,
+              height: 103,
               decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(

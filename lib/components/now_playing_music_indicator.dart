@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
@@ -34,6 +35,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
     var favoriteProvider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
     favoriteProvider.getFavids();
+
     super.initState();
   }
 

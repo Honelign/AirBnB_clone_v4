@@ -41,6 +41,7 @@ void main() async {
   Stripe.publishableKey =
       "pk_test_51LcOtyFvUcclFpL2uAwDrXq1HbZHXIDRywFiLWWLl32E3OyOjfSkraaNwAsHzAYmnfSGoGlK3QyQ9b6PqiXGWVvx001D1KIQCz";
   await Firebase.initializeApp(
+    name: 'noPersist',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -97,25 +98,10 @@ class _KinState extends State<Kin> {
   void initState() {
     super.initState();
 
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        systemNavigationBarColor: kPrimaryColor,
-        statusBarColor: kPrimaryColor,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
-
     Provider.of<CachedFavoriteProvider>(
       context,
       listen: false,
     ).cacheFavorite();
-    /*
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {}
-    });
-    FirebaseMessaging.instance.getInitialMessage().then((message) {});
-    FirebaseMessaging.instance.subscribeToTopic('all');
-    */
   }
 
   @override
@@ -127,7 +113,13 @@ class _KinState extends State<Kin> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: kPrimaryColor,
+        statusBarColor: kPrimaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
     final AppRouter _appRouter = AppRouter();
     return MaterialApp(
       debugShowCheckedModeBanner: false,

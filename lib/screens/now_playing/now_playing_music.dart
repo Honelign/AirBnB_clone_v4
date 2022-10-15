@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
+import 'package:kin_music_player_app/components/animation_rotate.dart';
 import 'package:kin_music_player_app/components/download/download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
@@ -49,6 +51,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(musicId);
+
     super.initState();
   }
 
@@ -133,7 +136,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
 
                           // album image
                           _buildAlbumCover(
-                            albumCoverUrl: "$kinAssetBaseUrl/${music!.cover}",
+                            music: music!,
+                            playerProvider: playerProvider,
                           ),
                           // spacer
                           SizedBox(
@@ -220,21 +224,111 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     );
   }
 
-  Widget _buildAlbumCover({required String albumCoverUrl}) {
-    return CachedNetworkImage(
-      imageUrl: albumCoverUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        height: MediaQuery.of(context).size.width * 0.65,
-        width: MediaQuery.of(context).size.width * 0.65,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.fill,
+  Widget _buildAlbumCover({
+    required MusicPlayer playerProvider,
+    required Music music,
+  }) {
+    // return CachedNetworkImage(
+    //   imageUrl: albumCoverUrl,
+    //   imageBuilder: (context, imageProvider) => Container(
+    //     height: MediaQuery.of(context).size.width * 0.65,
+    //     width: MediaQuery.of(context).size.width * 0.65,
+    //     decoration: BoxDecoration(
+    //       image: DecorationImage(
+    //         image: imageProvider,
+    //         fit: BoxFit.fill,
+    //       ),
+    //       borderRadius: BorderRadius.circular(20),
+    //     ),
+    //   ),
+    // );
+
+    return Container(
+        height: 250,
+        margin: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(30),
+            horizontal: getProportionateScreenWidth(30)),
+        child: AnimationRotate(
+          stop: !playerProvider.isPlaying(),
+          child: SizedBox(
+            height: 250,
+            width: 250,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(1000),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: playerProvider.getMusicCover(),
+                      height: 250,
+                      width: 250,
+                    ),
+                    Container(
+                      height: 250,
+                      width: 250,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xFF343434).withOpacity(0.4),
+                            const Color(0xFF343434).withOpacity(0.15),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                          height: 75,
+                          width: 75,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1000),
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      '$kinAssetBaseUrl/${music.cover}'),
+                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                                  fit: BoxFit.cover)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(1000),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1000),
+                                ),
+                              ),
+                            ),
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                          height: 25,
+                          width: 25,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1000),
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      '$kinAssetBaseUrl/${music.cover}'),
+                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                                  fit: BoxFit.cover)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(1000),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1000),
+                                ),
+                              ),
+                            ),
+                          )),
+                    ),
+                  ],
+                )),
           ),
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildProgressBar(
@@ -327,15 +421,15 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                                   width: MediaQuery.of(context).size.width,
                                   height:
                                       MediaQuery.of(context).size.height * 0.65,
-                                  color: Colors.black,
-                                  child: KinProgressIndicator(),
+                                  decoration: linearGradientDecoration,
+                                  child: const KinProgressIndicator(),
                                 );
                               }
 
                               // coin info got
                               else {
                                 return Container(
-                                  color: kPrimaryColor,
+                                  decoration: linearGradientDecoration,
                                   width: MediaQuery.of(context).size.width,
                                   height:
                                       MediaQuery.of(context).size.height * 0.7,
@@ -403,14 +497,16 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                                                   "Buy Coins",
                                                   style: TextStyle(
                                                     fontSize: 16,
+                                                    color: kSecondaryColor,
                                                   ),
                                                 ),
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        vertical: 8,
-                                                        horizontal: 25),
+                                                  vertical: 8,
+                                                  horizontal: 25,
+                                                ),
                                                 decoration: BoxDecoration(
-                                                  color: kSecondaryColor,
+                                                  color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(25),
                                                 ),
