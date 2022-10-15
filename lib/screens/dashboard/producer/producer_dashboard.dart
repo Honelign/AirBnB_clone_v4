@@ -81,11 +81,11 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                 fromY: 0,
                 toY: int.parse(stat.viewCount).toDouble(),
                 width: 15,
-                color: int.parse(stat.viewCount) > maxCount * 0.65
-                    ? Colors.green
-                    : int.parse(stat.viewCount) > maxCount * 0.35
-                        ? Colors.yellow
-                        : Colors.red,
+                color: int.parse(stat.viewCount) > (maxCount * 0.65)
+                    ? kSecondaryColor.withOpacity(0.95)
+                    : int.parse(stat.viewCount) > (maxCount * 0.35)
+                        ? kSecondaryColor.withOpacity(0.75)
+                        : kSecondaryColor.withOpacity(0.55),
               ),
             ],
           ),
@@ -154,416 +154,482 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
   Widget build(BuildContext context) {
     List displayValues = [];
 
-    return FutureBuilder<List>(
-      future: getAllDropDownValues(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const KinProgressIndicator();
-        } else if (snapshot.hasData && !snapshot.hasError) {
-          final analyticsProvider =
-              Provider.of<AnalyticsProvider>(context, listen: false);
-          // artists
-          if (currentUploadType == "Artists") {
-            displayValues = analyticsProvider.allArtists;
-          }
+    return Container(
+      decoration: linearGradientDecoration,
+      child: FutureBuilder<List>(
+        future: getAllDropDownValues(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const KinProgressIndicator();
+          } else if (snapshot.hasData && !snapshot.hasError) {
+            final analyticsProvider =
+                Provider.of<AnalyticsProvider>(context, listen: false);
+            // artists
+            if (currentUploadType == "Artists") {
+              displayValues = analyticsProvider.allArtists;
+            }
 
-          // albums
-          else if (currentUploadType == "Albums") {
-            displayValues = analyticsProvider.allAlbums;
-          }
-          // tracks
-          else if (currentUploadType == "Tracks") {
-            displayValues = analyticsProvider.allTracks;
-          } else {
-            displayValues = analyticsProvider.allTracks;
-          }
+            // albums
+            else if (currentUploadType == "Albums") {
+              displayValues = analyticsProvider.allAlbums;
+            }
+            // tracks
+            else if (currentUploadType == "Tracks") {
+              displayValues = analyticsProvider.allTracks;
+            } else {
+              displayValues = analyticsProvider.allTracks;
+            }
 
-          if (currentAnalyticsType == "Daily" &&
-              analyticsProvider.generalAnalytics.isNotEmpty) {
-            graphDisplayInfo =
-                analyticsProvider.generalAnalytics[0].total_daily;
-          }
-          //
-          else if (currentAnalyticsType == "Weekly" &&
-              analyticsProvider.generalAnalytics.isNotEmpty) {
-            graphDisplayInfo =
-                analyticsProvider.generalAnalytics[0].total_weekly;
-          }
-          //
-          else if (currentAnalyticsType == "Monthly" &&
-              analyticsProvider.generalAnalytics.isNotEmpty) {
-            graphDisplayInfo =
-                analyticsProvider.generalAnalytics[0].total_monthly;
-          }
-          //
-          else if (analyticsProvider.generalAnalytics.isNotEmpty) {
-            graphDisplayInfo =
-                analyticsProvider.generalAnalytics[0].total_daily;
-          }
+            if (currentAnalyticsType == "Daily" &&
+                analyticsProvider.generalAnalytics.isNotEmpty) {
+              graphDisplayInfo =
+                  analyticsProvider.generalAnalytics[0].total_daily;
+            }
+            //
+            else if (currentAnalyticsType == "Weekly" &&
+                analyticsProvider.generalAnalytics.isNotEmpty) {
+              graphDisplayInfo =
+                  analyticsProvider.generalAnalytics[0].total_weekly;
+            }
+            //
+            else if (currentAnalyticsType == "Monthly" &&
+                analyticsProvider.generalAnalytics.isNotEmpty) {
+              graphDisplayInfo =
+                  analyticsProvider.generalAnalytics[0].total_monthly;
+            }
+            //
+            else if (analyticsProvider.generalAnalytics.isNotEmpty) {
+              graphDisplayInfo =
+                  analyticsProvider.generalAnalytics[0].total_daily;
+            }
 
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.arrow_back),
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
+                backgroundColor: kSecondaryColor,
+                elevation: 0,
               ),
-              backgroundColor: Colors.black,
-            ),
-            backgroundColor: Colors.black,
-            body: RefreshIndicator(
-              onRefresh: () async {
-                setState(() {});
-              },
-              color: refreshIndicatorForegroundColor,
-              backgroundColor: refreshIndicatorBackgroundColor,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    getProportionateScreenWidth(16),
-                    getProportionateScreenHeight(40),
-                    getProportionateScreenWidth(16),
-                    getProportionateScreenHeight(40),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //  profile image
-                      FirebaseAuth.instance.currentUser!.photoURL != null
-                          ? SizedBox(
-                              width: 120,
-                              height: 120,
-                              child: CachedNetworkImage(
-                                imageUrl: FirebaseAuth
-                                        .instance.currentUser!.photoURL ??
-                                    "",
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  // height: 200,
-                                  //  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    // borderRadius: BorderRadius.circular(20),
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              width: 150,
-                              height: 150,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 15),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                // color: Colors.grey.withOpacity(0.55),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    "assets/images/logo.png",
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  formatDisplayName(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 64,
-                                    letterSpacing: 4,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                      // Spacer
-                      SizedBox(
-                        height: getProportionateScreenHeight(24),
+              body: RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {});
+                },
+                color: refreshIndicatorForegroundColor,
+                backgroundColor: refreshIndicatorBackgroundColor,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: linearGradientDecoration,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        getProportionateScreenWidth(16),
+                        getProportionateScreenHeight(40),
+                        getProportionateScreenWidth(16),
+                        getProportionateScreenHeight(40),
                       ),
-
-                      // Artist Name
-                      Text(
-                        FirebaseAuth.instance.currentUser!.displayName ?? "",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: getProportionateScreenWidth(28),
-                        ),
-                      ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(6),
-                      ),
-
-                      // Email / contact info
-                      Text(
-                        getEmailOrPhone(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: getProportionateScreenWidth(14),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: getProportionateScreenHeight(24),
-                      ),
-
-                      snapshot.data!.isEmpty == true
-                          ?
-                          // if no artists/albums/tracks
-                          Column(
-                              children: [
-                                // Info card - Total View Count
-                                ArtistInfoCard(
-                                  infoLabel: "Total Views",
-                                  infoValue: "0".toString(),
-                                  cardType: "Views",
-                                ),
-
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(24),
-                                ),
-
-                                // Info card - Total View Count
-                                ArtistInfoCard(
-                                  infoLabel: "Total Revenue",
-                                  infoValue: "0 ETB".toString(),
-                                  cardType: 'Revenue',
-                                ),
-
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(80),
-                                ),
-
-                                // Info Message
-                                const Text(
-                                  "No Uploads yet",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                              ],
-                            )
-                          :
-                          // info found
-                          Column(
-                              children: [
-                                // Info card - Total View Count
-                                ArtistInfoCard(
-                                  infoLabel: "Total Views",
-                                  infoValue: analyticsProvider
-                                      .generalAnalytics[0].total_count
-                                      .toString(),
-                                  cardType: "Views",
-                                ),
-
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(24),
-                                ),
-
-                                // Info card - Total View Count
-                                ArtistInfoCard(
-                                  infoLabel: "Total Revenue",
-                                  infoValue: analyticsProvider
-                                      .generalAnalytics[0].total_revenue
-                                      .toString(),
-                                  cardType: 'Revenue',
-                                ),
-
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(45),
-                                ),
-
-                                // analytics one title
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // section title
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.45,
-                                      child: Text(
-                                        "Your Music Analytics",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              getProportionateScreenWidth(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //  profile image
+                          FirebaseAuth.instance.currentUser!.photoURL != null
+                              ? SizedBox(
+                                  width: 120,
+                                  height: 120,
+                                  child: CachedNetworkImage(
+                                    imageUrl: FirebaseAuth
+                                            .instance.currentUser!.photoURL ??
+                                        "",
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
+                                  ),
+                                )
+                              : Container(
+                                  width: 150,
+                                  height: 150,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 15,
+                                    horizontal: 15,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    // color: Colors.grey.withOpacity(0.55),
+                                    // image: DecorationImage(
+                                    //   image: AssetImage(
+                                    //     "assets/images/logo.png",
+                                    //   ),
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    color: kSecondaryColor.withOpacity(0.65),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      formatDisplayName(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 64,
+                                        letterSpacing: 4,
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
-                                    // Dropdown options
+                          // Spacer
+                          SizedBox(
+                            height: getProportionateScreenHeight(24),
+                          ),
+
+                          // Artist Name
+                          Text(
+                            FirebaseAuth.instance.currentUser!.displayName ??
+                                "Kin Admin",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(6),
+                          ),
+
+                          // Email / contact info
+                          Text(
+                            getEmailOrPhone(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: getProportionateScreenHeight(24),
+                          ),
+
+                          snapshot.data!.isEmpty == true
+                              ?
+                              // if no artists/albums/tracks
+                              Column(
+                                  children: [
+                                    // Info card - Total View Count
+                                    ArtistInfoCard(
+                                      infoLabel: "Total Views",
+                                      infoValue: "0".toString(),
+                                      cardType: "Views",
+                                    ),
+
+                                    // spacer
                                     SizedBox(
+                                      height: getProportionateScreenHeight(24),
+                                    ),
+
+                                    // Info card - Total View Count
+                                    ArtistInfoCard(
+                                      infoLabel: "Total Revenue",
+                                      infoValue: "0 ETB".toString(),
+                                      cardType: 'Revenue',
+                                    ),
+
+                                    // spacer
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(80),
+                                    ),
+
+                                    Container(
                                       width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: DropdownButton(
-                                        value: currentAnalyticsType,
-                                        isExpanded: true,
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: kSecondaryColor,
-                                        ),
-                                        // Array list of items
-                                        items: possibleAnalyticTypes
-                                            .map((String items) {
-                                          return DropdownMenuItem(
-                                            value: items,
-                                            child: Text(
-                                              items,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            currentAnalyticsType = newValue!;
-                                          });
-                                        },
+                                          0.6,
+                                      height: 5,
+                                      color: Colors.grey,
+                                    ),
+
+                                    const SizedBox(
+                                      height: 24,
+                                    ),
+                                    // Info Message
+                                    const Text(
+                                      "No Uploads yet",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ],
-                                ),
+                                )
+                              :
 
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(36),
-                                ),
+                              // info found
+                              Column(
+                                  children: [
+                                    // Info card - Total View Count
+                                    ArtistInfoCard(
+                                      infoLabel: "Total Views",
+                                      infoValue: analyticsProvider
+                                          .generalAnalytics[0].total_count
+                                          .toString(),
+                                      cardType: "Views",
+                                    ),
 
-                                // graph that is dependant of the selected dropdown value
-                                currentAnalyticsType == "Daily"
-                                    ? DailyGraphWidget(
-                                        barData: barData,
-                                        bottomTileValues: dateValues,
-                                        maxY: maxCount.toDouble(),
-                                      )
-                                    : currentAnalyticsType == "Weekly"
-                                        ? WeeklyGraphWidget(
-                                            barData: barData,
-                                            maxY: (maxCount.toDouble() + 5),
-                                          )
-                                        : MonthlyGraphWidget(
+                                    // spacer
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(24),
+                                    ),
+
+                                    // Info card - Total View Count
+                                    ArtistInfoCard(
+                                      infoLabel: "Total Revenue",
+                                      infoValue: analyticsProvider
+                                          .generalAnalytics[0].total_revenue
+                                          .toString(),
+                                      cardType: 'Revenue',
+                                    ),
+
+                                    // spacer
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(50),
+                                    ),
+
+                                    // Line
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
+                                      height: 3,
+                                      color: Colors.grey.withOpacity(0.55),
+                                    ),
+
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(20),
+                                    ),
+
+                                    // analytics one title
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // section title
+                                        SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Center(
+                                            child: Text(
+                                              "Your Music Analytics",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize:
+                                                    getProportionateScreenWidth(
+                                                        24),
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+
+                                        // Dropdown options
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                              canvasColor: kSecondaryColor,
+                                            ),
+                                            child: DropdownButton(
+                                              value: currentAnalyticsType,
+                                              isExpanded: true,
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: kSecondaryColor,
+                                              ),
+                                              // Array list of items
+                                              items: possibleAnalyticTypes
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(
+                                                    items,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  currentAnalyticsType =
+                                                      newValue!;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    // spacer
+                                    SizedBox(
+                                      height: getProportionateScreenHeight(36),
+                                    ),
+
+                                    // graph that is dependant of the selected dropdown value
+                                    currentAnalyticsType == "Daily"
+                                        ? DailyGraphWidget(
                                             barData: barData,
                                             bottomTileValues: dateValues,
                                             maxY: maxCount.toDouble(),
-                                          ),
+                                          )
+                                        : currentAnalyticsType == "Weekly"
+                                            ? WeeklyGraphWidget(
+                                                barData: barData,
+                                                maxY: (maxCount.toDouble() + 5),
+                                              )
+                                            : MonthlyGraphWidget(
+                                                barData: barData,
+                                                bottomTileValues: dateValues,
+                                                maxY: maxCount.toDouble(),
+                                              ),
 
-                                // spacer
-                                SizedBox(
-                                  height: getProportionateScreenHeight(55),
-                                ),
-
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    // section title
+                                    // spacer
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.45,
-                                      child: Text(
-                                        "Your Views",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize:
-                                              getProportionateScreenWidth(16),
-                                        ),
-                                      ),
+                                      height: getProportionateScreenHeight(55),
                                     ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.4,
-                                      child: DropdownButton(
-                                        value: currentUploadType,
-                                        isExpanded: true,
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: kSecondaryColor,
-                                        ),
-                                        // Array list of items
-                                        items: possibleUploadTypesProducer
-                                            .map((String items) {
-                                          return DropdownMenuItem(
-                                            value: items,
-                                            child: Text(
-                                              items,
-                                              style: const TextStyle(
-                                                color: Colors.white,
+
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // section title
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.45,
+                                          child: Text(
+                                            "Your Views",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize:
+                                                  getProportionateScreenWidth(
+                                                16,
                                               ),
                                             ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          setState(
-                                            () {
-                                              currentUploadType = newValue!;
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: getProportionateScreenHeight(300),
-                                  child: displayValues.isNotEmpty
-                                      ? SingleChildScrollView(
-                                          scrollDirection: Axis.vertical,
-                                          child: ListView.builder(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            // scrollDirection: ,
-                                            shrinkWrap: true,
-                                            itemCount: displayValues.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return ArtistGraphCard(
-                                                id: displayValues[index].id,
-                                                image:
-                                                    displayValues[index].image,
-                                                name: displayValues[index].name,
-                                                cardType: currentUploadType,
-                                              );
-                                            },
                                           ),
-                                        )
-                                      : Center(
-                                          child: Text(
-                                            "No $currentUploadType uploaded",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: Theme(
+                                            data: Theme.of(context).copyWith(
+                                              canvasColor: kSecondaryColor,
+                                            ),
+                                            child: DropdownButton(
+                                              value: currentUploadType,
+                                              isExpanded: true,
+                                              icon: const Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: kSecondaryColor,
+                                              ),
+                                              // Array list of items
+                                              items: possibleUploadTypesProducer
+                                                  .map((String items) {
+                                                return DropdownMenuItem(
+                                                  value: items,
+                                                  child: Text(
+                                                    items,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(
+                                                  () {
+                                                    currentUploadType =
+                                                        newValue!;
+                                                  },
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),
-                                ),
-                              ],
-                            )
-                    ],
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: getProportionateScreenHeight(300),
+                                      child: displayValues.isNotEmpty
+                                          ? SingleChildScrollView(
+                                              scrollDirection: Axis.vertical,
+                                              child: ListView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                // scrollDirection: ,
+                                                shrinkWrap: true,
+                                                itemCount: displayValues.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return ArtistGraphCard(
+                                                    id: displayValues[index].id,
+                                                    image: displayValues[index]
+                                                        .image,
+                                                    name: displayValues[index]
+                                                        .name,
+                                                    cardType: currentUploadType,
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          : Center(
+                                              child: Text(
+                                                "No $currentUploadType uploaded",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                  ],
+                                )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        } else {
-          return OnSnapshotError(
-            error: snapshot.error.toString(),
-          );
-        }
-      },
+            );
+          } else {
+            return OnSnapshotError(
+              error: snapshot.error.toString(),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -70,8 +70,10 @@ class _GenresState extends State<Genres> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        padding:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
+        padding: EdgeInsets.symmetric(
+          vertical: getProportionateScreenHeight(30),
+        ),
+        decoration: linearGradientDecoration,
         child: checkConnection(status) == false
             ? const NoConnectionDisplay()
             : PagedGridView<int, Genre>(

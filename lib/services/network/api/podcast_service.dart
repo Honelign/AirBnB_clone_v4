@@ -224,6 +224,87 @@ class PodcastApiService {
             }
           ]
         },
+
+        //
+        {
+          "id": 1,
+          "podcast_name": "Fun and Games",
+          "podcasts": [
+            {
+              'id': 1,
+              'categoryId': 1,
+              "title": "HypheNation: A Diaspora Life",
+              "hostName": "Rebka Fisseha",
+              "hostId": 1,
+              "cover": "assets/images/Podcast-1.jpg",
+              "description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'categoryId': 1,
+              "title": "Habesha Finance",
+              "hostName": "Matt G",
+              "hostId": 2,
+              "cover": "assets/images/Podcast-2.png",
+              "description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'categoryId': 1,
+              "title": "The Horn",
+              "hostName": "International Crisis Group",
+              "hostId": 2,
+              "cover": "assets/images/Podcast-3.jpg",
+              "description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
+
+        {
+          "id": 1,
+          "podcast_name": "Reality",
+          "podcasts": [
+            {
+              'id': 1,
+              'categoryId': 1,
+              "title": "HypheNation: A Diaspora Life",
+              "hostName": "Rebka Fisseha",
+              "hostId": 1,
+              "cover": "assets/images/Podcast-1.jpg",
+              "description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'categoryId': 1,
+              "title": "Habesha Finance",
+              "hostName": "Matt G",
+              "hostId": 2,
+              "cover": "assets/images/Podcast-2.png",
+              "description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'categoryId': 1,
+              "title": "The Horn",
+              "hostName": "International Crisis Group",
+              "hostId": 2,
+              "cover": "assets/images/Podcast-3.jpg",
+              "description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
       ];
 
       podcastCategories = response

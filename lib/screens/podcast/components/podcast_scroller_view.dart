@@ -14,14 +14,20 @@ class PodcastScrollerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.only(
+        top: 20,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title
           Text(
             podcastCategory.name,
-            style: headerTextStyle,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+            ),
           ),
 
           const SizedBox(
@@ -30,7 +36,7 @@ class PodcastScrollerView extends StatelessWidget {
 
           //  card container
           SizedBox(
-            height: 175,
+            height: 135,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: podcastCategory.podcasts.length,

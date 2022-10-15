@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/constants.dart';
 
 class WeeklyGraphWidget extends StatelessWidget {
   final List<BarChartGroupData> barData;
@@ -14,7 +15,6 @@ class WeeklyGraphWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 0, right: 12, top: 10),
-      color: Colors.black,
       height: MediaQuery.of(context).size.height * 0.45,
       width: MediaQuery.of(context).size.width,
       child: BarChart(
@@ -71,7 +71,7 @@ class WeeklyGraphWidget extends StatelessWidget {
 
   Widget _getBottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Colors.red,
+      color: kLightTextColor,
       fontWeight: FontWeight.bold,
       fontSize: 10,
     );

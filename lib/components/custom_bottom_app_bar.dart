@@ -19,8 +19,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../screens/home/home_screen.dart';
 import '../constants.dart';
 
-import '../screens/radio.dart';
-
 import 'custom_animated_bottom_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +32,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 3;
+  int _currentIndex = 0;
 
   final _inactiveColor = kGrey;
   List<Widget> pages = [
@@ -77,43 +75,45 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             onWillPop: () async {
               bool willLeave = false;
               await showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        backgroundColor: kPopupMenuBackgroundColor,
-                        title: Text(
-                          'Do you want to exit from Kin?',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Provider.of<MusicPlayer>(context, listen: false)
-                                    .player
-                                    .stop();
-                                Provider.of<MusicPlayer>(context, listen: false)
-                                    .player
-                                    .updateCurrentAudioNotification(
-                                      showNotifications: false,
-                                    );
-                                willLeave = true;
-                                Navigator.of(context).pop();
-                                exit(0);
-                              },
-                              child: const Text(
-                                'Yes',
-                                style: TextStyle(color: kSecondaryColor),
-                              )),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text(
-                              'No',
-                              style: TextStyle(color: kSecondaryColor),
-                            ),
-                          )
-                        ],
-                      ));
+                context: context,
+                builder: (_) => AlertDialog(
+                  backgroundColor: kPopupMenuBackgroundColor,
+                  title: Text(
+                    'Do you want to exit from Kin?',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Provider.of<MusicPlayer>(context, listen: false)
+                            .player
+                            .stop();
+                        Provider.of<MusicPlayer>(context, listen: false)
+                            .player
+                            .updateCurrentAudioNotification(
+                              showNotifications: false,
+                            );
+                        willLeave = true;
+                        Navigator.of(context).pop();
+                        exit(0);
+                      },
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        'No',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
+                    )
+                  ],
+                ),
+              );
               return willLeave;
             },
             child: Scaffold(
@@ -212,7 +212,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 pages.removeAt(3);
                 pages.insert(
                   3,
-                  const RadioScreen(),
+                  const RadioScreenNew(),
                 );
               });
             }
@@ -230,49 +230,57 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.house),
+              icon: FaIcon(
+                FontAwesomeIcons.house,
+                size: 20,
+              ),
               title: const Text('Home'),
-              activeColor: kSecondaryColor,
+              activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.library_music),
+              icon: const Icon(
+                Icons.library_music,
+                size: 22,
+              ),
               title: const Text(
                 'My Library',
               ),
-              activeColor: kSecondaryColor,
+              activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.microphoneLines),
+              icon: FaIcon(
+                FontAwesomeIcons.microphoneLines,
+                size: 22,
+              ),
               title: const Text('Podcast'),
-              activeColor: kSecondaryColor,
+              activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: FaIcon(FontAwesomeIcons.radio),
+              icon: FaIcon(
+                FontAwesomeIcons.radio,
+                size: 20,
+              ),
               title: const Text('Radio'),
-              activeColor: kSecondaryColor,
+              activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
             BottomNavyBarItem(
-              icon: const Icon(Icons.person),
+              icon: const Icon(
+                Icons.person,
+                size: 26,
+              ),
               title: const Text('Account'),
-              activeColor: kSecondaryColor,
+              activeColor: Color.fromARGB(255, 40, 87, 134),
               inactiveColor: _inactiveColor,
               textAlign: TextAlign.center,
             ),
-            /*  BottomNavyBarItem(
-              icon: const Icon(Icons.person),
-              title: const Text('Payment'),
-              activeColor: kSecondaryColor,
-              inactiveColor: _inactiveColor,
-              textAlign: TextAlign.center,
-            ), */
           ],
         ),
       ],

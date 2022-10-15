@@ -68,8 +68,10 @@ class _ArtistsState extends State<Artists> with AutomaticKeepAliveClientMixin {
       color: refreshIndicatorForegroundColor,
       backgroundColor: refreshIndicatorBackgroundColor,
       child: Container(
-        padding:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
+        padding: EdgeInsets.symmetric(
+          vertical: getProportionateScreenHeight(30),
+        ),
+        decoration: linearGradientDecoration,
         child: checkConnection(status) == false
             ? const NoConnectionDisplay()
             : PagedGridView<int, Artist>(

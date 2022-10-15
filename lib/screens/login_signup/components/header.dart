@@ -12,11 +12,11 @@ class Header extends StatelessWidget {
       height: getProportionateScreenHeight(250),
       child: Stack(
         children: [
-          Positioned(
-            bottom: getProportionateScreenHeight(50),
-            left: getProportionateScreenWidth(175),
-            child: const BezierContainer(),
-          ),
+          // Positioned(
+          //   bottom: getProportionateScreenHeight(50),
+          //   left: getProportionateScreenWidth(175),
+          //   // child: const BezierContainer(),
+          // ),
           Positioned(
             top: getProportionateScreenHeight(100),
             child: Image.asset(

@@ -49,16 +49,15 @@ class PodcastCard extends StatelessWidget {
         children: [
           // Image
           Container(
-            margin: const EdgeInsets.only(right: 28),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              image: DecorationImage(
-                image: AssetImage(url),
+              margin: const EdgeInsets.only(right: 28),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: AssetImage(url),
+                ),
               ),
-            ),
-            width: 130,
-            height: 120,
-          ),
+              width: 107,
+              height: 105),
 
           //
           Container(

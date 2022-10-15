@@ -97,7 +97,10 @@ class _KinState extends State<Kin> {
   void initState() {
     super.initState();
 
-    Provider.of<CachedFavoriteProvider>(context, listen: false).cacheFavorite();
+    Provider.of<CachedFavoriteProvider>(
+      context,
+      listen: false,
+    ).cacheFavorite();
     /*
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {}
@@ -116,6 +119,7 @@ class _KinState extends State<Kin> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     final AppRouter _appRouter = AppRouter();
     return MaterialApp(
       debugShowCheckedModeBanner: false,

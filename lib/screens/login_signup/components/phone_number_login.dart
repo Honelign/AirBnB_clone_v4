@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/acc_alt_option.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/custom_elevated_button.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/enter_full_name.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/reusable_divider.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/social_login.dart';
 import 'package:kin_music_player_app/services/network/regi_page.dart';
-import 'package:kin_music_player_app/services/provider/login_provider.dart';
-import 'package:provider/provider.dart';
-
-import '../../../components/kin_progress_indicator.dart';
-import '../../../constants.dart';
-import '../../../size_config.dart';
+import 'package:kin_music_player_app/size_config.dart';
 
 class PhoneNumberLogin extends StatefulWidget {
   PhoneNumberLogin({Key? key}) : super(key: key);
@@ -47,14 +43,15 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                 height: getProportionateScreenHeight(35),
               ),
               Form(
-                  key: _phoneNumberFormKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: _buildKinForm(
-                    context,
-                    // hint: "",
-                    controller: phoneNumber,
-                    headerTitle: 'Phone Number',
-                  )),
+                key: _phoneNumberFormKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: _buildKinForm(
+                  context,
+                  // hint: "",
+                  controller: phoneNumber,
+                  headerTitle: 'Phone Number',
+                ),
+              ),
               SizedBox(height: getProportionateScreenHeight(35)),
               CustomElevatedButton(
                 onTap: () async {
@@ -108,41 +105,47 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
           Text(
             headerTitle!,
             style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                decoration: TextDecoration.none),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              decoration: TextDecoration.none,
+            ),
           ),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Expanded(
-              child: TextFormField(
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'This Field is required';
-                  }
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'This Field is required';
+                    }
 
-                  if (headerTitle == 'Phone Number' &&
-                      !RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')
-                          .hasMatch(phoneNumber.text)) {
-                    return "Phone number must be a number";
-                  }
-                  if (headerTitle == 'Phone Number' &&
-                      !phoneNumber.text.startsWith('+', 0)) {
-                    return "Start with +";
-                  }
-                  if (headerTitle == 'Phone Number' &&
-                      phoneNumber.text.length < 13) {
-                    return "Phone Number  digit should be 13";
-                  }
-                },
-                onFieldSubmitted: (va) {},
-                controller: controller,
-                style: const TextStyle(color: kGrey),
-                maxLength: 14,
-                maxLines: 1,
-                cursorColor: kGrey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
+                    if (headerTitle == 'Phone Number' &&
+                        !RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')
+                            .hasMatch(phoneNumber.text)) {
+                      return "Phone number must be a number";
+                    }
+                    if (headerTitle == 'Phone Number' &&
+                        !phoneNumber.text.startsWith('+', 0)) {
+                      return "Start with +";
+                    }
+                    if (headerTitle == 'Phone Number' &&
+                        phoneNumber.text.length < 13) {
+                      return "Phone Number  digit should be 13";
+                    }
+                  },
+                  onFieldSubmitted: (va) {},
+                  controller: controller,
+                  style: const TextStyle(
+                    color: kSecondaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLength: 14,
+                  maxLines: 1,
+                  cursorColor: kLightTextColor,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
                     hintText: hint,
                     hintStyle: const TextStyle(fontSize: 14, color: kGrey),
                     contentPadding:
@@ -171,10 +174,12 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                       borderSide: BorderSide(
                         color: kGrey,
                       ),
-                    )),
-              ),
-            )
-          ]),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

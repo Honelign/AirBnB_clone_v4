@@ -73,6 +73,7 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
       child: Container(
         padding:
             EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
+        decoration: linearGradientDecoration,
         child: checkConnection(status) == false
             ? const NoConnectionDisplay()
             : PagedGridView<int, Album>(

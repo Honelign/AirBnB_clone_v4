@@ -25,9 +25,8 @@ class LoginProvider extends ChangeNotifier {
     var result = await userApiService.fetchUserPrivilege(
         uid: uid, apiEndPoint: "/users");
 
-    // TODO: make id based
-    await prefs.remove("prev");
-    await prefs.setString("prev", result.toString());
+    await prefs.remove("prev$uid");
+    await prefs.setString("prev$uid", result.toString());
 
     isLoading = false;
     notifyListeners();

@@ -48,7 +48,13 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        color: kPrimaryColor,
+        // color: kPrimaryColor,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Color(0xFF052C54), Color(0xFFD9D9D9).withOpacity(0.7)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+        ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -57,13 +63,13 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 height: getProportionateScreenHeight(6),
               ),
               _buildRecentlyPlayedMusics(context),
-              SizedBox(height: getProportionateScreenWidth(15)),
+              SizedBox(height: getProportionateScreenWidth(5)),
               const AdBanner(),
               SizedBox(height: getProportionateScreenWidth(10)),
               _buildNewReleasedAlbums(context),
-              SizedBox(height: getProportionateScreenWidth(30)),
+              SizedBox(height: getProportionateScreenWidth(10)),
               _buildPopularMusics(context),
-              SizedBox(height: getProportionateScreenWidth(20)),
+              SizedBox(height: getProportionateScreenWidth(10)),
               _buildArtist(context),
               SizedBox(
                 height: getProportionateScreenHeight(20),
@@ -112,7 +118,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             )
           ],
         ),
-        SizedBox(height: getProportionateScreenWidth(20)),
+        SizedBox(height: getProportionateScreenWidth(10)),
         SizedBox(
           height: getProportionateScreenHeight(120),
           child: SingleChildScrollView(
@@ -204,9 +210,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                   if (snapshot.data?.length == 3 ||
                       snapshot.data?.length == 4) {
                     length = 2;
-                  } else if (snapshot.data?.length == 5 ||
-                      snapshot.data?.length == 6) {
-                    length = 3;
                   }
                 }
                 // if no music
@@ -225,14 +228,14 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 }
 
                 return SizedBox(
-                  height: 66.0 * length!.toDouble(),
+                  height: 80.0 * length!.toDouble(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                               maxCrossAxisExtent: 220,
-                              childAspectRatio: 3.2,
+                              childAspectRatio: 2.6,
                               crossAxisSpacing: 5,
                               mainAxisSpacing: 5),
                       itemCount: snapshot.data?.length,
@@ -292,7 +295,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 );
               }),
         ),
-        SizedBox(height: getProportionateScreenHeight(20)),
+        SizedBox(height: getProportionateScreenHeight(10)),
         SizedBox(
           height: getProportionateScreenHeight(200),
           child: SingleChildScrollView(
@@ -365,7 +368,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             )
           ],
         ),
-        SizedBox(height: getProportionateScreenWidth(20)),
+        SizedBox(height: getProportionateScreenWidth(10)),
         SizedBox(
           height: getProportionateScreenHeight(200),
           child: SingleChildScrollView(

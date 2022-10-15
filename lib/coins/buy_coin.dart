@@ -29,6 +29,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
       appBar: AppBar(
         title: const Text("Buy Coins"),
         backgroundColor: kPrimaryColor,
+        elevation: 0,
       ),
       backgroundColor: kPrimaryColor,
       body: FutureBuilder(
@@ -49,7 +50,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
                   height: MediaQuery.of(context).size.height,
                   padding:
                       const EdgeInsets.symmetric(vertical: 34, horizontal: 12),
-                  color: kPrimaryColor,
+                  decoration: linearGradientDecoration,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
