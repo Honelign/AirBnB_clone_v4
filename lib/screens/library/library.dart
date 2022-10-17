@@ -24,22 +24,29 @@ class _MyLibraryState extends State<MyLibrary> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          toolbarHeight: 15,
+          toolbarHeight: 60,
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF052c54),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            systemNavigationBarColor: kSecondaryColor,
-            statusBarColor: kSecondaryColor,
-          ),
           elevation: 0,
-          title: const TabBar(
-            //  indicatorPadding: EdgeInsets.all(0),
-            indicatorPadding: EdgeInsets.all(0),
-            indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(0),
-            indicatorSize: TabBarIndicatorSize.label,
+          title: TabBar(
+            labelColor: kSecondaryColor,
+            unselectedLabelColor: Colors.white,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 10,
+              right: 10,
+            ),
+            indicatorWeight: 5.0,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            //padding: EdgeInsets.symmetric(vertical: 20),
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
 
-            // padding: EdgeInsets.all(5),
             tabs: [
               Tab(
                 text: 'Playlist',
