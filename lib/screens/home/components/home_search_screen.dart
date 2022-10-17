@@ -39,6 +39,7 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
     super.initState();
     final provider = Provider.of<MusicProvider>(context, listen: false);
     provider.searchedMusics.clear();
+
     searchController.addListener(() {
       if (searchController.text.isNotEmpty) {
         if (_debounce?.isActive ?? false) _debounce?.cancel();
@@ -105,14 +106,10 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.7),
-                      Colors.black.withOpacity(0.35),
-                    ],
-                  ),
+                  gradient: LinearGradient(colors: [
+                    Color(0xFF052C54),
+                    Color(0xFFD9D9D9).withOpacity(0.7)
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
               ),
               Column(
@@ -138,45 +135,45 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                             child: _buildSearchBar(
                                 context, 'Searching ${title}s...', provider)),
 
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                bottomRight: Radius.circular(20)),
-                            color: Colors.white.withOpacity(0.1),
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.20,
-                          child: Center(
-                            child: DropdownButton(
-                              underline: Container(),
-                              value: currentSearchType,
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  overflow: TextOverflow.ellipsis),
-                              isExpanded: true,
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.white,
-                              ),
-                              // Array list of items
-                              items: possibleSearchTypes.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(
-                                    items,
-                                    style: TextStyle(color: kGrey),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  currentSearchType = newValue!;
-                                  title = newValue;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.only(
+                        //         topRight: Radius.circular(20),
+                        //         bottomRight: Radius.circular(20)),
+                        //     color: Colors.white.withOpacity(0.1),
+                        //   ),
+                        //   width: MediaQuery.of(context).size.width * 0.20,
+                        //   child: Center(
+                        //     child: DropdownButton(
+                        //       underline: Container(),
+                        //       value: currentSearchType,
+                        //       style: TextStyle(
+                        //           color: Colors.red,
+                        //           overflow: TextOverflow.ellipsis),
+                        //       isExpanded: true,
+                        //       icon: const Icon(
+                        //         Icons.keyboard_arrow_down,
+                        //         color: Colors.white,
+                        //       ),
+                        //       // Array list of items
+                        //       items: possibleSearchTypes.map((String items) {
+                        //         return DropdownMenuItem(
+                        //           value: items,
+                        //           child: Text(
+                        //             items,
+                        //             style: TextStyle(color: kGrey),
+                        //           ),
+                        //         );
+                        //       }).toList(),
+                        //       onChanged: (String? newValue) {
+                        //         setState(() {
+                        //           currentSearchType = newValue!;
+                        //           title = newValue;
+                        //         });
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(
                           width: getProportionateScreenWidth(15),
                         ),
@@ -281,18 +278,18 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               'Tracks',
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               height: 330,
                                               child: ListView.builder(
                                                 itemCount: provider
                                                     .searchedMusics.length,
                                                 itemBuilder: ((context, index) {
-                                                  // TODO: Replace Artist and Album ID
                                                   return MusicCardsearch(
                                                     music: provider
                                                         .searchedMusics[index],
@@ -325,12 +322,13 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
 
   Widget _buildSearchBar(BuildContext context, hint, provider) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+        color: Colors.white.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(25),
       ),
       child: TextFormField(
+        autofocus: true,
         controller: searchController,
         style: const TextStyle(color: kGrey),
         cursorColor: kGrey,
@@ -342,10 +340,10 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
           hintText: hint,
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle: const TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.search,
-            color: kGrey,
+            color: Colors.black,
           ),
         ),
       ),

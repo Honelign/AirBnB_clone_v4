@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
@@ -8,6 +9,7 @@ import 'package:kin_music_player_app/components/animation_rotate.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/position_seek_widget.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
@@ -63,80 +65,83 @@ class _NowPlayingMusicFromsearchState extends State<NowPlayingMusicFromsearch> {
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
-        body: PlayerBuilder.realtimePlayingInfos(
-          player: playerProvider.player,
-          builder: (context, info) {
-            music = playerProvider.currentMusic;
-            return Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      '$kinAssetBaseUrl/${music!.cover}',
+        body: SafeArea(
+          top: false,
+          child: PlayerBuilder.realtimePlayingInfos(
+            player: playerProvider.player,
+            builder: (context, info) {
+              music = playerProvider.currentMusic;
+              return Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        '$kinAssetBaseUrl/${music!.cover}',
+                      ),
+                      fit: BoxFit.cover),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                  child: Container(
+                    color: kPrimaryColor.withOpacity(0.5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: getProportionateScreenHeight(5),
+                        ),
+                        _buildAlbumCover(
+                          playerProvider,
+                          music!,
+                        ),
+                        _buildSongTitle(music),
+                        SizedBox(
+                          height: getProportionateScreenHeight(25),
+                        ),
+                        _buildProgressBar(info, music!, playerProvider),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildRepeatButton(playerProvider),
+                            SizedBox(
+                              width: getProportionateScreenWidth(5),
+                            ),
+                            _buildPreviousButton(playerProvider),
+                            SizedBox(
+                              width: getProportionateScreenWidth(5),
+                            ),
+                            _buildPlayPauseButton(playerProvider),
+                            SizedBox(
+                              width: getProportionateScreenWidth(5),
+                            ),
+                            _buildNextButton(playerProvider),
+                            SizedBox(
+                              width: getProportionateScreenWidth(5),
+                            ),
+                            _buildShuffleButton(playerProvider)
+                          ],
+                        ),
+                        SizedBox(
+                          width: getProportionateScreenWidth(15),
+                        ),
+                        // music!.lyrics!.isNotEmpty
+                        //     ? _buildScrollableLyrics(
+                        //         context,
+                        //         utf8.decode(music!.lyrics!
+                        //             .replaceAll('<p>', '')
+                        //             .replaceAll('</p>', '')
+                        //             .replaceAll('\\r', '')
+                        //             .replaceAll('\\n', '\n')
+                        //             .replaceAll('\\', '')
+                        //             .runes
+                        //             .toList()))
+                        //     : Container(),
+                      ],
                     ),
-                    fit: BoxFit.cover),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                child: Container(
-                  color: kPrimaryColor.withOpacity(0.5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: getProportionateScreenHeight(5),
-                      ),
-                      _buildAlbumCover(
-                        playerProvider,
-                        music!,
-                      ),
-                      _buildSongTitle(music),
-                      SizedBox(
-                        height: getProportionateScreenHeight(25),
-                      ),
-                      _buildProgressBar(info, music!, playerProvider),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildRepeatButton(playerProvider),
-                          SizedBox(
-                            width: getProportionateScreenWidth(5),
-                          ),
-                          _buildPreviousButton(playerProvider),
-                          SizedBox(
-                            width: getProportionateScreenWidth(5),
-                          ),
-                          _buildPlayPauseButton(playerProvider),
-                          SizedBox(
-                            width: getProportionateScreenWidth(5),
-                          ),
-                          _buildNextButton(playerProvider),
-                          SizedBox(
-                            width: getProportionateScreenWidth(5),
-                          ),
-                          _buildShuffleButton(playerProvider)
-                        ],
-                      ),
-                      SizedBox(
-                        width: getProportionateScreenWidth(15),
-                      ),
-                      // music!.lyrics!.isNotEmpty
-                      //     ? _buildScrollableLyrics(
-                      //         context,
-                      //         utf8.decode(music!.lyrics!
-                      //             .replaceAll('<p>', '')
-                      //             .replaceAll('</p>', '')
-                      //             .replaceAll('\\r', '')
-                      //             .replaceAll('\\n', '\n')
-                      //             .replaceAll('\\', '')
-                      //             .runes
-                      //             .toList()))
-                      //     : Container(),
-                    ],
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ));
   }
 

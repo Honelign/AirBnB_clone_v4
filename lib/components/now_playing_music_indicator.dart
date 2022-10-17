@@ -28,8 +28,6 @@ class NowPlayingMusicIndicator extends StatefulWidget {
 }
 
 class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
-  double minPlayerHeight = 70;
-
   @override
   void initState() {
     var favoriteProvider =
@@ -71,33 +69,33 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
             children: [
               _buildBlurBackground(p.getMusicCover()),
               _buildDarkContainer(),
-              Container(
-                height: minPlayerHeight,
-                color: Colors.transparent,
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                  getProportionateScreenWidth(15),
-                  getProportionateScreenHeight(8),
-                  getProportionateScreenWidth(15),
-                  getProportionateScreenHeight(8),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    p.setBuffering(p.tIndex);
-                    p.isMusicInProgress(p.currentMusic!)
-                        ? Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NowPlayingMusic(p.currentMusic),
-                            ),
-                          )
-                        : Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NowPlayingMusic(p.currentMusic),
-                            ),
-                          );
-                  },
+              GestureDetector(
+                onTap: () {
+                  p.setBuffering(p.tIndex);
+                  p.isMusicInProgress(p.currentMusic!)
+                      ? Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NowPlayingMusic(p.currentMusic),
+                          ),
+                        )
+                      : Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NowPlayingMusic(p.currentMusic),
+                          ),
+                        );
+                },
+                child: Container(
+                  height: minPlayerHeight,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                  ),
                   child: Row(
                     children: [
                       // small image

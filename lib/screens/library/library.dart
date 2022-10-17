@@ -46,7 +46,7 @@ class _MyLibraryState extends State<MyLibrary> {
             //padding: EdgeInsets.symmetric(vertical: 20),
             labelPadding:
                 const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-
+            //  indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(
                 text: 'Playlist',

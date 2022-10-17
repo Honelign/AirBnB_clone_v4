@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,5 +17,14 @@ class HelperUtils {
       return true;
     }
     return false;
+  }
+
+  void makeStatusBarTransparent() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+      ),
+    );
   }
 }

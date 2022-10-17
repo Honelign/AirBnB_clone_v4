@@ -162,65 +162,6 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                             ),
                             Column(
                               children: [
-                                PopupMenuButton(
-                                  initialValue: 0,
-                                  child: const Icon(
-                                    Icons.more_vert,
-                                    color: Colors.transparent,
-                                  ),
-                                  color: kPopupMenuBackgroundColor,
-                                  onSelected: (value) {
-                                    if (value == 2) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              backgroundColor: Colors.white
-                                                  .withOpacity(0.85),
-                                              title: const Text(
-                                                'Music Detail',
-                                                style: TextStyle(
-                                                    color: Colors.white60,
-                                                    fontSize: 15),
-                                              ),
-                                              content: SizedBox(
-                                                height: 100,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        widget.music.description
-                                                                .isNotEmpty
-                                                            ? widget.music
-                                                                .description
-                                                            : '',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                kLightSecondaryColor),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      Text(
-                                                        'By ${widget.music.artist}',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                kLightSecondaryColor),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          });
-                                    } else {}
-                                  },
-                                  itemBuilder: (context) {
-                                    return kMusicPopupMenuItem;
-                                  },
-                                ),
                                 p.currentMusic == null
                                     ? Container()
                                     : p.currentMusic!.title ==

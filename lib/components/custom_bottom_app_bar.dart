@@ -118,6 +118,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             },
             child: Scaffold(
               body: getBody(),
+              backgroundColor: Color(0xFF052C54),
               bottomNavigationBar: _buildBottomBar(),
             ),
           );
@@ -187,10 +188,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           ],
         ),
         CustomAnimatedBottomBar(
-          containerHeight: 60,
-          backgroundColor: kPrimaryColor,
+          containerHeight: 50,
+          backgroundColor: Colors.transparent,
           selectedIndex: _currentIndex,
-          showElevation: true,
+          showElevation: false,
           itemCornerRadius: 24,
           //  curve: Curves.easeIn,
           onItemSelected: (index) {

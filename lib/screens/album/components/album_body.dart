@@ -9,6 +9,7 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
@@ -55,10 +56,14 @@ class _AlbumBodyState extends State<AlbumBody> {
 
   @override
   Widget build(BuildContext context) {
+    helper.makeStatusBarTransparent();
+
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
+        top: false,
+        bottom: false,
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -74,6 +79,7 @@ class _AlbumBodyState extends State<AlbumBody> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
               child: Container(
+                padding: EdgeInsets.only(top: 32),
                 color: kPrimaryColor.withOpacity(0.5),
                 child: SingleChildScrollView(
                   physics: const NeverScrollableScrollPhysics(),

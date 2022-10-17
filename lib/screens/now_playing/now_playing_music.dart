@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
@@ -18,7 +19,6 @@ import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' show utf8;
 
@@ -34,25 +34,28 @@ class NowPlayingMusic extends StatefulWidget {
   static const String routeName = '/nowPlaying';
   final Music? musicForId;
 
-  NowPlayingMusic(this.musicForId);
+  const NowPlayingMusic(this.musicForId, {Key? key}) : super(key: key);
 
   @override
   State<NowPlayingMusic> createState() => _NowPlayingMusicState();
 }
 
-class _NowPlayingMusicState extends State<NowPlayingMusic> {
+class _NowPlayingMusicState extends State<NowPlayingMusic>
+    with WidgetsBindingObserver {
   final double MODAL_HEADER_HEIGHT = 180;
   late int musicId;
   int selectedPlaylistId = 1;
 
+  bool showLyric = false;
+
   @override
   void initState() {
+    super.initState();
+
     musicId = widget.musicForId!.id;
 
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(musicId);
-
-    super.initState();
   }
 
   @override
@@ -66,17 +69,27 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     playerProvider.audioSessionListener();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(0.4),
+        toolbarHeight: 0,
+        elevation: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+        ),
+      ),
       backgroundColor: kPrimaryColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
+        top: false,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height,
           child: PlayerBuilder.realtimePlayingInfos(
             player: playerProvider.player,
             builder: (context, info) {
               music = playerProvider.currentMusic;
               return Container(
-                height: MediaQuery.of(context).size.height - 45,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(
@@ -88,7 +101,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                   child: Container(
-                    color: kPrimaryColor.withOpacity(0.5),
+                    color: kPrimaryColor.withOpacity(0.4),
+                    width: MediaQuery.of(context).size.width,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -131,24 +145,43 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                           ),
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(60),
+                            height: getProportionateScreenHeight(30),
                           ),
 
                           // album image
-                          _buildAlbumCover(
-                            music: music!,
-                            playerProvider: playerProvider,
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                showLyric = !showLyric;
+                              });
+                            },
+                            child: showLyric == true
+                                ? music!.lyrics != "null" &&
+                                        music!.lyrics != null
+                                    ? _buildScrollableLyrics(
+                                        context,
+                                        music!.lyrics,
+                                      )
+                                    : _buildScrollableLyrics(
+                                        context,
+                                        "No Lyric",
+                                      )
+                                : _buildAlbumCover(
+                                    music: music!,
+                                    playerProvider: playerProvider,
+                                  ),
                           ),
+
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(60),
+                            height: getProportionateScreenHeight(50),
                           ),
                           // song title
                           _buildSongTitle(music),
 
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(30),
+                            height: getProportionateScreenHeight(40),
                           ),
 
                           // action center
@@ -194,23 +227,23 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                             width: getProportionateScreenWidth(25),
                             height: 20,
                           ),
-                          music!.lyrics!.isNotEmpty &&
-                                  music!.lyrics != "null" &&
-                                  music!.lyrics != null
-                              ? _buildScrollableLyrics(
-                                  context,
-                                  utf8.decode(
-                                    music!.lyrics!
-                                        .replaceAll('<p>', '')
-                                        .replaceAll('</p>', '')
-                                        .replaceAll('\\r', '')
-                                        .replaceAll('\\n', '\n')
-                                        .replaceAll('\\', '')
-                                        .runes
-                                        .toList(),
-                                  ),
-                                )
-                              : Container(),
+                          // music!.lyrics!.isNotEmpty &&
+                          //         music!.lyrics != "null" &&
+                          //         music!.lyrics != null
+                          //     ? _buildScrollableLyrics(
+                          //         context,
+                          //         utf8.decode(
+                          //           music!.lyrics!
+                          //               .replaceAll('<p>', '')
+                          //               .replaceAll('</p>', '')
+                          //               .replaceAll('\\r', '')
+                          //               .replaceAll('\\n', '\n')
+                          //               .replaceAll('\\', '')
+                          //               .runes
+                          //               .toList(),
+                          //         ),
+                          //       )
+                          //     : Container(),
                         ],
                       ),
                     ),
@@ -228,107 +261,97 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     required MusicPlayer playerProvider,
     required Music music,
   }) {
-    // return CachedNetworkImage(
-    //   imageUrl: albumCoverUrl,
-    //   imageBuilder: (context, imageProvider) => Container(
-    //     height: MediaQuery.of(context).size.width * 0.65,
-    //     width: MediaQuery.of(context).size.width * 0.65,
-    //     decoration: BoxDecoration(
-    //       image: DecorationImage(
-    //         image: imageProvider,
-    //         fit: BoxFit.fill,
-    //       ),
-    //       borderRadius: BorderRadius.circular(20),
-    //     ),
-    //   ),
-    // );
-
     return Container(
-        height: 250,
-        margin: EdgeInsets.symmetric(
-            vertical: getProportionateScreenHeight(30),
-            horizontal: getProportionateScreenWidth(30)),
-        child: AnimationRotate(
-          stop: !playerProvider.isPlaying(),
-          child: SizedBox(
-            height: 250,
-            width: 250,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(1000),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: playerProvider.getMusicCover(),
-                      height: 250,
-                      width: 250,
+      height: 250,
+      margin: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(30),
+        horizontal: getProportionateScreenWidth(30),
+      ),
+      child: AnimationRotate(
+        stop: !playerProvider.isPlaying(),
+        child: SizedBox(
+          height: 250,
+          width: 250,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(1000),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: playerProvider.getMusicCover(),
+                  height: 250,
+                  width: 250,
+                ),
+                Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(0xFF343434).withOpacity(0.4),
+                        const Color(0xFF343434).withOpacity(0.15),
+                      ],
                     ),
-                    Container(
-                      height: 250,
-                      width: 250,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      height: 75,
+                      width: 75,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            const Color(0xFF343434).withOpacity(0.4),
-                            const Color(0xFF343434).withOpacity(0.15),
-                          ],
+                          borderRadius: BorderRadius.circular(1000),
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                '$kinAssetBaseUrl/${music.cover}',
+                              ),
+                              // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                              fit: BoxFit.cover)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1000),
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                '$kinAssetBaseUrl/${music.cover}'),
+                            // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                            fit: BoxFit.cover)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(1000),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(1000),
+                          ),
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 75,
-                          width: 75,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                  ],
-                )),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildProgressBar(
@@ -412,144 +435,142 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                         }
 
                         return FutureBuilder(
-                            future: provider.getCoinBalance(),
-                            builder: (context, snapshot) {
-                              // if loading coin balance
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.65,
-                                  decoration: linearGradientDecoration,
-                                  child: const KinProgressIndicator(),
-                                );
-                              }
+                          future: provider.getCoinBalance(),
+                          builder: (context, snapshot) {
+                            // if loading coin balance
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
+                                decoration: linearGradientDecoration,
+                                child: const KinProgressIndicator(),
+                              );
+                            }
 
-                              // coin info got
-                              else {
-                                return Container(
-                                  decoration: linearGradientDecoration,
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: Column(
-                                    children: [
-                                      // modal header
-                                      SizedBox(
-                                        height: MODAL_HEADER_HEIGHT,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Column(
-                                          children: [
-                                            // spacer
-                                            const SizedBox(
-                                              height: 18,
+                            // coin info got
+                            else {
+                              return Container(
+                                decoration: linearGradientDecoration,
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.7,
+                                child: Column(
+                                  children: [
+                                    // modal header
+                                    SizedBox(
+                                      height: MODAL_HEADER_HEIGHT,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        children: [
+                                          // spacer
+                                          const SizedBox(
+                                            height: 18,
+                                          ),
+
+                                          // title
+                                          Text(
+                                            "Coin Balance",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white
+                                                  .withOpacity(0.75),
                                             ),
+                                          ),
 
-                                            // title
-                                            Text(
-                                              "Coin Balance",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white
-                                                    .withOpacity(0.75),
-                                              ),
+                                          // spacer
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+
+                                          // remaining coin value
+                                          Text(
+                                            "${snapshot.data ?? '0'} ETB",
+                                            style: TextStyle(
+                                              fontSize: 32,
+                                              color: Colors.white
+                                                  .withOpacity(0.75),
+                                              fontWeight: FontWeight.bold,
                                             ),
+                                          ),
 
-                                            // spacer
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
+                                          // spacer
+                                          const SizedBox(
+                                            height: 24,
+                                          ),
 
-                                            // remaining coin value
-                                            Text(
-                                              "${snapshot.data ?? '0'} ETB",
-                                              style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.white
-                                                    .withOpacity(0.75),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
+                                          // buy coins button
+                                          InkWell(
+                                            onTap: () async {
+                                              // remove modal sheet
+                                              Navigator.pop(context);
 
-                                            // spacer
-                                            const SizedBox(
-                                              height: 24,
-                                            ),
-
-                                            // buy coins button
-                                            InkWell(
-                                              onTap: () async {
-                                                // remove modal sheet
-                                                Navigator.pop(context);
-
-                                                // route to buy coin page
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const BuyCoinPage(),
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                child: const Text(
-                                                  "Buy Coins",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: kSecondaryColor,
-                                                  ),
+                                              // route to buy coin page
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const BuyCoinPage(),
                                                 ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 8,
-                                                  horizontal: 25,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
+                                              );
+                                            },
+                                            child: Container(
+                                              child: const Text(
+                                                "Buy Coins",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: kSecondaryColor,
                                                 ),
                                               ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 25,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                              ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
+                                    ),
 
-                                      // modal list values
-                                      SizedBox(
-                                        height: (MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.65 -
-                                            MODAL_HEADER_HEIGHT),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: ListView.builder(
-                                          itemCount: allowedCoinValues.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return TipArtistCard(
-                                              value: allowedCoinValues[index],
-                                              refresher: refresherFunction,
-                                              artistName: music.artist,
-                                              artistId: music.artist_id,
-                                            );
-                                          },
-                                        ),
+                                    // modal list values
+                                    SizedBox(
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                                  0.65 -
+                                              MODAL_HEADER_HEIGHT),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                        itemCount: allowedCoinValues.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TipArtistCard(
+                                            value: allowedCoinValues[index],
+                                            refresher: refresherFunction,
+                                            artistName: music.artist,
+                                            artistId: music.artist_id,
+                                          );
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            });
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        );
                       },
                     );
                   },
                 );
               },
               icon: Icon(
-                Icons.money_sharp,
+                Icons.card_giftcard_rounded,
                 color: Colors.white.withOpacity(0.8),
                 size: 24,
               ),
@@ -584,18 +605,18 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                 size: 24,
               ),
             ),
-
-            // add to playlist
             IconButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) {
-                    return PlaylistSelectorDialog(
-                      trackId: musicId.toString(),
-                    );
-                  },
-                );
+                if (Provider.of<MusicPlayer>(context).isPlayingLocal == false) {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return PlaylistSelectorDialog(
+                        trackId: musicId.toString(),
+                      );
+                    },
+                  );
+                }
               },
               icon: Icon(
                 Icons.add,
@@ -783,81 +804,115 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
   }
 
   Widget _buildScrollableLyrics(BuildContext context, lyrics) {
-    return GestureDetector(
-      dragStartBehavior: DragStartBehavior.start,
-      onVerticalDragStart: (DragStartDetails dragStartDetails) {
-        showMaterialModalBottomSheet(
-          context: context,
-          builder: (context) => SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
-            width: double.infinity,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                  color: kGrey.withOpacity(0.2),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
-                      top: getProportionateScreenHeight(50),
-                      left: getProportionateScreenWidth(100)),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child:
-                        // child: Html(
-                        //   data: lyrics,
+    // return GestureDetector(
+    //   dragStartBehavior: DragStartBehavior.start,
+    //   onVerticalDragStart: (DragStartDetails dragStartDetails) {
+    //     showMaterialModalBottomSheet(
+    //       context: context,
+    //       builder: (context) => SizedBox(
+    //         height: MediaQuery.of(context).size.height * 0.7,
+    //         width: double.infinity,
+    //         child: BackdropFilter(
+    //           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    //           child: Container(
+    //             alignment: Alignment.topCenter,
+    //             decoration: BoxDecoration(
+    //               color: kGrey.withOpacity(0.2),
+    //               borderRadius: const BorderRadius.only(
+    //                 topLeft: Radius.circular(50),
+    //                 topRight: Radius.circular(50),
+    //               ),
+    //             ),
+    //             child: SingleChildScrollView(
+    //               padding: EdgeInsets.only(
+    //                 top: getProportionateScreenHeight(50),
+    //                 left: getProportionateScreenWidth(100),
+    //               ),
+    //               child: SizedBox(
+    //                 width: double.infinity,
+    //                 child:
+    //                     // child: Html(
+    //                     //   data: lyrics,
 
-                        //   style: {
-                        //     'p': Style(
-                        //         color: Colors.white,
-                        //         fontFamily: 'Nokia',
-                        //         lineHeight: LineHeight.number(2))
-                        //   },
-                        // )
-                        Text(
-                      lyrics,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontFamily: 'Nokia',
-                        fontSize: 18,
+    //                     //   style: {
+    //                     //     'p': Style(
+    //                     //         color: Colors.white,
+    //                     //         fontFamily: 'Nokia',
+    //                     //         lineHeight: LineHeight.number(2))
+    //                     //   },
+    //                     // )
+    //                     Text(
+    //                   lyrics,
+    //                   style: TextStyle(
+    //                     color: Colors.white.withOpacity(0.7),
+    //                     fontFamily: 'Nokia',
+    //                     fontSize: 18,
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    //   child: Container(
+    //     height: 70,
+    //     decoration: BoxDecoration(
+    //       color: kGrey.withOpacity(0.15),
+    //       borderRadius: const BorderRadius.only(
+    //         topLeft: Radius.circular(50),
+    //         topRight: Radius.circular(50),
+    //       ),
+    //     ),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //       children: const [
+    //         Icon(
+    //           Icons.expand_less,
+    //           color: kSecondaryColor,
+    //         ),
+    //         Center(
+    //           child: Text(
+    //             'Lyrics',
+    //             style: TextStyle(color: Colors.white),
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
+
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 250,
+          margin: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(30),
+            horizontal: getProportionateScreenWidth(30),
+          ),
+          color: Colors.transparent,
+          child: lyrics == "No Lyric"
+              ? Center(
+                  child: Text(
+                    lyrics,
+                    style: headerOneTextStyle,
+                  ),
+                )
+              : Center(
+                  child: Html(
+                    data: lyrics,
+                    style: {
+                      'p': Style(
+                        color: Colors.white,
+                        fontFamily: "Nokia",
+                        lineHeight: LineHeight.number(2),
                       ),
-                    ),
+                    },
                   ),
                 ),
-              ),
-            ),
-          ),
-        );
-      },
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: kGrey.withOpacity(0.15),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(
-              Icons.expand_less,
-              color: kSecondaryColor,
-            ),
-            Center(
-              child: Text(
-                'Lyrics',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
         ),
       ),
     );

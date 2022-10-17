@@ -41,14 +41,13 @@ void main() async {
   Stripe.publishableKey =
       "pk_test_51LcOtyFvUcclFpL2uAwDrXq1HbZHXIDRywFiLWWLl32E3OyOjfSkraaNwAsHzAYmnfSGoGlK3QyQ9b6PqiXGWVvx001D1KIQCz";
   await Firebase.initializeApp(
-    name: 'noPersist',
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: kPrimaryColor,
-      statusBarColor: kPrimaryColor,
+      statusBarColor: kSecondaryColor,
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
@@ -116,7 +115,7 @@ class _KinState extends State<Kin> {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         systemNavigationBarColor: kPrimaryColor,
-        statusBarColor: kPrimaryColor,
+        statusBarColor: kSecondaryColor,
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
