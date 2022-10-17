@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
@@ -18,7 +19,6 @@ import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' show utf8;
 
@@ -34,25 +34,26 @@ class NowPlayingMusic extends StatefulWidget {
   static const String routeName = '/nowPlaying';
   final Music? musicForId;
 
-  NowPlayingMusic(this.musicForId);
+  const NowPlayingMusic(this.musicForId, {Key? key}) : super(key: key);
 
   @override
   State<NowPlayingMusic> createState() => _NowPlayingMusicState();
 }
 
-class _NowPlayingMusicState extends State<NowPlayingMusic> {
+class _NowPlayingMusicState extends State<NowPlayingMusic>
+    with WidgetsBindingObserver {
   final double MODAL_HEADER_HEIGHT = 180;
   late int musicId;
   int selectedPlaylistId = 1;
 
   @override
   void initState() {
+    super.initState();
+
     musicId = widget.musicForId!.id;
 
     Provider.of<FavoriteMusicProvider>(context, listen: false)
         .isMusicFav(musicId);
-
-    super.initState();
   }
 
   @override
@@ -66,17 +67,27 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     playerProvider.audioSessionListener();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(0.4),
+        toolbarHeight: 0,
+        elevation: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
+        ),
+      ),
       backgroundColor: kPrimaryColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
+        top: false,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height,
           child: PlayerBuilder.realtimePlayingInfos(
             player: playerProvider.player,
             builder: (context, info) {
               music = playerProvider.currentMusic;
               return Container(
-                height: MediaQuery.of(context).size.height - 45,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(
@@ -88,7 +99,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
                   child: Container(
-                    color: kPrimaryColor.withOpacity(0.5),
+                    color: kPrimaryColor.withOpacity(0.4),
+                    width: MediaQuery.of(context).size.width,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -131,7 +143,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                           ),
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(60),
+                            height: getProportionateScreenHeight(30),
                           ),
 
                           // album image
@@ -141,14 +153,14 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                           ),
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(60),
+                            height: getProportionateScreenHeight(50),
                           ),
                           // song title
                           _buildSongTitle(music),
 
                           // spacer
                           SizedBox(
-                            height: getProportionateScreenHeight(30),
+                            height: getProportionateScreenHeight(40),
                           ),
 
                           // action center
@@ -194,23 +206,23 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
                             width: getProportionateScreenWidth(25),
                             height: 20,
                           ),
-                          music!.lyrics!.isNotEmpty &&
-                                  music!.lyrics != "null" &&
-                                  music!.lyrics != null
-                              ? _buildScrollableLyrics(
-                                  context,
-                                  utf8.decode(
-                                    music!.lyrics!
-                                        .replaceAll('<p>', '')
-                                        .replaceAll('</p>', '')
-                                        .replaceAll('\\r', '')
-                                        .replaceAll('\\n', '\n')
-                                        .replaceAll('\\', '')
-                                        .runes
-                                        .toList(),
-                                  ),
-                                )
-                              : Container(),
+                          // music!.lyrics!.isNotEmpty &&
+                          //         music!.lyrics != "null" &&
+                          //         music!.lyrics != null
+                          //     ? _buildScrollableLyrics(
+                          //         context,
+                          //         utf8.decode(
+                          //           music!.lyrics!
+                          //               .replaceAll('<p>', '')
+                          //               .replaceAll('</p>', '')
+                          //               .replaceAll('\\r', '')
+                          //               .replaceAll('\\n', '\n')
+                          //               .replaceAll('\\', '')
+                          //               .runes
+                          //               .toList(),
+                          //         ),
+                          //       )
+                          //     : Container(),
                         ],
                       ),
                     ),
@@ -228,26 +240,12 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
     required MusicPlayer playerProvider,
     required Music music,
   }) {
-    // return CachedNetworkImage(
-    //   imageUrl: albumCoverUrl,
-    //   imageBuilder: (context, imageProvider) => Container(
-    //     height: MediaQuery.of(context).size.width * 0.65,
-    //     width: MediaQuery.of(context).size.width * 0.65,
-    //     decoration: BoxDecoration(
-    //       image: DecorationImage(
-    //         image: imageProvider,
-    //         fit: BoxFit.fill,
-    //       ),
-    //       borderRadius: BorderRadius.circular(20),
-    //     ),
-    //   ),
-    // );
-
     return Container(
         height: 250,
         margin: EdgeInsets.symmetric(
-            vertical: getProportionateScreenHeight(30),
-            horizontal: getProportionateScreenWidth(30)),
+          vertical: getProportionateScreenHeight(30),
+          horizontal: getProportionateScreenWidth(30),
+        ),
         child: AnimationRotate(
           stop: !playerProvider.isPlaying(),
           child: SizedBox(
@@ -783,81 +781,101 @@ class _NowPlayingMusicState extends State<NowPlayingMusic> {
   }
 
   Widget _buildScrollableLyrics(BuildContext context, lyrics) {
-    return GestureDetector(
-      dragStartBehavior: DragStartBehavior.start,
-      onVerticalDragStart: (DragStartDetails dragStartDetails) {
-        showMaterialModalBottomSheet(
-          context: context,
-          builder: (context) => SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
-            width: double.infinity,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                  color: kGrey.withOpacity(0.2),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.only(
-                      top: getProportionateScreenHeight(50),
-                      left: getProportionateScreenWidth(100)),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child:
-                        // child: Html(
-                        //   data: lyrics,
+    // return GestureDetector(
+    //   dragStartBehavior: DragStartBehavior.start,
+    //   onVerticalDragStart: (DragStartDetails dragStartDetails) {
+    //     showMaterialModalBottomSheet(
+    //       context: context,
+    //       builder: (context) => SizedBox(
+    //         height: MediaQuery.of(context).size.height * 0.7,
+    //         width: double.infinity,
+    //         child: BackdropFilter(
+    //           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+    //           child: Container(
+    //             alignment: Alignment.topCenter,
+    //             decoration: BoxDecoration(
+    //               color: kGrey.withOpacity(0.2),
+    //               borderRadius: const BorderRadius.only(
+    //                 topLeft: Radius.circular(50),
+    //                 topRight: Radius.circular(50),
+    //               ),
+    //             ),
+    //             child: SingleChildScrollView(
+    //               padding: EdgeInsets.only(
+    //                 top: getProportionateScreenHeight(50),
+    //                 left: getProportionateScreenWidth(100),
+    //               ),
+    //               child: SizedBox(
+    //                 width: double.infinity,
+    //                 child:
+    //                     // child: Html(
+    //                     //   data: lyrics,
 
-                        //   style: {
-                        //     'p': Style(
-                        //         color: Colors.white,
-                        //         fontFamily: 'Nokia',
-                        //         lineHeight: LineHeight.number(2))
-                        //   },
-                        // )
-                        Text(
-                      lyrics,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontFamily: 'Nokia',
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+    //                     //   style: {
+    //                     //     'p': Style(
+    //                     //         color: Colors.white,
+    //                     //         fontFamily: 'Nokia',
+    //                     //         lineHeight: LineHeight.number(2))
+    //                     //   },
+    //                     // )
+    //                     Text(
+    //                   lyrics,
+    //                   style: TextStyle(
+    //                     color: Colors.white.withOpacity(0.7),
+    //                     fontFamily: 'Nokia',
+    //                     fontSize: 18,
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    //   child: Container(
+    //     height: 70,
+    //     decoration: BoxDecoration(
+    //       color: kGrey.withOpacity(0.15),
+    //       borderRadius: const BorderRadius.only(
+    //         topLeft: Radius.circular(50),
+    //         topRight: Radius.circular(50),
+    //       ),
+    //     ),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //       children: const [
+    //         Icon(
+    //           Icons.expand_less,
+    //           color: kSecondaryColor,
+    //         ),
+    //         Center(
+    //           child: Text(
+    //             'Lyrics',
+    //             style: TextStyle(color: Colors.white),
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
+
+    return SingleChildScrollView(
       child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: kGrey.withOpacity(0.15),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(
-              Icons.expand_less,
-              color: kSecondaryColor,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        height: 300,
+        color: Colors.transparent,
+        child: Html(
+          data: lyrics,
+          style: {
+            'p': Style(
+              color: Colors.white,
+              fontFamily: "Nokia",
+              lineHeight: LineHeight.number(2),
             ),
-            Center(
-              child: Text(
-                'Lyrics',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
+          },
         ),
       ),
     );
