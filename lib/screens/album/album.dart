@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/grid_card.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
@@ -8,7 +7,6 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';
-import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
 class Albums extends StatefulWidget {

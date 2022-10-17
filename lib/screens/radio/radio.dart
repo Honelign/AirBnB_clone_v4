@@ -189,7 +189,7 @@ Widget _buildAppStations(
       SizedBox(
         height: (MediaQuery.of(context).size.height * 0.45),
         child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
           itemCount: radioStations.length,
           itemBuilder: (context, index) {

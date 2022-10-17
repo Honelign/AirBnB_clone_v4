@@ -174,7 +174,7 @@ class _DownloadProgressDisplayComponentState
                           currentDownloadProgressValue,
                           style: TextStyle(
                             color: currentDownloadProgressValue == "Completed"
-                                ? Colors.green
+                                ? kSecondaryColor
                                 : Colors.grey,
                             fontSize: 20,
                           ),
@@ -190,7 +190,7 @@ class _DownloadProgressDisplayComponentState
                       percent: double.parse(currentDownloadProgressValue) / 100,
                       animateFromLastPercent: true,
                       circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: Colors.green,
+                      progressColor: kSecondaryColor,
                       center: Text(
                         currentDownloadProgressValue + "%",
                         style: textStyle.copyWith(

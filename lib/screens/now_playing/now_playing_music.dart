@@ -46,6 +46,8 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
   late int musicId;
   int selectedPlaylistId = 1;
 
+  bool showLyric = false;
+
   @override
   void initState() {
     super.initState();
@@ -147,10 +149,29 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                           ),
 
                           // album image
-                          _buildAlbumCover(
-                            music: music!,
-                            playerProvider: playerProvider,
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                showLyric = !showLyric;
+                              });
+                            },
+                            child: showLyric == true
+                                ? music!.lyrics != "null" &&
+                                        music!.lyrics != null
+                                    ? _buildScrollableLyrics(
+                                        context,
+                                        music!.lyrics,
+                                      )
+                                    : _buildScrollableLyrics(
+                                        context,
+                                        "No Lyric",
+                                      )
+                                : _buildAlbumCover(
+                                    music: music!,
+                                    playerProvider: playerProvider,
+                                  ),
                           ),
+
                           // spacer
                           SizedBox(
                             height: getProportionateScreenHeight(50),
@@ -241,92 +262,96 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     required Music music,
   }) {
     return Container(
-        height: 250,
-        margin: EdgeInsets.symmetric(
-          vertical: getProportionateScreenHeight(30),
-          horizontal: getProportionateScreenWidth(30),
-        ),
-        child: AnimationRotate(
-          stop: !playerProvider.isPlaying(),
-          child: SizedBox(
-            height: 250,
-            width: 250,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(1000),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: playerProvider.getMusicCover(),
-                      height: 250,
-                      width: 250,
+      height: 250,
+      margin: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(30),
+        horizontal: getProportionateScreenWidth(30),
+      ),
+      child: AnimationRotate(
+        stop: !playerProvider.isPlaying(),
+        child: SizedBox(
+          height: 250,
+          width: 250,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(1000),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: playerProvider.getMusicCover(),
+                  height: 250,
+                  width: 250,
+                ),
+                Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(0xFF343434).withOpacity(0.4),
+                        const Color(0xFF343434).withOpacity(0.15),
+                      ],
                     ),
-                    Container(
-                      height: 250,
-                      width: 250,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      height: 75,
+                      width: 75,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            const Color(0xFF343434).withOpacity(0.4),
-                            const Color(0xFF343434).withOpacity(0.15),
-                          ],
+                          borderRadius: BorderRadius.circular(1000),
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                '$kinAssetBaseUrl/${music.cover}',
+                              ),
+                              // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                              fit: BoxFit.cover)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1000),
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1000),
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                '$kinAssetBaseUrl/${music.cover}'),
+                            // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                            fit: BoxFit.cover)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(1000),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(1000),
+                          ),
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 75,
-                          width: 75,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          height: 25,
-                          width: 25,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      '$kinAssetBaseUrl/${music.cover}'),
-                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                                  fit: BoxFit.cover)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(1000),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                  ],
-                )),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildProgressBar(
@@ -410,144 +435,142 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                         }
 
                         return FutureBuilder(
-                            future: provider.getCoinBalance(),
-                            builder: (context, snapshot) {
-                              // if loading coin balance
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.65,
-                                  decoration: linearGradientDecoration,
-                                  child: const KinProgressIndicator(),
-                                );
-                              }
+                          future: provider.getCoinBalance(),
+                          builder: (context, snapshot) {
+                            // if loading coin balance
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
+                                decoration: linearGradientDecoration,
+                                child: const KinProgressIndicator(),
+                              );
+                            }
 
-                              // coin info got
-                              else {
-                                return Container(
-                                  decoration: linearGradientDecoration,
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: Column(
-                                    children: [
-                                      // modal header
-                                      SizedBox(
-                                        height: MODAL_HEADER_HEIGHT,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Column(
-                                          children: [
-                                            // spacer
-                                            const SizedBox(
-                                              height: 18,
+                            // coin info got
+                            else {
+                              return Container(
+                                decoration: linearGradientDecoration,
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.7,
+                                child: Column(
+                                  children: [
+                                    // modal header
+                                    SizedBox(
+                                      height: MODAL_HEADER_HEIGHT,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        children: [
+                                          // spacer
+                                          const SizedBox(
+                                            height: 18,
+                                          ),
+
+                                          // title
+                                          Text(
+                                            "Coin Balance",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white
+                                                  .withOpacity(0.75),
                                             ),
+                                          ),
 
-                                            // title
-                                            Text(
-                                              "Coin Balance",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white
-                                                    .withOpacity(0.75),
-                                              ),
+                                          // spacer
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+
+                                          // remaining coin value
+                                          Text(
+                                            "${snapshot.data ?? '0'} ETB",
+                                            style: TextStyle(
+                                              fontSize: 32,
+                                              color: Colors.white
+                                                  .withOpacity(0.75),
+                                              fontWeight: FontWeight.bold,
                                             ),
+                                          ),
 
-                                            // spacer
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
+                                          // spacer
+                                          const SizedBox(
+                                            height: 24,
+                                          ),
 
-                                            // remaining coin value
-                                            Text(
-                                              "${snapshot.data ?? '0'} ETB",
-                                              style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.white
-                                                    .withOpacity(0.75),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
+                                          // buy coins button
+                                          InkWell(
+                                            onTap: () async {
+                                              // remove modal sheet
+                                              Navigator.pop(context);
 
-                                            // spacer
-                                            const SizedBox(
-                                              height: 24,
-                                            ),
-
-                                            // buy coins button
-                                            InkWell(
-                                              onTap: () async {
-                                                // remove modal sheet
-                                                Navigator.pop(context);
-
-                                                // route to buy coin page
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const BuyCoinPage(),
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                child: const Text(
-                                                  "Buy Coins",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: kSecondaryColor,
-                                                  ),
+                                              // route to buy coin page
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const BuyCoinPage(),
                                                 ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 8,
-                                                  horizontal: 25,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(25),
+                                              );
+                                            },
+                                            child: Container(
+                                              child: const Text(
+                                                "Buy Coins",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: kSecondaryColor,
                                                 ),
                                               ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 25,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                              ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
+                                    ),
 
-                                      // modal list values
-                                      SizedBox(
-                                        height: (MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.65 -
-                                            MODAL_HEADER_HEIGHT),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: ListView.builder(
-                                          itemCount: allowedCoinValues.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return TipArtistCard(
-                                              value: allowedCoinValues[index],
-                                              refresher: refresherFunction,
-                                              artistName: music.artist,
-                                              artistId: music.artist_id,
-                                            );
-                                          },
-                                        ),
+                                    // modal list values
+                                    SizedBox(
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                                  0.65 -
+                                              MODAL_HEADER_HEIGHT),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.builder(
+                                        itemCount: allowedCoinValues.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TipArtistCard(
+                                            value: allowedCoinValues[index],
+                                            refresher: refresherFunction,
+                                            artistName: music.artist,
+                                            artistId: music.artist_id,
+                                          );
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            });
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        );
                       },
                     );
                   },
                 );
               },
               icon: Icon(
-                Icons.money_sharp,
+                Icons.card_giftcard_rounded,
                 color: Colors.white.withOpacity(0.8),
                 size: 24,
               ),
@@ -582,18 +605,18 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                 size: 24,
               ),
             ),
-
-            // add to playlist
             IconButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) {
-                    return PlaylistSelectorDialog(
-                      trackId: musicId.toString(),
-                    );
-                  },
-                );
+                if (Provider.of<MusicPlayer>(context).isPlayingLocal == false) {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return PlaylistSelectorDialog(
+                        trackId: musicId.toString(),
+                      );
+                    },
+                  );
+                }
               },
               icon: Icon(
                 Icons.add,
@@ -862,20 +885,34 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     // );
 
     return SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        height: 300,
-        color: Colors.transparent,
-        child: Html(
-          data: lyrics,
-          style: {
-            'p': Style(
-              color: Colors.white,
-              fontFamily: "Nokia",
-              lineHeight: LineHeight.number(2),
-            ),
-          },
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 250,
+          margin: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(30),
+            horizontal: getProportionateScreenWidth(30),
+          ),
+          color: Colors.transparent,
+          child: lyrics == "No Lyric"
+              ? Center(
+                  child: Text(
+                    lyrics,
+                    style: headerOneTextStyle,
+                  ),
+                )
+              : Center(
+                  child: Html(
+                    data: lyrics,
+                    style: {
+                      'p': Style(
+                        color: Colors.white,
+                        fontFamily: "Nokia",
+                        lineHeight: LineHeight.number(2),
+                      ),
+                    },
+                  ),
+                ),
         ),
       ),
     );

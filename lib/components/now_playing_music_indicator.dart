@@ -28,8 +28,6 @@ class NowPlayingMusicIndicator extends StatefulWidget {
 }
 
 class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
-  double minPlayerHeight = 70;
-
   @override
   void initState() {
     var favoriteProvider =

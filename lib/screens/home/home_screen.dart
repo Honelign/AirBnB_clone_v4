@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
+          // ignore: prefer_const_constructors
           title: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: CustomSearchBar(),
