@@ -23,9 +23,11 @@ class _RadioScreenNewState extends State<RadioScreenNew> {
         Provider.of<RadioProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(top: 36),
           decoration: linearGradientDecoration,
           child: RefreshIndicator(
             onRefresh: () async {

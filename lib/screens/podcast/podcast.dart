@@ -171,11 +171,12 @@ class Podcast extends StatelessWidget {
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: Container(
           decoration: linearGradientDecoration,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
+          padding: const EdgeInsets.fromLTRB(10, 50, 10, 12),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

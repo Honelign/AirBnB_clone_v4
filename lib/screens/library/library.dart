@@ -26,13 +26,25 @@ class _MyLibraryState extends State<MyLibrary> {
           //automaticallyImplyLeading: false,
           backgroundColor: Color(0xFF052c54),
           elevation: 0,
-          title: const TabBar(
-            //  indicatorPadding: EdgeInsets.all(0),
-            indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(5),
-            indicatorSize: TabBarIndicatorSize.label,
-
-            // padding: EdgeInsets.all(5),
+          title: TabBar(
+            labelColor: kSecondaryColor,
+            unselectedLabelColor: Colors.white,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 10,
+              right: 10,
+            ),
+            indicatorWeight: 5.0,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            //padding: EdgeInsets.symmetric(vertical: 20),
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+            //  indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(
                 text: 'Playlist',

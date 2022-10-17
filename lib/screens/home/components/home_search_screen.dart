@@ -278,18 +278,18 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               'Tracks',
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               height: 330,
                                               child: ListView.builder(
                                                 itemCount: provider
                                                     .searchedMusics.length,
                                                 itemBuilder: ((context, index) {
-                                                  // TODO: Replace Artist and Album ID
                                                   return MusicCardsearch(
                                                     music: provider
                                                         .searchedMusics[index],
