@@ -48,7 +48,8 @@ const String kinAssetsBaseUrlOld =
 const String kinMusicBaseUrl = 'https://music-service-vdzflryflq-ew.a.run.app';
 
 const String kinRadioBaseUrl = 'https://radioservice.kinideas.com';
-const String kinPodcastBaseUrl = 'https://podcastservice.kinideas.com';
+const String kinPodcastBaseUrl =
+    'https://podcast-service-dev-vdzflryflq-ew.a.run.app';
 const String kinSearchBaseUrl = 'https://searchservice.kinideas.com';
 const String kAnalyticsBaseUrl =
     "https://analytics-service-vdzflryflq-ew.a.run.app";

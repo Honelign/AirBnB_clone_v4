@@ -32,12 +32,26 @@ class PodcastDetailPage extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: 40,
           // automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          bottom: const TabBar(
-            indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(0),
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorColor: kSecondaryColor,
+          backgroundColor: Color(0xFF052C54),
+          bottom: TabBar(
+            labelColor: kSecondaryColor,
+            unselectedLabelColor: Colors.white,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 50,
+              right: 50,
+            ),
+            indicatorWeight: 5.0,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            //padding: EdgeInsets.symmetric(vertical: 20),
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+            //  indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(text: "Detail"),
               Tab(

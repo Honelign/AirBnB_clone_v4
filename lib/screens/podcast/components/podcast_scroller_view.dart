@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_card.dart';
 import 'package:kin_music_player_app/services/network/model/podcast/podcast_category.dart';
 
 class PodcastScrollerView extends StatelessWidget {
-  PodcastCategory podcastCategory;
-  PodcastScrollerView({
+  final PodcastCategory podcastCategory;
+  const PodcastScrollerView({
     Key? key,
     required this.podcastCategory,
   }) : super(key: key);
@@ -14,7 +12,7 @@ class PodcastScrollerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 20,
       ),
       child: Column(
@@ -23,7 +21,7 @@ class PodcastScrollerView extends StatelessWidget {
           // Title
           Text(
             podcastCategory.name,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 17,
               fontWeight: FontWeight.w600,

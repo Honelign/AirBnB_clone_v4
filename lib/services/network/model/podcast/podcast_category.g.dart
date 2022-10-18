@@ -3,7 +3,7 @@ part of "podcast_category.dart";
 PodcastCategory _$PodcastCategoryFromJson(Map<String, dynamic> json) =>
     PodcastCategory(
       id: json['id'] as int,
-      name: json['podcast_name'],
+      name: json['category_name'],
       podcasts: (json['podcasts'] as List<dynamic>)
           .map((e) => PodcastInfo.fromJson(e as Map<String, dynamic>))
           .toList(),

@@ -93,6 +93,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
               url: link['toPayUrl'].toString(),
               paymentId: paymentId.toString(),
               trackId: widget.trackId.toString(),
+              paymentReason: "track",
             );
           },
         ),

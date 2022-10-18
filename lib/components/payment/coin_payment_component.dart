@@ -11,7 +11,6 @@ import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
-import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
@@ -96,6 +95,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
               url: link['toPayUrl'].toString(),
               paymentId: paymentId.toString(),
               trackId: widget.trackId.toString(),
+              paymentReason: widget.paymentReason,
             );
           },
         ),
@@ -221,6 +221,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
+        Provider.of<CoinProvider>(context).isLoading = false;
         kShowToast(message: "Could not complete payment");
         _errorLoggingApiService.logErrorToServer(
           fileName: fileName,

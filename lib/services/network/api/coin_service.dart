@@ -48,12 +48,13 @@ class CoinApiService {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
         "payment_method": paymentMethod,
-        "payment_state": 'completed',
+        "payment_state": '',
       };
 
       if (id != "") {
         Response postResponse = await post(Uri.parse(uri), body: requestBody);
 
+        print("lookie - post response code is ${postResponse.body}");
         // user already has payment info
         if (postResponse.statusCode == 400) {
           Response putResponse =
@@ -100,12 +101,13 @@ class CoinApiService {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
         "payment_method": paymentMethod,
-        "payment_state": 'pending',
+        "payment_state": '',
       };
 
       if (id != "") {
         Response postResponse = await post(Uri.parse(uri), body: requestBody);
-
+        print("lookie - post response code is ${postResponse.statusCode}");
+        print("lookie - post response body is ${postResponse.body}");
         // user already has payment info
         if (postResponse.statusCode == 400) {
           Response putResponse =

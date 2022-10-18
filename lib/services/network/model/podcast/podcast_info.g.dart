@@ -2,25 +2,25 @@ part of 'podcast_info.dart';
 
 PodcastInfo _$PodcastInfoFromJson(Map<String, dynamic> json) => PodcastInfo(
       id: json['id'],
-      categoryId: json['categoryId'],
-      title: json['title'],
-      hostName: json['hostName'],
-      hostId: json['hostId'],
-      cover: json['cover'],
-      description: json['description'],
-      numberOfEpisodes: json['numberOfEpisodes'],
-      numberOfSeasons: json['numberOfSeasons'],
+      categoryId: json['category'],
+      title: json['podcast_name'],
+      hostId: json['host'],
+      hostName: json['host_name'],
+      cover: json['podcast_coverImage'],
+      description: json['podcast_description'],
+      numberOfEpisodes: json['numberOfSeasons'],
+      numberOfSeasons: json['numberOfEpisodes'],
     );
 
 Map<String, dynamic> _$PodcastInfoToJson(PodcastInfo instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'categoryId': instance.categoryId,
-      "title": instance.title,
+      'category': instance.categoryId,
+      "podcast_name": instance.title,
       "hostName": instance.hostName,
-      "hostId": instance.hostId,
-      "cover": instance.cover,
-      "description": instance.description,
+      "host": instance.hostId,
+      "podcast_coverImage": instance.cover,
+      "podcast_description": instance.description,
       "numberOfEpisodes": instance.numberOfEpisodes,
       "numberOfSeasons": instance.numberOfSeasons,
     };

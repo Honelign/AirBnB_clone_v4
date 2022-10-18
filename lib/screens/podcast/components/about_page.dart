@@ -1,16 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 
 class AboutPage extends StatelessWidget {
-  String cover;
-  String title;
-  String description;
-  int numberOfSeasons;
-  int numberOfEpisodes;
-  String hostName;
-  String hostId;
+  final String cover;
+  final String title;
+  final String description;
+  final int numberOfSeasons;
+  final int numberOfEpisodes;
+  final String hostName;
+  final String hostId;
 
-  AboutPage({
+  const AboutPage({
     Key? key,
     required this.title,
     required this.description,
@@ -24,23 +25,27 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: SizedBox(
+      body: Container(
+        decoration: linearGradientDecoration,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 360,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(cover),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
+            CachedNetworkImage(
+                imageUrl: cover,
+                imageBuilder: (context, img) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 360,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: img,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  );
+                }),
 
             // Spacer
             SizedBox(
