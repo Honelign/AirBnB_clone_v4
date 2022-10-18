@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart';
 import '../../constants.dart';
 import '../../size_config.dart';
 import '../playlist/playlist.dart';
@@ -23,8 +24,9 @@ class _MyLibraryState extends State<MyLibrary> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          //automaticallyImplyLeading: false,
-          backgroundColor: Color(0xFF052c54),
+          toolbarHeight: 60,
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xFF052c54),
           elevation: 0,
           title: TabBar(
             labelColor: kSecondaryColor,

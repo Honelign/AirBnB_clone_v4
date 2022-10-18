@@ -64,7 +64,7 @@ class _PlaylistTitleDisplayState extends State<PlaylistTitleDisplay> {
                     Text(
                       widget.playlistInfo.name,
                       style: const TextStyle(
-                        color: kSecondaryColor,
+                        color: kLightTextColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),

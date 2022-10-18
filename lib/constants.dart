@@ -92,6 +92,17 @@ kShowToast({String message = "Please Check Your Connection"}) {
   );
 }
 
+kShowPrice({String message = "Track price 0 can not be paid"}) {
+  return Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey,
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
+}
+
 kTelebirrToast({String message = "TeleBirr server not responding"}) {
   return Fluttertoast.showToast(
     msg: message,

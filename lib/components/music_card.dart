@@ -74,7 +74,7 @@ class _MusicCardState extends State<MusicCard> {
               onTap: () async {
                 // first play call
                 // if (_musicPlayerController.isProcessingPlay == false) {
-
+                
                 p.albumMusicss = widget.musics;
                 p.isPlayingLocal = false;
                 p.setBuffering(widget.musicIndex);

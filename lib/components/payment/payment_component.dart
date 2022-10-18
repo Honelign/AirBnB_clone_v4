@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
@@ -53,6 +54,26 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   //get telebirr url
   Future getUrl() async {
+    int price = int.parse(widget.paymentPrice);
+    if (price == 0) {
+      return AwesomeDialog(
+        context: context,
+        animType: AnimType.scale,
+        dialogType: DialogType.info,
+        body: const Center(
+          child: Text(
+            "The track price is 0 you can't make payment",
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+        title: 'title',
+        desc: 'desc',
+        btnOkOnPress: () {
+          Navigator.pop(context);
+        },
+      )..show();
+    }
+
     var linkMap;
     var link;
     var paymentData;
@@ -103,37 +124,58 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   //payment methods for paypal
   payWithPayPal() async {
-    FlutterPaypalSDK sdk = FlutterPaypalSDK(
-      clientId:
-          'AQ0XWp625sJxSs6EJADNsK2iHLSbS99w5lkybY72euU_zbmBvT-7QF_XMvqVaE5xs9aOUQ4AXmDgYsCl',
-      clientSecret:
-          'EIeP-k7aoAkqc170_vUkN094sP6aIv3v5KSnfdNpDm8rgbsx1H_bFAdohSs3lmSmDM7t_6hY2UzkMIKW',
-      mode: Mode.sandbox, // this will use sandbox environment
-    );
-    AccessToken accessToken = await sdk.getAccessToken();
-    if (accessToken.token != null) {
-      Payment payment = await sdk.createPayment(
-        transaction(),
-        accessToken.token!,
-      );
-      if (payment.status) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PaypalWebview(
-              onPaymentSuccessFunction: widget.onSuccessFunction,
-              paymentAmount: double.parse(widget.paymentPrice),
-              paymentMethod: 'Paypal',
-              trackId: widget.trackId.toString(),
-              paymentState: 'COMPLETED',
-              approveUrl: payment.approvalUrl!,
-              executeUrl: payment.executeUrl!,
-              accessToken: accessToken.token!,
-              sdk: sdk,
-              successFunction: () {},
-            ),
+    int price = int.parse(widget.paymentPrice);
+    if (price == 0) {
+      return AwesomeDialog(
+        context: context,
+        animType: AnimType.scale,
+        dialogType: DialogType.info,
+        body: const Center(
+          child: Text(
+            "The track price is 0 you can't make payment",
+            style: TextStyle(fontStyle: FontStyle.italic),
           ),
+        ),
+        title: 'title',
+        desc: 'desc',
+        btnOkOnPress: () {
+          Navigator.pop(context);
+        },
+      )..show();
+    } else {
+      FlutterPaypalSDK sdk = FlutterPaypalSDK(
+        clientId:
+            'AQ0XWp625sJxSs6EJADNsK2iHLSbS99w5lkybY72euU_zbmBvT-7QF_XMvqVaE5xs9aOUQ4AXmDgYsCl',
+        clientSecret:
+            'EIeP-k7aoAkqc170_vUkN094sP6aIv3v5KSnfdNpDm8rgbsx1H_bFAdohSs3lmSmDM7t_6hY2UzkMIKW',
+        mode: Mode.sandbox, // this will use sandbox environment
+      );
+      AccessToken accessToken = await sdk.getAccessToken();
+      if (accessToken.token != null) {
+        Payment payment = await sdk.createPayment(
+          transaction(),
+          accessToken.token!,
         );
+        if (payment.status) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaypalWebview(
+                paymentReason: widget.paymentReason,
+                onPaymentSuccessFunction: widget.onSuccessFunction,
+                paymentAmount: double.parse(widget.paymentPrice),
+                paymentMethod: 'Paypal',
+                trackId: widget.trackId.toString(),
+                paymentState: 'COMPLETED',
+                approveUrl: payment.approvalUrl!,
+                executeUrl: payment.executeUrl!,
+                accessToken: accessToken.token!,
+                sdk: sdk,
+                successFunction: () {},
+              ),
+            ),
+          );
+        }
       }
     }
   }
@@ -168,6 +210,10 @@ class _PaymentComponentState extends State<PaymentComponent> {
   Map<String, dynamic>? paymentIntent;
   bool isLoading = false;
   Future<void> payWithStripe() async {
+    int price = int.parse(widget.paymentPrice);
+    if (price == 0) {
+      return kShowPrice();
+    }
     try {
       paymentIntent = await createPaymentIntent(widget.paymentPrice, 'USD');
       //Payment Sheet
@@ -429,7 +475,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
                           });
 
                           // initiate stripe payment
-                          await payWithStripe();
+
+                          payWithStripe();
 
                           setState(() {
                             isLoading = false;

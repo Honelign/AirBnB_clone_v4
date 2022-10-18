@@ -123,6 +123,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
           context,
           MaterialPageRoute(
             builder: (context) => PaypalWebview(
+              paymentReason: widget.paymentReason,
               onPaymentSuccessFunction: widget.onSuccessFunction,
               paymentAmount: double.parse(widget.paymentPrice),
               paymentMethod: 'Paypal',

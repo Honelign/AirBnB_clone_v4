@@ -171,68 +171,78 @@ class _PlaylistBodyState extends State<PlaylistBody> {
       ),
       backgroundColor: kPrimaryColor,
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xFF052C54),
-              const Color(0xFFD9D9D9).withOpacity(0.7)
-            ],
-          )),
-          padding: const EdgeInsets.symmetric(vertical: 24),
-          child: RefreshIndicator(
-            onRefresh: () async {
-              _pagingController.refresh();
-            },
-            backgroundColor: refreshIndicatorBackgroundColor,
-            color: refreshIndicatorForegroundColor,
-            child: PagedListView<int, Music>(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Music>(
-                animateTransitions: true,
-                transitionDuration: const Duration(milliseconds: 500),
-                noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Center(
-                    child: Text(
-                      "No Tracks in ${widget.playlistName}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            _pagingController.refresh();
+          },
+          backgroundColor: refreshIndicatorBackgroundColor,
+          color: refreshIndicatorForegroundColor,
+          child: Stack(
+            children: [
+              Positioned(
+                  height: 20,
+                  child: Container(
+                      height: 50, color: Colors.amber, child: Text("sdsdf"))),
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+
+                       
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF052C54),
+                    const Color(0xFFD9D9D9).withOpacity(0.7)
+                  ],
+                )),
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: PagedListView<int, Music>(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<Music>(
+                    animateTransitions: true,
+                    transitionDuration: const Duration(milliseconds: 500),
+                    noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Center(
+                        child: Text(
+                          "No Tracks in ${widget.playlistName}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                noMoreItemsIndicatorBuilder: (_) => Container(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                  child: Center(
-                    child: Text(
-                      "No More Items in ${widget.playlistName}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                    noMoreItemsIndicatorBuilder: (_) => Container(
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                      child: Center(
+                        child: Text(
+                          "No More Items in ${widget.playlistName}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const KinProgressIndicator(),
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const KinProgressIndicator(),
+                    itemBuilder: (context, item, index) {
+                      allTracksInPlaylist = _pagingController.itemList ?? [];
+                      return PlaylistListCard(
+                        music: item,
+                        musics: _pagingController.itemList ?? [],
+                        musicIndex: index,
+                        refresherFunction: refresh,
+                      );
+                    },
                   ),
                 ),
-                firstPageProgressIndicatorBuilder: (_) =>
-                    const KinProgressIndicator(),
-                newPageProgressIndicatorBuilder: (_) =>
-                    const KinProgressIndicator(),
-                itemBuilder: (context, item, index) {
-                  allTracksInPlaylist = _pagingController.itemList ?? [];
-                  return PlaylistListCard(
-                    music: item,
-                    musics: _pagingController.itemList ?? [],
-                    musicIndex: index,
-                    refresherFunction: refresh,
-                  );
-                },
               ),
-            ),
+            ],
           ),
         ),
       ),
