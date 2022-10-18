@@ -9,9 +9,11 @@ import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../services/provider/music_provider.dart';
 import '../../../services/provider/payment_provider.dart';
 
 class PaypalWebview extends StatefulWidget {
+  final String paymentReason;
   final String approveUrl;
   final String executeUrl;
   final String accessToken;
@@ -33,6 +35,7 @@ class PaypalWebview extends StatefulWidget {
     required this.paymentMethod,
     required this.trackId,
     required this.paymentState,
+    required this.paymentReason,
     required this.onPaymentSuccessFunction,
   }) : super(key: key);
 
@@ -42,6 +45,10 @@ class PaypalWebview extends StatefulWidget {
 
 class _PaypalWebviewState extends State<PaypalWebview> {
   var paymentProvider;
+  void onSuccess() {
+    print("onsuccess");
+  }
+
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
@@ -54,6 +61,7 @@ class _PaypalWebviewState extends State<PaypalWebview> {
 
   @override
   Widget build(BuildContext context) {
+    var paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
     CoinProvider coinProvider = Provider.of(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -83,6 +91,20 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                 if (url.contains('/success')) {
                   final uri = Uri.parse(url);
                   final payerId = uri.queryParameters['PayerID'];
+                  if (widget.paymentReason == "trackPurchase") {
+                    await paymentProvider.saveUserPaymentAndTrackInfo(
+                      paymentAmount: (widget.paymentAmount),
+                      paymentMethod: 'PayPal',
+                      trackId: widget.trackId.toString(),
+                      paymentState: 'COMPLETED',
+                      onPaymentCompleteFunction: onSuccess,
+                    );
+                  }
+                  Provider.of<MusicProvider>(context, listen: false)
+                      .isPurchaseMade = true;
+
+                  kShowToast(message: "Payment Completed");
+
                   await widget.sdk.executePayment(
                       widget.executeUrl, payerId!, widget.accessToken);
 

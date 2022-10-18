@@ -45,7 +45,7 @@ class PaymentApiService {
           'Accept': 'application/json'
         },
       );
-
+      print("code" + paymentResponse.statusCode.toString());
       if (paymentResponse.statusCode == 201) {
         var body = json.decode(paymentResponse.body);
         String payId = body['id'].toString();
@@ -66,7 +66,7 @@ class PaymentApiService {
             'Accept': 'application/json'
           },
         );
-
+        print("code" + trackResponse.statusCode.toString());
         if (trackResponse.statusCode == 201) {
           return true;
         }
