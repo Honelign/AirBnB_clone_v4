@@ -13,160 +13,6 @@ class Podcast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List podcasts = [
-      {
-        "podcast_name": "HypheNation: A Diaspora Life",
-        "image_url": "assets/images/Podcast-1.jpg",
-        "host": "Rebka Fisseha"
-      },
-      {
-        "podcast_name": "Habesha Finance",
-        "image_url": "assets/images/Podcast-2.png",
-        "host": "Matt G"
-      },
-      {
-        "podcast_name": "The Horn",
-        "image_url": "assets/images/Podcast-3.jpg",
-        "host": "International Crisis Group"
-      },
-      {
-        "podcast_name": "13 Months of Sunshine",
-        "image_url": "assets/images/Podcast-4.jpg",
-        "host": "TESFA"
-      },
-
-      // 13 Months of Sunshine
-
-      {
-        "podcast_name": "MERI Ethiopia",
-        "image_url": "assets/images/Podcast-8.jpg",
-        "host": "MERI Ethiopia"
-      },
-      {
-        "podcast_name": "Tragedy In Ethiopia",
-        "image_url": "assets/images/Podcast-11.jpg",
-        "host": "Chris Anderson"
-      },
-      {
-        "podcast_name": "Rorshok Ethiopia Update",
-        "image_url": "assets/images/Podcast-5.png",
-        "host": "Rorshok"
-      },
-      {
-        "podcast_name": "EBC Ethiopia",
-        "image_url": "assets/images/Podcast-10.jpg",
-        "host": "Radio"
-      },
-    ];
-    List podcastsTwo = [
-      {
-        "podcast_name": "Ethiopia by Ane Mitmita",
-        "image_url": "assets/images/Podcast-9.jpg",
-        "host": "Ane Mitmia"
-      },
-      {
-        "podcast_name": "TARIK: The Ethiopian History Podcast",
-        "image_url": "assets/images/Podcast-10.jpg",
-        "host": "T A R I K"
-      },
-      {
-        "podcast_name": "Tragedy In Ethiopia",
-        "image_url": "assets/images/Podcast-11.jpg",
-        "host": "Chris Anderson"
-      },
-      {
-        "podcast_name": "MIInDs Ethiopia",
-        "image_url": "assets/images/Podcast-6.jpg",
-        "host": "MIInDs"
-      },
-      {
-        "podcast_name": "EBC Ethiopia",
-        "image_url": "assets/images/Podcast-7.jpg",
-        "host": "Radio"
-      },
-      {
-        "podcast_name": "MERI Ethiopia",
-        "image_url": "assets/images/Podcast-8.jpg",
-        "host": "MERI Ethiopia"
-      },
-      {
-        "podcast_name": "Tragedy In Ethiopia",
-        "image_url": "assets/images/Podcast-11.jpg",
-        "host": "Chris Anderson"
-      },
-      {
-        "podcast_name": "Rorshok Ethiopia Update",
-        "image_url": "assets/images/Podcast-5.png",
-        "host": "Rorshok"
-      },
-      {
-        "podcast_name": "EBC Ethiopia",
-        "image_url": "assets/images/Podcast-10.jpg",
-        "host": "Radio"
-      },
-    ];
-    List podcastsThree = [
-      {
-        "podcast_name": "MERI Ethiopia",
-        "image_url": "assets/images/Podcast-8.jpg",
-        "host": "MERI Ethiopia"
-      },
-      {
-        "podcast_name": "Tragedy In Ethiopia",
-        "image_url": "assets/images/Podcast-11.jpg",
-        "host": "Chris Anderson"
-      },
-      {
-        "podcast_name": "Rorshok Ethiopia Update",
-        "image_url": "assets/images/Podcast-5.png",
-        "host": "Rorshok"
-      },
-      {
-        "podcast_name": "EBC Ethiopia",
-        "image_url": "assets/images/Podcast-10.jpg",
-        "host": "Radio"
-      },
-      {
-        "podcast_name": "Ethiopia by Ane Mitmita",
-        "image_url": "assets/images/Podcast-9.jpg",
-        "host": "Ane Mitmia"
-      },
-      {
-        "podcast_name": "TARIK: The Ethiopian History Podcast",
-        "image_url": "assets/images/Podcast-10.jpg",
-        "host": "T A R I K"
-      },
-      {
-        "podcast_name": "Tragedy In Ethiopia",
-        "image_url": "assets/images/Podcast-11.jpg",
-        "host": "Chris Anderson"
-      },
-      {
-        "podcast_name": "MIInDs Ethiopia",
-        "image_url": "assets/images/Podcast-6.jpg",
-        "host": "MIInDs"
-      },
-      {
-        "podcast_name": "EBC Ethiopia",
-        "image_url": "assets/images/Podcast-7.jpg",
-        "host": "Radio"
-      },
-    ];
-    List allPodcasts = [
-      podcasts,
-      podcastsTwo,
-      podcastsThree,
-      podcasts,
-      podcastsTwo,
-      podcastsThree,
-      podcasts,
-      podcastsTwo,
-      podcastsThree,
-      podcasts,
-      podcastsTwo,
-      podcastsThree
-    ];
-
     PodcastProvider podcastProvider =
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
@@ -182,7 +28,7 @@ class Podcast extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Search Bar
-                CustomSearchBar(),
+                const CustomSearchBar(),
 
                 // Spacer
 
@@ -199,7 +45,7 @@ class Podcast extends StatelessWidget {
                   height: 20,
                 ),
 
-                AdBanner(),
+                const AdBanner(),
 
                 // Title
                 FutureBuilder(

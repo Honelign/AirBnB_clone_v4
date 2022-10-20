@@ -48,16 +48,16 @@ class AboutPage extends StatelessWidget {
                 }),
 
             // Spacer
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
 
             // podcast name
             Padding(
-              padding: EdgeInsets.fromLTRB(6, 0, 48.0, 0),
+              padding: const EdgeInsets.fromLTRB(6, 0, 48.0, 0),
               child: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   letterSpacing: 1,
@@ -120,7 +120,7 @@ class AboutPage extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     width: 64,
                   ),
                   // Season Count

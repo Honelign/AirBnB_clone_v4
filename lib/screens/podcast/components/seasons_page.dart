@@ -7,16 +7,16 @@ import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 
 class SeasonsPage extends StatelessWidget {
-  String id;
-  SeasonsPage({Key? key, required this.id}) : super(key: key);
+  final String id;
+  const SeasonsPage({Key? key, required this.id}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     PodcastProvider podcastProvider =
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: SizedBox(
+      body: Container(
+        decoration: linearGradientDecoration,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
@@ -34,7 +34,7 @@ class SeasonsPage extends StatelessWidget {
 
             // loaded
             else if (snapshot.hasData && !snapshot.hasError) {
-              return Container(
+              return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: ListView.builder(

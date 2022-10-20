@@ -1,20 +1,18 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_detail_page.dart';
 
 class PodcastCard extends StatelessWidget {
-  int id;
-  String url;
-  String title;
-  String host;
-  String hostId;
-  int numberOfSeasons;
-  int numberOfEpisodes;
-  String description;
-  PodcastCard({
+  final int id;
+  final String url;
+  final String title;
+  final String host;
+  final String hostId;
+  final int numberOfSeasons;
+  final int numberOfEpisodes;
+  final String description;
+  const PodcastCard({
     Key? key,
     required this.id,
     required this.url,
@@ -81,7 +79,7 @@ class PodcastCard extends StatelessWidget {
           ),
 
           Container(
-            constraints: BoxConstraints(maxWidth: 100),
+            constraints: const BoxConstraints(maxWidth: 100),
             child: Text(
               host,
               style: const TextStyle(

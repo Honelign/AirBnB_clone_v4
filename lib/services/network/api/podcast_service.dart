@@ -48,87 +48,16 @@ class PodcastApiService {
     List<PodcastSeason> podcastSeasons = [];
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      List<Map<String, dynamic>> response = [
-        {
-          "id": 1,
-          "seasonNumber": 1,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 2,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 3,
-          "seasonNumber": 3,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 4,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 1,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 2,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 3,
-          "seasonNumber": 3,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 4,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 1,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 2,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 3,
-          "seasonNumber": 3,
-          "numberOfEpisodes": 25,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-        {
-          "id": 1,
-          "seasonNumber": 4,
-          "numberOfEpisodes": 12,
-          "cover": "assets/images/Podcast-1.jpg",
-        },
-      ];
+      Response response = await get(
+        Uri.parse("$kinPodcastBaseUrl/mobileApp/seasons?podcastId=$podcastId"),
+      );
 
-      podcastSeasons = response
-          .map(
-            (e) => PodcastSeason.fromJson(e),
-          )
-          .toList();
+      if (response.statusCode == 200) {
+        final item = jsonDecode(response.body) as List;
+
+        podcastSeasons =
+            item.map((season) => PodcastSeason.fromJson(season)).toList();
+      }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -147,147 +76,14 @@ class PodcastApiService {
     List<PodcastEpisode> podcastEpisodes = [];
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      List<Map<String, dynamic>> response = [
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        },
-        {
-          "id": 1,
-          "episode_number": "Sew ena Aden",
-          "hostName": "Abel Alem",
-          "hostId": 1,
-          "categoryId": 1,
-          "audio": "audio",
-          "cover": "assets/images/Podcast-2.png",
-        }
-      ];
+      Response response = await get(
+        Uri.parse("$kinPodcastBaseUrl/mobileApp/episodes?seasonId=$seasonId"),
+      );
 
-      podcastEpisodes =
-          response.map((e) => PodcastEpisode.fromJson(e)).toList();
+      if (response.statusCode == 200) {
+        final item = jsonDecode(response.body) as List;
+        podcastEpisodes = item.map((e) => PodcastEpisode.fromJson(e)).toList();
+      }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
