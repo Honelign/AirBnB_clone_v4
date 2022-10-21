@@ -203,7 +203,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
             if (!(snapshot.connectionState == ConnectionState.waiting)) {
               if (snapshot.hasData) {
                 List<Music> musics = snapshot.data!;
-                int? length;
+                int? length=0;
                 if (snapshot.data?.length == 1 || snapshot.data?.length == 2) {
                   length = 1;
                 } else {

@@ -91,7 +91,7 @@ class UserApiService {
     try {
       // connect with firebase
       var possibleUser = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
+        email: email.toString().trim(),
         password: password,
       );
 
