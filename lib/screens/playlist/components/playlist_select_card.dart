@@ -45,7 +45,7 @@ class _PlaylistSelectCardState extends State<PlaylistSelectCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: getProportionateScreenHeight(widget.height),
+      height: getProportionateScreenHeight(widget.height - 8),
       width: getProportionateScreenWidth(75),
       margin: EdgeInsets.symmetric(
         horizontal: getProportionateScreenWidth(8),
@@ -57,8 +57,8 @@ class _PlaylistSelectCardState extends State<PlaylistSelectCard> {
       ),
       decoration: BoxDecoration(
         color: widget.isMusicSelected == true
-            ? kSecondaryColor.withOpacity(0.35)
-            : kPrimaryColor,
+            ? Colors.green.withOpacity(0.1)
+            : Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(36),
       ),
       child: Row(
@@ -83,9 +83,13 @@ class _PlaylistSelectCardState extends State<PlaylistSelectCard> {
                             ),
                             shape: BoxShape.circle,
                           )
-                        : const BoxDecoration(
-                            color: kSecondaryColor,
+                        : BoxDecoration(
+                            color: Colors.green.withOpacity(0.55),
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.green.withOpacity(0.55),
+                              width: 2.0,
+                            ),
                           ),
               ),
             ),

@@ -63,60 +63,73 @@ class _PurchasedState extends State<Purchased> {
       listen: false,
     );
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        _pagingController.refresh();
-      },
-      backgroundColor: refreshIndicatorBackgroundColor,
-      color: refreshIndicatorForegroundColor,
-      child: Container(
-        padding:
-            EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
-        child: checkConnection(status) == false
-            ? const NoConnectionDisplay()
-            : PagedListView<int, Music>(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<Music>(
-                  animateTransitions: true,
-                  transitionDuration: const Duration(milliseconds: 500),
-                  noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: const Center(
-                      child: Text(
-                        "No Purchased Tracks",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _pagingController.refresh();
+        },
+        backgroundColor: refreshIndicatorBackgroundColor,
+        color: refreshIndicatorForegroundColor,
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF052C54),
+              const Color(0xFFD9D9D9).withOpacity(0.7)
+            ],
+          )),
+          /*    padding:
+              EdgeInsets.symmetric(vertical: getProportionateScreenHeight(30)),
+         */
+          child: checkConnection(status) == false
+              ? const NoConnectionDisplay()
+              : PagedListView<int, Music>(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<Music>(
+                    animateTransitions: true,
+                    transitionDuration: const Duration(milliseconds: 500),
+                    noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: const Center(
+                        child: Text(
+                          "No Purchased",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  noMoreItemsIndicatorBuilder: (_) => Container(
-                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                    child: const Center(
-                      child: Text(
-                        "No More Tracks",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                    noMoreItemsIndicatorBuilder: (_) => Container(
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                      child: const Center(
+                        child: Text(
+                          "No More Tracks",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const KinProgressIndicator(),
+                    newPageProgressIndicatorBuilder: (_) =>
+                        const KinProgressIndicator(),
+                    itemBuilder: ((context, item, index) {
+                      return MusicListCard(
+                        musics: _pagingController.itemList!,
+                        music: item,
+                        musicIndex: index,
+                      );
+                    }),
                   ),
-                  firstPageProgressIndicatorBuilder: (_) =>
-                      const KinProgressIndicator(),
-                  newPageProgressIndicatorBuilder: (_) =>
-                      const KinProgressIndicator(),
-                  itemBuilder: ((context, item, index) {
-                    return MusicListCard(
-                      musics: _pagingController.itemList!,
-                      music: item,
-                      musicIndex: index,
-                    );
-                  }),
                 ),
-              ),
+        ),
       ),
     );
   }

@@ -19,16 +19,18 @@ class PaymentView extends StatefulWidget {
   final String paymentMethod;
   final String paymentId;
   final String trackId;
+  final String paymentReason;
 
-  const PaymentView({
-    Key? key,
-    required this.url,
-    required this.userId,
-    required this.paymentAmount,
-    required this.paymentMethod,
-    required this.paymentId,
-    required this.trackId,
-  }) : super(key: key);
+  const PaymentView(
+      {Key? key,
+      required this.url,
+      required this.userId,
+      required this.paymentAmount,
+      required this.paymentMethod,
+      required this.paymentId,
+      required this.trackId,
+      required this.paymentReason})
+      : super(key: key);
   @override
   _PaymentViewState createState() => _PaymentViewState();
 }
@@ -213,22 +215,25 @@ class _PaymentViewState extends State<PaymentView> {
                       setState(() async {
                         final u = url.toString();
                         if (u.contains("result?status=200")) {
-                          // try {
-                          //   if (true == true) {
-                          //     await coinProvider.buyCoinTeleBirr(
-                          //       paymentAmount: int.parse(widget.paymentAmount),
-                          //       paymentMethod: "telebirr",
-                          //     );
-                          //   }
-                          //   Navigator.pop(context);
-                          // } catch (e) {
-                          //   errorLoggingApiService.logErrorToServer(
-                          //     fileName: fileName,
-                          //     functionName: "onLoadStop",
-                          //     errorInfo: e.toString(),
-                          //   );
-                          // }
-                          await savePayment();
+                          if (widget.paymentReason == "tip") {
+                            print("lookie - payment for tip");
+                            try {
+                              await coinProvider.buyCoinTeleBirr(
+                                paymentAmount: int.parse(widget.paymentAmount),
+                                paymentMethod: "telebirr",
+                              );
+
+                              Navigator.pop(context);
+                            } catch (e) {
+                              errorLoggingApiService.logErrorToServer(
+                                fileName: fileName,
+                                functionName: "onLoadStop",
+                                errorInfo: e.toString(),
+                              );
+                            }
+                          } else {
+                            await savePayment();
+                          }
                         }
 
                         this.url = url.toString();

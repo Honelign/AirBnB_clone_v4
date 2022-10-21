@@ -228,7 +228,7 @@ class _PlaylistListCardState extends State<PlaylistListCard> {
                     Icons.more_vert,
                     color: kGrey,
                   ),
-                  color: kPopupMenuBackgroundColor,
+                  color: Colors.white.withOpacity(0.95),
                   onSelected: (value) async {
                     // Add to playlist
                     if (value == 1) {

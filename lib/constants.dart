@@ -48,7 +48,8 @@ const String kinAssetsBaseUrlOld =
 const String kinMusicBaseUrl = 'https://music-service-vdzflryflq-ew.a.run.app';
 
 const String kinRadioBaseUrl = 'https://radioservice.kinideas.com';
-const String kinPodcastBaseUrl = 'https://podcastservice.kinideas.com';
+const String kinPodcastBaseUrl =
+    'https://podcast-service-dev-vdzflryflq-ew.a.run.app';
 const String kinSearchBaseUrl = 'https://searchservice.kinideas.com';
 const String kAnalyticsBaseUrl =
     "https://analytics-service-vdzflryflq-ew.a.run.app";
@@ -81,6 +82,17 @@ final headingStyle = TextStyle(
 );
 
 kShowToast({String message = "Please Check Your Connection"}) {
+  return Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey,
+    textColor: Colors.black,
+    fontSize: 16.0,
+  );
+}
+
+kShowPrice({String message = "Track price 0 can not be paid"}) {
   return Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
@@ -143,7 +155,7 @@ checkConnection(status) {
 }
 
 // POPUP MENU ITEMS
-const TextStyle popupTextStyle = TextStyle(color: kPopupMenuForegroundColor);
+const TextStyle popupTextStyle = TextStyle(color: kPrimaryColor);
 
 const List<PopupMenuItem> kMusicPopupMenuItem = [
   PopupMenuItem(
@@ -258,9 +270,8 @@ const String kMatchPassError = "Passwords don't match";
 const String kNameNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
-const String kConnectionErrorMessage =
-    "No Connection. Connect to Cellular data or Wifi";
-
+const String kConnectionErrorMessage = "No Connection.";
+const String kReconnectErrorMessage = "Connect to Cellular data or Wifi";
 const String kPrivacyPolicy =
     "We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the &ldquo;Last updated&rdquo; date of this Privacy Policy. You are encouraged to periodically review this Privacy Policy to stay informed of updates. You will be deemed to have been made aware of, will be subject to, and will be deemed to have accepted the changes in any revised Privacy Policy by your continued use of the Application after the date such revised Privacy Policy is posted.";
 const String kTermsOfService =
@@ -355,3 +366,5 @@ BoxDecoration linearGradientDecoration = BoxDecoration(
     ],
   ),
 );
+
+double minPlayerHeight = 70;

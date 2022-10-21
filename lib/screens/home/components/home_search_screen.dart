@@ -40,7 +40,6 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
     final provider = Provider.of<MusicProvider>(context, listen: false);
     provider.searchedMusics.clear();
 
-
     searchController.addListener(() {
       if (searchController.text.isNotEmpty) {
         if (_debounce?.isActive ?? false) _debounce?.cancel();
@@ -107,10 +106,10 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-              colors: [Color(0xFF052C54), Color(0xFFD9D9D9).withOpacity(0.7)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
+                  gradient: LinearGradient(colors: [
+                    Color(0xFF052C54),
+                    Color(0xFFD9D9D9).withOpacity(0.7)
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
               ),
               Column(
@@ -279,18 +278,18 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            const Text(
                                               'Tracks',
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               height: 330,
                                               child: ListView.builder(
                                                 itemCount: provider
                                                     .searchedMusics.length,
                                                 itemBuilder: ((context, index) {
-                                                  // TODO: Replace Artist and Album ID
                                                   return MusicCardsearch(
                                                     music: provider
                                                         .searchedMusics[index],
@@ -326,7 +325,8 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
       margin: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.4),
-        borderRadius:  BorderRadius.circular(25),),
+        borderRadius: BorderRadius.circular(25),
+      ),
       child: TextFormField(
         autofocus: true,
         controller: searchController,
@@ -340,9 +340,7 @@ class _HomeSearchScreenState extends State<HomeSearchScreen> {
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,
           hintText: hint,
-          hintStyle: const TextStyle(
-            
-            color: Colors.black),
+          hintStyle: const TextStyle(color: Colors.black),
           prefixIcon: const Icon(
             Icons.search,
             color: Colors.black,

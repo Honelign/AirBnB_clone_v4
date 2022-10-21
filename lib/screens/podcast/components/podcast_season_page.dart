@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/episode_card.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 
 class PodcastSeasonPage extends StatelessWidget {
-  String id;
+  final String id;
+  final String title;
 
-  PodcastSeasonPage({Key? key, required this.id}) : super(key: key);
+  const PodcastSeasonPage({Key? key, required this.id, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,15 @@ class PodcastSeasonPage extends StatelessWidget {
         Provider.of<PodcastProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: const Color(0xFF052C54),
+        title: Text(title),
+        elevation: 0,
       ),
-      backgroundColor: kPrimaryColor,
       body: Container(
+        decoration: linearGradientDecoration,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: FutureBuilder(
+        child: FutureBuilder<List<PodcastEpisode>>(
           future: podcastProvider.getPodcastEpisodes(
             pageSize: 1,
             seasonId: int.parse(id),
@@ -45,10 +47,9 @@ class PodcastSeasonPage extends StatelessWidget {
                 itemCount: podcastProvider.podcastEpisodes.length,
                 itemBuilder: (context, index) {
                   return EpisodeCard(
-                    cover: podcastProvider.podcastEpisodes[index].cover,
-                    title: podcastProvider.podcastEpisodes[index].episodeTitle
-                        .toString(),
-                    id: podcastProvider.podcastEpisodes[index].id.toString(),
+                    podcastEpisode: snapshot.data![index],
+                    index: index,
+                    podcasts: snapshot.data!,
                   );
                 },
               );

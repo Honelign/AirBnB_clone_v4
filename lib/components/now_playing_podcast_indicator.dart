@@ -1,19 +1,25 @@
-import 'dart:ui';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:kin_music_player_app/screens/now_playing/now_playing_podcast.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
+import 'package:kin_music_player_app/components/payment/payment_component.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
+import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
+import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
-import '../size_config.dart';
-
 class NowPlayingPodcastIndicator extends StatefulWidget {
-  const NowPlayingPodcastIndicator({Key? key}) : super(key: key);
+  final String episodePrice;
+  final bool isPurchased;
+  const NowPlayingPodcastIndicator(
+      {Key? key, required this.episodePrice, required this.isPurchased})
+      : super(key: key);
 
   @override
   State<NowPlayingPodcastIndicator> createState() =>
@@ -22,11 +28,38 @@ class NowPlayingPodcastIndicator extends StatefulWidget {
 
 class _NowPlayingPodcastIndicatorState
     extends State<NowPlayingPodcastIndicator> {
-  double minPlayerHeight = 70;
+  @override
+  void initState() {
+    var favoriteProvider =
+        Provider.of<CachedFavoriteProvider>(context, listen: false);
+    favoriteProvider.getFavids();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final p = Provider.of<PodcastPlayer>(context);
+    var p = Provider.of<PodcastPlayer>(context, listen: false);
+    bool showBuyButton = !widget.isPurchased;
+
+    print("lookie : $showBuyButton");
+
+    void onTrackPurchaseSuccess() async {
+      setState(() {
+        showBuyButton = false;
+      });
+    }
+
+    PodcastProvider podcastProvider = Provider.of<PodcastProvider>(context);
+
+    PaymentProvider paymentProvider = Provider.of<PaymentProvider>(context);
+
+    // get providers
+
+    // var favoriteProvider =
+    //     Provider.of<CachedFavoriteProvider>(context, listen: false);
+    // Provider.of<FavoriteMusicProvider>(context, listen: false)
+    //     .isMusicFav(p.currentMusic!.id);
 
     return PlayerBuilder.isPlaying(
       player: p.player,
@@ -38,50 +71,160 @@ class _NowPlayingPodcastIndicatorState
             children: [
               _buildBlurBackground(p.getEpisodeCover()),
               _buildDarkContainer(),
-              Container(
-                height: 70,
-                color: Colors.transparent,
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                    getProportionateScreenWidth(20),
-                    getProportionateScreenHeight(10),
-                    getProportionateScreenWidth(30),
-                    getProportionateScreenHeight(10)),
-                child: GestureDetector(
-                  onTap: () {
-                    p.setBuffering(p.tIndex);
-                    p.isEpisodeInProgress(p.currentEpisode!)
-                        ? Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                NowPlayingPodcast(p.currentEpisode)))
-                        : p.handlePlayButton(
-                            episode: p.currentEpisode!,
-                            index: p.tIndex,
-                            podCast: p.currentPodcast,
-                          );
-                  },
+              GestureDetector(
+                onTap: () {
+                  p.setBuffering(p.tIndex);
+                  p.isEpisodeInProgress(p.currentEpisode!);
+                  // ?
+                  // Navigator.of(context).push(
+                  //     MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           NowPlayingMusic(p.currentMusic),
+                  //     ),
+                  //   )
+                  // : Navigator.of(context).push(
+                  //     MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           NowPlayingMusic(p.currentMusic),
+                  //     ),
+                  //   );
+                },
+                child: Container(
+                  height: minPlayerHeight,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                  ),
                   child: Row(
                     children: [
-                      _buildCover(p.getEpisodeCover()),
+                      // small image
+                      _buildCover(p),
+
+                      // spacer
                       SizedBox(
                         width: getProportionateScreenWidth(10),
                       ),
+
+                      // title info
                       _buildTitleAndArtist(
-                        p.currentEpisode!.title,
+                        p.currentEpisode!.episodeTitle,
+                        p.currentEpisode!.hostName,
                       ),
-                      _buildPlayPauseButton(
-                        p,
-                      ),
+
+                      showBuyButton == true
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      // payment modal
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: (context) => PaymentComponent(
+                                          trackId: (p.currentEpisode!.id),
+                                          paymentPrice: p
+                                              .currentEpisode!.priceETB
+                                              .toString(),
+                                          paymentReason: "trackPurchase",
+                                          onSuccessFunction:
+                                              onTrackPurchaseSuccess,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 8,
+                                      ),
+                                      margin:
+                                          const EdgeInsets.fromLTRB(0, 0, 6, 8),
+                                      decoration: BoxDecoration(
+                                        color: kSecondaryColor,
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      child: Text(
+                                        "Buy ${widget.episodePrice} ETB",
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.75),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.55,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                // // favorite button
+                                // Consumer<FavoriteMusicProvider>(
+                                //   builder: (context, provider, _) {
+                                //     return favoriteProvider.favMusics
+                                //             .contains(p.currentMusic!.id)
+                                //         ? IconButton(
+                                //             onPressed: () async {
+                                //               favoriteProvider.removeCachedFav(
+                                //                   p.currentMusic!.id);
+                                //               favoriteProvider.getFavids();
+                                //               await provider.unFavMusic(
+                                //                   p.currentMusic!.id);
+
+                                //               await provider.getFavMusic();
+                                //             },
+                                //             icon: const Icon(
+                                //               Icons.favorite,
+                                //               color: kSecondaryColor,
+                                //               size: 23,
+                                //             ),
+                                //           )
+                                //         : IconButton(
+                                //             onPressed: () async {
+                                //               favoriteProvider.addCachedFav(
+                                //                   p.currentMusic!.id);
+                                //               favoriteProvider.getFavids();
+                                //               await provider
+                                //                   .favMusic(p.currentMusic!.id);
+
+                                //               await provider.getFavMusic();
+                                //             },
+                                //             icon: const Icon(
+                                //               Icons.favorite_border,
+                                //               color: Colors.white,
+                                //               size: 23,
+                                //             ),
+                                //           );
+                                //   },
+                                // ),
+
+                                // play button
+                                _buildPlayPauseButton(
+                                  p,
+                                ),
+
+                                // next button
+                                // _buildNextButton(p),
+                              ],
+                            )
                     ],
                   ),
                 ),
               ),
-              _buildCloseButton(p),
             ],
           ),
         );
       },
     );
+
+    // build UI
   }
 
   Widget _buildBlurBackground(musicCover) {
@@ -91,9 +234,13 @@ class _NowPlayingPodcastIndicatorState
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(10), bottomLeft: Radius.circular(10)),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+          ),
           image: DecorationImage(
-              image: CachedNetworkImageProvider(musicCover), fit: BoxFit.cover),
+            image: CachedNetworkImageProvider(musicCover),
+            fit: BoxFit.cover,
+          ),
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -123,27 +270,40 @@ class _NowPlayingPodcastIndicatorState
     );
   }
 
-  Widget _buildCover(podcastCover) {
+  Widget _buildCover(provider) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: AspectRatio(
-          aspectRatio: 1.02,
-          child: Container(
-              color: kSecondaryColor.withOpacity(0.1),
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: podcastCover,
-              )),
-        ));
+      borderRadius: BorderRadius.circular(15),
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: Container(
+          color: kSecondaryColor.withOpacity(0.1),
+          child: CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: '$kinAssetBaseUrl-dev/${provider.currentEpisode.cover}',
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget _buildTitleAndArtist(
-    musicTitle,
-  ) {
+  Widget _buildTitleAndArtist(musicTitle, musicCover) {
     return Expanded(
-      child: Text(
-        musicTitle,
-        style: const TextStyle(color: Colors.white, fontSize: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            musicTitle,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          Text(
+            musicCover,
+            style: const TextStyle(color: kGrey),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ],
       ),
     );
   }
@@ -155,14 +315,13 @@ class _NowPlayingPodcastIndicatorState
       player: playerProvider.player,
       builder: (context, isPlaying) {
         return InkWell(
-          onTap: () {
+          onTap: () async {
             if (isPlaying || playerProvider.player.isBuffering.value) {
               playerProvider.player.pause();
             } else {
-              if (checkConnection(status)) {
+              if (checkConnection(status) &&
+                  playerProvider.isProcessingPlay == false) {
                 playerProvider.player.play();
-              } else {
-                kShowToast();
               }
             }
           },
@@ -172,45 +331,42 @@ class _NowPlayingPodcastIndicatorState
             padding: const EdgeInsets.all(10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [kSecondaryColor, kPrimaryColor.withOpacity(0.75)],
-                ),
-                borderRadius: BorderRadius.circular(1000)),
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: 15,
-              child: SvgPicture.asset(
-                isPlaying
-                    ? 'assets/icons/pause.svg'
-                    : 'assets/icons/play-triangle.svg',
-                fit: BoxFit.contain,
-                color: Colors.white,
-              ),
+              borderRadius: BorderRadius.circular(1000),
             ),
+            child: isPlaying
+                ? const Icon(
+                    Icons.pause_rounded,
+                    size: 30,
+                    color: Colors.white,
+                  )
+                : const Icon(
+                    Icons.play_arrow_rounded,
+                    size: 32,
+                    color: Colors.white,
+                  ),
           ),
         );
       },
     );
   }
 
-  Widget _buildCloseButton(PodcastPlayer provider) {
-    return Positioned(
-      top: -10,
-      right: -10,
-      child: IconButton(
-        onPressed: () async {
-          provider.player.stop();
-          provider.setEpisodeStopped(true);
-          setState(() {
-            minPlayerHeight = 0;
-          });
-        },
-        icon: const Icon(
-          Icons.clear,
-          color: kGrey,
-          size: 15,
-        ),
+  Widget _buildNextButton(PodcastPlayer playerProvider) {
+    return IconButton(
+      icon: const Icon(
+        Icons.skip_next_rounded,
+        size: 30,
       ),
+      color: playerProvider.isLastMusic(playerProvider.currentIndex! + 1)
+          ? kGrey
+          : Colors.white,
+      onPressed: () {
+        if (playerProvider.isLastMusic(playerProvider.currentIndex! + 1)) {
+          return;
+        }
+        if (playerProvider.isProcessingPlay == false) {
+          playerProvider.next();
+        }
+      },
     );
   }
 }

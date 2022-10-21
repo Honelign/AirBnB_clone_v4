@@ -2,10 +2,10 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kin_music_player_app/components/kin_audio_wave.dart';
+import 'package:kin_music_player_app/screens/podcast/podcast.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
 
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
@@ -19,8 +19,8 @@ class TrackMusicPlayButton extends StatelessWidget {
   final Music? music;
   final Album? album;
   final int? index;
-  bool isplaying = true;
-  TrackMusicPlayButton(
+
+  const TrackMusicPlayButton(
       {Key? key, this.onPressed, this.music, this.album, this.index})
       : super(key: key);
 
@@ -64,12 +64,13 @@ class TrackMusicPlayButton extends StatelessWidget {
 class TrackEpisodePlayButton extends StatelessWidget {
   final Function? onPressed;
 
-  final PodCast? podCast;
-  final PodCastEpisode? episode;
+  final Podcast? podcast;
+  final PodcastEpisode? episode;
   final int? index;
 
-  TrackEpisodePlayButton(
-      {this.onPressed, this.episode, this.podCast, this.index});
+  const TrackEpisodePlayButton(
+      {Key? key, this.onPressed, this.episode, this.podcast, this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,22 +80,23 @@ class TrackEpisodePlayButton extends StatelessWidget {
       player: p.player,
       builder: (context, isPlaying) {
         return SizedBox(
-            height: 25,
-            width: 25,
-            child: !p.isEpisodeLoaded && p.tIndex == index
-                ? SpinKitFadingCircle(
-                    itemBuilder: (BuildContext context, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: index.isEven ? kSecondaryColor : Colors.white,
-                        ),
-                      );
-                    },
-                    size: 30,
-                  )
-                : p.isEpisodeInProgress(episode!)
-                    ? const KinPlayingAudioWave()
-                    : const KinPausedAudioWave());
+          height: 25,
+          width: 25,
+          child: !p.isEpisodeLoaded && p.tIndex == index
+              ? SpinKitFadingCircle(
+                  itemBuilder: (BuildContext context, int index) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: index.isEven ? kSecondaryColor : Colors.white,
+                      ),
+                    );
+                  },
+                  size: 30,
+                )
+              : p.isEpisodeInProgress(episode!)
+                  ? const KinPlayingAudioWave()
+                  : const KinPausedAudioWave(),
+        );
       },
     );
   }

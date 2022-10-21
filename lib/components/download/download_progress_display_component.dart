@@ -110,11 +110,11 @@ class _DownloadProgressDisplayComponentState
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(
-      color: Colors.white60,
+      color: kSecondaryColor,
       fontSize: 15,
     );
     return AlertDialog(
-      backgroundColor: kPopupMenuBackgroundColor,
+      backgroundColor: Colors.white.withOpacity(0.85),
       insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       title: Column(
         children: [
@@ -174,7 +174,7 @@ class _DownloadProgressDisplayComponentState
                           currentDownloadProgressValue,
                           style: TextStyle(
                             color: currentDownloadProgressValue == "Completed"
-                                ? Colors.green
+                                ? kSecondaryColor
                                 : Colors.grey,
                             fontSize: 20,
                           ),
@@ -190,7 +190,7 @@ class _DownloadProgressDisplayComponentState
                       percent: double.parse(currentDownloadProgressValue) / 100,
                       animateFromLastPercent: true,
                       circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: Colors.green,
+                      progressColor: kSecondaryColor,
                       center: Text(
                         currentDownloadProgressValue + "%",
                         style: textStyle.copyWith(

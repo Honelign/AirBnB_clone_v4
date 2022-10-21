@@ -3,7 +3,6 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:provider/provider.dart';

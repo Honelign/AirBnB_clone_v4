@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart';
 import '../../constants.dart';
 import '../../size_config.dart';
-import '../album/album.dart';
-import '../artist/artist.dart';
-import '../genre/genre.dart';
-import 'favorite/favorite.dart';
-import '../home/components/home_search_screen.dart';
-import '../home/components/songs.dart';
 import '../playlist/playlist.dart';
 import 'Offline/offline.dart';
 import 'Purchased/purchased.dart';
+import 'favorite/favorite.dart';
 
 class MyLibrary extends StatefulWidget {
   const MyLibrary({Key? key}) : super(key: key);
@@ -28,16 +24,29 @@ class _MyLibraryState extends State<MyLibrary> {
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
-          //automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-
-          title: const TabBar(
-            //  indicatorPadding: EdgeInsets.all(0),
-            indicatorWeight: 3.0,
-            labelPadding: EdgeInsets.all(5),
-            indicatorSize: TabBarIndicatorSize.label,
-
-            // padding: EdgeInsets.all(5),
+          toolbarHeight: 60,
+          automaticallyImplyLeading: false,
+          backgroundColor: const Color(0xFF052c54),
+          elevation: 0,
+          title: TabBar(
+            labelColor: kSecondaryColor,
+            unselectedLabelColor: Colors.white,
+            indicator: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            indicatorPadding: const EdgeInsets.only(
+              top: 15,
+              bottom: 19,
+              left: 10,
+              right: 10,
+            ),
+            indicatorWeight: 5.0,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            //padding: EdgeInsets.symmetric(vertical: 20),
+            labelPadding:
+                const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+            //  indicatorSize: TabBarIndicatorSize.label,
             tabs: [
               Tab(
                 text: 'Playlist',
@@ -55,12 +64,22 @@ class _MyLibraryState extends State<MyLibrary> {
             indicatorColor: kSecondaryColor,
           ),
         ),
-        body: TabBarView(children: [
-          const PlaylistsScreen(),
-          const Favorite(),
-          const Offline(),
-          const Purchased(),
-        ]),
+        body: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.blue,
+                Colors.white,
+              ],
+            )),
+            child: const TabBarView(children: [
+              PlaylistsScreen(),
+              Favorite(),
+              Offline(),
+              Purchased(),
+            ])),
       ),
     );
   }

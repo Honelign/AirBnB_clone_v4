@@ -71,8 +71,9 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
       builder: ((context, multiSelectProvider, child) {
         return Scaffold(
           appBar: AppBar(
-            toolbarHeight: 100,
-            backgroundColor: kPrimaryColor,
+            toolbarHeight: 80,
+            backgroundColor: Color(0xFF052c54),
+            elevation: 0,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -169,67 +170,76 @@ class _AddTracksToPlaylistState extends State<AddTracksToPlaylist> {
               color: refreshIndicatorForegroundColor,
               child: multiSelectProvider.isLoading ||
                       playlistProvider.isLoading == true
-                  ? const Center(
-                      child: KinProgressIndicator(),
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: linearGradientDecoration,
+                      child: const Center(
+                        child: KinProgressIndicator(),
+                      ),
                     )
-                  : PagedListView<int, Music>(
-                      pagingController: _pagingController,
-                      builderDelegate: PagedChildBuilderDelegate<Music>(
-                        animateTransitions: true,
-                        transitionDuration: const Duration(milliseconds: 500),
-                        noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: const Center(
-                            child: Text(
-                              "No Tracks",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
+                  : Container(
+                      decoration: linearGradientDecoration,
+                      child: PagedListView<int, Music>(
+                        pagingController: _pagingController,
+                        builderDelegate: PagedChildBuilderDelegate<Music>(
+                          animateTransitions: true,
+                          transitionDuration: const Duration(milliseconds: 500),
+                          noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: const Center(
+                              child: Text(
+                                "No Tracks",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        noMoreItemsIndicatorBuilder: (_) => Container(
-                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                          child: const Center(
-                            child: Text(
-                              "No More Tracks",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                          noMoreItemsIndicatorBuilder: (_) => Container(
+                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                            child: const Center(
+                              child: Text(
+                                "No More Tracks",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        firstPageProgressIndicatorBuilder: (_) =>
-                            const KinProgressIndicator(),
-                        newPageProgressIndicatorBuilder: (_) =>
-                            const KinProgressIndicator(),
-                        itemBuilder: (context, item, index) {
-                          // check if music is selected
-                          List<String> filtered = multiSelectProvider
-                              .selectModeSelectedMusicIds
-                              .where((element) =>
-                                  element.toString() == item.id.toString())
-                              .toList();
+                          firstPageProgressIndicatorBuilder: (_) =>
+                              const KinProgressIndicator(),
+                          newPageProgressIndicatorBuilder: (_) =>
+                              const KinProgressIndicator(),
+                          itemBuilder: (context, item, index) {
+                            // check if music is selected
+                            List<String> filtered = multiSelectProvider
+                                .selectModeSelectedMusicIds
+                                .where((element) =>
+                                    element.toString() == item.id.toString())
+                                .toList();
 
-                          return InkWell(
-                            onTap: () async {
-                              await multiSelectProvider.addMusicToSelectedList(
-                                musicId: item.id.toString(),
-                              );
-                              setState(() {});
-                            },
-                            child: PlaylistSelectCard(
-                              music: item,
-                              musics: musicProvider.albumMusics,
-                              musicIndex: index,
-                              isMusicSelected:
-                                  filtered.isEmpty == true ? false : true,
-                            ),
-                          );
-                        },
+                            return InkWell(
+                              onTap: () async {
+                                await multiSelectProvider
+                                    .addMusicToSelectedList(
+                                  musicId: item.id.toString(),
+                                );
+                                setState(() {});
+                              },
+                              child: PlaylistSelectCard(
+                                music: item,
+                                musics: musicProvider.albumMusics,
+                                musicIndex: index,
+                                isMusicSelected:
+                                    filtered.isEmpty == true ? false : true,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
             ),

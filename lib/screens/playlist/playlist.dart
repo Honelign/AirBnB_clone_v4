@@ -71,7 +71,6 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       body: SafeArea(
         child: checkConnection(status) == false
             ? RefreshIndicator(
@@ -87,14 +86,20 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                 builder: (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
                   // loading
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: KinProgressIndicator(),
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: linearGradientDecoration,
+                      child: const Center(
+                        child: KinProgressIndicator(),
+                      ),
                     );
                   }
 
                   // data loaded
                   else if (snapshot.hasData && !snapshot.hasError) {
                     return Container(
+                      decoration: linearGradientDecoration,
                       padding: const EdgeInsets.fromLTRB(0, 24, 0, 36),
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -112,15 +117,35 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                             noItemsFoundIndicatorBuilder: (context) => SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.5,
-                              child: const Center(
-                                child: Text(
-                                  "No Playlist",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
+                              child: Column(children: const [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 8.0, right: 180),
+                                  child: Text(
+                                    "Your Playlist",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
+                                SizedBox(height: 150),
+                                Text(
+                                  "No Playlist",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "Add your first playlist",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ]),
                             ),
                             noMoreItemsIndicatorBuilder: (_) => Container(
                               padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
@@ -180,7 +205,10 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
               return Consumer<PlayListProvider>(
                 builder: (BuildContext context, playListProvider, _) {
                   return SimpleDialog(
-                    backgroundColor: kPopupMenuBackgroundColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: kLightTextColor,
                     insetPadding: const EdgeInsets.symmetric(horizontal: 20),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 30, horizontal: 30),
@@ -188,24 +216,12 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                     children: playListProvider.isLoading == false
                         ? [
                             // title
-                            Text(
-                              "Create Playlist",
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.75),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            // spacer
-                            const SizedBox(
-                              height: 20,
-                            ),
 
                             // Input
                             TextField(
                               controller: playlistNameController,
                               cursorColor: kGrey,
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.black),
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 0, horizontal: 0),
@@ -241,28 +257,8 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                                 horizontal: getProportionateScreenWidth(20),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Cancel Button
-                                  InkWell(
-                                    onTap: () async {
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 16),
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
                                   // Separator
 
                                   // Create Button
@@ -285,12 +281,16 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                                       }
                                     },
                                     child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.black,
+                                      ),
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 4,
                                         horizontal: 16,
                                       ),
                                       child: const Text(
-                                        "Create",
+                                        "Create Playlist",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,

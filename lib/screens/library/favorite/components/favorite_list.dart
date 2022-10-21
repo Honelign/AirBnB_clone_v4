@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
@@ -14,10 +15,8 @@ import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
+import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../constants.dart';
-import '../../../../size_config.dart';
 
 class FavoriteList extends StatelessWidget {
   const FavoriteList({
@@ -152,9 +151,10 @@ class FavoriteList extends StatelessWidget {
                                   Text(
                                     music.title,
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize:
-                                            getProportionateScreenHeight(18)),
+                                      color: Colors.white,
+                                      fontSize:
+                                          getProportionateScreenHeight(18),
+                                    ),
                                   ),
                                   Text(
                                     music.artist,
@@ -168,6 +168,7 @@ class FavoriteList extends StatelessWidget {
                       ),
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         p.currentMusic == null
                             ? Container()
@@ -199,21 +200,26 @@ class FavoriteList extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
-                                    backgroundColor: kPrimaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    backgroundColor: Colors.white,
                                     title: const Text(
                                       'Are Your Sure',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.black),
                                     ),
                                     actions: [
                                       TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text(
-                                            'No',
-                                            style: TextStyle(
-                                                color: kSecondaryColor),
-                                          )),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text(
+                                          'No',
+                                          style: TextStyle(
+                                            color: kSecondaryColor,
+                                          ),
+                                        ),
+                                      ),
                                       TextButton(
                                         onPressed: () async {
                                           final provider = Provider.of<
@@ -238,10 +244,12 @@ class FavoriteList extends StatelessWidget {
                                   );
                                 });
                           },
-                          child: SvgPicture.asset(
-                            'assets/icons/favorite.svg',
-                            height: getProportionateScreenHeight(30),
-                            color: kSecondaryColor,
+                          child: Center(
+                            child: Icon(
+                              Icons.favorite,
+                              color: Colors.white.withOpacity(0.65),
+                              size: 20,
+                            ),
                           ),
                         ),
                       ],

@@ -79,11 +79,13 @@ class _AlbumGraphPageState extends State<AlbumGraphPage> {
               fromY: 0,
               toY: int.parse(stat.viewCount).toDouble(),
               width: 15,
-              color: int.parse(stat.viewCount) > maxCount * 0.65
-                  ? Colors.green
-                  : int.parse(stat.viewCount) > maxCount * 0.35
-                      ? Colors.yellow
-                      : Colors.red,
+              color: kSecondaryColor,
+
+              // int.parse(stat.viewCount) > maxCount * 0.65
+              //     ? Colors.green
+              //     : int.parse(stat.viewCount) > maxCount * 0.35
+              //         ? Colors.yellow
+              //         : Colors.red,
             ),
           ],
         ),
@@ -108,130 +110,157 @@ class _AlbumGraphPageState extends State<AlbumGraphPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List>(
-        future: getInfoValues(),
-        builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const KinProgressIndicator();
-          } else if (snapshot.hasData && !snapshot.hasError) {
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: kPrimaryColor,
-                title: Text(widget.albumTitle.toString()),
+      future: getInfoValues(),
+      builder: ((context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
+        } else if (snapshot.hasData && !snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color(0xFF052c54),
+              elevation: 0,
+            ),
+            body: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(
+                vertical: getProportionateScreenHeight(40),
+                horizontal: getProportionateScreenWidth(10),
               ),
-              body: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(
-                  vertical: getProportionateScreenHeight(40),
-                  horizontal: getProportionateScreenWidth(10),
-                ),
-                height: MediaQuery.of(context).size.height,
-                color: kPrimaryColor,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // dropdown
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                  "$kinAssetBaseUrl/${widget.albumCover}",
-                                ),
-                                fit: BoxFit.fill,
+              height: MediaQuery.of(context).size.height,
+              decoration: linearGradientDecoration,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // dropdown
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                "$kinAssetBaseUrl/${widget.albumCover}",
                               ),
+                              fit: BoxFit.fill,
                             ),
-                            width: getProportionateScreenWidth(120),
-                            height: getProportionateScreenHeight(120),
                           ),
-                        ],
+                          width: getProportionateScreenWidth(120),
+                          height: getProportionateScreenHeight(120),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
+                    ),
+
+                    SizedBox(
+                      height: 4,
+                    ),
+
+                    Text(
+                      widget.albumTitle.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
                       ),
-                      SizedBox(
-                        height: getProportionateScreenHeight(20),
-                      ),
+                    ),
 
-                      // Name
-                      // Text(
-                      //   widget.albumTitle.toString(),
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontSize: 18,
-                      //   ),
-                      // ),
+                    // Name
+                    // Text(
+                    //   widget.albumTitle.toString(),
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 18,
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(50),
+                    ),
 
-                      snapshot.data!.isEmpty
-                          ? Center(
-                              child: Column(
-                                children: [
-                                  const ArtistInfoCard(
-                                    infoLabel: "Total Views",
-                                    infoValue: "0",
-                                    cardType: "Views",
-                                  ),
-
-                                  // spacer
-                                  SizedBox(
-                                    height: getProportionateScreenHeight(24),
-                                  ),
-                                  const ArtistInfoCard(
-                                    infoLabel: "Total Revenue",
-                                    infoValue: "0.0 ETB",
-                                    cardType: "Revenue",
-                                  ),
-
-                                  // spacer
-                                  SizedBox(
-                                    width: getProportionateScreenWidth(80),
-                                  ),
-                                  // Spacer
-                                  const SizedBox(
-                                    height: 160,
-                                  ),
-
-                                  // No Views
-                                  const Text(
-                                    "No Views yet",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Column(
+                    snapshot.data!.isEmpty
+                        ? Center(
+                            child: Column(
                               children: [
-                                ArtistInfoCard(
+                                const ArtistInfoCard(
                                   infoLabel: "Total Views",
-                                  infoValue:
-                                      trackAnalytics[0].total_count.toString(),
+                                  infoValue: "0",
                                   cardType: "Views",
                                 ),
+
                                 // spacer
                                 SizedBox(
                                   height: getProportionateScreenHeight(24),
                                 ),
-                                ArtistInfoCard(
+                                const ArtistInfoCard(
                                   infoLabel: "Total Revenue",
-                                  infoValue: trackAnalytics[0]
-                                      .total_revenue
-                                      .toString(),
+                                  infoValue: "0.0 ETB",
                                   cardType: "Revenue",
                                 ),
 
+                                // spacer
                                 SizedBox(
                                   width: getProportionateScreenWidth(80),
                                 ),
-                                // drop down
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
+                                // Spacer
+                                const SizedBox(
+                                  height: 160,
+                                ),
+
+                                // No Views
+                                const Text(
+                                  "No Views yet",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              ArtistInfoCard(
+                                infoLabel: "Total Views",
+                                infoValue:
+                                    trackAnalytics[0].total_count.toString(),
+                                cardType: "Views",
+                              ),
+                              // spacer
+                              SizedBox(
+                                height: getProportionateScreenHeight(24),
+                              ),
+                              ArtistInfoCard(
+                                infoLabel: "Total Revenue",
+                                infoValue:
+                                    trackAnalytics[0].total_revenue.toString(),
+                                cardType: "Revenue",
+                              ),
+
+                              SizedBox(
+                                width: getProportionateScreenWidth(80),
+                              ),
+                              // drop down
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Theme(
+                                      data: Theme.of(context).copyWith(
+                                        canvasColor: kSecondaryColor,
+                                      ),
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.4,
@@ -261,60 +290,60 @@ class _AlbumGraphPageState extends State<AlbumGraphPage> {
                                           },
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: getProportionateScreenWidth(80),
-                                ),
-                                // Graph
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.5,
-                                  color: kPrimaryColor,
-                                  child: barData.isEmpty == true
-                                      ? const Center(
-                                          child: Text(
-                                            "No Views Yet",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            ),
+                              ),
+                              SizedBox(
+                                width: getProportionateScreenWidth(80),
+                              ),
+                              // Graph
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                child: barData.isEmpty == true
+                                    ? const Center(
+                                        child: Text(
+                                          "No Views Yet",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
                                           ),
-                                        )
-                                      : currentAnalyticsType == "Daily"
-                                          ? DailyGraphWidget(
-                                              barData: barData,
-                                              bottomTileValues: dateValues,
-                                              maxY: maxCount.toDouble(),
-                                            )
-                                          : currentAnalyticsType == "Weekly"
-                                              ? WeeklyGraphWidget(
-                                                  barData: barData,
-                                                  maxY:
-                                                      (maxCount.toDouble() + 5),
-                                                )
-                                              : MonthlyGraphWidget(
-                                                  barData: barData,
-                                                  bottomTileValues: dateValues,
-                                                  maxY: maxCount.toDouble(),
-                                                ),
-                                ),
-                              ],
-                            ),
-                    ],
-                  ),
+                                        ),
+                                      )
+                                    : currentAnalyticsType == "Daily"
+                                        ? DailyGraphWidget(
+                                            barData: barData,
+                                            bottomTileValues: dateValues,
+                                            maxY: maxCount.toDouble(),
+                                          )
+                                        : currentAnalyticsType == "Weekly"
+                                            ? WeeklyGraphWidget(
+                                                barData: barData,
+                                                maxY: (maxCount.toDouble() + 5),
+                                              )
+                                            : MonthlyGraphWidget(
+                                                barData: barData,
+                                                bottomTileValues: dateValues,
+                                                maxY: maxCount.toDouble(),
+                                              ),
+                              ),
+                            ],
+                          ),
+                  ],
                 ),
               ),
-            );
-          } else {
-            return Scaffold(
-              body: Text(
-                snapshot.toString(),
-              ),
-            );
-          }
-        }));
+            ),
+          );
+        } else {
+          return Scaffold(
+            body: Text(
+              snapshot.toString(),
+            ),
+          );
+        }
+      }),
+    );
   }
 }

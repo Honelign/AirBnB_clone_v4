@@ -99,11 +99,12 @@ class SettingsBody extends StatelessWidget {
                                     listen: false);
 
                                 return AlertDialog(
-                                  backgroundColor: kPopupMenuBackgroundColor,
-                                  title: Text(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.95),
+                                  title: const Text(
                                     'Are you sure?',
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.7),
+                                      color: kSecondaryColor,
                                     ),
                                   ),
                                   actions: [
@@ -210,14 +211,24 @@ class SettingsBody extends StatelessWidget {
                             vertical: 15,
                             horizontal: 15,
                           ),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            // color: Colors.grey.withOpacity(0.55),
-                            image: DecorationImage(
-                              image: AssetImage(
-                                "assets/images/logo.png",
+                            color: kSecondaryColor.withOpacity(0.65),
+                            // image: DecorationImage(
+                            //   image: AssetImage(
+                            //     "assets/images/logo.png",
+                            //   ),
+                            //   fit: BoxFit.fitWidth,
+                            // ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              formatDisplayName(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 64,
+                                letterSpacing: 4,
                               ),
-                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -229,7 +240,8 @@ class SettingsBody extends StatelessWidget {
 
                   // User Name
                   Text(
-                    FirebaseAuth.instance.currentUser?.displayName ?? "",
+                    FirebaseAuth.instance.currentUser?.displayName ??
+                        "Kin Admin",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 25,
@@ -368,22 +380,28 @@ String formatDisplayName() {
 
     return displayValue;
   } catch (e) {
-    return "";
+    return "KA";
   }
 }
 
 // get phone or email to display
 String getEmailOrPhone() {
-  String displayValue = "";
-  var currentUser = FirebaseAuth.instance.currentUser;
+  try {
+    String displayValue = "kinadmin@admin.com";
+    var currentUser = FirebaseAuth.instance.currentUser;
 
-  if (currentUser != null) {
-    if (currentUser.email != "") {
-      displayValue = currentUser.email ?? "";
-    } else if (currentUser.phoneNumber != "") {
-      displayValue = currentUser.phoneNumber ?? "";
+    if (currentUser != null) {
+      if (currentUser.email != "") {
+        displayValue = currentUser.email ?? "";
+      } else if (currentUser.phoneNumber != "") {
+        displayValue = currentUser.phoneNumber ?? "";
+      } else {
+        displayValue = "kinadmin@admin.com";
+      }
     }
-  }
 
-  return displayValue;
+    return displayValue;
+  } catch (e) {
+    return "kinadmin@admin.com";
+  }
 }

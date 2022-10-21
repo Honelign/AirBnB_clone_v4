@@ -115,142 +115,83 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
               }
             },
             child: CachedNetworkImage(
-              imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
-              imageBuilder: (context,image) {
-                return Container(
-                  
-                  padding: const EdgeInsets.only(left: 10),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      opacity: 0.4,
-                      fit: BoxFit.cover,
-                      image:image ),
-                    //color:  Colors.red.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                       Padding(
-                         padding: const EdgeInsets.symmetric(vertical: 2),
-                         child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                   
-                    height: 100,
-                    imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
-                    fit: BoxFit.cover,
-                    width: getProportionateScreenWidth(widget.width) / 2,
-                  ),
-                ),
-                       ),
-                       SizedBox(width: 10,),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            
-                            width: getProportionateScreenWidth(90),
-                            child: Text(
-                              widget.music.title,
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                  color: Colors.white, fontSize: 12),
+                imageUrl: '$kinAssetBaseUrl/${widget.music.cover}',
+                imageBuilder: (context, image) {
+                  return Container(
+                    padding: const EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            opacity: 0.4, fit: BoxFit.cover, image: image),
+                        //color:  Colors.red.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              height: 100,
+                              imageUrl:
+                                  '$kinAssetBaseUrl/${widget.music.cover}',
+                              fit: BoxFit.cover,
+                              width:
+                                  getProportionateScreenWidth(widget.width) / 2,
                             ),
                           ),
-                          Column(
-                            children: [
-                              PopupMenuButton(
-                                initialValue: 0,
-                                child: const Icon(
-                                  Icons.more_vert,
-                                  color: Colors.transparent,
-                                ),
-                                color: kPopupMenuBackgroundColor,
-                                onSelected: (value) {
-                                  if (value == 2) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                                kPopupMenuBackgroundColor,
-                                            title: const Text(
-                                              'Music Detail',
-                                              style: TextStyle(
-                                                  color: Colors.white60,
-                                                  fontSize: 15),
-                                            ),
-                                            content: SizedBox(
-                                              height: 100,
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      widget.music.description
-                                                              .isNotEmpty
-                                                          ? widget
-                                                              .music.description
-                                                          : '',
-                                                      style: const TextStyle(
-                                                          color:
-                                                              kLightSecondaryColor),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    Text(
-                                                      'By ${widget.music.artist}',
-                                                      style: const TextStyle(
-                                                          color:
-                                                              kLightSecondaryColor),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  } else {}
-                                },
-                                itemBuilder: (context) {
-                                  return kMusicPopupMenuItem;
-                                },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: getProportionateScreenWidth(90),
+                              child: Text(
+                                widget.music.title,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    fontSize: 12),
                               ),
-                              p.currentMusic == null
-                                  ? Container()
-                                  : p.currentMusic!.title ==
-                                          widget.musics[widget.musicIndex].title
-                                      ? TrackMusicPlayButton(
-                                          music: widget.music,
-                                          index: widget.musicIndex,
-                                          album: Album(
-                                            id: -2,
-                                            title:
-                                                'Single Music ${widget.musicIndex}',
-                                            artist: 'kin',
-                                            description: '',
-                                            cover: 'assets/images/kin.png',
-                                            count: widget.musics.length,
-                                            artist_id: 6,
-                                            isPurchasedByUser: false,
-                                            price: 60,
-                                          ),
-                                        )
-                                      : Container()
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }
-            ),
+                            ),
+                            Column(
+                              children: [
+                                p.currentMusic == null
+                                    ? Container()
+                                    : p.currentMusic!.title ==
+                                            widget
+                                                .musics[widget.musicIndex].title
+                                        ? TrackMusicPlayButton(
+                                            music: widget.music,
+                                            index: widget.musicIndex,
+                                            album: Album(
+                                              id: -2,
+                                              title:
+                                                  'Single Music ${widget.musicIndex}',
+                                              artist: 'kin',
+                                              description: '',
+                                              cover: 'assets/images/kin.png',
+                                              count: widget.musics.length,
+                                              artist_id: 6,
+                                              isPurchasedByUser: false,
+                                              price: 60,
+                                            ),
+                                          )
+                                        : Container()
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
           ),
         );
       },

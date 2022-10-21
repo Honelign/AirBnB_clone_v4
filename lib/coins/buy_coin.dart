@@ -28,7 +28,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Buy Coins"),
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Color(0xFF052c54),
         elevation: 0,
       ),
       backgroundColor: kPrimaryColor,
@@ -36,7 +36,12 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
         future: provider.getCoinBalance(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const KinProgressIndicator();
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: linearGradientDecoration,
+              child: const KinProgressIndicator(),
+            );
           } else {
             return RefreshIndicator(
               onRefresh: () async {

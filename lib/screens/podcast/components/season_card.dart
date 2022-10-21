@@ -1,18 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_season_page.dart';
 
 class SeasonCard extends StatelessWidget {
-  String cover;
-  String title;
-  String id;
-  int numberOfEpisodes;
+  final String cover;
+  final String title;
+  final String id;
+  final int numberOfEpisodes;
 
-  SeasonCard({
+  const SeasonCard({
     Key? key,
     required this.cover,
     required this.title,
@@ -28,6 +25,7 @@ class SeasonCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => PodcastSeasonPage(
               id: id,
+              title: title,
             ),
           ),
         );
@@ -43,15 +41,21 @@ class SeasonCard extends StatelessWidget {
             Row(
               children: [
                 // Image
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(cover),
-                    ),
-                    shape: BoxShape.circle,
-                  ),
+
+                CachedNetworkImage(
+                  imageUrl: "$kinAssetBaseUrl-dev/" + cover,
+                  imageBuilder: (context, img) {
+                    return Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: img,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(
@@ -65,7 +69,7 @@ class SeasonCard extends StatelessWidget {
                   children: [
                     // title
                     Text(
-                      "Season " + title,
+                      title,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 17.0,
@@ -90,11 +94,12 @@ class SeasonCard extends StatelessWidget {
               ],
             ),
             IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_vert_rounded,
-                  color: kGrey,
-                ))
+              onPressed: () {},
+              icon: const Icon(
+                Icons.more_vert_rounded,
+                color: kGrey,
+              ),
+            )
           ],
         ),
       ),

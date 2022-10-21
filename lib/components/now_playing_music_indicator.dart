@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
@@ -18,7 +19,7 @@ class NowPlayingMusicIndicator extends StatefulWidget {
   final String trackPrice;
   final bool isPurchased;
   const NowPlayingMusicIndicator(
-      {Key? key, required this.trackPrice, this.isPurchased = false})
+      {Key? key, required this.trackPrice, required this.isPurchased})
       : super(key: key);
 
   @override
@@ -27,20 +28,19 @@ class NowPlayingMusicIndicator extends StatefulWidget {
 }
 
 class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
-  double minPlayerHeight = 70;
-
   @override
   void initState() {
     var favoriteProvider =
         Provider.of<CachedFavoriteProvider>(context, listen: false);
     favoriteProvider.getFavids();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var p = Provider.of<MusicPlayer>(context, listen: false);
-    bool showBuyButton = !widget.isPurchased;
+    bool showBuyButton = !p.currentMusic!.isPurchasedByUser;
 
     void onTrackPurchaseSuccess() async {
       setState(() {
@@ -69,33 +69,33 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
             children: [
               _buildBlurBackground(p.getMusicCover()),
               _buildDarkContainer(),
-              Container(
-                height: minPlayerHeight,
-                color: Colors.transparent,
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                  getProportionateScreenWidth(15),
-                  getProportionateScreenHeight(8),
-                  getProportionateScreenWidth(15),
-                  getProportionateScreenHeight(8),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    p.setBuffering(p.tIndex);
-                    p.isMusicInProgress(p.currentMusic!)
-                        ? Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NowPlayingMusic(p.currentMusic),
-                            ),
-                          )
-                        : Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NowPlayingMusic(p.currentMusic),
-                            ),
-                          );
-                  },
+              GestureDetector(
+                onTap: () {
+                  p.setBuffering(p.tIndex);
+                  p.isMusicInProgress(p.currentMusic!)
+                      ? Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NowPlayingMusic(p.currentMusic),
+                          ),
+                        )
+                      : Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NowPlayingMusic(p.currentMusic),
+                          ),
+                        );
+                },
+                child: Container(
+                  height: minPlayerHeight,
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  padding: EdgeInsets.fromLTRB(
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                    getProportionateScreenWidth(15),
+                    getProportionateScreenHeight(8),
+                  ),
                   child: Row(
                     children: [
                       // small image
@@ -112,7 +112,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                         p.currentMusic!.artist,
                       ),
 
-                      widget.isPurchased == false
+                      showBuyButton == true
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(

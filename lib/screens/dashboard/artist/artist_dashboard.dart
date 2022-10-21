@@ -75,11 +75,13 @@ class _ArtistDashboardState extends State<ArtistDashboard> {
               fromY: 0,
               toY: int.parse(stat.viewCount).toDouble(),
               width: 15,
-              color: int.parse(stat.viewCount) > maxCount * 0.65
-                  ? Colors.green
-                  : int.parse(stat.viewCount) > maxCount * 0.35
-                      ? Colors.yellow
-                      : Colors.red,
+              color: kSecondaryColor,
+
+              // int.parse(stat.viewCount) > maxCount * 0.65
+              //     ? Colors.green
+              //     : int.parse(stat.viewCount) > maxCount * 0.35
+              //         ? Colors.yellow
+              //         : Colors.red,
             ),
           ],
         ),

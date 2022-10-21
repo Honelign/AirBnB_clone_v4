@@ -32,7 +32,7 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 0;
+  int _currentIndex = 2;
 
   final _inactiveColor = kGrey;
   List<Widget> pages = [
@@ -77,11 +77,11 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  backgroundColor: kPopupMenuBackgroundColor,
-                  title: Text(
+                  backgroundColor: Colors.white.withOpacity(0.85),
+                  title: const Text(
                     'Do you want to exit from Kin?',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: kSecondaryColor,
                     ),
                   ),
                   actions: [
@@ -118,13 +118,19 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             },
             child: Scaffold(
               body: getBody(),
+              backgroundColor: Color(0xFF052C54),
               bottomNavigationBar: _buildBottomBar(),
             ),
           );
         }
         // email not verified
         else {
-          return const KinProgressIndicator();
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: linearGradientDecoration,
+            child: const KinProgressIndicator(),
+          );
         }
       },
     );
@@ -170,7 +176,11 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             podcastProvider.isEpisodeLoaded
                         ? Visibility(
                             visible: podcastProvider.miniPlayerVisibility,
-                            child: const NowPlayingPodcastIndicator(),
+                            child: NowPlayingPodcastIndicator(
+                              episodePrice: "30",
+                              isPurchased: podcastProvider
+                                  .currentEpisode!.isPurchasedByUser,
+                            ),
                           )
                         : Container();
               },
@@ -182,10 +192,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           ],
         ),
         CustomAnimatedBottomBar(
-          containerHeight: 60,
-          backgroundColor: kPrimaryColor,
+          containerHeight: 50,
+          backgroundColor: Colors.transparent,
           selectedIndex: _currentIndex,
-          showElevation: true,
+          showElevation: false,
           itemCornerRadius: 24,
           //  curve: Curves.easeIn,
           onItemSelected: (index) {

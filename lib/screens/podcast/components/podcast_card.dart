@@ -1,19 +1,18 @@
-import 'dart:ui';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kin_music_player_app/screens/podcast/component/podcast_detail.dart';
+import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_detail_page.dart';
 
 class PodcastCard extends StatelessWidget {
-  int id;
-  String url;
-  String title;
-  String host;
-  String hostId;
-  int numberOfSeasons;
-  int numberOfEpisodes;
-  String description;
-  PodcastCard({
+  final int id;
+  final String url;
+  final String title;
+  final String host;
+  final String hostId;
+  final int numberOfSeasons;
+  final int numberOfEpisodes;
+  final String description;
+  const PodcastCard({
     Key? key,
     required this.id,
     required this.url,
@@ -34,7 +33,7 @@ class PodcastCard extends StatelessWidget {
             builder: (context) => PodcastDetailPage(
               podcastId: id.toString(),
               podcastName: title,
-              cover: url,
+              cover: "$kinAssetBaseUrl-dev/" + url,
               host: host,
               hostId: hostId,
               numberOfEpisodes: numberOfEpisodes,
@@ -48,20 +47,26 @@ class PodcastCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image
-          Container(
-              margin: const EdgeInsets.only(right: 28),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  image: AssetImage(url),
+          CachedNetworkImage(
+            imageUrl: "$kinAssetBaseUrl-dev/" + url,
+            imageBuilder: (context, img) {
+              return Container(
+                margin: const EdgeInsets.only(right: 28),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    image: img,
+                  ),
                 ),
-              ),
-              width: 107,
-              height: 105),
+                width: 107,
+                height: 105,
+              );
+            },
+          ),
 
           //
           Container(
-            constraints: BoxConstraints(maxWidth: 100),
+            constraints: const BoxConstraints(maxWidth: 100),
             child: Text(
               title,
               style: const TextStyle(
@@ -74,7 +79,7 @@ class PodcastCard extends StatelessWidget {
           ),
 
           Container(
-            constraints: BoxConstraints(maxWidth: 100),
+            constraints: const BoxConstraints(maxWidth: 100),
             child: Text(
               host,
               style: const TextStyle(

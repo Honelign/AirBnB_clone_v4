@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/download/multiple_download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
@@ -54,10 +56,14 @@ class _AlbumBodyState extends State<AlbumBody> {
 
   @override
   Widget build(BuildContext context) {
+    helper.makeStatusBarTransparent();
+
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
+        top: false,
+        bottom: false,
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -73,6 +79,7 @@ class _AlbumBodyState extends State<AlbumBody> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
               child: Container(
+                padding: EdgeInsets.only(top: 32),
                 color: kPrimaryColor.withOpacity(0.5),
                 child: SingleChildScrollView(
                   physics: const NeverScrollableScrollPhysics(),
@@ -188,7 +195,7 @@ class _AlbumBodyState extends State<AlbumBody> {
     return CachedNetworkImage(
       imageUrl: image,
       imageBuilder: (context, imageProvider) => Container(
-        height: MediaQuery.of(context).size.width * 0.45,
+        height: MediaQuery.of(context).size.width * 0.4,
         width: MediaQuery.of(context).size.width * 0.4,
         decoration: BoxDecoration(
           image: DecorationImage(

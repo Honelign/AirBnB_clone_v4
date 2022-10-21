@@ -28,6 +28,7 @@ class _FavoriteState extends State<Favorite> {
 
   @override
   Widget build(BuildContext context) {
+    var centerSize = MediaQuery.of(context).size.height * 0.3;
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return checkConnection(status) == false
         ? RefreshIndicator(
@@ -49,46 +50,69 @@ class _FavoriteState extends State<Favorite> {
                   color: refreshIndicatorForegroundColor,
                   backgroundColor: refreshIndicatorBackgroundColor,
                   child: SingleChildScrollView(
-                    child: SizedBox(
+                    child: Container(
+                      decoration: linearGradientDecoration,
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
-                      child: provider.isLoading == true
-                          ? const Center(
-                              child: KinProgressIndicator(),
-                            )
-                          : provider.favoriteMusics == null ||
-                                  provider.favoriteMusics.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    "No Favorites yet",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                      child: Column(
+                        children: [
+                          provider.isLoading == true
+                              ? Padding(
+                                  padding: EdgeInsets.only(top: centerSize),
+                                  child: KinProgressIndicator(),
                                 )
-                              : Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 12),
-                                  child: ListView.builder(
-                                    itemCount:
-                                        provider.favoriteMusics.isNotEmpty
-                                            ? provider.favoriteMusics.length
-                                            : 0,
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return FavoriteList(
-                                        id: provider
-                                            .favoriteMusics[index].music.id
-                                            .toString(),
-                                        music: provider
-                                            .favoriteMusics[index].music,
-                                        musicIndex: index,
-                                        favoriteMusics: provider.favoriteMusics,
-                                      );
-                                    },
-                                  ),
-                                ),
+                              : provider.favoriteMusics == null ||
+                                      provider.favoriteMusics.isEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.only(top: centerSize),
+                                      child: Column(
+                                        children: const [
+                                          Text(
+                                            "No Favorites yet",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "Add your musics to access them here",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
+                                      child: ListView.builder(
+                                        itemCount:
+                                            provider.favoriteMusics.isNotEmpty
+                                                ? provider.favoriteMusics.length
+                                                : 0,
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return FavoriteList(
+                                            id: provider
+                                                .favoriteMusics[index].music.id
+                                                .toString(),
+                                            music: provider
+                                                .favoriteMusics[index].music,
+                                            musicIndex: index,
+                                            favoriteMusics:
+                                                provider.favoriteMusics,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

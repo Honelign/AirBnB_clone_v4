@@ -79,11 +79,12 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
               fromY: 0,
               toY: int.parse(stat.viewCount).toDouble(),
               width: 15,
-              color: int.parse(stat.viewCount) > maxCount * 0.65
-                  ? Colors.green
-                  : int.parse(stat.viewCount) > maxCount * 0.35
-                      ? Colors.yellow
-                      : Colors.red,
+              color: kSecondaryColor,
+              // int.parse(stat.viewCount) > maxCount * 0.65
+              //     ? Colors.green
+              //     : int.parse(stat.viewCount) > maxCount * 0.35
+              //         ? Colors.yellow
+              //         : Colors.red,
             ),
           ],
         ),
@@ -111,12 +112,17 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
         future: getInfoValues(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const KinProgressIndicator();
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: linearGradientDecoration,
+              child: const KinProgressIndicator(),
+            );
           } else if (snapshot.hasData && !snapshot.hasError) {
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: kPrimaryColor,
-                title: Text(widget.artistName.toString()),
+                backgroundColor: const Color(0xFF052c54),
+                elevation: 0,
               ),
               body: Container(
                 padding: EdgeInsets.symmetric(
@@ -124,7 +130,7 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
                   horizontal: getProportionateScreenWidth(10),
                 ),
                 height: MediaQuery.of(context).size.height,
-                color: kPrimaryColor,
+                decoration: linearGradientDecoration,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,6 +157,19 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
                           // ),
                           // drop down
                         ],
+                      ),
+
+                      SizedBox(
+                        height: 4,
+                      ),
+
+                      Text(
+                        widget.artistName.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
 
                       SizedBox(
@@ -218,35 +237,42 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        child: DropdownButton(
-                                          value: currentAnalyticsType,
-                                          isExpanded: true,
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            color: kSecondaryColor,
-                                          ),
-                                          // Array list of items
-                                          items: possibleAnalyticTypes
-                                              .map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Text(
-                                                items,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                          canvasColor: kSecondaryColor,
+                                        ),
+                                        child: SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.4,
+                                          child: DropdownButton(
+                                            value: currentAnalyticsType,
+                                            isExpanded: true,
+                                            icon: const Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: kSecondaryColor,
+                                            ),
+                                            // Array list of items
+                                            items: possibleAnalyticTypes
+                                                .map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(
+                                                  items,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              currentAnalyticsType = newValue!;
-                                            });
-                                          },
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                currentAnalyticsType =
+                                                    newValue!;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -259,7 +285,7 @@ class _ArtistGraphPageState extends State<ArtistGraphPage> {
                                   width: MediaQuery.of(context).size.width,
                                   height:
                                       MediaQuery.of(context).size.height * 0.5,
-                                  color: kPrimaryColor,
+
                                   // child: InfoGraph(analyticsType: currentAnalyticsType),
                                   child: barData.isEmpty == true
                                       ? const Center(

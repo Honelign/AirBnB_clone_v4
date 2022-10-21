@@ -23,9 +23,11 @@ class _RadioScreenNewState extends State<RadioScreenNew> {
         Provider.of<RadioProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(top: 36),
           decoration: linearGradientDecoration,
           child: RefreshIndicator(
             onRefresh: () async {
@@ -187,7 +189,7 @@ Widget _buildAppStations(
       SizedBox(
         height: (MediaQuery.of(context).size.height * 0.45),
         child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
           itemCount: radioStations.length,
           itemBuilder: (context, index) {

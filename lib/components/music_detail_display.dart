@@ -9,11 +9,11 @@ class MusicDetailDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: kPopupMenuBackgroundColor,
+      backgroundColor: Colors.white.withOpacity(0.85),
       title: const Text(
         'Music Detail',
         style: TextStyle(
-          color: Colors.white60,
+          color: kSecondaryColor,
           fontSize: 15,
         ),
       ),
@@ -25,12 +25,12 @@ class MusicDetailDisplay extends StatelessWidget {
             children: [
               Text(
                 music.description.isNotEmpty ? music.description : '',
-                style: const TextStyle(color: kLightSecondaryColor),
+                style: const TextStyle(color: kSecondaryColor),
                 textAlign: TextAlign.center,
               ),
               Text(
                 'By ${music.artist}',
-                style: const TextStyle(color: kLightSecondaryColor),
+                style: const TextStyle(color: kSecondaryColor),
               )
             ],
           ),
