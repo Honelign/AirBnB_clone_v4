@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
+import 'package:kin_music_player_app/firebase_options.dart';
+import 'package:kin_music_player_app/routes.dart';
 import 'package:kin_music_player_app/screens/login_signup/login_signup_body.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/connectivity_service.dart';
@@ -19,21 +18,21 @@ import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
+import 'package:kin_music_player_app/services/provider/genre_provider.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/multi_select_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
+import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/services/provider/playlist_provider.dart';
-import 'package:kin_music_player_app/services/provider/podcast_provider_old.dart';
+import 'package:kin_music_player_app/services/provider/podcast_player.dart';
+import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
-import './services/provider/payment_provider.dart';
-import 'firebase_options.dart';
-import 'routes.dart';
-import 'services/provider/genre_provider.dart';
-import 'services/provider/podcast_player.dart';
-import 'theme.dart';
+import 'package:kin_music_player_app/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +65,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => FavoriteMusicProvider()),
         ChangeNotifierProvider(create: (_) => PlayListProvider()),
         ChangeNotifierProvider(create: (_) => GenreProvider()),
-        ChangeNotifierProvider(create: (_) => PodCastProvider()),
         ChangeNotifierProvider(create: (_) => RadioProvider()),
         ChangeNotifierProvider(create: (_) => RecentlyPlayedProvider()),
         ChangeNotifierProvider(create: (_) => CachedFavoriteProvider()),

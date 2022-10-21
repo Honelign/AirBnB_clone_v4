@@ -5,13 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08ec674c-38d2-4b9f-a4d8-21d55a91438a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kin_music_player_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kin_music_player_app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/music_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/music_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/now_playing_podcast_indicator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/now_playing_podcast_indicator.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/track_play_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/track_play_button.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_music.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_podcast.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/now_playing/now_playing_podcast.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/podcast/components/episode_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/podcast/components/episode_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/podcast/components/podcast_season_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/podcast/components/podcast_season_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/podcast/podcast.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/podcast/podcast.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/radio/components/radio_list_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/radio/components/radio_list_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/network/api/podcast_service_old.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/services/provider/music_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/music_player.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/podcast_player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/podcast_player.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/podcast_provider_old.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/provider/radio_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/provider/radio_provider.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

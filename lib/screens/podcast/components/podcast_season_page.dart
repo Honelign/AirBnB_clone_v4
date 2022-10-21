@@ -3,6 +3,7 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/episode_card.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class PodcastSeasonPage extends StatelessWidget {
         decoration: linearGradientDecoration,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: FutureBuilder(
+        child: FutureBuilder<List<PodcastEpisode>>(
           future: podcastProvider.getPodcastEpisodes(
             pageSize: 1,
             seasonId: int.parse(id),
@@ -46,10 +47,9 @@ class PodcastSeasonPage extends StatelessWidget {
                 itemCount: podcastProvider.podcastEpisodes.length,
                 itemBuilder: (context, index) {
                   return EpisodeCard(
-                    cover: podcastProvider.podcastEpisodes[index].cover,
-                    title: podcastProvider.podcastEpisodes[index].episodeTitle
-                        .toString(),
-                    id: podcastProvider.podcastEpisodes[index].id.toString(),
+                    podcastEpisode: snapshot.data![index],
+                    index: index,
+                    podcasts: snapshot.data!,
                   );
                 },
               );

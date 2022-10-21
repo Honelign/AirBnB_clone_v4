@@ -11,6 +11,8 @@ class PodcastEpisode {
   final String hostName;
   final String audio;
   final String cover;
+  final double priceETB;
+  final bool isPurchasedByUser;
 
   PodcastEpisode({
     required this.id,
@@ -20,6 +22,8 @@ class PodcastEpisode {
     required this.categoryId,
     required this.audio,
     required this.cover,
+    required this.priceETB,
+    required this.isPurchasedByUser,
   });
 
   factory PodcastEpisode.fromJson(Map<String, dynamic> json) {

@@ -1,10 +1,9 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/radio.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
-
-import '../network/api_service.dart';
 
 class RadioProvider extends ChangeNotifier {
   AssetsAudioPlayer player = AssetsAudioPlayer();

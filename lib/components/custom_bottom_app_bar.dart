@@ -176,7 +176,11 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                             podcastProvider.isEpisodeLoaded
                         ? Visibility(
                             visible: podcastProvider.miniPlayerVisibility,
-                            child: const NowPlayingPodcastIndicator(),
+                            child: NowPlayingPodcastIndicator(
+                              episodePrice: "30",
+                              isPurchased: podcastProvider
+                                  .currentEpisode!.isPurchasedByUser,
+                            ),
                           )
                         : Container();
               },

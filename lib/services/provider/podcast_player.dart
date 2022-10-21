@@ -1,18 +1,31 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
+import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_old/podcast.dart';
-import 'package:kin_music_player_app/services/network/model/podcast_old/podcastEpisode.dart';
-
-import 'package:kin_music_player_app/services/provider/music_player.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
+import 'package:kin_music_player_app/services/network/model/podcast/podcast_season.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 
 class PodcastPlayer extends ChangeNotifier with BaseMixins {
-  AssetsAudioPlayer player = AssetsAudioPlayer();
+  AssetsAudioPlayer player = AssetsAudioPlayer.withId("0");
 
+  ErrorLoggingApiService errorLoggingApiService = ErrorLoggingApiService();
+  String fileName = "podcast_player.dart";
+  String className = "PodcastPlayer";
+
+  final List<PodcastEpisode> _popularEpisodesList = [];
+  final List<PodcastEpisode> _recentEpisodesList = [];
+
+  List<PodcastEpisode> get getPopularEpisodesList => _popularEpisodesList;
+
+  List<PodcastEpisode> get getRecentPodcastsList => _recentEpisodesList;
+
+  bool _miniPlayerVisibility = false;
   bool _isEpisodeStopped = true;
+  bool isPlayingLocal = false;
+  bool isProcessingPlay = false;
 
   bool get isEpisodeStopped => _isEpisodeStopped;
 
@@ -21,7 +34,37 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     notifyListeners();
   }
 
-  PodcastPlayer() {
+  void listenPodcastStreaming() {
+    player.playlistAudioFinished.listen((Playing playing) {
+      if (!_isEpisodeStopped) {
+        next(action: false);
+      }
+    });
+  }
+
+  bool get miniPlayerVisibility => _miniPlayerVisibility;
+
+  void setMiniPlayerVisibility(bool visibility) {
+    _miniPlayerVisibility = visibility;
+    print("podcast : setting visiblity");
+    notifyListeners();
+  }
+
+  void setPopularEpisodesList(List<PodcastEpisode> episodes) {
+    for (PodcastEpisode episode in episodes) {
+      _popularEpisodesList.add(episode);
+    }
+    notifyListeners();
+  }
+
+  void setRecentEpisodesList(List<PodcastEpisode> episodes) {
+    for (PodcastEpisode episode in episodes) {
+      _recentEpisodesList.add(episode);
+    }
+    notifyListeners();
+  }
+
+  MusicPlayer() {
     player.playlistAudioFinished.listen((Playing playing) {
       if (!_isEpisodeStopped) {
         next(action: false);
@@ -33,7 +76,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     });
   }
 
-  void listenPodcastStreaming() {
+  void listenMusicStreaming() {
     player.playlistAudioFinished.listen((Playing playing) {
       if (!_isEpisodeStopped) {
         next(action: false);
@@ -41,51 +84,51 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     });
   }
 
-  void setPlayer(AssetsAudioPlayer podcastPlayer, MusicPlayer musicProvider,
+  void setPlayer(AssetsAudioPlayer musicPlayer, musicPlayerr,
       RadioProvider radioProvider) {
-    player = podcastPlayer;
+    player = musicPlayer;
 
     setMiniPlayerVisibility(true);
-    musicProvider.setMiniPlayerVisibility(false);
+    musicPlayerr.setMiniPlayerVisibility(false);
     radioProvider.setMiniPlayerVisibility(false);
   }
 
-  bool _miniPlayerVisibility = false;
+  List<PodcastEpisode> _currentSeason = [];
 
-  bool get miniPlayerVisibility => _miniPlayerVisibility;
+  List<PodcastEpisode> get currentSeason => _currentSeason;
 
-  void setMiniPlayerVisibility(bool visibility) {
-    _miniPlayerVisibility = visibility;
-    notifyListeners();
-  }
+  // late Album _playlist;
 
-  late PodCast _currentPodcast;
+  // Album get playlist => _playlist;
 
-  PodCast get currentPodcast => _currentPodcast;
+  PodcastEpisode? _currentEpisode;
 
-  late PodCast _playlist;
+  PodcastEpisode? get currentEpisode => _currentEpisode;
 
-  PodCast get playlist => _playlist;
+  // bool _loopMode = false;
 
-  PodCastEpisode? _currentEpisode;
+  // bool get loopMode => _loopMode;
+  // bool _loopPlaylist = false;
 
-  PodCastEpisode? get currentEpisode => _currentEpisode;
-
-  bool _loopMode = false;
-
-  bool get loopMode => _loopMode;
-  bool _loopPlaylist = false;
-
-  bool get loopPlaylist => _loopPlaylist;
+  // bool get loopPlaylist => _loopPlaylist;
   bool _isEpisodeLoaded = true;
 
   bool get isEpisodeLoaded => _isEpisodeLoaded;
+
+  // PodcastEpisode? _currentEpisode;
   int? _currentIndex;
 
   int? get currentIndex => _currentIndex;
 
-  set currentPodcast(podcast) {
-    _currentPodcast = podcast;
+  set currentSeason(season) {
+    _currentSeason = season;
+    notifyListeners();
+  }
+
+  List<PodcastEpisode> _seasonEpisodes = [];
+  List<PodcastEpisode> get seasonEpisodes => _seasonEpisodes;
+  set seasonEpisodes(episodes) {
+    _seasonEpisodes = episodes;
     notifyListeners();
   }
 
@@ -102,98 +145,133 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
   playOrPause() async {
     try {
       await player.playOrPause();
-    } catch (_) {}
-  }
-
-  isFirstEpisode() {
-    return _currentIndex == 0;
-  }
-
-  isLastEpisode(next) {
-    return next == _currentPodcast.episodes.length;
-  }
-
-  next({action = true}) {
-    int next = _currentIndex! + 1;
-    if (!action && _loopMode && isLastEpisode(next) && _loopPlaylist) {
-      setPlaying(_currentPodcast, 0);
-      play(0);
-    } else if (!action && _loopMode && !_loopPlaylist) {
-      setPlaying(_currentPodcast, _currentIndex!);
-      play(_currentIndex);
-    } else {
-      play(next);
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "playOrPause",
+        errorInfo: e.toString(),
+        className: className,
+      );
     }
   }
 
-  prev() {
-    int pre = _currentIndex! - 1;
-    if (pre <= _currentPodcast.episodes.length) {
-      play(pre);
+  isFirstMusic() {
+    return _currentIndex == 0;
+  }
+
+  isLastMusic(next) {
+    return next == _seasonEpisodes.length;
+  }
+
+  next({action = true, episodes}) {
+    if (isProcessingPlay == false) {
+      int next = _currentIndex! + 1;
+      if (!action && isLastMusic(next)) {
+        setPlaying(episodes: episodes, index: 0);
+
+        play(
+          0,
+        );
+      } else if (!action) {
+        setPlaying(episodes: episodes ?? [], index: _currentIndex!);
+        play(_currentIndex);
+      } else {
+        play(next);
+      }
+    }
+  }
+
+  prev() async {
+    if (isProcessingPlay == false) {
+      int pre = _currentIndex! - 1;
+
+      if (pre >= 0 && pre < _seasonEpisodes.length) {
+        play(pre);
+      }
     }
   }
 
   int c = 0;
 
-  handleLoop() {
-    c++;
-    if (c == 1) {
-      _loopMode = true;
-      _loopPlaylist = true;
-    } else if (c == 2) {
-      _loopMode = true;
-      _loopPlaylist = false;
-    } else if (c > 2) {
-      _loopMode = _loopPlaylist = false;
-      c = 0;
-    }
-  }
+  // handleLoop() {
+  //   c++;
+  //   if (c == 1) {
+  //     _loopMode = true;
+  //     _loopPlaylist = true;
+  //   } else if (c == 2) {
+  //     _loopMode = true;
+  //     _loopPlaylist = false;
+  //   } else if (c > 2) {
+  //     _loopMode = _loopPlaylist = false;
+  //     c = 0;
+  //   }
+  // }
 
-  late PodCast _beforeShuffling;
-  bool _shuffled = false;
+  // late Album _beforeShuffling;
+  // bool _shuffled = false;
 
-  bool get shuffled => _shuffled;
+  // bool get shuffled => _shuffled;
 
-  handleShuffle() {
-    _shuffled = !_shuffled;
-    List<PodCastEpisode?> episodes = _currentPodcast.episodes;
-    _beforeShuffling = _currentPodcast;
-    List shuffledMusics = shufflePodcast(episodes);
-    if (_shuffled) {
-      PodCast podCast = PodCast(
-          id: currentPodcast.id,
-          title: currentPodcast.title,
-          description: currentPodcast.description,
-          cover: currentPodcast.cover,
-          episodes: currentPodcast.episodes,
-          duration: currentPodcast.duration,
-          narrator: currentPodcast.narrator);
-      _currentPodcast = podCast;
-    } else {
-      _currentPodcast = _beforeShuffling;
-    }
-  }
+  // handleShuffle() {
+  //   _shuffled = !_shuffled;
+  //   List<Music> musics = _albumMusics;
+  //   _beforeShuffling = _currentAlbum;
+  //   List<Music> shuffledMusics = shuffle(musics);
+  //   if (_shuffled) {
+  //     Album album = Album(
+  //       id: currentAlbum.id,
+  //       title: currentAlbum.title,
+  //       artist: currentAlbum.artist,
+  //       description: currentAlbum.description,
+  //       cover: '$kinAssetBaseUrl/${currentAlbum.cover}',
+  //       count: currentAlbum.count,
+  //       artist_id: 1,
+  //       isPurchasedByUser: false,
+  //       price: 60,
+  //     );
+  //     _currentAlbum = album;
+  //     _albumMusics = shuffledMusics;
+  //   } else {
+  //     _currentAlbum = _beforeShuffling;
+  //   }
+  // }
 
-  play(index) async {
+  play(
+    index,
+  ) async {
     try {
-      _currentEpisode = _currentPodcast.episodes[index];
+      _currentEpisode = _seasonEpisodes[index];
+      player.stop();
       notifyListeners();
-      await _open(_currentPodcast.episodes[index], _currentPodcast);
+
+      if (isPlayingLocal == false) {
+        await _open(_seasonEpisodes[index]);
+      } else {
+        await _openLocal(_seasonEpisodes[index]);
+      }
+
       _currentIndex = index;
-    } catch (_) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "play",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
-  isSamePodcast() {
-    return _playlist.id == _currentPodcast.id;
-  }
+  // isSameAlbum() {
+  //   return _playlist.id == _currentAlbum.id;
+  // }
 
-  isEpisodeInProgress(PodCastEpisode episode) {
+  isEpisodeInProgress(PodcastEpisode episode) {
     return player.isPlaying.value &&
         player.current.value != null &&
-        player.getCurrentAudioTitle == episode.title;
+        player.getCurrentAudioTitle == episode.hostName;
   }
 
-  isLocalEpisodeInProgress(filePath) {
+  isLocalMusicInProgress(filePath) {
     return player.isPlaying.value &&
         player.current.value != null &&
         player.current.value?.audio.assetAudioPath == filePath;
@@ -209,18 +287,30 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     });
   }
 
-  _open(PodCastEpisode episode, PodCast podCast) async {
+  _open(PodcastEpisode podcastEpisode) async {
+    isProcessingPlay = true;
+    // give meta info
     var metas = Metas(
-        title: episode.title,
-        artist: podCast.narrator,
-        image: MetasImage.network('$kinAssetBaseUrl/${podCast.cover}'),
-        id: episode.id.toString()
-        //can be MetasImage.network
-        );
+      title: podcastEpisode.episodeTitle,
+      artist: podcastEpisode.hostName,
+      image: MetasImage.network('$kinAssetBaseUrl-dev/${podcastEpisode.cover}'),
+      id: podcastEpisode.id.toString(),
+    );
     try {
+      // kill any existing player
+      player.pause();
+      player.stop();
+      print("podcast : handling play  @_open");
+
+      // open new player
       await player.open(
-        Audio.network('$kinAssetBaseUrl/${episode.audio}', metas: metas),
+        Audio.network(
+          '$kinAssetBaseUrl-dev/${podcastEpisode.audio}',
+          // music.audio,
+          metas: metas,
+        ),
         showNotification: true,
+        playInBackground: PlayInBackground.enabled,
         notificationSettings: NotificationSettings(
           customPrevAction: (player) {
             prev();
@@ -238,40 +328,151 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
-    } catch (_) {}
+      player.isPlaying.listen((event) {
+        if (event) {
+          isProcessingPlay = false;
+        }
+      });
+
+      notifyListeners();
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "_open",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
-  handlePlayButton({podCast, required PodCastEpisode episode, index}) async {
-    _shuffled = false;
+  _openLocal(PodcastEpisode podcastEpisode) async {
+    // give meta info
+    var metas = Metas(
+      title: podcastEpisode.episodeTitle,
+      artist: podcastEpisode.hostName,
+      image: MetasImage.network('$kinAssetBaseUrl/${podcastEpisode.cover}'),
+      id: podcastEpisode.id.toString(),
+    );
+    try {
+      // kill any existing player
+      // player.pause();
+      player.stop();
+
+      // open new player
+      await player.open(
+        Audio.file(
+          podcastEpisode.audio,
+          // music.audio,
+          metas: metas,
+        ),
+        showNotification: true,
+        playInBackground: PlayInBackground.enabled,
+        notificationSettings: NotificationSettings(
+          customPrevAction: (player) {
+            prev();
+            setMiniPlayerVisibility(true);
+          },
+          customNextAction: (player) {
+            next();
+            setMiniPlayerVisibility(true);
+          },
+          customPlayPauseAction: (player) => playOrPause(),
+          customStopAction: (player) {
+            setEpisodeStopped(true);
+            player.stop();
+            setMiniPlayerVisibility(false);
+          },
+        ),
+      );
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "_openLocal",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
+  }
+
+  handlePlayButton(
+      {required PodcastEpisode episode,
+      index,
+      required List<PodcastEpisode> episodes}) async {
+    // _shuffled = false;
 
     setBuffering(index);
 
     try {
       if (isEpisodeInProgress(episode)) {
-        player.pause();
+        player.stop();
       } else {
         _isEpisodeLoaded = false;
         notifyListeners();
         _currentIndex = index;
-        await _open(episode, podCast);
+        // if (isProcessingPlay == false) {
+        isProcessingPlay = true;
+        print("podcast : handling play @handlePlayButton");
+        await _open(episode);
+
         _isEpisodeLoaded = true;
         notifyListeners();
-        setPlaying(podCast, index);
+
+        setPlaying(index: index, episodes: episodes);
+        // }
       }
-    } catch (_) {}
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "handlePlayButton",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
   }
 
-  setPlaying(PodCast podCast, int index) {
-    _currentPodcast = podCast;
+  handlePlayButtonLocal(
+      {season,
+      required PodcastEpisode episode,
+      index,
+      required List<PodcastEpisode> episodes}) async {
+    // _shuffled = false;
+
+    setBuffering(index);
+
+    try {
+      if (isEpisodeInProgress(episode)) {
+        player.stop();
+      } else {
+        _isEpisodeLoaded = false;
+        notifyListeners();
+        _currentIndex = index;
+        await _openLocal(episode);
+        _isEpisodeLoaded = true;
+        notifyListeners();
+
+        setPlaying(index: index, episodes: episodes);
+      }
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "handlePlayButtonLocal",
+        errorInfo: e.toString(),
+        className: className,
+      );
+    }
+  }
+
+  setPlaying({required int index, required List<PodcastEpisode> episodes}) {
+    _currentSeason = episodes;
     _currentIndex = index;
-    _currentEpisode = _currentPodcast.episodes[index];
+    _currentEpisode = episodes[index];
   }
 
-  String getEpisodeThumbnail() {
-    return currentPodcast.cover;
+  String getMusicThumbnail() {
+    return currentEpisode!.cover.isNotEmpty ? currentEpisode!.cover : '';
   }
 
   String getEpisodeCover() {
-    return '$kinAssetBaseUrl/${currentPodcast.cover}';
+    return '$kinAssetBaseUrl-dev/${currentEpisode!.cover}';
   }
 }

@@ -7,13 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
+
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
-
-class SingletonPlayer {
-  SingletonPlayer._privateConstructor();
-
-  static AssetsAudioPlayer instance = AssetsAudioPlayer.withId("0");
-}
 
 class MusicPlayer extends ChangeNotifier with BaseMixins {
   AssetsAudioPlayer player = AssetsAudioPlayer.withId("0");

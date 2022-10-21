@@ -9,6 +9,8 @@ PodcastEpisode _$PodcastEpisodeFromJson(Map<String, dynamic> json) =>
       hostName: json['host_name'],
       hostId: json['host'],
       categoryId: json['category'],
+      priceETB: 10.0,
+      isPurchasedByUser: false,
     );
 
 Map<String, dynamic> _$PodcastEpisodeToJson(PodcastEpisode instance) =>
