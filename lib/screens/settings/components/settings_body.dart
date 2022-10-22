@@ -89,14 +89,18 @@ class SettingsBody extends StatelessWidget {
                               context: context,
                               builder: (context) {
                                 var podcastProvider =
-                                    Provider.of<PodcastPlayer>(context,
-                                        listen: false);
+                                    Provider.of<PodcastPlayer>(
+                                  context,
+                                  listen: false,
+                                );
                                 var musicProvider = Provider.of<MusicPlayer>(
-                                    context,
-                                    listen: false);
+                                  context,
+                                  listen: false,
+                                );
                                 var radioProvider = Provider.of<RadioProvider>(
-                                    context,
-                                    listen: false);
+                                  context,
+                                  listen: false,
+                                );
 
                                 return AlertDialog(
                                   backgroundColor:
@@ -111,8 +115,10 @@ class SettingsBody extends StatelessWidget {
                                     TextButton(
                                       onPressed: () async {
                                         final provider =
-                                            Provider.of<LoginProvider>(context,
-                                                listen: false);
+                                            Provider.of<LoginProvider>(
+                                          context,
+                                          listen: false,
+                                        );
 
                                         musicProvider.player.stop();
                                         musicProvider.setMusicStopped(true);
@@ -132,17 +138,17 @@ class SettingsBody extends StatelessWidget {
                                         radioProvider
                                             .setMiniPlayerVisibility(false);
 
-                                        await provider.logOut();
                                         Navigator.of(context).pop();
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          LoginSignUpBody.routeName,
+                                        );
+                                        await provider.logOut();
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
                                             content: Text('Logged Out'),
                                           ),
-                                        );
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          LoginSignUpBody.routeName,
                                         );
                                       },
                                       child: const Text(
