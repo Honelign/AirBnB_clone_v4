@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:kin_music_player_app/components/download/multiple_download_progress_display_component.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/no_connection_display.dart';
@@ -12,15 +12,11 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
-
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-
 import 'album_card.dart';
 
 class AlbumBody extends StatefulWidget {
@@ -63,7 +59,6 @@ class _AlbumBodyState extends State<AlbumBody> {
       backgroundColor: kPrimaryColor,
       body: SafeArea(
         top: false,
-        bottom: false,
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -79,7 +74,7 @@ class _AlbumBodyState extends State<AlbumBody> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
               child: Container(
-                padding: EdgeInsets.only(top: 32),
+                padding: const EdgeInsets.only(top: 32),
                 color: kPrimaryColor.withOpacity(0.5),
                 child: SingleChildScrollView(
                   physics: const NeverScrollableScrollPhysics(),

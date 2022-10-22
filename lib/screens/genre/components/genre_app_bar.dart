@@ -14,7 +14,7 @@ class GenreAppBar extends StatelessWidget {
     return SliverAppBar(
       expandedHeight: 175,
       pinned: true,
-      backgroundColor: kPrimaryColor,
+      backgroundColor: Colors.transparent,
       elevation: 2,
       title: const Text('Musics'),
       bottom: PreferredSize(

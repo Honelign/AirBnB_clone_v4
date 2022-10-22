@@ -151,13 +151,15 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                           // album image
                           InkWell(
                             onTap: () {
-                              setState(() {
-                                showLyric = !showLyric;
-                              });
+                              if (checkMusicLyric(music: music!) ||
+                                  showLyric == true) {
+                                setState(() {
+                                  showLyric = !showLyric;
+                                });
+                              }
                             },
                             child: showLyric == true
-                                ? music!.lyrics != "null" &&
-                                        music!.lyrics != null
+                                ? checkMusicLyric(music: music!)
                                     ? _buildScrollableLyrics(
                                         context,
                                         music!.lyrics,
@@ -232,17 +234,17 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                           //         music!.lyrics != null
                           //     ? _buildScrollableLyrics(
                           //         context,
-                          //         utf8.decode(
-                          //           music!.lyrics!
-                          //               .replaceAll('<p>', '')
-                          //               .replaceAll('</p>', '')
-                          //               .replaceAll('\\r', '')
-                          //               .replaceAll('\\n', '\n')
-                          //               .replaceAll('\\', '')
-                          //               .runes
-                          //               .toList(),
-                          //         ),
-                          //       )
+                          //   utf8.decode(
+                          //     music!.lyrics!
+                          //         .replaceAll('<p>', '')
+                          //         .replaceAll('</p>', '')
+                          //         .replaceAll('\\r', '')
+                          //         .replaceAll('\\n', '\n')
+                          //         .replaceAll('\\', '')
+                          //         .runes
+                          //         .toList(),
+                          //   ),
+                          // )
                           //     : Container(),
                         ],
                       ),
@@ -261,96 +263,113 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     required MusicPlayer playerProvider,
     required Music music,
   }) {
-    return Container(
-      height: 250,
-      margin: EdgeInsets.symmetric(
-        vertical: getProportionateScreenHeight(30),
-        horizontal: getProportionateScreenWidth(30),
-      ),
-      child: AnimationRotate(
-        stop: !playerProvider.isPlaying(),
-        child: SizedBox(
-          height: 250,
-          width: 250,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(1000),
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: playerProvider.getMusicCover(),
-                  height: 250,
-                  width: 250,
-                ),
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        const Color(0xFF343434).withOpacity(0.4),
-                        const Color(0xFF343434).withOpacity(0.15),
-                      ],
+    return Column(
+      children: [
+        // ROTATING CD
+        Container(
+          height: 240,
+          margin: EdgeInsets.symmetric(
+            vertical: getProportionateScreenHeight(30),
+            horizontal: getProportionateScreenWidth(30),
+          ),
+          child: AnimationRotate(
+            stop: !playerProvider.isPlaying(),
+            child: SizedBox(
+              height: 240,
+              width: 240,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(1000),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: playerProvider.getMusicCover(),
+                      height: 250,
+                      width: 250,
                     ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      height: 75,
-                      width: 75,
+                    Container(
+                      height: 250,
+                      width: 250,
                       decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xFF343434).withOpacity(0.4),
+                            const Color(0xFF343434).withOpacity(0.15),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                          height: 75,
+                          width: 75,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1000),
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                    '$kinAssetBaseUrl/${music.cover}',
+                                  ),
+                                  // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
+                                  fit: BoxFit.cover)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(1000),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1000),
+                                ),
+                              ),
+                            ),
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(1000),
                           image: DecorationImage(
                               image: CachedNetworkImageProvider(
-                                '$kinAssetBaseUrl/${music.cover}',
-                              ),
+                                  '$kinAssetBaseUrl/${music.cover}'),
                               // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                              fit: BoxFit.cover)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(1000),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1000),
-                            ),
-                          ),
+                              fit: BoxFit.cover),
                         ),
-                      )),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1000),
-                        image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                                '$kinAssetBaseUrl/${music.cover}'),
-                            // CachedNetworkImageProvider('$kinAssetBaseUrl/Media_Files/Artists_Profile_Images/Teddy Afro/Teddy_Afro_-_tedyafro.jpg'),
-                            fit: BoxFit.cover)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(1000),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1000),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(1000),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 75, sigmaY: 75),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(1000),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+
+        //
+        checkMusicLyric(music: music) == false
+            ? Container()
+            : const Text(
+                "Tap to view lyric",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+      ],
     );
   }
 
@@ -884,37 +903,46 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     //   ),
     // );
 
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 250,
-          margin: EdgeInsets.symmetric(
-            vertical: getProportionateScreenHeight(30),
-            horizontal: getProportionateScreenWidth(30),
-          ),
-          color: Colors.transparent,
-          child: lyrics == "No Lyric"
-              ? Center(
-                  child: Text(
-                    lyrics,
-                    style: headerOneTextStyle,
-                  ),
-                )
-              : Center(
-                  child: Html(
-                    data: lyrics,
-                    style: {
-                      'p': Style(
-                        color: Colors.white,
-                        fontFamily: "Nokia",
-                        lineHeight: LineHeight.number(2),
-                      ),
-                    },
-                  ),
-                ),
-        ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 250,
+      margin: EdgeInsets.symmetric(
+        vertical: getProportionateScreenHeight(30),
+        horizontal: getProportionateScreenWidth(30),
       ),
+      color: Colors.transparent,
+      child: lyrics == "No Lyric"
+          ? Center(
+              child: Text(
+                lyrics,
+                style: headerOneTextStyle,
+              ),
+            )
+          : SingleChildScrollView(
+              child: Html(
+                data: utf8.decode(
+                  lyrics
+                      .replaceAll('<p>', '')
+                      .replaceAll('</p>', '')
+                      .replaceAll('\\r', '')
+                      .replaceAll('\\n', '\n')
+                      .replaceAll('\\', '')
+                      .runes
+                      .toList(),
+                ),
+                style: {
+                  'p': Style(
+                    color: Colors.white,
+                    fontFamily: "Nokia",
+                    lineHeight: LineHeight.number(2),
+                  ),
+                },
+              ),
+            ),
     );
   }
+}
+
+bool checkMusicLyric({required Music music}) {
+  return music.lyrics != "null" && music.lyrics != null && music.lyrics != "";
 }

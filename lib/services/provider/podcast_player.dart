@@ -5,7 +5,6 @@ import 'package:kin_music_player_app/services/network/api/error_logging_service.
 
 import 'package:flutter/foundation.dart';
 import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
-import 'package:kin_music_player_app/services/network/model/podcast/podcast_season.dart';
 import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 
 class PodcastPlayer extends ChangeNotifier with BaseMixins {
@@ -46,7 +45,6 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
 
   void setMiniPlayerVisibility(bool visibility) {
     _miniPlayerVisibility = visibility;
-    print("podcast : setting visiblity");
     notifyListeners();
   }
 
@@ -64,7 +62,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     notifyListeners();
   }
 
-  MusicPlayer() {
+  PodcastPlayer() {
     player.playlistAudioFinished.listen((Playing playing) {
       if (!_isEpisodeStopped) {
         next(action: false);
@@ -159,21 +157,22 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     return _currentIndex == 0;
   }
 
-  isLastMusic(next) {
+  isLastEpisode(next) {
     return next == _seasonEpisodes.length;
   }
 
   next({action = true, episodes}) {
     if (isProcessingPlay == false) {
       int next = _currentIndex! + 1;
-      if (!action && isLastMusic(next)) {
-        setPlaying(episodes: episodes, index: 0);
+      if (!action && isLastEpisode(next)) {
+        setPlaying(episodes: _currentSeason, index: 0);
 
         play(
           0,
         );
       } else if (!action) {
-        setPlaying(episodes: episodes ?? [], index: _currentIndex!);
+        setPlaying(episodes: _currentSeason, index: _currentIndex!);
+
         play(_currentIndex);
       } else {
         play(next);
@@ -185,7 +184,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     if (isProcessingPlay == false) {
       int pre = _currentIndex! - 1;
 
-      if (pre >= 0 && pre < _seasonEpisodes.length) {
+      if (pre >= 0 && pre < _currentSeason.length) {
         play(pre);
       }
     }
@@ -240,14 +239,14 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     index,
   ) async {
     try {
-      _currentEpisode = _seasonEpisodes[index];
+      _currentEpisode = _currentSeason[index];
       player.stop();
       notifyListeners();
 
       if (isPlayingLocal == false) {
-        await _open(_seasonEpisodes[index]);
+        await _open(_currentSeason[index]);
       } else {
-        await _openLocal(_seasonEpisodes[index]);
+        await _openLocal(_currentSeason[index]);
       }
 
       _currentIndex = index;
@@ -300,7 +299,6 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
       // kill any existing player
       player.pause();
       player.stop();
-      print("podcast : handling play  @_open");
 
       // open new player
       await player.open(
@@ -409,16 +407,13 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
         _isEpisodeLoaded = false;
         notifyListeners();
         _currentIndex = index;
-        // if (isProcessingPlay == false) {
-        isProcessingPlay = true;
-        print("podcast : handling play @handlePlayButton");
-        await _open(episode);
-
-        _isEpisodeLoaded = true;
-        notifyListeners();
-
-        setPlaying(index: index, episodes: episodes);
-        // }
+        if (isProcessingPlay == false) {
+          isProcessingPlay = true;
+          await _open(episode);
+          _isEpisodeLoaded = true;
+          notifyListeners();
+          setPlaying(index: index, episodes: episodes);
+        }
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
@@ -468,7 +463,7 @@ class PodcastPlayer extends ChangeNotifier with BaseMixins {
     _currentEpisode = episodes[index];
   }
 
-  String getMusicThumbnail() {
+  String getEpisodeThumbnail() {
     return currentEpisode!.cover.isNotEmpty ? currentEpisode!.cover : '';
   }
 

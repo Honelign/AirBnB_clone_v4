@@ -23,9 +23,11 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchMoreAlbums(pageKey);
-    });
+    _pagingController.addPageRequestListener(
+      (pageKey) {
+        _fetchMoreAlbums(pageKey);
+      },
+    );
     super.initState();
   }
 
@@ -70,7 +72,6 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        padding: EdgeInsets.fromLTRB(10, 30, 2, 30),
         decoration: linearGradientDecoration,
         child: checkConnection(status) == false
             ? Container(
@@ -79,56 +80,60 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
                 decoration: linearGradientDecoration,
                 child: const NoConnectionDisplay(),
               )
-            : Center(
-                child: PagedGridView<int, Album>(
-                  scrollDirection: Axis.vertical,
-                  showNoMoreItemsIndicatorAsGridChild: false,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 140,
-                    childAspectRatio: 0.9,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                  ),
-                  pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Album>(
-                    animateTransitions: true,
-                    transitionDuration: const Duration(milliseconds: 500),
-                    noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: const Center(
-                        child: Text("No Albums"),
-                      ),
+            : Container(
+                padding: const EdgeInsets.fromLTRB(10, 30, 2, 30),
+                child: Center(
+                  child: PagedGridView<int, Album>(
+                    scrollDirection: Axis.vertical,
+                    showNoMoreItemsIndicatorAsGridChild: false,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 140,
+                      childAspectRatio: 0.9,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
                     ),
-                    noMoreItemsIndicatorBuilder: (_) => Wrap(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(18, 16, 0, 32),
-                          width: double.infinity,
-                          height: 100,
-                          child: const Center(
-                            child: Text(
-                              "No More Albums",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                    pagingController: _pagingController,
+                    builderDelegate: PagedChildBuilderDelegate<Album>(
+                      animateTransitions: true,
+                      transitionDuration: const Duration(milliseconds: 500),
+                      noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: const Center(
+                          child: Text("No Albums"),
+                        ),
+                      ),
+                      noMoreItemsIndicatorBuilder: (_) => Wrap(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(18, 16, 0, 32),
+                            width: double.infinity,
+                            height: 100,
+                            child: const Center(
+                              child: Text(
+                                "No More Albums",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      firstPageProgressIndicatorBuilder: (_) => SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: const Center(child: KinProgressIndicator()),
+                      ),
+                      newPageProgressIndicatorBuilder: (_) => SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: const Center(child: KinProgressIndicator()),
+                      ),
+                      itemBuilder: (context, item, index) {
+                        return GridCard(album: item);
+                      },
                     ),
-                    firstPageProgressIndicatorBuilder: (_) => SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(child: KinProgressIndicator()),
-                    ),
-                    newPageProgressIndicatorBuilder: (_) => SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(child: KinProgressIndicator()),
-                    ),
-                    itemBuilder: (context, item, index) {
-                      return GridCard(album: item);
-                    },
                   ),
                 ),
               ),

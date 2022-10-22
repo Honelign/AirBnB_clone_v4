@@ -71,37 +71,37 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
     // text controller
     TextEditingController playlistNameController = TextEditingController();
     return Scaffold(
-      body: SafeArea(
-        child: checkConnection(status) == false
-            ? RefreshIndicator(
-                onRefresh: () async {
-                  setState(() {});
-                },
-                backgroundColor: refreshIndicatorBackgroundColor,
-                color: refreshIndicatorForegroundColor,
-                child: NoConnectionDisplay(),
-              )
-            : FutureBuilder(
-                future: playListProvider.getPlayList(),
-                builder: (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
-                  // loading
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: linearGradientDecoration,
-                      child: const Center(
-                        child: KinProgressIndicator(),
-                      ),
-                    );
-                  }
+      body: Container(
+        decoration: linearGradientDecoration,
+        child: SafeArea(
+          child: checkConnection(status) == false
+              ? RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() {});
+                  },
+                  backgroundColor: refreshIndicatorBackgroundColor,
+                  color: refreshIndicatorForegroundColor,
+                  child: const NoConnectionDisplay(),
+                )
+              : FutureBuilder(
+                  future: playListProvider.getPlayList(),
+                  builder:
+                      (context, AsyncSnapshot<List<PlaylistInfo>> snapshot) {
+                    // loading
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: linearGradientDecoration,
+                        child: const Center(
+                          child: KinProgressIndicator(),
+                        ),
+                      );
+                    }
 
-                  // data loaded
-                  else if (snapshot.hasData && !snapshot.hasError) {
-                    return Container(
-                      decoration: linearGradientDecoration,
-                      padding: const EdgeInsets.fromLTRB(0, 24, 0, 36),
-                      child: RefreshIndicator(
+                    // data loaded
+                    else if (snapshot.hasData && !snapshot.hasError) {
+                      return RefreshIndicator(
                         onRefresh: () async {
                           _pagingController.refresh();
                         },
@@ -117,35 +117,38 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                             noItemsFoundIndicatorBuilder: (context) => SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.5,
-                              child: Column(children: const [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 8.0, right: 180),
-                                  child: Text(
-                                    "Your Playlist",
+                              child: Column(
+                                children: const [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, right: 180),
+                                    child: Text(
+                                      "Your Playlist",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 150),
+                                  Text(
+                                    "No Playlist",
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 24,
+                                      fontSize: 34,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 150),
-                                Text(
-                                  "No Playlist",
-                                  style: TextStyle(
+                                  Text(
+                                    "Add your first playlist",
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 34,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "Add your first playlist",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                ),
-                              ]),
+                                ],
+                              ),
                             ),
                             noMoreItemsIndicatorBuilder: (_) => Container(
                               padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
@@ -184,137 +187,152 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                             }),
                           ),
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  // error
-                  else {
-                    return OnSnapshotError(error: snapshot.error.toString());
-                  }
-                },
-              ),
+                    // error
+                    else {
+                      return OnSnapshotError(error: snapshot.error.toString());
+                    }
+                  },
+                ),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kSecondaryColor,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) {
-              return Consumer<PlayListProvider>(
-                builder: (BuildContext context, playListProvider, _) {
-                  return SimpleDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    backgroundColor: kLightTextColor,
-                    insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 30),
-                    elevation: 10,
-                    children: playListProvider.isLoading == false
-                        ? [
-                            // title
-
-                            // Input
-                            TextField(
-                              controller: playlistNameController,
-                              cursorColor: kGrey,
-                              style: const TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 0),
-                                hintText: "Playlist Name",
-                                hintStyle: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 3,
-                                    color: kSecondaryColor.withOpacity(0.5),
-                                  ),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 3,
-                                    color: kSecondaryColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            // Spacer
-                            const SizedBox(
-                              height: 48,
-                            ),
-
-                            // controls
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(
-                                horizontal: getProportionateScreenWidth(20),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Separator
-
-                                  // Create Button
-                                  InkWell(
-                                    onTap: () async {
-                                      // empty text
-                                      if (playlistNameController.text == "") {
-                                        kShowToast(
-                                            message: "Invalid Playlist name");
-                                      } else {
-                                        await playListProvider.createPlayList(
-                                          playlistName:
-                                              playlistNameController.text,
-                                        );
-                                        await playListProvider.getPlayList();
-                                        playlistNameController.text = "";
-
-                                        Navigator.pop(context, true);
-                                        refersh();
-                                      }
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.black,
+      floatingActionButton: checkConnection(status) == false
+          ? Container()
+          : FloatingActionButton(
+              backgroundColor: kSecondaryColor,
+              child: const Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return Consumer<PlayListProvider>(
+                      builder: (BuildContext context, playListProvider, _) {
+                        return SimpleDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          backgroundColor: kLightTextColor,
+                          insetPadding:
+                              const EdgeInsets.symmetric(horizontal: 20),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 30,
+                            horizontal: 30,
+                          ),
+                          elevation: 10,
+                          children: playListProvider.isLoading == false
+                              ? [
+                                  // Input
+                                  TextField(
+                                    controller: playlistNameController,
+                                    cursorColor: kGrey,
+                                    style: const TextStyle(color: Colors.black),
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 0,
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 16,
+                                      hintText: "Playlist Name",
+                                      hintStyle: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 15,
                                       ),
-                                      child: const Text(
-                                        "Create Playlist",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          width: 3,
+                                          color:
+                                              kSecondaryColor.withOpacity(0.5),
+                                        ),
+                                      ),
+                                      focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          width: 3,
+                                          color: kSecondaryColor,
                                         ),
                                       ),
                                     ),
                                   ),
+
+                                  // Spacer
+                                  const SizedBox(
+                                    height: 48,
+                                  ),
+
+                                  // controls
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                          getProportionateScreenWidth(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        // Separator
+
+                                        // Create Button
+                                        InkWell(
+                                          onTap: () async {
+                                            // empty text
+                                            if (playlistNameController.text ==
+                                                "") {
+                                              kShowToast(
+                                                message:
+                                                    "Invalid Playlist name",
+                                              );
+                                            } else {
+                                              await playListProvider
+                                                  .createPlayList(
+                                                playlistName:
+                                                    playlistNameController.text,
+                                              );
+                                              await playListProvider
+                                                  .getPlayList();
+                                              playlistNameController.text = "";
+
+                                              Navigator.pop(context, true);
+                                              refersh();
+                                            }
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: kSecondaryColor,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 8,
+                                              horizontal: 30,
+                                            ),
+                                            child: const Text(
+                                              "Create Playlist",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ]
+                              : [
+                                  const Center(
+                                    child: KinProgressIndicator(),
+                                  )
                                 ],
-                              ),
-                            )
-                          ]
-                        : [
-                            const Center(
-                              child: KinProgressIndicator(),
-                            )
-                          ],
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 

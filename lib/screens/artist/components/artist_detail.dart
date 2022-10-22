@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/coins/buy_coin.dart';
 import 'package:kin_music_player_app/coins/components/tip_artist_card.dart';
 import 'package:kin_music_player_app/components/grid_card.dart';
@@ -13,6 +14,7 @@ import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 
@@ -49,10 +51,21 @@ class _ArtistDetailState extends State<ArtistDetail> {
 
   @override
   Widget build(BuildContext context) {
+    helper.makeStatusBarTransparent();
     ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   toolbarHeight: 0,
+      //   elevation: 0,
+      //   systemOverlayStyle: const SystemUiOverlayStyle(
+      //     statusBarColor: Colors.transparent,
+      //     systemNavigationBarColor: Colors.transparent,
+      //   ),
+      // ),
       backgroundColor: kPrimaryColor,
       body: SafeArea(
+        top: false,
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -76,6 +89,9 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       children: [
                         Column(
                           children: [
+                            const SizedBox(
+                              height: 32,
+                            ),
                             // artist header with name image
                             _buildHeader(),
 
@@ -113,11 +129,16 @@ class _ArtistDetailState extends State<ArtistDetail> {
                       ],
                     ),
                   ),
-                  BackButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+
+                  // Back Button
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: BackButton(
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   )
                 ],
               ),

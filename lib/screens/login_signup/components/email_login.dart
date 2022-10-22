@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/acc_alt_option.dart';
 import 'package:kin_music_player_app/screens/login_signup/components/custom_elevated_button.dart';
 import 'package:kin_music_player_app/components/kin_form.dart';
+import 'package:kin_music_player_app/screens/login_signup/reset_password_page.dart';
 import 'package:kin_music_player_app/services/network/regi_page.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +21,7 @@ class _EmailLoginState extends State<EmailLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,43 +52,83 @@ class _EmailLoginState extends State<EmailLogin> {
                 hasIcon: true,
               ),
               SizedBox(
+                height: getProportionateScreenHeight(4),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ResetPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: const Text("Forgot Password"),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
                 height: getProportionateScreenHeight(35),
               ),
-              Consumer<LoginProvider>(
-                builder: (context, provider, _) {
-                  if (provider.isLoading) {
-                    return const Center(
-                      child: KinProgressIndicator(),
-                    );
-                  }
-                  return CustomElevatedButton(
-                    onTap: () async {
-                      if (email.text.isNotEmpty && password.text.isNotEmpty) {
-                        var result =
-                            await provider.login(email.text, password.text);
-                        if (result == 'Successfully Logged In') {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CustomBottomAppBar(),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(result),
-                          ));
+              isLoading == true
+                  ? const KinProgressIndicator()
+                  : CustomElevatedButton(
+                      onTap: () async {
+                        if (isLoading == false) {
+                          // set loading animation
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          // get login provider
+                          LoginProvider provider = Provider.of<LoginProvider>(
+                              context,
+                              listen: false);
+
+                          // if email & password are valid
+                          if (email.text.isNotEmpty &&
+                              password.text.isNotEmpty) {
+                            // make api call
+                            var result =
+                                await provider.login(email.text, password.text);
+
+                            // end loading animation
+                            setState(() {
+                              isLoading = false;
+                            });
+
+                            // redirect to home
+                            if (result == 'Successfully Logged In') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CustomBottomAppBar(),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(result),
+                                ),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please Fill all Field'),
+                              ),
+                            );
+                          }
                         }
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('Please Fill all Field'),
-                        ));
-                      }
-                    },
-                    text: 'Login',
-                  );
-                },
-              ),
+                      },
+                      text: 'Login',
+                    ),
               SizedBox(
                 height: getProportionateScreenHeight(10),
               ),

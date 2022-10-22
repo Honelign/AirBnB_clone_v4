@@ -16,23 +16,35 @@ class NoConnectionDisplay extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Spacer
+                // Offline Icon
+                const Icon(
+                  Icons.wifi_off_outlined,
+                  size: 80,
+                  color: kSecondaryColor,
+                ),
 
+                // Spacer
+                const SizedBox(
+                  height: 4,
+                ),
+
+                // No Connection Message
                 Text(
                   kConnectionErrorMessage,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.8),
-                    fontSize: 26,
+                    fontSize: 24,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
                   ),
                 ),
 
+                // Spacer
                 const SizedBox(
                   height: 4,
                 ),
 
-                //
+                // No Connection Message
                 Text(
                   kReconnectErrorMessage,
                   style: TextStyle(

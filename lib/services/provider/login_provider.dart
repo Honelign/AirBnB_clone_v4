@@ -69,6 +69,14 @@ class LoginProvider extends ChangeNotifier {
     return "";
   }
 
+  Future resetPassword({required String email}) async {
+    isLoading = true;
+    notifyListeners();
+    var result = await userApiService.sendResetPasswordEmail(email: email);
+    isLoading = false;
+    return "";
+  }
+
   Future requestOTP(phoneNumber, context, fullName) async {
     isLoading = true;
     notifyListeners();

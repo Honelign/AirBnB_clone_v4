@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/music_detail_display.dart';
 import 'package:kin_music_player_app/components/track_play_button.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music_from_search.dart';
@@ -62,20 +63,18 @@ class MusicCardsearch extends StatelessWidget {
           // height: 50,
           width: getProportionateScreenWidth(width),
           child: GestureDetector(
-           
-            onTap: () async{
-              
-               p.albumMusicss = musics;
-                p.isPlayingLocal = false;
-                p.setBuffering(musicIndex);
+            onTap: () async {
+              p.albumMusicss = musics;
+              p.isPlayingLocal = false;
+              p.setBuffering(musicIndex);
               if (checkConnection(status)) {
-               // incrementMusicView(music.id);
+                // incrementMusicView(music.id);
                 p.setBuffering(musicIndex);
 
                 if (p.isMusicInProgress(music)) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>NowPlayingMusic(music),
+                      builder: (context) => NowPlayingMusic(music),
                     ),
                   );
                 } else {
@@ -112,14 +111,12 @@ class MusicCardsearch extends StatelessWidget {
                   p.listenMusicStreaming();
 
                   podcastProvider.listenPodcastStreaming();
-                     // p.setMiniPlayerVisibility(true);
+                  // p.setMiniPlayerVisibility(true);
                   // add to recently played
                   musicProvider.addToRecentlyPlayed(music: music);
 
                   // add to popluar
                   musicProvider.countPopular(music: music);
-
-                  
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -200,44 +197,8 @@ class MusicCardsearch extends StatelessWidget {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return AlertDialog(
-                                              backgroundColor:
-                                                  kPopupMenuBackgroundColor,
-                                              title: const Text(
-                                                'Music Detail',
-                                                style: TextStyle(
-                                                    color: Colors.white60,
-                                                    fontSize: 15),
-                                              ),
-                                              content: SizedBox(
-                                                height: 100,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        music.description
-                                                                .isNotEmpty
-                                                            ? music.description
-                                                            : '',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                kLightSecondaryColor),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                      Text(
-                                                        'By ${music.artist}',
-                                                        style: const TextStyle(
-                                                            color:
-                                                                kLightSecondaryColor),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
+                                            return MusicDetailDisplay(
+                                              music: music,
                                             );
                                           });
                                     } else {
@@ -388,7 +349,6 @@ class MusicCardsearch extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
                 ],
               ),
             ),

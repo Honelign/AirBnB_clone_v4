@@ -18,11 +18,12 @@ class MusicDetailDisplay extends StatelessWidget {
         ),
       ),
       content: SizedBox(
-        height: 100,
+        height: 300,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //
               Text(
                 music.description.isNotEmpty ? music.description : '',
                 style: const TextStyle(color: kSecondaryColor),

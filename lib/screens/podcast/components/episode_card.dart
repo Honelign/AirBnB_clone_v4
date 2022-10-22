@@ -1,11 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:kin_music_player_app/components/kin_audio_wave.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/podcast/podcast_episode.dart';
-import 'package:kin_music_player_app/services/network/model/podcast/podcast_season.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/offline_play_provider.dart';
@@ -48,7 +47,6 @@ class _EpisodeCardState extends State<EpisodeCard> {
     OfflineMusicProvider offlineMusicProvider =
         Provider.of<OfflineMusicProvider>(
       context,
-      listen: false,
     );
     return PlayerBuilder.isPlaying(
         player: p.player,
@@ -99,7 +97,7 @@ class _EpisodeCardState extends State<EpisodeCard> {
 
                   // // add to popular
                   // musicProvider.countPopular(music: widget.music);
-                  print("PLAYING");
+
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +120,7 @@ class _EpisodeCardState extends State<EpisodeCard> {
                 children: [
                   Row(
                     children: [
-                      // Image
+                      // Podcast Episode Image
                       CachedNetworkImage(
                         imageUrl: "$kinAssetBaseUrl-dev/" +
                             widget.podcastEpisode.cover,
@@ -140,21 +138,23 @@ class _EpisodeCardState extends State<EpisodeCard> {
                         },
                       ),
 
+                      // Spacer
                       const SizedBox(
                         width: 16,
                       ),
 
-                      // Title
+                      // Podcast Episode Info
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // title
+                          // Podcast Title
                           Text(
                             "Episode :  " + widget.podcastEpisode.episodeTitle,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17.0,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
 
@@ -162,21 +162,39 @@ class _EpisodeCardState extends State<EpisodeCard> {
                           const SizedBox(
                             height: 4,
                           ),
+
+                          // Podcast Hostname
+                          Text(
+                            widget.podcastEpisode.hostName,
+                            style: const TextStyle(
+                              color: kGrey,
+                              fontSize: 14,
+                            ),
+                          )
                         ],
                       ),
                     ],
                   ),
-                  isPlaying == true &&
-                          p.currentEpisode != null &&
-                          p.currentEpisode!.id == widget.podcastEpisode.id
-                      ? Text("Playing")
-                      : Text("Not Playing"),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.more_vert_rounded,
-                      color: kGrey,
-                    ),
+
+                  //  Action Center
+                  Row(
+                    children: [
+                      // Playing Indicator Wave
+                      isPlaying == true &&
+                              p.currentEpisode != null &&
+                              p.currentEpisode!.id == widget.podcastEpisode.id
+                          ? const KinPlayingAudioWave()
+                          : Container(),
+
+                      // Actions Dropdown
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          color: kGrey,
+                        ),
+                      )
+                    ],
                   )
                 ],
               ),

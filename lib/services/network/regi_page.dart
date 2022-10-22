@@ -44,148 +44,151 @@ class _RegPageState extends State<RegPage> {
     SizeConfig().init(context);
 
     return Scaffold(
-        backgroundColor: kPrimaryColor,
         key: _scaffoldKey,
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Header(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(20)),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: getProportionateScreenHeight(35)),
-                          _buildKinForm(
-                            context,
-                            hint: 'Enter your  name',
-                            controller: fullName,
-                            headerTitle: 'Name',
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          _buildKinForm(
-                            context,
-                            hint: 'Enter your email',
-                            controller: email,
-                            headerTitle: 'Email',
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          _buildKinForm(
-                            context,
-                            hint: 'Enter your phone number (0911..)',
-                            controller: phoneName,
-                            headerTitle: 'Phone number',
-                          ),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          _buildKinForm(context,
-                              hint: 'Enter password',
-                              controller: password,
-                              headerTitle: 'Password',
-                              hasIcon: true, onPressed: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
-                          }),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          _buildKinForm(context,
-                              hint: 'Confirm your password',
-                              controller: confirmPassword,
-                              headerTitle: 'Confirm password',
-                              hasIcon: true, onPressed: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
-                          })
-                        ],
+        body: Container(
+          decoration: linearGradientDecoration,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const Header(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(20)),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: getProportionateScreenHeight(35)),
+                            _buildKinForm(
+                              context,
+                              hint: 'Enter your  name',
+                              controller: fullName,
+                              headerTitle: 'Name',
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(10)),
+                            _buildKinForm(
+                              context,
+                              hint: 'Enter your email',
+                              controller: email,
+                              headerTitle: 'Email',
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(10)),
+                            _buildKinForm(
+                              context,
+                              hint: 'Enter your phone number (0911..)',
+                              controller: phoneName,
+                              headerTitle: 'Phone number',
+                            ),
+                            SizedBox(height: getProportionateScreenHeight(10)),
+                            _buildKinForm(context,
+                                hint: 'Enter password',
+                                controller: password,
+                                headerTitle: 'Password',
+                                hasIcon: true, onPressed: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            }),
+                            SizedBox(height: getProportionateScreenHeight(10)),
+                            _buildKinForm(context,
+                                hint: 'Confirm your password',
+                                controller: confirmPassword,
+                                headerTitle: 'Confirm password',
+                                hasIcon: true, onPressed: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            })
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: getProportionateScreenHeight(35)),
-                  Consumer<LoginProvider>(
-                    builder: (context, provider, _) {
-                      if (provider.isLoading) {
-                        return Center(child: KinProgressIndicator());
-                      }
-                      return CustomElevatedButton(
-                        onTap: () async {
-                          // var future = await FirebaseAuth
-                          //     .instance.currentUser!.emailVerified
-                          //     .toString();
-                          if (_formKey.currentState!.validate()) {
-                            final provider = Provider.of<LoginProvider>(context,
-                                listen: false);
-                            var result = await provider.register(
-                              CustomUser(
-                                name: fullName.text,
-                                id: 2,
-                                phoneNumber: phoneName.text,
-                                email: email.text,
-                                password: password.text,
-                                passwordConfirmation: confirmPassword.text,
-                              ),
-                            );
-                            if (result == 'Successfully Registered') {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CustomBottomAppBar(),
+                    SizedBox(height: getProportionateScreenHeight(35)),
+                    Consumer<LoginProvider>(
+                      builder: (context, provider, _) {
+                        if (provider.isLoading) {
+                          return Center(child: KinProgressIndicator());
+                        }
+                        return CustomElevatedButton(
+                          onTap: () async {
+                            // var future = await FirebaseAuth
+                            //     .instance.currentUser!.emailVerified
+                            //     .toString();
+                            if (_formKey.currentState!.validate()) {
+                              final provider = Provider.of<LoginProvider>(
+                                  context,
+                                  listen: false);
+                              var result = await provider.register(
+                                CustomUser(
+                                  name: fullName.text,
+                                  id: 2,
+                                  phoneNumber: phoneName.text,
+                                  email: email.text,
+                                  password: password.text,
+                                  passwordConfirmation: confirmPassword.text,
                                 ),
                               );
+                              if (result == 'Successfully Registered') {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CustomBottomAppBar(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(result),
+                                ));
+                              }
                             } else {
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(result),
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Please Fill All Inputs."),
                               ));
                             }
-                          } else {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text("Please Fill All Inputs."),
-                            ));
-                          }
-                        },
-                        text: 'Signup',
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: getProportionateScreenHeight(25),
-                  ),
-                  const ReusableDivider(),
-                  SizedBox(height: getProportionateScreenHeight(10)),
-                  const SocialLogin(),
-                  AccAltOption(
-                      buttonText: 'Login',
-                      leadingText: 'Do you have account ?',
-                      onTap: () {
-                        Navigator.pop(context);
-                      }),
-                  SizedBox(
-                    height: getProportionateScreenHeight(15),
-                  )
-                ],
-              ),
-            ),
-            Positioned(
-              top: getProportionateScreenHeight(25),
-              left: getProportionateScreenWidth(10),
-              right: 0,
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                          },
+                          text: 'Signup',
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(25),
+                    ),
+                    const ReusableDivider(),
+                    SizedBox(height: getProportionateScreenHeight(10)),
+                    const SocialLogin(),
+                    AccAltOption(
+                        buttonText: 'Login',
+                        leadingText: 'Do you have account ?',
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                    SizedBox(
+                      height: getProportionateScreenHeight(15),
+                    )
+                  ],
                 ),
               ),
-            )
-          ],
+              Positioned(
+                top: getProportionateScreenHeight(25),
+                left: getProportionateScreenWidth(10),
+                right: 0,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: BackButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
         ));
   }
 

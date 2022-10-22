@@ -37,7 +37,10 @@ class _FavoriteState extends State<Favorite> {
             },
             backgroundColor: refreshIndicatorBackgroundColor,
             color: refreshIndicatorForegroundColor,
-            child: const NoConnectionDisplay(),
+            child: Container(
+              child: const NoConnectionDisplay(),
+              decoration: linearGradientDecoration,
+            ),
           )
         : Consumer<FavoriteMusicProvider>(
             builder: (context, provider, _) {

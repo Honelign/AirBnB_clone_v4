@@ -6,8 +6,6 @@ import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
-import 'package:kin_music_player_app/services/provider/favorite_music_provider.dart';
-import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';
@@ -30,10 +28,6 @@ class _NowPlayingPodcastIndicatorState
     extends State<NowPlayingPodcastIndicator> {
   @override
   void initState() {
-    var favoriteProvider =
-        Provider.of<CachedFavoriteProvider>(context, listen: false);
-    favoriteProvider.getFavids();
-
     super.initState();
   }
 
@@ -41,8 +35,6 @@ class _NowPlayingPodcastIndicatorState
   Widget build(BuildContext context) {
     var p = Provider.of<PodcastPlayer>(context, listen: false);
     bool showBuyButton = !widget.isPurchased;
-
-    print("lookie : $showBuyButton");
 
     void onTrackPurchaseSuccess() async {
       setState(() {
@@ -69,9 +61,11 @@ class _NowPlayingPodcastIndicatorState
           width: double.infinity,
           child: Stack(
             children: [
-              _buildBlurBackground(p.getEpisodeCover()),
+              _buildBlurBackground(
+                p.getEpisodeCover(),
+              ),
               _buildDarkContainer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   p.setBuffering(p.tIndex);
                   p.isEpisodeInProgress(p.currentEpisode!);
@@ -165,53 +159,13 @@ class _NowPlayingPodcastIndicatorState
                             )
                           : Row(
                               children: [
-                                // // favorite button
-                                // Consumer<FavoriteMusicProvider>(
-                                //   builder: (context, provider, _) {
-                                //     return favoriteProvider.favMusics
-                                //             .contains(p.currentMusic!.id)
-                                //         ? IconButton(
-                                //             onPressed: () async {
-                                //               favoriteProvider.removeCachedFav(
-                                //                   p.currentMusic!.id);
-                                //               favoriteProvider.getFavids();
-                                //               await provider.unFavMusic(
-                                //                   p.currentMusic!.id);
-
-                                //               await provider.getFavMusic();
-                                //             },
-                                //             icon: const Icon(
-                                //               Icons.favorite,
-                                //               color: kSecondaryColor,
-                                //               size: 23,
-                                //             ),
-                                //           )
-                                //         : IconButton(
-                                //             onPressed: () async {
-                                //               favoriteProvider.addCachedFav(
-                                //                   p.currentMusic!.id);
-                                //               favoriteProvider.getFavids();
-                                //               await provider
-                                //                   .favMusic(p.currentMusic!.id);
-
-                                //               await provider.getFavMusic();
-                                //             },
-                                //             icon: const Icon(
-                                //               Icons.favorite_border,
-                                //               color: Colors.white,
-                                //               size: 23,
-                                //             ),
-                                //           );
-                                //   },
-                                // ),
-
                                 // play button
                                 _buildPlayPauseButton(
                                   p,
                                 ),
 
                                 // next button
-                                // _buildNextButton(p),
+                                _buildNextButton(p),
                               ],
                             )
                     ],
@@ -356,11 +310,11 @@ class _NowPlayingPodcastIndicatorState
         Icons.skip_next_rounded,
         size: 30,
       ),
-      color: playerProvider.isLastMusic(playerProvider.currentIndex! + 1)
+      color: playerProvider.isLastEpisode(playerProvider.currentIndex! + 1)
           ? kGrey
           : Colors.white,
       onPressed: () {
-        if (playerProvider.isLastMusic(playerProvider.currentIndex! + 1)) {
+        if (playerProvider.isLastEpisode(playerProvider.currentIndex! + 1)) {
           return;
         }
         if (playerProvider.isProcessingPlay == false) {

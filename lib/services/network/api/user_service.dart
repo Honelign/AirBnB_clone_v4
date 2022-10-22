@@ -132,6 +132,20 @@ class UserApiService {
   // TODO:Implement
   Future loginWithFacebook(apiEndPoint) async {}
 
+  Future sendResetPasswordEmail({required String email}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "sendResetPasswordEmail",
+        errorInfo: e.toString(),
+        remark: "Password Reset",
+        className: className,
+      );
+    }
+  }
+
   // Google Sign in Function
   Future loginWithGoogle() async {
     try {

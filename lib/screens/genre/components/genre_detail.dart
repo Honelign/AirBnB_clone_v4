@@ -6,9 +6,11 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 
 import 'package:kin_music_player_app/components/music_list_card.dart';
+import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/constants.dart';
 
 import 'package:kin_music_player_app/screens/genre/components/genre_app_bar.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/genre.dart';
 import 'package:kin_music_player_app/services/network/model/music/music.dart';
 
@@ -66,6 +68,7 @@ class _GenreDetailState extends State<GenreDetail> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: SafeArea(
@@ -84,49 +87,62 @@ class _GenreDetailState extends State<GenreDetail> {
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-              child: PagedListView<int, Music>(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<Music>(
-                  animateTransitions: true,
-                  transitionDuration: const Duration(milliseconds: 500),
-                  noItemsFoundIndicatorBuilder: (context) => SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: Center(
-                      child: Text(
-                        "No Tracks in ${widget.genre.title}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+              child: checkConnection(status) == false
+                  ? RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {});
+                      },
+                      color: refreshIndicatorForegroundColor,
+                      backgroundColor: refreshIndicatorBackgroundColor,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: const NoConnectionDisplay(),
+                      ),
+                    )
+                  : PagedListView<int, Music>(
+                      pagingController: _pagingController,
+                      builderDelegate: PagedChildBuilderDelegate<Music>(
+                        animateTransitions: true,
+                        transitionDuration: const Duration(milliseconds: 500),
+                        noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Center(
+                            child: Text(
+                              "No Tracks in ${widget.genre.title}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
                         ),
+                        noMoreItemsIndicatorBuilder: (_) => Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
+                          child: Center(
+                            child: Text(
+                              "No More Items in ${widget.genre.title}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        firstPageProgressIndicatorBuilder: (_) =>
+                            const KinProgressIndicator(),
+                        newPageProgressIndicatorBuilder: (_) =>
+                            const KinProgressIndicator(),
+                        itemBuilder: (context, item, index) {
+                          return MusicListCard(
+                            music: item,
+                            musics: _pagingController.itemList ?? [],
+                            musicIndex: index,
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  noMoreItemsIndicatorBuilder: (_) => Container(
-                    padding: const EdgeInsets.fromLTRB(0, 16, 0, 32),
-                    child: Center(
-                      child: Text(
-                        "No More Items in ${widget.genre.title}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  firstPageProgressIndicatorBuilder: (_) =>
-                      const KinProgressIndicator(),
-                  newPageProgressIndicatorBuilder: (_) =>
-                      const KinProgressIndicator(),
-                  itemBuilder: (context, item, index) {
-                    return MusicListCard(
-                      music: item,
-                      musics: _pagingController.itemList ?? [],
-                      musicIndex: index,
-                    );
-                  },
-                ),
-              ),
             ),
           ),
         ),
