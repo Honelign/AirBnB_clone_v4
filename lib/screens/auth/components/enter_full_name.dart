@@ -19,12 +19,15 @@ class EnterFullName extends StatefulWidget {
 
 class _EnterFullNameState extends State<EnterFullName> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
 
   TextEditingController fullName = TextEditingController();
   final _fullNameFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    LoginProvider loginProvider =
+        Provider.of<LoginProvider>(context, listen: false);
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
@@ -56,24 +59,35 @@ class _EnterFullNameState extends State<EnterFullName> {
                 ),
               ),
               SizedBox(height: getProportionateScreenHeight(20)),
-              Consumer<LoginProvider>(
-                builder: (context, loginProvider, _) {
-                  return loginProvider.isLoading
-                      ? const Center(
-                          child: KinProgressIndicator(),
-                        )
-                      : CustomElevatedButton(
-                          onTap: () async {
-                            if (_fullNameFormKey.currentState!.validate()) {
-                              await loginProvider.requestOTP(
-                                  widget.phoneNumber, context, fullName.text);
-                            } else if (!_fullNameFormKey.currentState!
-                                .validate()) {}
-                          },
-                          text: 'Request OTP',
-                        );
-                },
-              ),
+              isLoading == true
+                  ? const Center(
+                      child: KinProgressIndicator(),
+                    )
+                  : CustomElevatedButton(
+                      onTap: () async {
+                        if (isLoading == false) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          if (_fullNameFormKey.currentState!.validate()) {
+                            await loginProvider.requestOTP(
+                              widget.phoneNumber,
+                              context,
+                              fullName.text,
+                            );
+                          } else if (!_fullNameFormKey.currentState!
+                              .validate()) {
+                            kShowToast(message: "Invalid Name");
+
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        }
+                      },
+                      text: 'Request OTP',
+                    ),
               const SizedBox(
                 height: 18,
               ),

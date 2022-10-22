@@ -79,7 +79,7 @@ class LoginProvider extends ChangeNotifier {
 
   Future requestOTP(phoneNumber, context, fullName) async {
     isLoading = true;
-    notifyListeners();
+
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
           phoneNumber: phoneNumber,
@@ -106,6 +106,7 @@ class LoginProvider extends ChangeNotifier {
       kShowToast(message: "Invalid OTP");
       rethrow;
     }
+    notifyListeners();
     isLoading = false;
   }
 
