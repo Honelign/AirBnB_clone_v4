@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/acc_alt_option.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/custom_elevated_button.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/enter_full_name.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/reusable_divider.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/social_login.dart';
-import 'package:kin_music_player_app/services/network/regi_page.dart';
+import 'package:kin_music_player_app/screens/auth/components/acc_alt_option.dart';
+import 'package:kin_music_player_app/screens/auth/components/custom_elevated_button.dart';
+import 'package:kin_music_player_app/screens/auth/components/enter_full_name.dart';
+import 'package:kin_music_player_app/screens/auth/components/reusable_divider.dart';
+import 'package:kin_music_player_app/screens/auth/components/social_login.dart';
+import 'package:kin_music_player_app/screens/auth/register_page.dart';
 import 'package:kin_music_player_app/size_config.dart';
 
 class PhoneNumberLogin extends StatefulWidget {
@@ -38,10 +38,13 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
+              // Spacer
               SizedBox(
                 height: getProportionateScreenHeight(35),
               ),
+
+              // OTP FORM
               Form(
                 key: _phoneNumberFormKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -52,7 +55,11 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                   headerTitle: 'Phone Number',
                 ),
               ),
+
+              // Spacer
               SizedBox(height: getProportionateScreenHeight(35)),
+
+              // BUTTON
               CustomElevatedButton(
                 onTap: () async {
                   if (_phoneNumberFormKey.currentState!.validate()) {
@@ -67,21 +74,26 @@ class _PhoneNumberLoginState extends State<PhoneNumberLogin> {
                 },
                 text: 'Proceed to OTP',
               ),
+
+              // Spacer
               SizedBox(
                 height: getProportionateScreenHeight(25),
               ),
-              const ReusableDivider(),
-              SizedBox(
-                height: getProportionateScreenHeight(10),
-              ),
-              const SocialLogin(),
-              AccAltOption(
-                buttonText: 'Register',
-                leadingText: 'Don\'t have an account ?',
-                onTap: () {
-                  Navigator.pushNamed(context, RegPage.routeName);
-                },
-              ),
+
+              // TODO: Uncomment or Remove
+
+              // const ReusableDivider(),
+              // SizedBox(
+              //   height: getProportionateScreenHeight(10),
+              // ),
+              // const SocialLogin(),
+              // AccAltOption(
+              //   buttonText: 'Register',
+              //   leadingText: 'Don\'t have an account ?',
+              //   onTap: () {
+              //     Navigator.pushNamed(context, RegisterPage.routeName);
+              //   },
+              // ),
             ],
           ),
         ),

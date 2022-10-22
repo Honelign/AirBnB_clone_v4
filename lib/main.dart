@@ -9,7 +9,7 @@ import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/firebase_options.dart';
 import 'package:kin_music_player_app/routes.dart';
-import 'package:kin_music_player_app/screens/login_signup/login_signup_body.dart';
+import 'package:kin_music_player_app/screens/auth/login_signup_body.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/connectivity_service.dart';
 import 'package:kin_music_player_app/services/provider/album_provider.dart';

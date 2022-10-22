@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';
+import 'package:kin_music_player_app/screens/auth/components/otp_verification.dart';
 import 'package:kin_music_player_app/services/network/api/user_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/user.dart';

@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/login_signup_body.dart';
+import 'package:kin_music_player_app/screens/auth/login_signup_body.dart';
 import 'package:kin_music_player_app/screens/settings/components/Setting_card_artist.dart';
 import 'package:kin_music_player_app/screens/settings/components/settings_tip_buy_card.dart';
 import 'package:kin_music_player_app/screens/settings/old/user_account_header.dart';

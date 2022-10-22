@@ -1,14 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:kin_music_player_app/main.dart';
-
 import 'package:kin_music_player_app/screens/library/favorite/favorite.dart';
 import 'package:kin_music_player_app/screens/home/components/home_search_screen.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/forget_password.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/otp_verification.dart';
-import 'package:kin_music_player_app/screens/login_signup/login_signup_body.dart';
-
-import 'package:kin_music_player_app/services/network/regi_page.dart';
-
+import 'package:kin_music_player_app/screens/auth/components/otp_verification.dart';
+import 'package:kin_music_player_app/screens/auth/login_signup_body.dart';
+import 'package:kin_music_player_app/screens/auth/register_page.dart';
 import 'screens/home/home_screen.dart';
 import 'components/custom_bottom_app_bar.dart';
 
@@ -20,8 +16,7 @@ class AppRouter {
     CustomBottomAppBar.routeName: (context) => const CustomBottomAppBar(),
     Favorite.routeName: (context) => const Favorite(),
     LoginSignUpBody.routeName: (context) => const LoginSignUpBody(),
-    ForgetPassword.routeName: (context) => ForgetPassword(),
-    RegPage.routeName: (context) => RegPage(),
+    RegisterPage.routeName: (context) => RegisterPage(),
     OTPVerification.routeName: (context) => OTPVerification(),
   };
 }

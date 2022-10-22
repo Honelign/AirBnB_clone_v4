@@ -4,28 +4,26 @@ import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/acc_alt_option.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/custom_elevated_button.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/reusable_divider.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/social_login.dart';
-import 'package:kin_music_player_app/screens/login_signup/verify_email.dart';
+import 'package:kin_music_player_app/screens/auth/components/acc_alt_option.dart';
+import 'package:kin_music_player_app/screens/auth/components/custom_elevated_button.dart';
+import 'package:kin_music_player_app/screens/auth/components/reusable_divider.dart';
+import 'package:kin_music_player_app/screens/auth/components/social_login.dart';
+import 'package:kin_music_player_app/screens/auth/verify_email.dart';
 import 'package:kin_music_player_app/services/network/model/user.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../size_config.dart';
-import '../../screens/login_signup/components/header.dart';
+import 'components/header.dart';
 
-class RegPage extends StatefulWidget {
-  static String routeName = 'regPage';
+class RegisterPage extends StatefulWidget {
+  static String routeName = '/register';
 
   @override
-  _RegPageState createState() => _RegPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegPageState extends State<RegPage> {
-  static String routeName = 'signUp';
-
+class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();

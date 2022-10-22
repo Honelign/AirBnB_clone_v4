@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../size_config.dart';
 
+// ignore: must_be_immutable
 class KinForm extends StatefulWidget {
   final TextEditingController? controller;
   final String? hint;
@@ -10,12 +11,14 @@ class KinForm extends StatefulWidget {
   bool? obscureText;
   final String? headerTitle;
 
-  KinForm(
-      {required this.hint,
-      required this.controller,
-      this.hasIcon = false,
-      this.obscureText = true,
-      this.headerTitle = ''});
+  KinForm({
+    Key? key,
+    required this.hint,
+    required this.controller,
+    this.hasIcon = false,
+    this.obscureText = true,
+    this.headerTitle = '',
+  }) : super(key: key);
 
   @override
   State<KinForm> createState() => _KinFormState();
@@ -36,15 +39,19 @@ class _KinFormState extends State<KinForm> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
+          // Label
           Text(
             widget.headerTitle!,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color:
+                  widget.obscureText == false ? kSecondaryColor : Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
           ),
+
+          // Text Form with Validator
           TextFormField(
             validator: (value) {
               if (value!.isEmpty) {
@@ -74,7 +81,7 @@ class _KinFormState extends State<KinForm> {
                           },
                           icon: const Icon(
                             Icons.visibility,
-                            color: kLightTextColor,
+                            color: kSecondaryColor,
                           ),
                         )
                       : IconButton(

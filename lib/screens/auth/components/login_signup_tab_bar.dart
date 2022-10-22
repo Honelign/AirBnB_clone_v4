@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/email_login.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/phone_number_login.dart';
+import 'package:kin_music_player_app/screens/auth/components/email_login.dart';
+import 'package:kin_music_player_app/screens/auth/components/phone_number_login.dart';
 
 class LoginSignUpTabBar extends StatefulWidget {
   const LoginSignUpTabBar({Key? key}) : super(key: key);
@@ -32,13 +32,17 @@ class _LoginSignUpTabBarState extends State<LoginSignUpTabBar>
       children: [
         SizedBox(
           height: 45,
+
+          // Tab Bar
           child: TabBar(
             controller: _tabController,
             labelColor: Colors.white,
             indicatorColor: kSecondaryColor,
             unselectedLabelColor: kGrey,
-            labelStyle:
-                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            labelStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
             tabs: const [
               Tab(
                 text: 'Login With Email',
@@ -49,12 +53,13 @@ class _LoginSignUpTabBarState extends State<LoginSignUpTabBar>
             ],
           ),
         ),
-        // tab bar view here
+
+        // Tab View
         Expanded(
           child: TabBarView(
             controller: _tabController,
             children: [
-              EmailLogin(),
+              const EmailLogin(),
               PhoneNumberLogin(),
             ],
           ),

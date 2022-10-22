@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
-import 'package:kin_music_player_app/screens/login_signup/components/custom_elevated_button.dart';
+import 'package:kin_music_player_app/screens/auth/components/custom_elevated_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 

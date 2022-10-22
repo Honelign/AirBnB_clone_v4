@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../size_config.dart';
-import 'bezierContainer.dart';
+import 'package:kin_music_player_app/size_config.dart';
 
 class Header extends StatelessWidget {
   const Header({Key? key}) : super(key: key);
@@ -9,20 +7,15 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: getProportionateScreenHeight(250),
+      height: getProportionateScreenHeight(200),
       child: Stack(
         children: [
-          // Positioned(
-          //   bottom: getProportionateScreenHeight(50),
-          //   left: getProportionateScreenWidth(175),
-          //   // child: const BezierContainer(),
-          // ),
           Positioned(
             top: getProportionateScreenHeight(100),
             child: Image.asset(
               'assets/images/logo.png',
-              height: 100,
-              width: 100,
+              height: 80,
+              width: 80,
             ),
             right: getProportionateScreenWidth(50),
             left: getProportionateScreenWidth(50),

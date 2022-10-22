@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 
-
 class ReusableDivider extends StatelessWidget {
   const ReusableDivider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return                 Container(
+    return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: const <Widget>[
@@ -24,7 +23,10 @@ class ReusableDivider extends StatelessWidget {
               ),
             ),
           ),
-          Text('or', style: TextStyle(color: Colors.white),),
+          Text(
+            'or',
+            style: TextStyle(color: Colors.white),
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),

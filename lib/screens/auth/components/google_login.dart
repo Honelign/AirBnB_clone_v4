@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:kin_music_player_app/components/custom_bottom_app_bar.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 
-class FacebookLogin extends StatelessWidget {
-  const FacebookLogin({Key? key}) : super(key: key);
+class GoogleLogin extends StatelessWidget {
+  const GoogleLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
         final provider = Provider.of<LoginProvider>(context, listen: false);
-        // await FacebookAuth.i.logOut();
         var result = await provider.googleLogin();
         if (result == "Successfully Logged In") {
           Navigator.pushReplacementNamed(context, CustomBottomAppBar.routeName);
@@ -25,9 +22,8 @@ class FacebookLogin extends StatelessWidget {
         }
       },
       child: Image.asset(
-        'assets/icons/Facebook.png',
+        'assets/icons/Google.png',
         fit: BoxFit.contain,
-        // color: Colors.blueAccent,
         height: getProportionateScreenHeight(40),
         width: getProportionateScreenWidth(50),
       ),

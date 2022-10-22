@@ -125,8 +125,8 @@ class UserApiService {
         functionName: "logIn",
         errorInfo: e.toString(),
       );
-      return "Something Went Wrong";
     }
+    return "Something Went Wrong";
   }
 
   // TODO:Implement
