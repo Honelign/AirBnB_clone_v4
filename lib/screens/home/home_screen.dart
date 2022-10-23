@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/search/search_bar.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/album/album.dart';
 import 'package:kin_music_player_app/screens/artist/artist.dart';
 import 'package:kin_music_player_app/screens/genre/genre.dart';
-import 'package:kin_music_player_app/screens/home/components/home_search_screen.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
+import 'package:provider/provider.dart';
 
 import '../../size_config.dart';
 import 'components/songs.dart';
@@ -22,9 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    // final provider = Provider.of<CachedFavoriteProvider>(context);
-    //  provider.cacheFavorite( context);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -40,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // ignore: prefer_const_constructors
           title: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: CustomSearchBar(),
+            child: const CustomSearchBar(),
           ),
           toolbarHeight: 60,
           automaticallyImplyLeading: false,

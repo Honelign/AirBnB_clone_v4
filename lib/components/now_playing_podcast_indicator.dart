@@ -5,7 +5,6 @@ import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/connectivity_result.dart';
-import 'package:kin_music_player_app/services/provider/cached_favorite_music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_provider.dart';

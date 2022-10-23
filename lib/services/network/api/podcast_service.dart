@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
-import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/network/model/podcast/podcast_category.dart';
@@ -21,15 +17,400 @@ class PodcastApiService {
     List<PodcastCategory> podcastCategories = [];
     try {
       // mock api call
-      Response responseApi =
-          await get(Uri.parse("$kinPodcastBaseUrl/mobileApp/categories"));
 
-      if (responseApi.statusCode == 200) {
-        final items = jsonDecode(responseApi.body) as List;
+      await Future.delayed(const Duration(seconds: 2));
+      List<Map<String, dynamic>> response = [
+        {
+          "id": 1,
+          "category_name": "Technology",
+          "podcasts": [
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
 
-        podcastCategories =
-            items.map((e) => PodcastCategory.fromJson(e)).toList();
-      }
+        //
+
+        {
+          "id": 2,
+          "category_name": "Entertainment",
+          "podcasts": [
+            {
+              'id': 3,
+              'category': 2,
+              "podcast_name": "13 Months of Sunshine",
+              "host_name": "TESFA",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-4.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 1,
+            },
+            {
+              'id': 4,
+              'category': 2,
+              "podcast_name": "MERI Ethiopia",
+              "host_name": "MERI Ethiopia",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-8.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 19,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 5,
+              'category': 2,
+              "podcast_name": "Rorshok Ethiopia Update",
+              "host_name": "Rorshok",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-5.png",
+              "podcast_description": "",
+              "numberOfEpisodes": 21,
+              "numberOfSeasons": 3,
+            }
+          ]
+        },
+
+        //
+        {
+          "id": 3,
+          "category_name": "Arts",
+          "podcasts": [
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
+
+        //
+        {
+          "id": 4,
+          "category_name": "Personal Development",
+          "podcasts": [
+            {
+              'id': 3,
+              'category': 2,
+              "podcast_name": "13 Months of Sunshine",
+              "host_name": "TESFA",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-4.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 1,
+            },
+            {
+              'id': 4,
+              'category': 2,
+              "podcast_name": "MERI Ethiopia",
+              "host_name": "MERI Ethiopia",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-8.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 19,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 5,
+              'category': 2,
+              "podcast_name": "Rorshok Ethiopia Update",
+              "host_name": "Rorshok",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-5.png",
+              "podcast_description": "",
+              "numberOfEpisodes": 21,
+              "numberOfSeasons": 3,
+            }
+          ]
+        },
+
+        //
+        {
+          "id": 5,
+          "category_name": "Tv & Film",
+          "podcasts": [
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            },
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            },
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
+
+        //
+        {
+          "id": 1,
+          "category_name": "Fun and Games",
+          "podcasts": [
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        },
+
+        {
+          "id": 1,
+          "category_name": "Reality",
+          "podcasts": [
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            },
+            {
+              'id': 1,
+              'category': 1,
+              "podcast_name": "HypheNation: A Diaspora Life",
+              "host_name": "Rebka Fisseha",
+              "host": 1,
+              "podcast_coverImage": "assets/images/Podcast-1.jpg",
+              "podcast_description": "",
+              "numberOfEpisodes": 8,
+              "numberOfSeasons": 2,
+            },
+            {
+              'id': 2,
+              'category': 1,
+              "podcast_name": "Habesha Finance",
+              "host_name": "Matt G",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-2.png",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 18,
+              "numberOfSeasons": 3,
+            },
+            {
+              'id': 3,
+              'category': 1,
+              "podcast_name": "The Horn",
+              "host_name": "International Crisis Group",
+              "host": 2,
+              "podcast_coverImage": "assets/images/Podcast-3.jpg",
+              "podcast_description": "desc",
+              "numberOfEpisodes": 33,
+              "numberOfSeasons": 4,
+            }
+          ]
+        }
+      ];
+
+      podcastCategories = response
+          .map(
+            (podcastCategory) => PodcastCategory.fromJson(podcastCategory),
+          )
+          .toList();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -48,16 +429,87 @@ class PodcastApiService {
     List<PodcastSeason> podcastSeasons = [];
 
     try {
-      Response response = await get(
-        Uri.parse("$kinPodcastBaseUrl/mobileApp/seasons?podcastId=$podcastId"),
-      );
+      await Future.delayed(const Duration(seconds: 2));
+      List<Map<String, dynamic>> response = [
+        {
+          "id": 1,
+          "season_name": 1,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 2,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 3,
+          "season_name": 3,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 4,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 1,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 2,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 3,
+          "season_name": 3,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 4,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 1,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 2,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 3,
+          "season_name": 3,
+          "numberOfEpisodes": 25,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+        {
+          "id": 1,
+          "season_name": 4,
+          "numberOfEpisodes": 12,
+          "season_coverImage": "assets/images/Podcast-1.jpg",
+        },
+      ];
 
-      if (response.statusCode == 200) {
-        final item = jsonDecode(response.body) as List;
-
-        podcastSeasons =
-            item.map((season) => PodcastSeason.fromJson(season)).toList();
-      }
+      podcastSeasons = response
+          .map(
+            (e) => PodcastSeason.fromJson(e),
+          )
+          .toList();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -76,14 +528,147 @@ class PodcastApiService {
     List<PodcastEpisode> podcastEpisodes = [];
 
     try {
-      Response response = await get(
-        Uri.parse("$kinPodcastBaseUrl/mobileApp/episodes?seasonId=$seasonId"),
-      );
+      await Future.delayed(const Duration(seconds: 2));
+      List<Map<String, dynamic>> response = [
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+          "episode_audioFile": "episode_audioFile",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        },
+        {
+          "id": 1,
+          "episode_name": "Sew ena Aden",
+          "host_name": "Abel Alem",
+          "host": 1,
+          "category": 1,
+          "episode_audioFile": "episode_audioFile",
+          "episode_coverImage": "assets/images/Podcast-2.png",
+        }
+      ];
 
-      if (response.statusCode == 200) {
-        final item = jsonDecode(response.body) as List;
-        podcastEpisodes = item.map((e) => PodcastEpisode.fromJson(e)).toList();
-      }
+      podcastEpisodes =
+          response.map((e) => PodcastEpisode.fromJson(e)).toList();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,

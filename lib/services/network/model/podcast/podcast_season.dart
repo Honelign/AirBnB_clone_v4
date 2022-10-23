@@ -5,8 +5,8 @@ part 'podcast_season.g.dart';
 @JsonSerializable()
 class PodcastSeason {
   final int id;
-  final String seasonNumber;
   final int numberOfEpisodes;
+  final String seasonNumber;
   final String cover;
 
   PodcastSeason(

@@ -9,7 +9,11 @@ import 'Purchased/purchased.dart';
 import 'favorite/favorite.dart';
 
 class MyLibrary extends StatefulWidget {
-  const MyLibrary({Key? key}) : super(key: key);
+  final int initialIndex;
+  final bool showToast;
+  const MyLibrary(
+      {Key? key, required this.initialIndex, required this.showToast})
+      : super(key: key);
 
   @override
   State<MyLibrary> createState() => _MyLibraryState();
@@ -19,8 +23,13 @@ class _MyLibraryState extends State<MyLibrary> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+
+    if (widget.showToast == true) {
+      kShowToast(message: "No Connection. Listen Offline");
+    }
     return DefaultTabController(
       length: 4,
+      initialIndex: widget.initialIndex ?? 0,
       child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
@@ -65,21 +74,24 @@ class _MyLibraryState extends State<MyLibrary> {
           ),
         ),
         body: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Colors.blue,
-                Colors.white,
-              ],
-            )),
-            child: const TabBarView(children: [
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.blue,
+              Colors.white,
+            ],
+          )),
+          child: const TabBarView(
+            children: [
               PlaylistsScreen(),
               Favorite(),
               Offline(),
               Purchased(),
-            ])),
+            ],
+          ),
+        ),
       ),
     );
   }

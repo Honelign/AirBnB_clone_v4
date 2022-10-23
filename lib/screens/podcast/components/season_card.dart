@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/podcast/components/podcast_season_page.dart';
@@ -41,21 +40,15 @@ class SeasonCard extends StatelessWidget {
             Row(
               children: [
                 // Image
-
-                CachedNetworkImage(
-                  imageUrl: "$kinAssetBaseUrl-dev/" + cover,
-                  imageBuilder: (context, img) {
-                    return Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: img,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    );
-                  },
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(cover),
+                    ),
+                    shape: BoxShape.circle,
+                  ),
                 ),
 
                 const SizedBox(
@@ -69,7 +62,7 @@ class SeasonCard extends StatelessWidget {
                   children: [
                     // title
                     Text(
-                      title,
+                      "Season " + title,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 17.0,
@@ -94,12 +87,11 @@ class SeasonCard extends StatelessWidget {
               ],
             ),
             IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: kGrey,
-              ),
-            )
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.more_vert_rounded,
+                  color: kGrey,
+                ))
           ],
         ),
       ),

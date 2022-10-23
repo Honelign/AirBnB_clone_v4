@@ -6,6 +6,7 @@ import 'package:kin_music_player_app/components/ad_banner.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/components/music_card.dart';
 import 'package:kin_music_player_app/components/music_card_recently.dart';
+import 'package:kin_music_player_app/components/no_connection_display.dart';
 import 'package:kin_music_player_app/components/on_snapshot_error.dart';
 import 'package:kin_music_player_app/components/section_titile_recently.dart';
 import 'package:kin_music_player_app/components/section_title.dart';
@@ -14,6 +15,7 @@ import 'package:kin_music_player_app/screens/album/components/album_body.dart';
 import 'package:kin_music_player_app/screens/artist/components/artist_detail.dart';
 import 'package:kin_music_player_app/screens/home/components/all_music_list.dart';
 import 'package:kin_music_player_app/screens/home/components/genre_home_display.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/network/model/music/album.dart';
 import 'package:kin_music_player_app/services/network/model/music/artist.dart';
 import 'package:kin_music_player_app/services/network/model/music/genre.dart';
@@ -40,7 +42,9 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    bool isReleased = false;
     super.build(context);
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {});
@@ -48,40 +52,70 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
       backgroundColor: refreshIndicatorBackgroundColor,
       color: refreshIndicatorForegroundColor,
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              const Color(0xFF052C54),
-              const Color(0xFFD9D9D9).withOpacity(0.7),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: linearGradientDecoration,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Spacer
               SizedBox(
                 height: getProportionateScreenHeight(6),
               ),
+
+              // Recently Played
               _buildRecentlyPlayedMusics(context),
+
+              // Spacer
               SizedBox(height: getProportionateScreenWidth(5)),
+
+              // Ad Banner
               const AdBanner(),
-              SizedBox(height: getProportionateScreenWidth(10)),
-              _buildNewReleasedAlbums(context),
-              SizedBox(height: getProportionateScreenWidth(10)),
-              _buildPopularMusics(context),
-              SizedBox(height: getProportionateScreenWidth(10)),
-              _buildArtist(context),
-              SizedBox(
-                height: getProportionateScreenHeight(10),
-              ),
-              _buildRecentMusics(context),
-              SizedBox(
-                height: getProportionateScreenHeight(10),
-              ),
-              _buildGenres(context)
+
+              // Spacer
+              checkConnection(status) == false && isReleased == true
+                  ? Container(
+                      child: const NoConnectionDisplay(),
+                      width: MediaQuery.of(context).size.width,
+                      height: 200,
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(height: getProportionateScreenWidth(10)),
+
+                        // New Released Albums
+                        _buildNewReleasedAlbums(context),
+
+                        // Spacer
+                        SizedBox(height: getProportionateScreenWidth(10)),
+
+                        // Popular Music
+                        _buildPopularMusics(context),
+
+                        // Spacer
+                        SizedBox(height: getProportionateScreenWidth(10)),
+
+                        // Artists
+                        _buildArtist(context),
+
+                        // Spacer
+                        SizedBox(
+                          height: getProportionateScreenHeight(10),
+                        ),
+
+                        // New Music
+                        _buildRecentMusics(context),
+
+                        // Spacer
+                        SizedBox(
+                          height: getProportionateScreenHeight(10),
+                        ),
+
+                        // Genre
+                        _buildGenres(context)
+                      ],
+                    )
             ],
           ),
         ),
@@ -478,6 +512,7 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(22),
@@ -492,7 +527,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 );
               }),
         ),
+
+        // Spacer
         SizedBox(height: getProportionateScreenHeight(20)),
+
+        // Scroll Child
         SizedBox(
           height: getProportionateScreenHeight(160),
           child: SingleChildScrollView(
@@ -502,8 +541,11 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               builder: (context, AsyncSnapshot<List<Genre>> snapshot) {
                 // loading
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: KinProgressIndicator(),
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: KinProgressIndicator(),
+                    ),
                   );
                 }
 
@@ -572,7 +614,7 @@ class SpecialOfferCard extends StatelessWidget {
                     height: 115,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           offset: Offset(-5, 5),
                           spreadRadius: -3,
@@ -581,15 +623,9 @@ class SpecialOfferCard extends StatelessWidget {
                         )
                       ],
                       image: DecorationImage(
-                          fit: BoxFit.cover, image: imageProvider),
-                      // gradient: LinearGradient(
-                      //   begin: Alignment.topCenter,
-                      //   end: Alignment.bottomCenter,
-                      //   colors: [
-                      //     const Color(0xFF343434).withOpacity(0.3),
-                      //     const Color(0xFF343434).withOpacity(0.45),
-                      //   ],
-                      // ),
+                        fit: BoxFit.cover,
+                        image: imageProvider,
+                      ),
                     ),
                   );
                 },
@@ -599,27 +635,6 @@ class SpecialOfferCard extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 style: const TextStyle(fontSize: 16, color: Colors.white),
               )
-              // Padding(
-              //   padding: EdgeInsets.symmetric(
-              //     horizontal: getProportionateScreenWidth(15.0),
-              //     vertical: getProportionateScreenWidth(10),
-              //   ),
-              //   child: Text.rich(
-              //     TextSpan(
-              //       style: const TextStyle(color: Colors.white),
-              //       children: [
-              //         TextSpan(
-              //           text: "$genre\n",
-              //           style: const TextStyle(
-              //             fontSize: 16,
-              //             fontWeight: FontWeight.bold,
-              //           ),
-              //         ),
-              //         // TextSpan(text: "$numOfMusics Musics")
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),

@@ -21,6 +21,7 @@ const kDarkTextColor = Color(0XFFFFFF00);
 const kLightTextColor = Color(0XFFFFFFFF);
 const kPopupMenuBackgroundColor = Color.fromARGB(255, 43, 42, 42);
 const kPopupMenuForegroundColor = kGrey;
+const kAppBarColor = const Color(0xFF052c54);
 
 // refresh
 const refreshIndicatorBackgroundColor = kSecondaryColor;

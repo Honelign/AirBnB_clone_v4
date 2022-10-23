@@ -10,6 +10,7 @@ import 'package:kin_music_player_app/screens/library/library.dart';
 import 'package:kin_music_player_app/screens/podcast/podcast.dart';
 import 'package:kin_music_player_app/screens/radio/radio.dart';
 import 'package:kin_music_player_app/screens/settings/settings.dart';
+import 'package:kin_music_player_app/services/connectivity_result.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
@@ -32,17 +33,9 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _currentIndex = 2;
+  int _currentIndex = 0;
 
   final _inactiveColor = kGrey;
-  List<Widget> pages = [
-    const HomeScreen(),
-    const MyLibrary(),
-    const Podcast(),
-    const RadioScreenNew(),
-    const Settings(),
-    //makePayment(),
-  ];
 
   Future<bool> checkIfEmailIsVerified() async {
     var user = FirebaseAuth.instance.currentUser;
@@ -65,6 +58,25 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    bool isReleased = false;
+
+    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
+    if (checkConnection(status) == false && isReleased == true) {
+      _currentIndex = 1;
+    }
+
+    List<Widget> pages = [
+      const HomeScreen(),
+      MyLibrary(
+        initialIndex: _currentIndex == 0 ? 0 : 2,
+        showToast: _currentIndex == 0 ? false : true,
+      ),
+      const Podcast(),
+      const RadioScreenNew(),
+      const Settings(),
+      //makePayment(),
+    ];
+
     return FutureBuilder(
       future:
           Provider.of<LoginProvider>(context, listen: false).getUserPrivilege(),
@@ -117,9 +129,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               return willLeave;
             },
             child: Scaffold(
-              body: getBody(),
+              body: getBody(pages: pages),
               backgroundColor: Color(0xFF052C54),
-              bottomNavigationBar: _buildBottomBar(),
+              bottomNavigationBar: _buildBottomBar(pages: pages),
             ),
           );
         }
@@ -136,7 +148,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar({required List<Widget> pages}) {
     final musicProvider = Provider.of<MusicPlayer>(context);
     final podcastProvider = Provider.of<PodcastPlayer>(context);
     final radioProvider = Provider.of<RadioProvider>(context);
@@ -204,7 +216,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
                 pages.removeAt(1);
                 pages.insert(
                   1,
-                  const MyLibrary(),
+                  const MyLibrary(
+                    initialIndex: 0,
+                    showToast: false,
+                  ),
                 ); //changed from playlist to library
               });
             }
@@ -297,7 +312,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
     );
   }
 
-  Widget getBody() {
+  Widget getBody({required List<Widget> pages}) {
     return IndexedStack(
       children: pages,
       index: _currentIndex,
