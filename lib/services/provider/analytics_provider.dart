@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/services/network/api/analytics_service.dart';
+import 'package:kin_music_player_app/services/network/model/analytics/analytics_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AnalyticsProvider extends ChangeNotifier {
   bool isLoading = false;
   List producerOwnedInfo = [];
-  List allArtists = [];
-  List allAlbums = [];
-  List allTracks = [];
+  List<AnalyticsInfo> allArtists = [];
+  List<AnalyticsInfo> allAlbums = [];
+  List<AnalyticsInfo> allTracks = [];
   List generalAnalytics = [];
 
   List currentTrackAnalytics = [];
@@ -48,7 +49,8 @@ class AnalyticsProvider extends ChangeNotifier {
   }
 
   // get all artists, albums and tracks under a producer
-  Future getProducerOwnedInfo({required String infoType}) async {
+  Future<List<AnalyticsInfo>> getProducerOwnedInfo(
+      {required String infoType, required int page}) async {
     isLoading = true;
     allArtists = [];
     allAlbums = [];
@@ -69,9 +71,14 @@ class AnalyticsProvider extends ChangeNotifier {
     var producerOwnedInfo = await analyticsApiService.getProducerOwnedInfo(
       infoType: infoType,
       apiEndPoint: apiEndPoint,
+      page: page,
     );
 
     isLoading = false;
+
+    allAlbums = [];
+    allArtists = [];
+    allTracks = [];
 
     if (infoType == "Albums") {
       allAlbums = producerOwnedInfo;

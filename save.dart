@@ -1,244 +1,3 @@
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
-// import 'package:kin_music_player_app/components/on_snapshot_error.dart';
-// import 'package:kin_music_player_app/constants.dart';
-// import 'package:kin_music_player_app/screens/dashboard/producer/components/producer_general_info.dart';
-// import 'package:kin_music_player_app/screens/dashboard/producer/components/producer_owned_info.dart';
-// import 'package:kin_music_player_app/size_config.dart';
-
-// class ProducerDashboard extends StatefulWidget {
-//   const ProducerDashboard({Key? key}) : super(key: key);
-
-//   @override
-//   State<ProducerDashboard> createState() => _ProducerDashboardState();
-// }
-
-// class _ProducerDashboardState extends State<ProducerDashboard> {
-//   bool isReleased = false;
-//   // get formatted display name for profile display
-//   String formatDisplayName() {
-//     String displayValue = "";
-//     try {
-//       var currentUser = FirebaseAuth.instance.currentUser;
-//       displayValue = "KA";
-//       if (currentUser != null) {
-//         String firstName = currentUser.displayName!.split(" ")[0];
-//         String lastName = currentUser.displayName!.split(" ")[1];
-//         if (firstName != null && lastName != null) {
-//           displayValue = firstName[0] + lastName[0];
-//         } else if (firstName != null) {
-//           displayValue = firstName[0] + firstName[1];
-//         } else if (lastName != null) {
-//           displayValue = lastName[0] + lastName[1];
-//         }
-//       }
-//     } catch (e) {
-//       displayValue = "KA";
-//     }
-//     return displayValue;
-//   }
-
-//   // get phone or email to display
-//   String getEmailOrPhone() {
-//     String displayValue = "";
-//     var currentUser = FirebaseAuth.instance.currentUser;
-
-//     if (currentUser != null) {
-//       if (currentUser.email != "") {
-//         displayValue = currentUser.email ?? "";
-//       } else if (currentUser.phoneNumber != "") {
-//         displayValue = currentUser.phoneNumber ?? "";
-//       }
-//     }
-
-//     return displayValue;
-//   }
-
-//   Future<Map<String, dynamic>> getDisplayInfo() async {
-//     String emailOrPhone = await getEmailOrPhone();
-//     String displayName = await formatDisplayName();
-
-//     return {"emailOrPhone": emailOrPhone, "displayName": displayName};
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         elevation: 0,
-//         toolbarHeight: HeightValues.toolBarHeight,
-//         backgroundColor: kAppBarColor,
-//       ),
-//       body: RefreshIndicator(
-//         onRefresh: () async {
-//           setState(() {});
-//         },
-//         backgroundColor: refreshIndicatorBackgroundColor,
-//         color: refreshIndicatorForegroundColor,
-//         child: Container(
-//           decoration: linearGradientDecoration,
-//           width: MediaQuery.of(context).size.width,
-//           height: MediaQuery.of(context).size.height,
-//           padding: EdgeInsets.fromLTRB(
-//             getProportionateScreenWidth(16),
-//             getProportionateScreenHeight(0),
-//             getProportionateScreenWidth(16),
-//             getProportionateScreenHeight(40),
-//           ),
-//           child: SingleChildScrollView(
-//             child: Column(
-//               children: [
-//                 // Profile Detail
-//                 FutureBuilder<Map<String, dynamic>>(
-//                   future: getDisplayInfo(),
-//                   builder: (context, snapshot) {
-//                     // loading
-//                     if (snapshot.connectionState == ConnectionState.waiting) {
-//                       return Container(
-//                         width: MediaQuery.of(context).size.width,
-//                         height: HeightValues.profileSectionHeight,
-//                         padding: const EdgeInsets.only(top: 20),
-//                         child: const Center(
-//                           child: KinProgressIndicator(),
-//                         ),
-//                       );
-//                     }
-
-//                     // data loaded
-//                     else if (snapshot.hasData && !snapshot.hasError) {
-//                       return Container(
-//                         width: MediaQuery.of(context).size.width,
-//                         height: HeightValues.profileSectionHeight,
-//                         padding: const EdgeInsets.only(top: 20),
-//                         child: Column(
-//                           children: [
-//                             //  profile image
-//                             FirebaseAuth.instance.currentUser!.photoURL != null
-//                                 ? SizedBox(
-//                                     width: 120,
-//                                     height: 120,
-//                                     child: CachedNetworkImage(
-//                                       imageUrl: FirebaseAuth
-//                                               .instance.currentUser!.photoURL ??
-//                                           "",
-//                                       imageBuilder: (context, imageProvider) =>
-//                                           Container(
-//                                         decoration: BoxDecoration(
-//                                           shape: BoxShape.circle,
-//                                           image: DecorationImage(
-//                                             image: imageProvider,
-//                                             fit: BoxFit.fill,
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   )
-//                                 : Container(
-//                                     width: 150,
-//                                     height: 150,
-//                                     padding: const EdgeInsets.symmetric(
-//                                       vertical: 15,
-//                                       horizontal: 15,
-//                                     ),
-//                                     decoration: BoxDecoration(
-//                                       shape: BoxShape.circle,
-//                                       color: kSecondaryColor.withOpacity(0.65),
-//                                     ),
-//                                     child: Center(
-//                                       child: Text(
-//                                         snapshot.data!['displayName'],
-//                                         style: const TextStyle(
-//                                           color: Colors.white,
-//                                           fontSize: 56,
-//                                           letterSpacing: 3,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ),
-
-//                             // Spacer
-//                             SizedBox(
-//                               height: getProportionateScreenHeight(20),
-//                             ),
-
-//                             // Artist Name
-//                             Text(
-//                               FirebaseAuth.instance.currentUser == null ||
-//                                       FirebaseAuth.instance.currentUser!
-//                                               .displayName ==
-//                                           null ||
-//                                       FirebaseAuth.instance.currentUser!
-//                                               .displayName ==
-//                                           ""
-//                                   ? "Kin Admin"
-//                                   : FirebaseAuth
-//                                           .instance.currentUser!.displayName ??
-//                                       "Kin Admin",
-//                               style: const TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: 25,
-//                                 fontWeight: FontWeight.w700,
-//                               ),
-//                             ),
-
-//                             //  Spacer
-//                             SizedBox(
-//                               height: getProportionateScreenHeight(6),
-//                             ),
-
-//                             // Email / contact info
-//                             Text(
-//                               snapshot.data!['emailOrPhone'],
-//                               style: const TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: 16,
-//                                 fontWeight: FontWeight.w400,
-//                               ),
-//                             ),
-
-//                             // Spacer
-//                             SizedBox(
-//                               height: getProportionateScreenHeight(12),
-//                             ),
-//                           ],
-//                         ),
-//                       );
-//                     }
-
-//                     // error
-//                     else {
-//                       return OnSnapshotError(error: snapshot.error.toString());
-//                     }
-//                   },
-//                 ),
-
-//                 // Spacer
-//                 const SizedBox(
-//                   height: 24,
-//                 ),
-
-//                 // Producer General Info
-//                 const ProducerGeneralInfo(),
-
-//                 // spacer
-//                 SizedBox(
-//                   height: getProportionateScreenHeight(6),
-//                 ),
-
-//                 // List View
-
-//                 const ProducerOwnedInfo(),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -287,7 +46,7 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
         listen: false,
       ); // get producer based info
       await analyticsProvider.getProducerOwnedInfo(
-          infoType: currentUploadType, page: 1);
+          infoType: currentUploadType, page: 2);
       List result = await analyticsProvider.getProducerGeneralInfo();
       barData = [];
       dateValues = [];
@@ -356,9 +115,10 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
 
   // get formatted display name for profile display
   String formatDisplayName() {
+    String displayValue = "";
     try {
       var currentUser = FirebaseAuth.instance.currentUser;
-      String displayValue = "KA";
+      displayValue = "KA";
       if (currentUser != null) {
         String firstName = currentUser.displayName!.split(" ")[0];
         String lastName = currentUser.displayName!.split(" ")[1];
@@ -371,11 +131,13 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
           displayValue = lastName[0] + lastName[1];
         }
       }
-
-      return displayValue;
     } catch (e) {
-      return "KA";
+      displayValue = "KA";
     }
+
+    print("dashboard : $displayValue");
+
+    return displayValue;
   }
 
   // get phone or email to display
@@ -509,13 +271,6 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                                   ),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    // color: Colors.grey.withOpacity(0.55),
-                                    // image: DecorationImage(
-                                    //   image: AssetImage(
-                                    //     "assets/images/logo.png",
-                                    //   ),
-                                    //   fit: BoxFit.cover,
-                                    // ),
                                     color: kSecondaryColor.withOpacity(0.65),
                                   ),
                                   child: Center(
@@ -545,6 +300,8 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
+
+                          //  Spacer
                           SizedBox(
                             height: getProportionateScreenHeight(6),
                           ),
@@ -559,10 +316,12 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                             ),
                           ),
 
+                          // Spacer
                           SizedBox(
                             height: getProportionateScreenHeight(24),
                           ),
 
+                          //
                           snapshot.data!.isEmpty == true
                               ?
                               // if no artists/albums/tracks
@@ -676,7 +435,8 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
                                                 color: Colors.white,
                                                 fontSize:
                                                     getProportionateScreenWidth(
-                                                        24),
+                                                  24,
+                                                ),
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
@@ -876,4 +636,8 @@ class _ProducerDashboardState extends State<ProducerDashboard> {
       ),
     );
   }
+}
+
+Widget _buildProducerTotalInfo() {
+  return Text("Producer General Info");
 }

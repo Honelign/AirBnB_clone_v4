@@ -57,7 +57,7 @@ class ArtistInfoCard extends StatelessWidget {
                 infoLabel,
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.85),
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -66,10 +66,11 @@ class ArtistInfoCard extends StatelessWidget {
           Text(
             infoValue,
             style: TextStyle(
-              fontSize: getProportionateScreenWidth(24),
+              fontSize: getProportionateScreenWidth(22),
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.clip,
           )
         ],
       ),

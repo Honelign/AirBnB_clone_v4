@@ -43,6 +43,12 @@ class _GenreDetailState extends State<GenreDetail> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
   Future _fetchMoreTracksUnderGenre({required int pageKey}) async {
     try {
       final newItems = await genreProvider.getAllTracksByGenreId(
@@ -58,12 +64,6 @@ class _GenreDetailState extends State<GenreDetail> {
     } catch (error) {
       _pagingController.error = error;
     }
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 
   @override

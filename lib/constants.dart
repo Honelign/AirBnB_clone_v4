@@ -5,6 +5,15 @@ import 'package:kin_music_player_app/services/connectivity_result.dart';
 
 import 'size_config.dart';
 
+class HeightValues {
+  static double profileSectionHeight = 280;
+  static double toolBarHeight = 40;
+  static double generalInfoCardHeight = 300 + SizeConfig.screenHeight * 0.45;
+  static double graphHeight = SizeConfig.screenHeight * 0.45;
+
+  static double producerOwnedInfoSectionHeight = 400;
+}
+
 //a-0xFFF67E7D  b-0xFFabdf75  c-0xFF009ddc
 // const kPrimaryColor = Color(0xFF464646);
 // const kArtistID = "gZkd8CJAxESJpJFmXRLnU0IFkhE3";
@@ -185,24 +194,17 @@ const List<PopupMenuItem> kMusicPopupMenuItem = [
 const List<PopupMenuItem> kMusicOfflinePopupMenuItem = [
   PopupMenuItem(
     child: Text(
-      'Add to playlist',
+      'Detail',
       style: popupTextStyle,
     ),
     value: 1,
   ),
   PopupMenuItem(
     child: Text(
-      'Detail',
-      style: popupTextStyle,
-    ),
-    value: 2,
-  ),
-  PopupMenuItem(
-    child: Text(
       'Remove',
       style: popupTextStyle,
     ),
-    value: 3,
+    value: 2,
   ),
 ];
 const List<PopupMenuItem> kPlaylistPopupMenuItem = [

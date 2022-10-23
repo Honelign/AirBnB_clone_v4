@@ -208,47 +208,37 @@ class _OfflineMusicCardState extends State<OfflineMusicCard> {
                 ),
 
                 // Popup Menu
-                // Center(
-                //   child: PopupMenuButton(
-                //     initialValue: 0,
-                //     child: const Icon(
-                //       Icons.more_vert,
-                //       color: kPopupMenuForegroundColor,
-                //       size: 28,
-                //     ),
-                //     color: kPopupMenuBackgroundColor,
-                //     onSelected: (value) async {
-                //       // add to playlist
-                //       if (value == 1) {
-                //         showDialog(
-                //           context: context,
-                //           builder: (_) {
-                //             return PlaylistSelectorDialog(
-                //               trackId: widget.music!.id.toString(),
-                //             );
-                //           },
-                //         );
-                //       }
+                Center(
+                  child: PopupMenuButton(
+                    initialValue: 0,
+                    child: const Icon(
+                      Icons.more_vert,
+                      color: kPopupMenuForegroundColor,
+                      size: 28,
+                    ),
+                    color: Colors.white.withOpacity(0.75),
+                    onSelected: (value) async {
+                      // add to playlist
 
-                //       // detail
-                //       else if (value == 2) {
-                //         showDialog(
-                //             context: context,
-                //             builder: (context) {
-                //               return MusicDetailDisplay(music: widget.music!);
-                //             });
-                //       } else if (value == 3) {
-                //         await offlineMusicProvider.removeOfflineMusic(
-                //             music: widget.music!);
+                      // detail
+                      if (value == 1) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return MusicDetailDisplay(music: widget.music!);
+                            });
+                      } else if (value == 2) {
+                        await offlineMusicProvider.removeOfflineMusic(
+                            music: widget.music!);
 
-                //         widget.refresherFunction();
-                //       }
-                //     },
-                //     itemBuilder: (context) {
-                //       return kMusicOfflinePopupMenuItem;
-                //     },
-                //   ),
-                // ),
+                        widget.refresherFunction();
+                      }
+                    },
+                    itemBuilder: (context) {
+                      return kMusicOfflinePopupMenuItem;
+                    },
+                  ),
+                ),
               ],
             ),
           ),

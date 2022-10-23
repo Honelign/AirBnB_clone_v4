@@ -215,7 +215,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                               SizedBox(
                                 width: getProportionateScreenWidth(5),
                               ),
-                              _buildPreviousButton(playerProvider),
+                              _buildPreviousButton(),
                               SizedBox(
                                 width: getProportionateScreenWidth(5),
                               ),
@@ -223,7 +223,7 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
                               SizedBox(
                                 width: getProportionateScreenWidth(5),
                               ),
-                              _buildNextButton(playerProvider),
+                              _buildNextButton(),
                               SizedBox(
                                 width: getProportionateScreenWidth(5),
                               ),
@@ -764,7 +764,9 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     );
   }
 
-  Widget _buildPreviousButton(MusicPlayer playerProvider) {
+  Widget _buildPreviousButton() {
+    MusicPlayer playerProvider =
+        Provider.of<MusicPlayer>(context, listen: false);
     return IconButton(
       icon: const Icon(
         Icons.skip_previous_rounded,
@@ -822,7 +824,9 @@ class _NowPlayingMusicState extends State<NowPlayingMusic>
     );
   }
 
-  Widget _buildNextButton(MusicPlayer playerProvider) {
+  Widget _buildNextButton() {
+    MusicPlayer playerProvider =
+        Provider.of<MusicPlayer>(context, listen: false);
     return IconButton(
       icon: const Icon(
         Icons.skip_next_rounded,

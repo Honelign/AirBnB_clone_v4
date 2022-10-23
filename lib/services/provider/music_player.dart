@@ -28,6 +28,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   bool _isMusicStopped = true;
   bool isPlayingLocal = false;
   bool isProcessingPlay = false;
+  bool isReleased = false;
 
   bool get isMusicStopped => _isMusicStopped;
 
@@ -166,6 +167,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   next({action = true, musics}) {
     if (isProcessingPlay == false) {
       int next = _currentIndex! + 1;
+
       if (!action && _loopMode && isLastMusic(next) && _loopPlaylist) {
         setPlaying(_currentAlbum, 0, musics);
 
@@ -241,16 +243,19 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   ) async {
     try {
       _currentMusic = _albumMusics[index];
-      player.stop();
-      notifyListeners();
+      _currentIndex = index;
 
-      if (isPlayingLocal == false) {
-        await _open(_albumMusics[index]);
-      } else {
-        await _openLocal(_albumMusics[index]);
+      if (isReleased == false) {
+        player.stop();
       }
 
-      _currentIndex = index;
+      if (isProcessingPlay == false) {
+        if (isPlayingLocal == false) {
+          await _open(_albumMusics[index]);
+        } else {
+          await _openLocal(_albumMusics[index]);
+        }
+      }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -259,6 +264,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         className: className,
       );
     }
+    notifyListeners();
   }
 
   isSameAlbum() {
@@ -298,9 +304,10 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     );
     try {
       // kill any existing player
-      player.pause();
-      player.stop();
-
+      if (isReleased == false) {
+        player.pause();
+        player.stop();
+      }
       // open new player
       await player.open(
         Audio.network(
@@ -332,8 +339,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           isProcessingPlay = false;
         }
       });
-
-      notifyListeners();
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
         fileName: fileName,
@@ -342,6 +347,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         className: className,
       );
     }
+    notifyListeners();
   }
 
   _openLocal(Music music) async {
@@ -354,9 +360,10 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     );
     try {
       // kill any existing player
-      // player.pause();
-      player.stop();
-
+      if (isReleased == false) {
+        player.pause();
+        player.stop();
+      }
       // open new player
       await player.open(
         Audio.file(
@@ -391,6 +398,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         className: className,
       );
     }
+    // // notifyListeners();
   }
 
   handlePlayButton(

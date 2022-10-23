@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kin_music_player_app/components/kin_progress_indicator.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/auth/login_signup_body.dart';
 import 'package:kin_music_player_app/screens/settings/components/Setting_card_artist.dart';
 import 'package:kin_music_player_app/screens/settings/components/settings_tip_buy_card.dart';
-import 'package:kin_music_player_app/screens/settings/old/user_account_header.dart';
 import 'package:kin_music_player_app/services/provider/login_provider.dart';
 import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/podcast_player.dart';
@@ -16,8 +14,6 @@ import 'package:kin_music_player_app/services/provider/radio_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'settings_card.dart';
 
 class SettingsBody extends StatelessWidget {
   const SettingsBody({Key? key}) : super(key: key);
@@ -56,16 +52,7 @@ class SettingsBody extends StatelessWidget {
         return Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                const Color(0xFF052C54),
-                const Color(0xFFD9D9D9).withOpacity(0.7),
-              ],
-            ),
-          ),
+          decoration: linearGradientDecoration,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -175,7 +162,7 @@ class SettingsBody extends StatelessWidget {
                           icon: Icon(
                             Icons.logout,
                             color: Colors.white.withOpacity(0.75),
-                            size: 22,
+                            size: 23,
                           ),
                         ),
                       ],
@@ -197,10 +184,7 @@ class SettingsBody extends StatelessWidget {
                                 FirebaseAuth.instance.currentUser!.photoURL ??
                                     "",
                             imageBuilder: (context, imageProvider) => Container(
-                              // height: 200,
-                              //  width: double.infinity,
                               decoration: BoxDecoration(
-                                // borderRadius: BorderRadius.circular(20),
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   image: imageProvider,
@@ -220,20 +204,14 @@ class SettingsBody extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: kSecondaryColor.withOpacity(0.65),
-                            // image: DecorationImage(
-                            //   image: AssetImage(
-                            //     "assets/images/logo.png",
-                            //   ),
-                            //   fit: BoxFit.fitWidth,
-                            // ),
                           ),
                           child: Center(
                             child: Text(
                               formatDisplayName(),
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 64,
-                                letterSpacing: 4,
+                                fontSize: 56,
+                                letterSpacing: 5,
                               ),
                             ),
                           ),
@@ -314,7 +292,7 @@ class SettingsBody extends StatelessWidget {
                           "Terms & Conditons",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
-                            fontSize: 14,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -322,7 +300,7 @@ class SettingsBody extends StatelessWidget {
                           "Help & Support",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
-                            fontSize: 14,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -330,7 +308,7 @@ class SettingsBody extends StatelessWidget {
                           "Privacy Policy",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
-                            fontSize: 14,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                           ),
                         )
@@ -368,9 +346,10 @@ class SettingsBody extends StatelessWidget {
 }
 
 String formatDisplayName() {
+  String displayValue = "PD";
   try {
     var currentUser = FirebaseAuth.instance.currentUser;
-    String displayValue = "PD";
+
     if (currentUser != null) {
       String firstName = currentUser.displayName!.split(" ")[0];
       String lastName = currentUser.displayName!.split(" ")[1];
@@ -383,17 +362,17 @@ String formatDisplayName() {
         displayValue = lastName[0] + lastName[1];
       }
     }
-
-    return displayValue;
   } catch (e) {
-    return "KA";
+    displayValue = "KA";
   }
+
+  return displayValue;
 }
 
 // get phone or email to display
 String getEmailOrPhone() {
+  String displayValue = "kinadmin@admin.com";
   try {
-    String displayValue = "kinadmin@admin.com";
     var currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
@@ -405,9 +384,8 @@ String getEmailOrPhone() {
         displayValue = "kinadmin@admin.com";
       }
     }
-
-    return displayValue;
   } catch (e) {
     return "kinadmin@admin.com";
   }
+  return displayValue;
 }

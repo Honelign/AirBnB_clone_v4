@@ -69,7 +69,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       const HomeScreen(),
       MyLibrary(
         initialIndex: _currentIndex == 0 ? 0 : 2,
-        showToast: _currentIndex == 0 ? false : true,
+        showToast: false,
       ),
       const Podcast(),
       const RadioScreenNew(),
