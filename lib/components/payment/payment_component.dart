@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/screens/payment/telebirr/paymentview.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
+import 'package:kin_music_player_app/services/network/model/music/music.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/payment_provider.dart';
 import 'package:kin_music_player_app/size_config.dart';
@@ -65,7 +67,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
     });
 
     var res = await http.post(
-        Uri.parse("$kinPaymentUrl/payment/purchase-with-telebirr/"),
+        Uri.parse("$kinPaymentUrl/payment/purchase-with-telebirr"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
@@ -99,6 +101,14 @@ class _PaymentComponentState extends State<PaymentComponent> {
           },
         ),
       );
+    } else {
+      errorLoggingApiService.logErrorToServer(
+        fileName: fileName,
+        functionName: "getUrl",
+        errorInfo: res.body,
+        remark: res.statusCode.toString(),
+      );
+      kShowToast(message: "Could not process telebirr");
     }
   }
 
@@ -209,12 +219,12 @@ class _PaymentComponentState extends State<PaymentComponent> {
             onPaymentCompleteFunction: widget.onSuccessFunction,
           );
         }
-        Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =
-            true;
 
-        widget.onSuccessFunction;
+        MusicPlayer p = Provider.of<MusicPlayer>(context, listen: false);
+        p.makePurchase(true);
+
         // showSucessDialog(context);
-        // kShowToast(message: "Payment Completed");
+        kShowToast(message: "Payment Completed");
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -236,6 +246,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
         className: className,
       );
     } catch (e) {
+      print(e);
       kShowToast(message: "Could not complete payment");
       _errorLoggingApiService.logErrorToServer(
         fileName: fileName,

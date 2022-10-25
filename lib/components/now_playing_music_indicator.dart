@@ -38,15 +38,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    var p = Provider.of<MusicPlayer>(context, listen: false);
-
-    bool showBuyButton = !p.currentMusic!.isPurchasedByUser == false;
-
-    void onTrackPurchaseSuccess() async {
-      setState(() {
-        showBuyButton = false;
-      });
-    }
+    var p = Provider.of<MusicPlayer>(context);
 
     MusicProvider musicProvider = Provider.of<MusicProvider>(context);
 
@@ -113,6 +105,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                       ),
 
                       (p.currentMusic!.isPurchasedByUser == false &&
+                              p.purchaseStatus == false &&
                               p.currentMusic!.priceETB != "0")
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
@@ -130,8 +123,7 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                                           paymentPrice: p.currentMusic!.priceETB
                                               .toString(),
                                           paymentReason: "trackPurchase",
-                                          onSuccessFunction:
-                                              onTrackPurchaseSuccess,
+                                          onSuccessFunction: () {},
                                         ),
                                       );
                                     },

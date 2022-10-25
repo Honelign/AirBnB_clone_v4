@@ -66,22 +66,6 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                 height: getProportionateScreenHeight(6),
               ),
 
-              InkWell(
-                onTap: () async {
-                  Provider.of<MusicPlayer>(context, listen: false)
-                      .player
-                      .stop();
-
-                  Provider.of<MusicPlayer>(context, listen: false)
-                      .isProcessingPlay = false;
-                },
-                child: Container(
-                  width: 60,
-                  height: 30,
-                  color: Colors.amber,
-                ),
-              ),
-
               // Recently Played
               _buildRecentlyPlayedMusics(context),
 
@@ -486,8 +470,8 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
                       return ListView.builder(
                           itemCount: snapshot.data == null
                               ? 0
-                              : (snapshot.data!.length > 5
-                                  ? 5
+                              : (snapshot.data!.length > 10
+                                  ? 10
                                   : snapshot.data!.length),
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,

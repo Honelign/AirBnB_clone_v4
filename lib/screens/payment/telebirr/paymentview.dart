@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -230,8 +231,14 @@ class _PaymentViewState extends State<PaymentView> {
 
                               setState(() {});
                               kShowToast(message: "payment completed");
+                            } else {
+                              await savePayment();
+                              MusicPlayer p = Provider.of<MusicPlayer>(
+                                context,
+                                listen: false,
+                              );
+                              p.makePurchase(true);
                             }
-                            await savePayment();
 
                             Navigator.pop(context);
                             setState(() {});

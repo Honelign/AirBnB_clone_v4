@@ -28,7 +28,7 @@ class PaymentApiService {
 
       // save payment
       String paymentUrl = "$kinPaymentUrl/payment/save-payment-info";
-      print(paymentUrl);
+
       var paymentBody = jsonEncode(
         {
           "userId": uid,
@@ -46,9 +46,9 @@ class PaymentApiService {
           'Accept': 'application/json'
         },
       );
-      //print(paymentResponse.body.toString());
-      print(paymentBody.toString());
-      print("code" + paymentResponse.statusCode.toString());
+      print("paypalprinter : $paymentBody");
+      print("paypalprinter : ${paymentResponse.statusCode}");
+      print("paypalprinter : ${paymentResponse.body}");
       if (paymentResponse.statusCode == 201) {
         var body = json.decode(paymentResponse.body);
         String payId = body['id'].toString();
@@ -70,7 +70,8 @@ class PaymentApiService {
           },
         );
 
-        print("code 2" + trackResponse.statusCode.toString());
+        print("paypalprinter 2 : ${paymentResponse.statusCode}");
+        print("paypalprinter 2 : ${paymentResponse.body}");
 
         if (trackResponse.statusCode == 201) {
           return true;

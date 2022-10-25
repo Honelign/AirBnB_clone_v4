@@ -21,6 +21,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
   bool isReleased = false;
 
+  bool _isPurchaseMade = false;
+
   final List<Music> _popularMusicsList = [];
   final List<Music> _recentMusicsList = [];
 
@@ -39,6 +41,13 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     _isMusicStopped = value;
     notifyListeners();
   }
+
+  void makePurchase(bool value) {
+    _isPurchaseMade = value;
+    notifyListeners();
+  }
+
+  bool get purchaseStatus => _isPurchaseMade;
 
   bool get miniPlayerVisibility => _miniPlayerVisibility;
 
@@ -298,6 +307,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
   _open(Music music) async {
     isProcessingPlay = true;
+    makePurchase(music.isPurchasedByUser);
+    // _isPurchaseMade = music.isPurchasedByUser;
     // give meta info
     var metas = Metas(
       title: music.title,
@@ -337,7 +348,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
-      print("Here + ${player.networkSettings.defaultHeaders}");
+
       player.isPlaying.listen((event) {
         if (event) {
           isProcessingPlay = false;
@@ -355,6 +366,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   }
 
   _openLocal(Music music) async {
+    makePurchase(music.isPurchasedByUser);
+    // _isPurchaseMade = music.isPurchasedByUser;
     // give meta info
     var metas = Metas(
       title: music.title,
@@ -416,6 +429,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         player.stop();
       } else {
         _isMusicLoaded = false;
+
         notifyListeners();
         _currentIndex = index;
         if (isProcessingPlay == false) {
