@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kin_music_player_app/components/payment/payment_component.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/now_playing/now_playing_music.dart';
@@ -40,7 +39,8 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
   @override
   Widget build(BuildContext context) {
     var p = Provider.of<MusicPlayer>(context, listen: false);
-    bool showBuyButton = !p.currentMusic!.isPurchasedByUser;
+
+    bool showBuyButton = !p.currentMusic!.isPurchasedByUser == false;
 
     void onTrackPurchaseSuccess() async {
       setState(() {
@@ -112,7 +112,8 @@ class _NowPlayingMusicIndicatorState extends State<NowPlayingMusicIndicator> {
                         p.currentMusic!.artist,
                       ),
 
-                      showBuyButton == true
+                      (p.currentMusic!.isPurchasedByUser == false &&
+                              p.currentMusic!.priceETB != "0")
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Row(
