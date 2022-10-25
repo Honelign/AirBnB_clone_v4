@@ -24,6 +24,7 @@ import 'package:kin_music_player_app/services/provider/album_provider.dart';
 import 'package:kin_music_player_app/services/provider/artist_provider.dart';
 
 import 'package:kin_music_player_app/services/provider/genre_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 
 import 'package:kin_music_player_app/services/provider/music_provider.dart';
 import 'package:kin_music_player_app/services/provider/recently_played_provider.dart';
@@ -44,7 +45,8 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     bool isReleased = false;
     super.build(context);
-    ConnectivityStatus status = Provider.of<ConnectivityStatus>(context);
+    ConnectivityStatus status =
+        Provider.of<ConnectivityStatus>(context, listen: false);
     return RefreshIndicator(
       onRefresh: () async {
         setState(() {});
@@ -62,6 +64,22 @@ class _SongsState extends State<Songs> with AutomaticKeepAliveClientMixin {
               // Spacer
               SizedBox(
                 height: getProportionateScreenHeight(6),
+              ),
+
+              InkWell(
+                onTap: () async {
+                  Provider.of<MusicPlayer>(context, listen: false)
+                      .player
+                      .stop();
+
+                  Provider.of<MusicPlayer>(context, listen: false)
+                      .isProcessingPlay = false;
+                },
+                child: Container(
+                  width: 60,
+                  height: 30,
+                  color: Colors.amber,
+                ),
               ),
 
               // Recently Played

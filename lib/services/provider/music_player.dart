@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
@@ -17,6 +19,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   String fileName = "music_player.dart";
   String className = "MusicPlayer";
 
+  bool isReleased = false;
+
   final List<Music> _popularMusicsList = [];
   final List<Music> _recentMusicsList = [];
 
@@ -28,7 +32,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   bool _isMusicStopped = true;
   bool isPlayingLocal = false;
   bool isProcessingPlay = false;
-  bool isReleased = false;
 
   bool get isMusicStopped => _isMusicStopped;
 
@@ -334,6 +337,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
+      print("Here + ${player.networkSettings.defaultHeaders}");
       player.isPlaying.listen((event) {
         if (event) {
           isProcessingPlay = false;
@@ -422,6 +426,10 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           notifyListeners();
 
           setPlaying(album, index, musics);
+        } else {
+          if (isReleased == true) {
+            Timer(Duration(milliseconds: 2), () => {isProcessingPlay = false});
+          }
         }
       }
     } catch (e) {

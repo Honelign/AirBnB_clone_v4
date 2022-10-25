@@ -77,67 +77,60 @@ class _MusicCardState extends State<MusicCard> {
                 p.albumMusicss = widget.musics;
                 p.isPlayingLocal = false;
                 p.setBuffering(widget.musicIndex);
-                if (checkConnection(status)) {
-                  // incrementMusicView(music.id);
-                  p.setBuffering(widget.musicIndex);
+                // if (checkConnection(status)) {
+                // incrementMusicView(music.id);
+                p.setBuffering(widget.musicIndex);
 
-                  if (p.isMusicInProgress(widget.music)) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => NowPlayingMusic(widget.music),
-                      ),
-                    );
-                  } else {
-                    radioProvider.player.stop();
-                    podcastProvider.player.stop();
-                    p.player.stop();
-
-                    p.setMusicStopped(true);
-                    podcastProvider.setEpisodeStopped(true);
-                    p.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-
-                    p.setPlayer(p.player, podcastProvider, radioProvider);
-
-                    p.handlePlayButton(
-                      music: widget.music,
-                      index: widget.musicIndex,
-                      album: Album(
-                        id: -2,
-                        title: 'Single Music ${widget.musicIndex}',
-                        artist: 'kin',
-                        description: '',
-                        cover: 'assets/images/kin.png',
-                        count: widget.musics.length,
-                        artist_id: 1,
-                        isPurchasedByUser: false,
-                        price: 60,
-                      ),
-                      musics: widget.musics,
-                    );
-                    // _musicPlayerController.setIsProcessingPlayToFalse();
-
-                    p.setMusicStopped(false);
-                    podcastProvider.setEpisodeStopped(true);
-                    p.listenMusicStreaming();
-                    podcastProvider.listenPodcastStreaming();
-
-                    // add to recently played
-                    musicProvider.addToRecentlyPlayed(music: widget.music);
-
-                    // add to popular
-                    musicProvider.countPopular(music: widget.music);
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'No Connection',
-                        style: TextStyle(color: kGrey),
-                      ),
+                if (p.isMusicInProgress(widget.music)) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NowPlayingMusic(widget.music),
                     ),
                   );
+                } else {
+                  radioProvider.player.stop();
+                  podcastProvider.player.stop();
+                  p.player.stop();
+
+                  p.setMusicStopped(true);
+                  podcastProvider.setEpisodeStopped(true);
+                  p.listenMusicStreaming();
+                  podcastProvider.listenPodcastStreaming();
+
+                  p.setPlayer(p.player, podcastProvider, radioProvider);
+
+                  p.handlePlayButton(
+                    music: widget.music,
+                    index: widget.musicIndex,
+                    album: Album(
+                      id: -2,
+                      title: 'Single Music ${widget.musicIndex}',
+                      artist: 'kin',
+                      description: '',
+                      cover: 'assets/images/kin.png',
+                      count: widget.musics.length,
+                      artist_id: 1,
+                      isPurchasedByUser: false,
+                      price: 60,
+                    ),
+                    musics: widget.musics,
+                  );
+                  // _musicPlayerController.setIsProcessingPlayToFalse();
+
+                  p.setMusicStopped(false);
+                  podcastProvider.setEpisodeStopped(true);
+                  p.listenMusicStreaming();
+                  podcastProvider.listenPodcastStreaming();
+
+                  // add to recently played
+                  musicProvider.addToRecentlyPlayed(music: widget.music);
+
+                  // add to popular
+                  musicProvider.countPopular(music: widget.music);
                 }
+                // } else {
+                //   kShowToast(message: "No Connection");
+                // }
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -43,13 +45,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: kPrimaryColor,
-      statusBarColor: kSecondaryColor,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ),
-  );
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     systemNavigationBarColor: kPrimaryColor,
+  //     statusBarColor: kSecondaryColor,
+  //     systemNavigationBarIconBrightness: Brightness.light,
+  //   ),
+  // );
 
   runApp(
     MultiProvider(
@@ -104,8 +106,8 @@ class _KinState extends State<Kin> {
   @override
   void dispose() {
     // SingletonPlayer.instance.stop();
-    Provider.of<MusicPlayer>(context, listen: false).player.stop();
     super.dispose();
+    exit(0);
   }
 
   @override
