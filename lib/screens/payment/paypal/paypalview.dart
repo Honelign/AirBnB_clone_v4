@@ -95,6 +95,7 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                         paymentAmount: widget.paymentAmount.toInt(),
                         paymentMethod: "paypal",
                       );
+                      widget.onPaymentSuccessFunction();
                       Navigator.pop(context);
                       kShowToast(message: "Payment Successful!");
                       // widget.onPaymentSuccessFunction();
@@ -117,8 +118,8 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                       onPaymentCompleteFunction: widget.successFunction,
                     );
                     Navigator.pop(context);
-
-                    kShowToast(message: "Payment Successful!");
+                    setState(() {});
+                    kShowToast(message: "Payment completed");
                   }
 
                   // widget.onPaymentSuccessFunction();

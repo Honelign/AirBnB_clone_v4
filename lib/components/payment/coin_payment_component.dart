@@ -65,7 +65,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
     });
 
     var res = await http.post(
-        Uri.parse("$kinPaymentUrl/gift/buy-gift-telebirr/"),
+        Uri.parse("$kinPaymentUrl/gift/buy-gift-telebirr"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
@@ -90,6 +90,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
         MaterialPageRoute(
           builder: (context) {
             return PaymentView(
+              onSucess: widget.onSuccessFunction,
               isCoin: isCoin,
               userId: id,
               paymentAmount: widget.paymentPrice,
@@ -97,6 +98,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
               url: link.toString(),
               paymentId: paymentId.toString(),
               trackId: widget.trackId.toString(),
+              
             );
           },
         ),

@@ -87,6 +87,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
         MaterialPageRoute(
           builder: (context) {
             return PaymentView(
+              onSucess: widget.onSuccessFunction,
               isCoin: false,
               userId: id,
               paymentAmount: widget.paymentPrice,

@@ -43,7 +43,7 @@ class CoinApiService {
       String id = await helper.getUserId();
 
       // request url & body
-      String uri = "$kinPaymentUrl/gift/save-gift-payment-info/";
+      String uri = "$kinPaymentUrl/gift/save-gift-payment-info";
       Map<String, dynamic> requestBody = {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
@@ -54,7 +54,7 @@ class CoinApiService {
       if (id != "") {
         Response postResponse = await post(Uri.parse(uri), body: requestBody);
 
-        print("lookie - post response code is ${postResponse.body}");
+        print("lookie - post response code is ${postResponse.statusCode}");
         // user already has payment info
         if (postResponse.statusCode == 400) {
           Response putResponse =
