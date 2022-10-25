@@ -87,6 +87,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
         MaterialPageRoute(
           builder: (context) {
             return PaymentView(
+              isCoin: false,
               userId: id,
               paymentAmount: widget.paymentPrice,
               paymentMethod: "telebirr",
@@ -120,6 +121,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
           context,
           MaterialPageRoute(
             builder: (context) => PaypalWebview(
+              isCoin: false,
               onPaymentSuccessFunction: widget.onSuccessFunction,
               paymentAmount: double.parse(widget.paymentPrice),
               paymentMethod: 'Paypal',
@@ -166,7 +168,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   Map<String, dynamic>? paymentIntent;
   bool isLoading = false;
-  Future<void> payWithStripe() async {
+  Future<void> payWithStripe(context) async {
     try {
       paymentIntent = await createPaymentIntent(widget.paymentPrice, 'USD');
       //Payment Sheet
@@ -209,7 +211,9 @@ class _PaymentComponentState extends State<PaymentComponent> {
         Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =
             true;
 
-        kShowToast(message: "Payment Completed");
+        widget.onSuccessFunction;
+        // showSucessDialog(context);
+        // kShowToast(message: "Payment Completed");
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -283,6 +287,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   @override
   Widget build(BuildContext context) {
+    var prov =
+        Provider.of<PaymentProvider>(context, listen: false).isBought(context);
     return Container(
       height: getProportionateScreenHeight(450) +
           MediaQuery.of(context).viewInsets.bottom,
@@ -428,7 +434,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
                           });
 
                           // initiate stripe payment
-                          await payWithStripe();
+                          await payWithStripe(context);
 
                           setState(() {
                             isLoading = false;

@@ -27,7 +27,8 @@ class PaymentApiService {
       String uid = await helper.getUserId();
 
       // save payment
-      String paymentUrl = "$kinPaymentUrl/payment/save-payment-info/";
+      String paymentUrl = "$kinPaymentUrl/payment/save-payment-info";
+      print(paymentUrl);
       var paymentBody = jsonEncode(
         {
           "userId": uid,
@@ -45,7 +46,9 @@ class PaymentApiService {
           'Accept': 'application/json'
         },
       );
-
+      //print(paymentResponse.body.toString());
+      print(paymentBody.toString());
+      print("code" + paymentResponse.statusCode.toString());
       if (paymentResponse.statusCode == 201) {
         var body = json.decode(paymentResponse.body);
         String payId = body['id'].toString();
@@ -59,13 +62,15 @@ class PaymentApiService {
         });
 
         Response trackResponse = await post(
-          Uri.parse("$kinPaymentUrl/payment/purchased-tracks/"),
+          Uri.parse("$kinPaymentUrl/payment/purchased-tracks"),
           body: trackBody,
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json'
           },
         );
+
+        print("code 2" + trackResponse.statusCode.toString());
 
         if (trackResponse.statusCode == 201) {
           return true;

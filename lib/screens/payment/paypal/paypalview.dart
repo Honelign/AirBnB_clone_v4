@@ -12,6 +12,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../../services/provider/payment_provider.dart';
 
 class PaypalWebview extends StatefulWidget {
+  final bool isCoin;
   final String approveUrl;
   final String executeUrl;
   final String accessToken;
@@ -24,6 +25,7 @@ class PaypalWebview extends StatefulWidget {
   final Function onPaymentSuccessFunction;
   const PaypalWebview({
     Key? key,
+    required this.isCoin,
     required this.approveUrl,
     required this.executeUrl,
     required this.accessToken,
@@ -44,7 +46,6 @@ class _PaypalWebviewState extends State<PaypalWebview> {
   var paymentProvider;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
-
   int progress = 0;
   @override
   void initState() {
@@ -85,32 +86,43 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                   final payerId = uri.queryParameters['PayerID'];
                   await widget.sdk.executePayment(
                       widget.executeUrl, payerId!, widget.accessToken);
+                  if (widget.isCoin == true) {
+                    try {
+                      CoinProvider coinProvider =
+                          Provider.of(context, listen: false);
 
-                  try {
-                    CoinProvider coinProvider =
-                        Provider.of(context, listen: false);
+                      await coinProvider.buyCoin(
+                        paymentAmount: widget.paymentAmount.toInt(),
+                        paymentMethod: "paypal",
+                      );
+                      Navigator.pop(context);
+                      kShowToast(message: "Payment Successful!");
+                      // widget.onPaymentSuccessFunction();
+                    } catch (e) {
+                      ErrorLoggingApiService _errorLoggingApiService =
+                          ErrorLoggingApiService();
 
-                    await coinProvider.buyCoin(
-                      paymentAmount: widget.paymentAmount.toInt(),
-                      paymentMethod: "paypal",
+                      _errorLoggingApiService.logErrorToServer(
+                        fileName: "paypalview.dart",
+                        functionName: "onPageStarted",
+                        errorInfo: e.toString(),
+                      );
+                    }
+                  } else {
+                    await paymentProvider.saveUserPaymentAndTrackInfo(
+                      paymentAmount: widget.paymentAmount,
+                      paymentMethod: 'PayPal',
+                      trackId: widget.trackId.toString(),
+                      paymentState: 'COMPLETED',
+                      onPaymentCompleteFunction: widget.successFunction,
                     );
-                    widget.onPaymentSuccessFunction();
-                  } catch (e) {
-                    ErrorLoggingApiService _errorLoggingApiService =
-                        ErrorLoggingApiService();
+                    Navigator.pop(context);
 
-                    _errorLoggingApiService.logErrorToServer(
-                      fileName: "paypalview.dart",
-                      functionName: "onPageStarted",
-                      errorInfo: e.toString(),
-                    );
+                    kShowToast(message: "Payment Successful!");
                   }
-                  Navigator.pop(context);
 
                   // widget.onPaymentSuccessFunction();
 
-                  kShowToast(message: "Payment Completed");
-                  kShowToast(message: "Payment Successful!");
                 }
               },
               gestureNavigationEnabled: true,

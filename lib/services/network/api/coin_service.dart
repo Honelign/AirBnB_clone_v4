@@ -48,7 +48,7 @@ class CoinApiService {
         "userId": id.toString(),
         "payment_amount": paymentAmount.toString(),
         "payment_method": paymentMethod,
-        "payment_state": 'completed',
+        "payment_state": '',
       };
 
       if (id != "") {
@@ -93,6 +93,7 @@ class CoinApiService {
 
     try {
       String id = await helper.getUserId();
+     
 
       // request url & body
       String uri = "$kinPaymentUrl/gift/buy-gift-telebirr/";
@@ -105,7 +106,7 @@ class CoinApiService {
 
       if (id != "") {
         Response postResponse = await post(Uri.parse(uri), body: requestBody);
-
+        print("res" + postResponse.statusCode.toString());
         // user already has payment info
         if (postResponse.statusCode == 400) {
           Response putResponse =
