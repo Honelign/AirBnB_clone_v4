@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/home_screen.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PaymentView extends StatefulWidget {
   final bool isCoin;
@@ -21,6 +22,7 @@ class PaymentView extends StatefulWidget {
   final String paymentMethod;
   final String paymentId;
   final String trackId;
+  final Function onSucess;
 
   const PaymentView({
     Key? key,
@@ -31,6 +33,7 @@ class PaymentView extends StatefulWidget {
     required this.paymentMethod,
     required this.paymentId,
     required this.trackId,
+    required this.onSucess,
   }) : super(key: key);
   @override
   _PaymentViewState createState() => _PaymentViewState();
@@ -222,13 +225,17 @@ class _PaymentViewState extends State<PaymentView> {
                                 paymentAmount: int.parse(widget.paymentAmount),
                                 paymentMethod: "telebirr",
                               );
-                              showSucessDialog(context);
+                              await widget.onSucess;
                               Navigator.pop(context);
+
+                              setState(() {});
+                              kShowToast(message: "payment completed");
                             }
                             await savePayment();
 
-                            showSucessDialog(context);
                             Navigator.pop(context);
+                            setState(() {});
+                            kShowToast(message: "payment completed");
                           } catch (e) {
                             errorLoggingApiService.logErrorToServer(
                               fileName: fileName,

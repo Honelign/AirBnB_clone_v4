@@ -118,9 +118,7 @@ class _BuyCoinPageState extends State<BuyCoinPage> {
                                 // card component
                                 return PurchaseCoinCard(
                                   value: allowedCoinValues[index],
-                                  refresher: () {
-                                    setState(() {});
-                                  },
+                                  refresher: refreshFunction,
                                 );
                               },
                             ),
