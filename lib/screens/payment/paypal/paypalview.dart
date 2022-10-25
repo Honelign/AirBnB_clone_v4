@@ -9,11 +9,10 @@ import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../../services/provider/music_provider.dart';
 import '../../../services/provider/payment_provider.dart';
 
 class PaypalWebview extends StatefulWidget {
-  final String paymentReason;
+  final bool isCoin;
   final String approveUrl;
   final String executeUrl;
   final String accessToken;
@@ -26,6 +25,7 @@ class PaypalWebview extends StatefulWidget {
   final Function onPaymentSuccessFunction;
   const PaypalWebview({
     Key? key,
+    required this.isCoin,
     required this.approveUrl,
     required this.executeUrl,
     required this.accessToken,
@@ -35,7 +35,6 @@ class PaypalWebview extends StatefulWidget {
     required this.paymentMethod,
     required this.trackId,
     required this.paymentState,
-    required this.paymentReason,
     required this.onPaymentSuccessFunction,
   }) : super(key: key);
 
@@ -45,13 +44,8 @@ class PaypalWebview extends StatefulWidget {
 
 class _PaypalWebviewState extends State<PaypalWebview> {
   var paymentProvider;
-  void onSuccess() {
-    print("onsuccess");
-  }
-
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
-
   int progress = 0;
   @override
   void initState() {
@@ -61,7 +55,6 @@ class _PaypalWebviewState extends State<PaypalWebview> {
 
   @override
   Widget build(BuildContext context) {
-    var paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
     CoinProvider coinProvider = Provider.of(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -91,48 +84,45 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                 if (url.contains('/success')) {
                   final uri = Uri.parse(url);
                   final payerId = uri.queryParameters['PayerID'];
-                  if (widget.paymentReason == "trackPurchase") {
+                  await widget.sdk.executePayment(
+                      widget.executeUrl, payerId!, widget.accessToken);
+                  if (widget.isCoin == true) {
+                    try {
+                      CoinProvider coinProvider =
+                          Provider.of(context, listen: false);
+
+                      await coinProvider.buyCoin(
+                        paymentAmount: widget.paymentAmount.toInt(),
+                        paymentMethod: "paypal",
+                      );
+                      Navigator.pop(context);
+                      kShowToast(message: "Payment Successful!");
+                      // widget.onPaymentSuccessFunction();
+                    } catch (e) {
+                      ErrorLoggingApiService _errorLoggingApiService =
+                          ErrorLoggingApiService();
+
+                      _errorLoggingApiService.logErrorToServer(
+                        fileName: "paypalview.dart",
+                        functionName: "onPageStarted",
+                        errorInfo: e.toString(),
+                      );
+                    }
+                  } else {
                     await paymentProvider.saveUserPaymentAndTrackInfo(
-                      paymentAmount: (widget.paymentAmount),
+                      paymentAmount: widget.paymentAmount,
                       paymentMethod: 'PayPal',
                       trackId: widget.trackId.toString(),
                       paymentState: 'COMPLETED',
-                      onPaymentCompleteFunction: onSuccess,
+                      onPaymentCompleteFunction: widget.successFunction,
                     );
+                    Navigator.pop(context);
+
+                    kShowToast(message: "Payment Successful!");
                   }
-                  Provider.of<MusicProvider>(context, listen: false)
-                      .isPurchaseMade = true;
-
-                  kShowToast(message: "Payment Completed");
-
-                  await widget.sdk.executePayment(
-                      widget.executeUrl, payerId!, widget.accessToken);
-
-                  try {
-                    CoinProvider coinProvider =
-                        Provider.of(context, listen: false);
-
-                    await coinProvider.buyCoin(
-                      paymentAmount: widget.paymentAmount.toInt(),
-                      paymentMethod: "paypal",
-                    );
-                    widget.onPaymentSuccessFunction();
-                  } catch (e) {
-                    ErrorLoggingApiService _errorLoggingApiService =
-                        ErrorLoggingApiService();
-
-                    _errorLoggingApiService.logErrorToServer(
-                      fileName: "paypalview.dart",
-                      functionName: "onPageStarted",
-                      errorInfo: e.toString(),
-                    );
-                  }
-                  Navigator.pop(context);
 
                   // widget.onPaymentSuccessFunction();
 
-                  kShowToast(message: "Payment Completed");
-                  kShowToast(message: "Payment Successful!");
                 }
               },
               gestureNavigationEnabled: true,

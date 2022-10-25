@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_paypal_sdk/flutter_paypal_sdk.dart';
@@ -54,26 +53,6 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   //get telebirr url
   Future getUrl() async {
-    int price = int.parse(widget.paymentPrice);
-    if (price == 0) {
-      return AwesomeDialog(
-        context: context,
-        animType: AnimType.scale,
-        dialogType: DialogType.info,
-        body: const Center(
-          child: Text(
-            "The track price is 0 you can't make payment",
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        title: 'title',
-        desc: 'desc',
-        btnOkOnPress: () {
-          Navigator.pop(context);
-        },
-      )..show();
-    }
-
     var linkMap;
     var link;
     var paymentData;
@@ -108,13 +87,13 @@ class _PaymentComponentState extends State<PaymentComponent> {
         MaterialPageRoute(
           builder: (context) {
             return PaymentView(
+              isCoin: false,
               userId: id,
               paymentAmount: widget.paymentPrice,
               paymentMethod: "telebirr",
               url: link['toPayUrl'].toString(),
               paymentId: paymentId.toString(),
               trackId: widget.trackId.toString(),
-              paymentReason: "track",
             );
           },
         ),
@@ -124,58 +103,38 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   //payment methods for paypal
   payWithPayPal() async {
-    int price = int.parse(widget.paymentPrice);
-    if (price == 0) {
-      return AwesomeDialog(
-        context: context,
-        animType: AnimType.scale,
-        dialogType: DialogType.info,
-        body: const Center(
-          child: Text(
-            "The track price is 0 you can't make payment",
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-        title: 'title',
-        desc: 'desc',
-        btnOkOnPress: () {
-          Navigator.pop(context);
-        },
-      )..show();
-    } else {
-      FlutterPaypalSDK sdk = FlutterPaypalSDK(
-        clientId:
-            'AQ0XWp625sJxSs6EJADNsK2iHLSbS99w5lkybY72euU_zbmBvT-7QF_XMvqVaE5xs9aOUQ4AXmDgYsCl',
-        clientSecret:
-            'EIeP-k7aoAkqc170_vUkN094sP6aIv3v5KSnfdNpDm8rgbsx1H_bFAdohSs3lmSmDM7t_6hY2UzkMIKW',
-        mode: Mode.sandbox, // this will use sandbox environment
+    FlutterPaypalSDK sdk = FlutterPaypalSDK(
+      clientId:
+          'AQ0XWp625sJxSs6EJADNsK2iHLSbS99w5lkybY72euU_zbmBvT-7QF_XMvqVaE5xs9aOUQ4AXmDgYsCl',
+      clientSecret:
+          'EIeP-k7aoAkqc170_vUkN094sP6aIv3v5KSnfdNpDm8rgbsx1H_bFAdohSs3lmSmDM7t_6hY2UzkMIKW',
+      mode: Mode.sandbox, // this will use sandbox environment
+    );
+    AccessToken accessToken = await sdk.getAccessToken();
+    if (accessToken.token != null) {
+      Payment payment = await sdk.createPayment(
+        transaction(),
+        accessToken.token!,
       );
-      AccessToken accessToken = await sdk.getAccessToken();
-      if (accessToken.token != null) {
-        Payment payment = await sdk.createPayment(
-          transaction(),
-          accessToken.token!,
-        );
-        if (payment.status) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PaypalWebview(
-                paymentReason: widget.paymentReason,
-                onPaymentSuccessFunction: widget.onSuccessFunction,
-                paymentAmount: double.parse(widget.paymentPrice),
-                paymentMethod: 'Paypal',
-                trackId: widget.trackId.toString(),
-                paymentState: 'COMPLETED',
-                approveUrl: payment.approvalUrl!,
-                executeUrl: payment.executeUrl!,
-                accessToken: accessToken.token!,
-                sdk: sdk,
-                successFunction: () {},
-              ),
+      if (payment.status) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PaypalWebview(
+              isCoin: false,
+              onPaymentSuccessFunction: widget.onSuccessFunction,
+              paymentAmount: double.parse(widget.paymentPrice),
+              paymentMethod: 'Paypal',
+              trackId: widget.trackId.toString(),
+              paymentState: 'COMPLETED',
+              approveUrl: payment.approvalUrl!,
+              executeUrl: payment.executeUrl!,
+              accessToken: accessToken.token!,
+              sdk: sdk,
+              successFunction: () {},
             ),
-          );
-        }
+          ),
+        );
       }
     }
   }
@@ -209,11 +168,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   Map<String, dynamic>? paymentIntent;
   bool isLoading = false;
-  Future<void> payWithStripe() async {
-    int price = int.parse(widget.paymentPrice);
-    if (price == 0) {
-      return kShowPrice();
-    }
+  Future<void> payWithStripe(context) async {
     try {
       paymentIntent = await createPaymentIntent(widget.paymentPrice, 'USD');
       //Payment Sheet
@@ -256,7 +211,9 @@ class _PaymentComponentState extends State<PaymentComponent> {
         Provider.of<MusicProvider>(context, listen: false).isPurchaseMade =
             true;
 
-        kShowToast(message: "Payment Completed");
+        widget.onSuccessFunction;
+        // showSucessDialog(context);
+        // kShowToast(message: "Payment Completed");
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -330,6 +287,8 @@ class _PaymentComponentState extends State<PaymentComponent> {
 
   @override
   Widget build(BuildContext context) {
+    var prov =
+        Provider.of<PaymentProvider>(context, listen: false).isBought(context);
     return Container(
       height: getProportionateScreenHeight(450) +
           MediaQuery.of(context).viewInsets.bottom,
@@ -475,8 +434,7 @@ class _PaymentComponentState extends State<PaymentComponent> {
                           });
 
                           // initiate stripe payment
-
-                          payWithStripe();
+                          await payWithStripe(context);
 
                           setState(() {
                             isLoading = false;

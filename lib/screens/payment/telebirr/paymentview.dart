@@ -1,36 +1,37 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/home/home_screen.dart';
 import 'package:kin_music_player_app/services/network/api_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 class PaymentView extends StatefulWidget {
+  final bool isCoin;
   final String url;
   final String userId;
   final String paymentAmount;
   final String paymentMethod;
   final String paymentId;
   final String trackId;
-  final String paymentReason;
 
-  const PaymentView(
-      {Key? key,
-      required this.url,
-      required this.userId,
-      required this.paymentAmount,
-      required this.paymentMethod,
-      required this.paymentId,
-      required this.trackId,
-      required this.paymentReason})
-      : super(key: key);
+  const PaymentView({
+    Key? key,
+    required this.isCoin,
+    required this.url,
+    required this.userId,
+    required this.paymentAmount,
+    required this.paymentMethod,
+    required this.paymentId,
+    required this.trackId,
+  }) : super(key: key);
   @override
   _PaymentViewState createState() => _PaymentViewState();
 }
@@ -215,24 +216,25 @@ class _PaymentViewState extends State<PaymentView> {
                       setState(() async {
                         final u = url.toString();
                         if (u.contains("result?status=200")) {
-                          if (widget.paymentReason == "tip") {
-                            print("lookie - payment for tip");
-                            try {
+                          try {
+                            if (widget.isCoin == true) {
                               await coinProvider.buyCoinTeleBirr(
                                 paymentAmount: int.parse(widget.paymentAmount),
                                 paymentMethod: "telebirr",
                               );
-
+                              showSucessDialog(context);
                               Navigator.pop(context);
-                            } catch (e) {
-                              errorLoggingApiService.logErrorToServer(
-                                fileName: fileName,
-                                functionName: "onLoadStop",
-                                errorInfo: e.toString(),
-                              );
                             }
-                          } else {
                             await savePayment();
+
+                            showSucessDialog(context);
+                            Navigator.pop(context);
+                          } catch (e) {
+                            errorLoggingApiService.logErrorToServer(
+                              fileName: fileName,
+                              functionName: "onLoadStop",
+                              errorInfo: e.toString(),
+                            );
                           }
                         }
 

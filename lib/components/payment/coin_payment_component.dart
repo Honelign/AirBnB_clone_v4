@@ -52,7 +52,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
   }
 
   //get telebirr url
-  Future getUrl() async {
+  Future getUrl({required bool isCoin}) async {
     var linkMap;
     var link;
     var paymentData;
@@ -65,7 +65,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
     });
 
     var res = await http.post(
-        Uri.parse("$kinPaymentUrl/payment/purchase-with-telebirr/"),
+        Uri.parse("$kinPaymentUrl/gift/buy-gift-telebirr/"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json'
@@ -76,26 +76,27 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
 
     if (res.statusCode == 200) {
       Map<String, dynamic> response = json.decode(res.body);
+      print("res" + response.toString());
 
-      for (var key in response.keys) {
-        linkMap = response['pay'];
-        paymentData = response['data'];
+      linkMap = response['Telebirr_Response'];
+      var linkpath = linkMap['data'];
+      //  print(linkpath['toPayUrl'].toString());
 
-        link = linkMap['data'];
-        paymentId = paymentData['id'];
-      }
+      link = linkpath['toPayUrl'];
+      paymentId = "1";
+
       return Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) {
             return PaymentView(
+              isCoin: isCoin,
               userId: id,
               paymentAmount: widget.paymentPrice,
               paymentMethod: "telebirr",
-              url: link['toPayUrl'].toString(),
+              url: link.toString(),
               paymentId: paymentId.toString(),
               trackId: widget.trackId.toString(),
-              paymentReason: widget.paymentReason,
             );
           },
         ),
@@ -113,6 +114,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
       mode: Mode.sandbox, // this will use sandbox environment
     );
     AccessToken accessToken = await sdk.getAccessToken();
+    bool isCoin = true;
     if (accessToken.token != null) {
       Payment payment = await sdk.createPayment(
         transaction(),
@@ -123,7 +125,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
           context,
           MaterialPageRoute(
             builder: (context) => PaypalWebview(
-              paymentReason: widget.paymentReason,
+              isCoin: true,
               onPaymentSuccessFunction: widget.onSuccessFunction,
               paymentAmount: double.parse(widget.paymentPrice),
               paymentMethod: 'Paypal',
@@ -172,6 +174,9 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
   bool isLoading = false;
   Future<void> payWithStripe() async {
     try {
+      String id = await helper.getUserId();
+      print("idd" + id.toString());
+
       paymentIntent = await createPaymentIntent(widget.paymentPrice, 'USD');
       //Payment Sheet
       await Stripe.instance
@@ -346,7 +351,7 @@ class _CoinPaymentComponentState extends State<CoinPaymentComponent> {
                           setState(() {
                             isLoading = true;
                           });
-                          getUrl();
+                          getUrl(isCoin: true);
 
                           // navigate to tele birr pay view
                           /*  Navigator.push(
