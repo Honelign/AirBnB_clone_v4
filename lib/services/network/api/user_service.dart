@@ -118,6 +118,8 @@ class UserApiService {
           errorInfo: e.toString(),
         );
         return "Something Went Wrong";
+      }else{
+        print("@@@@@@@@@@@ ${e.code}");
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(

@@ -75,8 +75,10 @@ class _EmailLoginState extends State<EmailLogin> {
                             ),
                           );
                         } else {
+                          print(email);
+                          print(result);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(result),
+                            content:Text(result),
                           ));
                         }
                       } else {
