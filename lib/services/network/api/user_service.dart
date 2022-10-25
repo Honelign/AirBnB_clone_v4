@@ -91,7 +91,7 @@ class UserApiService {
     try {
       // connect with firebase
       var possibleUser = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
+        email: email.toString().trim(),
         password: password,
       );
 
@@ -118,6 +118,8 @@ class UserApiService {
           errorInfo: e.toString(),
         );
         return "Something Went Wrong";
+      }else{
+        print("@@@@@@@@@@@ ${e.code}");
       }
     } catch (e) {
       errorLoggingApiService.logErrorToServer(
