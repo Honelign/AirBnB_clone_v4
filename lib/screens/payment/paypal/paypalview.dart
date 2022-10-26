@@ -6,6 +6,7 @@ import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/screens/payment/paypal/success.dart';
 import 'package:kin_music_player_app/services/network/api/error_logging_service.dart';
 import 'package:kin_music_player_app/services/provider/coin_provider.dart';
+import 'package:kin_music_player_app/services/provider/music_player.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -43,7 +44,7 @@ class PaypalWebview extends StatefulWidget {
 }
 
 class _PaypalWebviewState extends State<PaypalWebview> {
-  var paymentProvider;
+  late PaymentProvider paymentProvider;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   int progress = 0;
@@ -87,6 +88,7 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                   await widget.sdk.executePayment(
                       widget.executeUrl, payerId!, widget.accessToken);
                   if (widget.isCoin == true) {
+                    print("paypalprinter : @if");
                     try {
                       CoinProvider coinProvider =
                           Provider.of(context, listen: false);
@@ -110,15 +112,19 @@ class _PaypalWebviewState extends State<PaypalWebview> {
                       );
                     }
                   } else {
+                    print("paypalprinter : @else");
                     await paymentProvider.saveUserPaymentAndTrackInfo(
-                      paymentAmount: widget.paymentAmount,
+                      paymentAmount:
+                          double.parse(widget.paymentAmount.toString()),
                       paymentMethod: 'PayPal',
                       trackId: widget.trackId.toString(),
                       paymentState: 'COMPLETED',
                       onPaymentCompleteFunction: widget.successFunction,
                     );
                     Navigator.pop(context);
-                    setState(() {});
+                    MusicPlayer p =
+                        Provider.of<MusicPlayer>(context, listen: false);
+                    p.makePurchase(true);
                     kShowToast(message: "Payment completed");
                   }
 

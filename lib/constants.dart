@@ -14,6 +14,10 @@ class HeightValues {
   static double producerOwnedInfoSectionHeight = 400;
 }
 
+class TimeOutValues {
+  static int musicFileFetchTimeout = 1;
+}
+
 //a-0xFFF67E7D  b-0xFFabdf75  c-0xFF009ddc
 // const kPrimaryColor = Color(0xFF464646);
 // const kArtistID = "gZkd8CJAxESJpJFmXRLnU0IFkhE3";

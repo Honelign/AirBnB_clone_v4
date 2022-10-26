@@ -62,7 +62,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
             onTap: () {
               p.albumMusicss = widget.musics;
               p.isPlayingLocal = false;
-              incrementMusicView(widget.music.id);
+
               p.setBuffering(widget.musicIndex);
               if (checkConnection(status)) {
                 if (p.isMusicInProgress(widget.music)) {
@@ -80,9 +80,8 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   podcastProvider.setEpisodeStopped(true);
                   p.listenMusicStreaming();
                   podcastProvider.listenPodcastStreaming();
-
                   p.setPlayer(p.player, podcastProvider, radioProvider);
-                  radioProvider.setMiniPlayerVisibility(false);
+
                   p.handlePlayButton(
                       music: widget.music,
                       index: widget.musicIndex,
@@ -111,7 +110,7 @@ class _MusicCardRecentlyState extends State<MusicCardRecently> {
                   musicProvider.countPopular(music: widget.music);
                 }
               } else {
-                kShowToast();
+                kShowToast(message: "No Connection");
               }
             },
             child: CachedNetworkImage(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:kin_music_player_app/constants.dart';
 import 'package:kin_music_player_app/mixins/BaseMixins.dart';
@@ -17,6 +19,10 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   String fileName = "music_player.dart";
   String className = "MusicPlayer";
 
+  bool isReleased = false;
+
+  bool _isPurchaseMade = false;
+
   final List<Music> _popularMusicsList = [];
   final List<Music> _recentMusicsList = [];
 
@@ -28,7 +34,6 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   bool _isMusicStopped = true;
   bool isPlayingLocal = false;
   bool isProcessingPlay = false;
-  bool isReleased = false;
 
   bool get isMusicStopped => _isMusicStopped;
 
@@ -36,6 +41,13 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
     _isMusicStopped = value;
     notifyListeners();
   }
+
+  void makePurchase(bool value) {
+    _isPurchaseMade = value;
+    notifyListeners();
+  }
+
+  bool get purchaseStatus => _isPurchaseMade;
 
   bool get miniPlayerVisibility => _miniPlayerVisibility;
 
@@ -295,6 +307,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
 
   _open(Music music) async {
     isProcessingPlay = true;
+    makePurchase(music.isPurchasedByUser);
+    // _isPurchaseMade = music.isPurchasedByUser;
     // give meta info
     var metas = Metas(
       title: music.title,
@@ -334,6 +348,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           },
         ),
       );
+
       player.isPlaying.listen((event) {
         if (event) {
           isProcessingPlay = false;
@@ -351,6 +366,8 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
   }
 
   _openLocal(Music music) async {
+    makePurchase(music.isPurchasedByUser);
+    // _isPurchaseMade = music.isPurchasedByUser;
     // give meta info
     var metas = Metas(
       title: music.title,
@@ -412,6 +429,7 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
         player.stop();
       } else {
         _isMusicLoaded = false;
+
         notifyListeners();
         _currentIndex = index;
         if (isProcessingPlay == false) {
@@ -422,6 +440,10 @@ class MusicPlayer extends ChangeNotifier with BaseMixins {
           notifyListeners();
 
           setPlaying(album, index, musics);
+        } else {
+          if (isReleased == true) {
+            Timer(Duration(milliseconds: 2), () => {isProcessingPlay = false});
+          }
         }
       }
     } catch (e) {
