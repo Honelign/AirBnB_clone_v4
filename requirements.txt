@@ -1,0 +1,6 @@
+flask
+gunicorn
+flasgger
+sqlalchemy
+flasgger
+flask_cors
